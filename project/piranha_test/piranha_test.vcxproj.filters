@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="test.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="..\..\test\sdl_stress_tests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\sdl_tests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\utilities.cpp">
+      <Filter>Utilities\Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="..\..\test\utilities.h">
+      <Filter>Utilities\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{e80bdb4c-578f-4af3-bd07-884b13e3b32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{288ccb9f-a500-440b-a892-d2a81a25b6a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Headers">
+      <UniqueIdentifier>{77950cd2-20d3-4d2f-a1a1-77752c0c1c8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Source">
+      <UniqueIdentifier>{4151d972-8e57-4aa3-80ab-1400bfe3d6df}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
