@@ -10,8 +10,6 @@ namespace piranha {
 		ConstructedStringNodeOutput();
 		virtual ~ConstructedStringNodeOutput();
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-		virtual void discreteSample2D(int x, int y, void *target) const;
 		virtual void fullCompute(void *target) const;
 
 		pNodeInput *getStringConnection() { return &m_stringInput; }

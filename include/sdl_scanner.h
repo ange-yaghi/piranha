@@ -5,7 +5,7 @@
 #include <FlexLexer.h>
 #endif
 
-#include <sdl_parser.auto.h>
+#include <parser.auto.h>
 #include <sdl_token_info.h>
 #include <sdl_token_info.h>
 

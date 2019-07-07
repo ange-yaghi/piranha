@@ -39,7 +39,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -69,7 +69,18 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)/..\autogen;$(SolutionDir)/..\dependencies\libraries\flex\include;$(SolutionDir)/..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)/../include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)/..\autogen;$(SolutionDir)/..\dependencies\libraries\flex\include;$(SolutionDir)/..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)/../include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SolutionDir)/..\autogen;$(SolutionDir)/..\dependencies\libraries\flex\include;$(SolutionDir)/..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)/../include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir)/..\autogen;$(SolutionDir)/..\dependencies\libraries\flex\include;$(SolutionDir)/..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)/../include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -77,6 +88,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -85,6 +102,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -99,6 +122,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -113,8 +142,98 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\autogen\parser.auto.h" />
+    <ClInclude Include="..\..\autogen\stack.hh" />
+    <ClInclude Include="..\..\include\constructed_float_node.h" />
+    <ClInclude Include="..\..\include\constructed_float_node_output.h" />
+    <ClInclude Include="..\..\include\constructed_string_node.h" />
+    <ClInclude Include="..\..\include\constructed_string_node_output.h" />
+    <ClInclude Include="..\..\include\custom_node.h" />
+    <ClInclude Include="..\..\include\float_node_output.h" />
+    <ClInclude Include="..\..\include\memory_management.h" />
+    <ClInclude Include="..\..\include\node.h" />
+    <ClInclude Include="..\..\include\node_output.h" />
+    <ClInclude Include="..\..\include\node_program.h" />
+    <ClInclude Include="..\..\include\node_type.h" />
+    <ClInclude Include="..\..\include\path.h" />
+    <ClInclude Include="..\..\include\sdl_attribute.h" />
+    <ClInclude Include="..\..\include\sdl_attribute_definition.h" />
+    <ClInclude Include="..\..\include\sdl_attribute_definition_list.h" />
+    <ClInclude Include="..\..\include\sdl_attribute_list.h" />
+    <ClInclude Include="..\..\include\sdl_binary_operator.h" />
+    <ClInclude Include="..\..\include\sdl_compilation_error.h" />
+    <ClInclude Include="..\..\include\sdl_compilation_unit.h" />
+    <ClInclude Include="..\..\include\sdl_compiler.h" />
+    <ClInclude Include="..\..\include\sdl_context_tree.h" />
+    <ClInclude Include="..\..\include\sdl_error_list.h" />
+    <ClInclude Include="..\..\include\sdl_generator.h" />
+    <ClInclude Include="..\..\include\sdl_generic_value.h" />
+    <ClInclude Include="..\..\include\sdl_import_statement.h" />
+    <ClInclude Include="..\..\include\sdl_input_connection.h" />
+    <ClInclude Include="..\..\include\sdl_node.h" />
+    <ClInclude Include="..\..\include\sdl_node_definition.h" />
+    <ClInclude Include="..\..\include\sdl_parser_structure.h" />
+    <ClInclude Include="..\..\include\sdl_scanner.h" />
+    <ClInclude Include="..\..\include\sdl_structure_list.h" />
+    <ClInclude Include="..\..\include\sdl_token_info.h" />
+    <ClInclude Include="..\..\include\sdl_unary_operator.h" />
+    <ClInclude Include="..\..\include\sdl_value.h" />
+    <ClInclude Include="..\..\include\sdl_value_constant.h" />
+    <ClInclude Include="..\..\include\sdl_visibility.h" />
+    <ClInclude Include="..\..\include\single_float_node_output.h" />
+    <ClInclude Include="..\..\include\single_string_node_output.h" />
+    <ClInclude Include="..\..\include\standard_allocator.h" />
+    <ClInclude Include="..\..\include\string_node_output.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\autogen\parser.auto.cpp" />
+    <ClCompile Include="..\..\autogen\scanner.auto.cpp" />
+    <ClCompile Include="..\..\src\constructed_float_node.cpp" />
+    <ClCompile Include="..\..\src\constructed_float_node_output.cpp" />
+    <ClCompile Include="..\..\src\constructed_string_node.cpp" />
+    <ClCompile Include="..\..\src\constructed_string_node_output.cpp" />
+    <ClCompile Include="..\..\src\custom_node.cpp" />
+    <ClCompile Include="..\..\src\float_node_output.cpp" />
+    <ClCompile Include="..\..\src\node.cpp" />
+    <ClCompile Include="..\..\src\node_output.cpp" />
+    <ClCompile Include="..\..\src\node_program.cpp" />
+    <ClCompile Include="..\..\src\node_type.cpp" />
+    <ClCompile Include="..\..\src\path.cpp" />
+    <ClCompile Include="..\..\src\sdl_attribute.cpp" />
+    <ClCompile Include="..\..\src\sdl_attribute_definition.cpp" />
+    <ClCompile Include="..\..\src\sdl_attribute_definition_list.cpp" />
+    <ClCompile Include="..\..\src\sdl_attribute_list.cpp" />
+    <ClCompile Include="..\..\src\sdl_binary_operator.cpp" />
+    <ClCompile Include="..\..\src\sdl_compilation_error.cpp" />
+    <ClCompile Include="..\..\src\sdl_compilation_unit.cpp" />
+    <ClCompile Include="..\..\src\sdl_compiler.cpp" />
+    <ClCompile Include="..\..\src\sdl_context_tree.cpp" />
+    <ClCompile Include="..\..\src\sdl_error_list.cpp" />
+    <ClCompile Include="..\..\src\sdl_generator.cpp" />
+    <ClCompile Include="..\..\src\sdl_generic_value.cpp" />
+    <ClCompile Include="..\..\src\sdl_import_statement.cpp" />
+    <ClCompile Include="..\..\src\sdl_input_connection.cpp" />
+    <ClCompile Include="..\..\src\sdl_node.cpp" />
+    <ClCompile Include="..\..\src\sdl_node_definition.cpp" />
+    <ClCompile Include="..\..\src\sdl_parser_structure.cpp" />
+    <ClCompile Include="..\..\src\sdl_unary_operator.cpp" />
+    <ClCompile Include="..\..\src\sdl_value.cpp" />
+    <ClCompile Include="..\..\src\single_float_node_output.cpp" />
+    <ClCompile Include="..\..\src\single_string_node_output.cpp" />
+    <ClCompile Include="..\..\src\standard_allocator.cpp" />
+    <ClCompile Include="..\..\src\string_node_output.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\flex-bison\scanner.l" />
+    <None Include="..\..\flex-bison\specification.y" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

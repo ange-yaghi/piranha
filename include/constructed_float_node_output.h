@@ -12,10 +12,7 @@ namespace piranha {
 		ConstructedFloatNodeOutput();
 		virtual ~ConstructedFloatNodeOutput();
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-		virtual void discreteSample2D(int x, int y, void *target) const;
 		virtual void fullCompute(void *target) const;
-
 		virtual void registerInputs();
 
 		pNodeInput *getInputConnection() { return &m_input; }

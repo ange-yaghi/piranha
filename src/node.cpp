@@ -1,7 +1,6 @@
 #include <node.h>
 
 #include <node_output.h>
-#include <stack_allocator.h>
 #include <node_program.h>
 
 piranha::Node::Node() {
@@ -45,22 +44,15 @@ void piranha::Node::evaluate() {
 		}
 	}
 
+	/*
 	if (requiresMaterials()) {
 		getProgram()
 			->getMaterialManager()
 			->evaluateAllMaterialNodes();
-	}
+	}*/
 
 	// Node can now self-evaluate
 	_evaluate();
-
-	// All dependencies are evaluated so outputs can now determine their
-	// dimensions
-	int outputCount = getOutputCount();
-	for (int i = 0; i < outputCount; i++) {
-		NodeOutput *node = m_outputs[i].output;
-		node->evaluateDimensions();
-	}
 
 	int outputReferenceCount = getOutputReferenceCount();
 	for (int i = 0; i < outputReferenceCount; i++) {
@@ -74,17 +66,6 @@ void piranha::Node::destroy() {
 	m_evaluated = false;
 
 	_destroy();
-}
-
-void piranha::Node::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
-	memset(memory, 0, sizeof(NodeSessionMemory));
-}
-
-void piranha::Node::destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
-	if (memory->extraMemory != nullptr) {
-		stackAllocator->free(memory->extraMemory);
-		memory->extraMemory = nullptr;
-	}
 }
 
 void piranha::Node::connectInput(pNodeInput input, const std::string &name) {

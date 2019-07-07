@@ -40,8 +40,6 @@ namespace piranha {
 		Node();
 		virtual ~Node();
 
-		void destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
-
 		void initialize();
 		void evaluate();
 		void destroy();
@@ -73,11 +71,6 @@ namespace piranha {
 		// Context dependencies
 		virtual bool isMaterial() const { return false; }
 		virtual bool requiresMaterials() const { return false; }
-
-		// Main Interface
-	public:
-		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
-			NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
 	protected:
 		virtual void _initialize();

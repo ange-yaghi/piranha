@@ -8,26 +8,12 @@ piranha::ConstructedStringNodeOutput::~ConstructedStringNodeOutput() {
 	/* void */
 }
 
-void piranha::ConstructedStringNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
-	(void)surfaceInteraction;
-
-	std::string *target = reinterpret_cast<std::string *>(_target);
+void piranha::ConstructedStringNodeOutput::fullCompute(void *_target) const {
 	std::string value;
-
-	m_stringInput->sample(surfaceInteraction, (void *)&value);
-
+	m_stringInput->fullCompute((void *)&value);
+	
+	std::string *target = reinterpret_cast<std::string *>(_target);
 	*target = value;
-}
-
-void piranha::ConstructedStringNodeOutput::discreteSample2D(int x, int y, void *target) const {
-	(void)x;
-	(void)y;
-
-	sample(nullptr, target);
-}
-
-void piranha::ConstructedStringNodeOutput::fullCompute(void *target) const {
-	sample(nullptr, target);
 }
 
 void piranha::ConstructedStringNodeOutput::registerInputs() {

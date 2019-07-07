@@ -17,8 +17,6 @@ namespace piranha {
 		virtual ~FloatNodeOutput() {
 			/* void */
 		}
-
-		virtual void fullCompute(void *target) const;
 	};
 
 } /* namespace piranha */
