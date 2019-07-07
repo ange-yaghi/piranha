@@ -26,11 +26,11 @@
 #include <kd_tree_node.h>
 #include <node_program.h>
 
-manta::SdlNode::SdlNode() {
+piranha::SdlNode::SdlNode() {
 	/* void */
 }
 
-manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_string &name, 
+piranha::SdlNode::SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_string &name, 
 			SdlAttributeList *attributes, const SdlTokenInfo_string &library) {
 	m_type = type;
 	m_name = name;
@@ -45,7 +45,7 @@ manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_stri
 	m_definition = nullptr;
 }
 
-manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attributes,
+piranha::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attributes,
 			const SdlTokenInfo_string &library) {
 	m_type = type;
 	m_name = SdlTokenInfo_string("");
@@ -57,16 +57,16 @@ manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attri
 	registerComponent(attributes);
 }
 
-manta::SdlNode::~SdlNode() {
+piranha::SdlNode::~SdlNode() {
 	/* void */
 }
 
-void manta::SdlNode::setAttributes(SdlAttributeList *list) {
+void piranha::SdlNode::setAttributes(SdlAttributeList *list) {
 	m_attributes = list;
 	registerComponent(list);
 }
 
-manta::SdlAttribute *manta::SdlNode::getAttribute(const std::string &name, int *count) const {
+piranha::SdlAttribute *piranha::SdlNode::getAttribute(const std::string &name, int *count) const {
 	if (m_attributes == nullptr) return nullptr;
 
 	if (count != nullptr) *count = 0;
@@ -87,14 +87,14 @@ manta::SdlAttribute *manta::SdlNode::getAttribute(const std::string &name, int *
 	return result;
 }
 
-void manta::SdlNode::setParentScope(SdlParserStructure *parentScope) {
+void piranha::SdlNode::setParentScope(SdlParserStructure *parentScope) {
 	SdlParserStructure::setParentScope(parentScope);
 	if (m_attributes != nullptr) {
 		m_attributes->setParentScope(parentScope);
 	}
 }
 
-manta::SdlAttribute *manta::SdlNode::getAttribute(SdlAttributeDefinition *definition, int *count) const {
+piranha::SdlAttribute *piranha::SdlNode::getAttribute(SdlAttributeDefinition *definition, int *count) const {
 	if (m_attributes == nullptr) return nullptr;
 
 	if (count != nullptr) *count = 0;
@@ -112,7 +112,7 @@ manta::SdlAttribute *manta::SdlNode::getAttribute(SdlAttributeDefinition *defini
 	return result;
 }
 
-manta::SdlParserStructure *manta::SdlNode::resolveLocalName(const std::string &name) const {
+piranha::SdlParserStructure *piranha::SdlNode::resolveLocalName(const std::string &name) const {
 	SdlParserStructure *attribute = getAttribute(name);
 	if (attribute != nullptr) return attribute;
 	
@@ -120,12 +120,12 @@ manta::SdlParserStructure *manta::SdlNode::resolveLocalName(const std::string &n
 	else return nullptr;
 }
 
-void manta::SdlNode::_resolveDefinitions() {
+void piranha::SdlNode::_resolveDefinitions() {
 	resolveNodeDefinition();
 	resolveAttributeDefinitions();
 }
 
-void manta::SdlNode::_validate() {
+void piranha::SdlNode::_validate() {
 	SdlAttributeList *attributes = m_attributes;
 	SdlCompilationUnit *unit = getParentUnit();
 
@@ -185,7 +185,7 @@ void manta::SdlNode::_validate() {
 	}
 }
 
-void manta::SdlNode::_checkInstantiation() {
+void piranha::SdlNode::_checkInstantiation() {
 	// Check all references relating to the connection of inputs from this
 	// node to the actual definition.
 	SdlContextTree *parentContext = new SdlContextTree(nullptr);
@@ -204,7 +204,7 @@ void manta::SdlNode::_checkInstantiation() {
 	}
 }
 
-void manta::SdlNode::resolveNodeDefinition() {
+void piranha::SdlNode::resolveNodeDefinition() {
 	int definitionCount = 0;
 	SdlNodeDefinition *definition = nullptr;
 	SdlCompilationUnit *unit = getParentUnit();
@@ -236,7 +236,7 @@ void manta::SdlNode::resolveNodeDefinition() {
 	}
 }
 
-void manta::SdlNode::resolveAttributeDefinitions() {
+void piranha::SdlNode::resolveAttributeDefinitions() {
 	if (m_definition == nullptr) {
 		// The definition wasn't found so resolving any attributes doesn't make sense
 		return;
@@ -295,7 +295,7 @@ void manta::SdlNode::resolveAttributeDefinitions() {
 	}
 }
 
-manta::Node *manta::SdlNode::generateNode(SdlContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgram *program) {
 	SdlContextTree *newContext;
 	SdlContextTree *parentContext = context;
 	if (parentContext == nullptr) {
@@ -450,7 +450,7 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context, NodeProgram *
 	return newNode;
 }
 
-manta::SdlNode::NodeTableEntry *manta::SdlNode::getTableEntry(SdlContextTree *context) {
+piranha::SdlNode::NodeTableEntry *piranha::SdlNode::getTableEntry(SdlContextTree *context) {
 	int entryCount = (int)m_nodeTable.size();
 	for (int i = 0; i < entryCount; i++) {
 		if (m_nodeTable[i]->context->isEqual(context)) {
@@ -461,7 +461,7 @@ manta::SdlNode::NodeTableEntry *manta::SdlNode::getTableEntry(SdlContextTree *co
 	return nullptr;
 }
 
-manta::SdlNode::NodeTableEntry *manta::SdlNode::newTableEntry(SdlContextTree *context) {
+piranha::SdlNode::NodeTableEntry *piranha::SdlNode::newTableEntry(SdlContextTree *context) {
 	NodeTableEntry *newEntry = new NodeTableEntry();
 	newEntry->context = context;
 	newEntry->generatedNode = nullptr;
@@ -471,7 +471,7 @@ manta::SdlNode::NodeTableEntry *manta::SdlNode::newTableEntry(SdlContextTree *co
 	return newEntry;
 }
 
-manta::SdlValue *manta::SdlNode::getDefaultOutputValue() {
+piranha::SdlValue *piranha::SdlNode::getDefaultOutputValue() {
 	auto definition = m_definition;
 	if (definition == nullptr) return nullptr;
 
@@ -487,7 +487,7 @@ manta::SdlValue *manta::SdlNode::getDefaultOutputValue() {
 	return defaultValue->getAsValue();
 }
 
-void manta::SdlNode::writeTraceToFile(std::ofstream &file) {
+void piranha::SdlNode::writeTraceToFile(std::ofstream &file) {
 	SdlContextTree *parentContext = new SdlContextTree(nullptr);
 	SdlContextTree *thisContext = parentContext->newChild(this);
 
@@ -500,7 +500,7 @@ void manta::SdlNode::writeTraceToFile(std::ofstream &file) {
 	}
 }
 
-void manta::SdlNode::checkReferences(SdlContextTree *inputContext) {
+void piranha::SdlNode::checkReferences(SdlContextTree *inputContext) {
 	SdlContextTree *thisContext = inputContext->newChild(this, false);
 	SdlAttributeList *attributes = getAttributes();
 

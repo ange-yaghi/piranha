@@ -5,7 +5,7 @@
 
 #include <sdl_token_info.h>
 
-namespace manta {
+namespace piranha {
 
 	class SdlValue;
 	class SdlInputConnection;
@@ -70,6 +70,6 @@ namespace manta {
 		SdlNodeDefinition *m_typeDefinition;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_ATTRIBUTE_DEFINITION_H */

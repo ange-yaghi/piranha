@@ -2,22 +2,22 @@
 
 #include <sdl_attribute_definition.h>
 
-manta::SdlAttributeDefinitionList::SdlAttributeDefinitionList() {
+piranha::SdlAttributeDefinitionList::SdlAttributeDefinitionList() {
 	/* void */
 }
 
-manta::SdlAttributeDefinitionList::~SdlAttributeDefinitionList() {
+piranha::SdlAttributeDefinitionList::~SdlAttributeDefinitionList() {
 	/* void */
 }
 
-void manta::SdlAttributeDefinitionList::addDefinition(SdlAttributeDefinition *definition) {
+void piranha::SdlAttributeDefinitionList::addDefinition(SdlAttributeDefinition *definition) {
 	if (definition != nullptr) {
 		m_definitions.push_back(definition);
 		registerComponent(definition);
 	}
 }
 
-manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getDefinition(int index, SdlAttributeDefinition::DIRECTION direction) const {
+piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getDefinition(int index, SdlAttributeDefinition::DIRECTION direction) const {
 	int totalCount = getDefinitionCount();
 	int inputIndex = 0;
 	for (int i = 0; i < totalCount; i++) {
@@ -34,11 +34,11 @@ manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getDefinition(
 	return nullptr;
 }
 
-manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getInputDefinition(int index) const {
+piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getInputDefinition(int index) const {
 	return getDefinition(index, SdlAttributeDefinition::INPUT);
 }
 
-int manta::SdlAttributeDefinitionList::getCount(SdlAttributeDefinition::DIRECTION direction) const {
+int piranha::SdlAttributeDefinitionList::getCount(SdlAttributeDefinition::DIRECTION direction) const {
 	int totalCount = getDefinitionCount();
 	int inputs = 0;
 	for (int i = 0; i < totalCount; i++) {
@@ -51,19 +51,19 @@ int manta::SdlAttributeDefinitionList::getCount(SdlAttributeDefinition::DIRECTIO
 	return inputs;
 }
 
-int manta::SdlAttributeDefinitionList::getInputCount() const {
+int piranha::SdlAttributeDefinitionList::getInputCount() const {
 	return getCount(SdlAttributeDefinition::INPUT);
 }
 
-int manta::SdlAttributeDefinitionList::getOutputCount() const {
+int piranha::SdlAttributeDefinitionList::getOutputCount() const {
 	return getCount(SdlAttributeDefinition::OUTPUT);
 }
 
-manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getOutputDefinition(int index) const {
+piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getOutputDefinition(int index) const {
 	return getDefinition(index, SdlAttributeDefinition::OUTPUT);
 }
 
-manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getOutputDefinition(const std::string &name) const {
+piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getOutputDefinition(const std::string &name) const {
 	int totalCount = getDefinitionCount();
 	int inputs = 0;
 	for (int i = 0; i < totalCount; i++) {
@@ -76,7 +76,7 @@ manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getOutputDefin
 	return nullptr;
 }
 
-manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getDefaultOutput() const {
+piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getDefaultOutput() const {
 	SdlAttributeDefinition *firstOutput = nullptr;
 
 	int totalCount = getDefinitionCount();

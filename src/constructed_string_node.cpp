@@ -1,29 +1,29 @@
 #include <constructed_string_node.h>
 
-manta::ConstructedStringNode::ConstructedStringNode() {
+piranha::ConstructedStringNode::ConstructedStringNode() {
 	/* void */
 }
 
-manta::ConstructedStringNode::~ConstructedStringNode() {
+piranha::ConstructedStringNode::~ConstructedStringNode() {
 	/* void */
 }
 
-void manta::ConstructedStringNode::_initialize() {
+void piranha::ConstructedStringNode::_initialize() {
 	m_output.initialize();
 }
 
-void manta::ConstructedStringNode::_evaluate() {
+void piranha::ConstructedStringNode::_evaluate() {
 	/* void */
 }
 
-void manta::ConstructedStringNode::_destroy() {
+void piranha::ConstructedStringNode::_destroy() {
 	/* void */
 }
 
-void manta::ConstructedStringNode::registerOutputs() {
+void piranha::ConstructedStringNode::registerOutputs() {
 	setPrimaryOutput(&m_output);
 }
 
-void manta::ConstructedStringNode::registerInputs() {
+void piranha::ConstructedStringNode::registerInputs() {
 	registerInput(m_output.getStringConnection(), "__in");
 }

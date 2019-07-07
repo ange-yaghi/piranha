@@ -2,12 +2,12 @@
 #define NODE_OUTPUT_H
 
 #include <node_type.h>
-#include <manta_math.h>
+#include <piranha_math.h>
 
 #include <string>
 #include <vector>
 
-namespace manta {
+namespace piranha {
 
 	struct IntersectionPoint;
 	class Node;
@@ -85,6 +85,6 @@ namespace manta {
 	// Type to reduce confusion
 	typedef NodeOutput * pNodeInput;
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* NODE_OUTPUT_H */

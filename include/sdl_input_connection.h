@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace manta {
+namespace piranha {
 
 	class SdlAttributeDefinition;
 
@@ -25,6 +25,6 @@ namespace manta {
 		SdlAttributeDefinition *m_inputAttribute;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_INPUT_CONNECTION_H */

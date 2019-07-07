@@ -6,7 +6,7 @@
 #include <sdl_token_info.h>
 #include <sdl_structure_list.h>
 
-namespace manta {
+namespace piranha {
 
 	class SdlAttributeDefinitionList;
 	class SdlAttributeDefinition;
@@ -61,6 +61,6 @@ namespace manta {
 		virtual void _checkInstantiation();
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_NODE_DEFINITION_H */

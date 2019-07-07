@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace manta {
+namespace piranha {
 
 	template <typename T>
 	class SdlStructureList : public SdlParserStructure {
@@ -25,6 +25,6 @@ namespace manta {
 
 	typedef SdlStructureList<SdlNode> SdlNodeList;
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_STRUCTURE_LIST_H */

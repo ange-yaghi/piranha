@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace manta {
+namespace piranha {
 
 	class SdlCompilationError;
 
@@ -22,6 +22,6 @@ namespace manta {
 		std::vector<SdlCompilationError *> m_compilationErrors;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_ERROR_LIST_H */

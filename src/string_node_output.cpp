@@ -2,12 +2,12 @@
 
 #include <string>
 
-const manta::NodeType manta::StringNodeOutput::StringType("StringNodeType");
+const piranha::NodeType piranha::StringNodeOutput::StringType("StringNodeType");
 
-manta::StringNodeOutput::StringNodeOutput() : NodeOutput(&StringType) {
+piranha::StringNodeOutput::StringNodeOutput() : NodeOutput(&StringType) {
 	/* void */
 }
 
-manta::StringNodeOutput::~StringNodeOutput() {
+piranha::StringNodeOutput::~StringNodeOutput() {
 	/* void */
 }

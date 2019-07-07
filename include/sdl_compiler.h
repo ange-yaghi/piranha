@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 
-namespace manta {
+namespace piranha {
 
 	class SdlCompilationUnit;
 
@@ -49,6 +49,6 @@ namespace manta {
 		std::vector<SdlPath> m_searchPaths;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_COMPILER_H */

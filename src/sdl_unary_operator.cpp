@@ -5,18 +5,18 @@
 #include <node.h>
 #include <sdl_context_tree.h>
 
-manta::SdlUnaryOperator::SdlUnaryOperator(OPERATOR op, SdlValue *operand) : SdlValue(SdlValue::UNARY_OPERATION) {
+piranha::SdlUnaryOperator::SdlUnaryOperator(OPERATOR op, SdlValue *operand) : SdlValue(SdlValue::UNARY_OPERATION) {
 	m_operand = operand;
 	m_operator = op;
 
 	registerComponent(operand);
 }
 
-manta::SdlUnaryOperator::~SdlUnaryOperator() {
+piranha::SdlUnaryOperator::~SdlUnaryOperator() {
 	/* void */
 }
 
-manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+piranha::SdlParserStructure *piranha::SdlUnaryOperator::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	SDL_RESET(query);
 
 	SdlReferenceInfo basicInfo;
@@ -69,7 +69,7 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const 
 	return nullptr;
 }
 
-manta::NodeOutput *manta::SdlUnaryOperator::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::SdlUnaryOperator::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 	SdlValue *resolvedOperand = m_operand;
 
 	if (resolvedOperand == nullptr) return nullptr;
@@ -85,7 +85,7 @@ manta::NodeOutput *manta::SdlUnaryOperator::_generateNodeOutput(SdlContextTree *
 	return nullptr;
 }
 
-manta::Node *manta::SdlUnaryOperator::_generateNode(SdlContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::SdlUnaryOperator::_generateNode(SdlContextTree *context, NodeProgram *program) {
 	SdlValue *resolvedOperand = m_operand;
 
 	if (resolvedOperand == nullptr) return nullptr;

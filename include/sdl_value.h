@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace manta {
+namespace piranha {
 
 	class SdlAttribute;
 	class NodeOutput;
@@ -63,6 +63,6 @@ namespace manta {
 		std::vector<GenerationTableEntry> m_generationTable;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_VALUE_H */

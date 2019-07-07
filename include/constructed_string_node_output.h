@@ -3,7 +3,7 @@
 
 #include <string_node_output.h>
 
-namespace manta {
+namespace piranha {
 
 	class ConstructedStringNodeOutput : public StringNodeOutput {
 	public:
@@ -23,6 +23,6 @@ namespace manta {
 		pNodeInput m_stringInput;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* CONSTRUCTED_VECTOR_NODE_OUTPUT_H */

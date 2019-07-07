@@ -2,15 +2,15 @@
 
 #include <sdl_attribute.h>
 
-manta::SdlAttributeList::SdlAttributeList() {
+piranha::SdlAttributeList::SdlAttributeList() {
 	/* void */
 }
 
-manta::SdlAttributeList::~SdlAttributeList() {
+piranha::SdlAttributeList::~SdlAttributeList() {
 	/* void */
 }
 
-void manta::SdlAttributeList::addAttribute(SdlAttribute *attribute) {
+void piranha::SdlAttributeList::addAttribute(SdlAttribute *attribute) {
 	if (attribute != nullptr) {
 		int index = getAttributeCount();
 
@@ -21,7 +21,7 @@ void manta::SdlAttributeList::addAttribute(SdlAttribute *attribute) {
 	}
 }
 
-manta::SdlAttribute *manta::SdlAttributeList::getAttribute(SdlAttributeDefinition *definition) const {
+piranha::SdlAttribute *piranha::SdlAttributeList::getAttribute(SdlAttributeDefinition *definition) const {
 	int attributeCount = getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
 		SdlAttribute *attribute = getAttribute(i);

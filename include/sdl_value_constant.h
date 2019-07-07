@@ -13,7 +13,7 @@
 #include <standard_allocator.h>
 #include <node.h>
 
-namespace manta {
+namespace piranha {
 
 	class SdlNode;
 
@@ -161,6 +161,6 @@ namespace manta {
 	typedef SdlValueConstant<double, SdlValue::CONSTANT_FLOAT> SdlValueFloat;
 	typedef SdlValueConstant<bool, SdlValue::CONSTANT_BOOL> SdlValueBool;
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_VALUE_CONSTANT_H */

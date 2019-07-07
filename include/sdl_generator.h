@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace manta {
+namespace piranha {
 
 	class Node;
 	class SdlNode;
@@ -26,6 +26,6 @@ namespace manta {
 		Node *generateNode(SdlNode *reference) const;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_GENERATOR_H */

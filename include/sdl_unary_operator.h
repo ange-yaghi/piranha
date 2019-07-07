@@ -3,7 +3,7 @@
 
 #include <sdl_value.h>
 
-namespace manta {
+namespace piranha {
 
 	class SdlCompilationError;
 
@@ -33,7 +33,7 @@ namespace manta {
 		virtual Node *_generateNode(SdlContextTree *context, NodeProgram *program);
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_UNARY_OPERATOR_H */
 

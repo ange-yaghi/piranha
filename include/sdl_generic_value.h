@@ -3,7 +3,7 @@
 
 #include <sdl_value.h>
 
-namespace manta {
+namespace piranha {
 
 	class SdlNodeDefinition;
 
@@ -29,6 +29,6 @@ namespace manta {
 		SdlNodeDefinition *m_typeDefinition;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_GENERIC_VALUE_H */

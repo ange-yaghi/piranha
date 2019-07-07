@@ -3,7 +3,7 @@
 
 #include <node_output.h>
 
-namespace manta {
+namespace piranha {
 
 	class FloatNodeOutput: public NodeOutput {
 	protected:
@@ -21,6 +21,6 @@ namespace manta {
 		virtual void fullCompute(void *target) const;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* FLOAT_NODE_OUTPUT_H */

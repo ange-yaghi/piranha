@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace manta {
+namespace piranha {
 
 	class SdlNode;
 	class SdlAttributeDefinition;
@@ -41,6 +41,6 @@ namespace manta {
 		std::vector<SdlContextTree *> m_children;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_CONTEXT_TREE_H */

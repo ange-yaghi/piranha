@@ -8,7 +8,7 @@
 #include <vector>
 #include <fstream>
 
-namespace manta {
+namespace piranha {
 
 	class SdlAttributeList;
 	class SdlNodeDefinition;
@@ -89,6 +89,6 @@ namespace manta {
 		std::vector<NodeTableEntry *> m_nodeTable;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_NODE_H */

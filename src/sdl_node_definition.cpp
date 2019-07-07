@@ -8,7 +8,7 @@
 #include <sdl_value.h>
 #include <sdl_context_tree.h>
 
-manta::SdlNodeDefinition::SdlNodeDefinition(const SdlTokenInfo_string &name) {
+piranha::SdlNodeDefinition::SdlNodeDefinition(const SdlTokenInfo_string &name) {
 	m_name = name;
 	registerToken(&name);
 
@@ -16,26 +16,26 @@ manta::SdlNodeDefinition::SdlNodeDefinition(const SdlTokenInfo_string &name) {
 	setDefaultVisibility(SdlVisibility::PUBLIC);
 }
 
-manta::SdlNodeDefinition::~SdlNodeDefinition() {
+piranha::SdlNodeDefinition::~SdlNodeDefinition() {
 	/* void */
 }
 
-void manta::SdlNodeDefinition::setBuiltinName(const SdlTokenInfo_string &builtinName) {
+void piranha::SdlNodeDefinition::setBuiltinName(const SdlTokenInfo_string &builtinName) {
 	m_builtinName = builtinName;
 	registerToken(&m_builtinName);
 }
 
-void manta::SdlNodeDefinition::setAttributeDefinitionList(SdlAttributeDefinitionList *definitions) {
+void piranha::SdlNodeDefinition::setAttributeDefinitionList(SdlAttributeDefinitionList *definitions) {
 	m_attributes = definitions;
 	registerComponent(definitions);
 }
 
-void manta::SdlNodeDefinition::setScopeToken(const SdlTokenInfo_string &scopeToken) {
+void piranha::SdlNodeDefinition::setScopeToken(const SdlTokenInfo_string &scopeToken) {
 	m_scopeToken = scopeToken;
 	registerToken(&scopeToken);
 }
 
-manta::SdlAttributeDefinition *manta::SdlNodeDefinition::getAttributeDefinition(const std::string &attributeName) const {
+piranha::SdlAttributeDefinition *piranha::SdlNodeDefinition::getAttributeDefinition(const std::string &attributeName) const {
 	if (m_attributes == nullptr) return nullptr;
 
 	int attributeCount = m_attributes->getDefinitionCount();
@@ -51,12 +51,12 @@ manta::SdlAttributeDefinition *manta::SdlNodeDefinition::getAttributeDefinition(
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlNodeDefinition::resolveName(const std::string &name) const {
+piranha::SdlParserStructure *piranha::SdlNodeDefinition::resolveName(const std::string &name) const {
 	// Node definitions are not able to see variables outside of themselves for now
 	return resolveLocalName(name);
 }
 
-int manta::SdlNodeDefinition::countSymbolIncidence(const std::string &name) const {
+int piranha::SdlNodeDefinition::countSymbolIncidence(const std::string &name) const {
 	if (name.empty()) return 0;
 
 	int count = 0;
@@ -84,7 +84,7 @@ int manta::SdlNodeDefinition::countSymbolIncidence(const std::string &name) cons
 	return count;
 }
 
-manta::SdlParserStructure *manta::SdlNodeDefinition::resolveLocalName(const std::string &name) const {
+piranha::SdlParserStructure *piranha::SdlNodeDefinition::resolveLocalName(const std::string &name) const {
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {
@@ -109,7 +109,7 @@ manta::SdlParserStructure *manta::SdlNodeDefinition::resolveLocalName(const std:
 	return nullptr;
 }
 
-void manta::SdlNodeDefinition::_validate() {
+void piranha::SdlNodeDefinition::_validate() {
 	SdlCompilationUnit *unit = getParentUnit();
 
 	// Check that no symbol is used more than once
@@ -163,7 +163,7 @@ void manta::SdlNodeDefinition::_validate() {
 	}
 }
 
-void manta::SdlNodeDefinition::_checkInstantiation() {
+void piranha::SdlNodeDefinition::_checkInstantiation() {
 	SdlContextTree *mainContext = new SdlContextTree(nullptr, true);
 	checkReferences(mainContext);
 }

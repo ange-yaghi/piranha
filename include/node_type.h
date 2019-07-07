@@ -3,7 +3,7 @@
 
 #include <cstring>
 
-namespace manta {
+namespace piranha {
 
 	class NodeType {
 	public:
@@ -28,6 +28,6 @@ namespace manta {
 		const char *m_typeString;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* NODE_TYPE_H */

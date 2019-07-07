@@ -5,7 +5,7 @@
 
 #include <constructed_string_node_output.h>
 
-namespace manta {
+namespace piranha {
 
 	class ConstructedStringNode : public Node {
 	public:
@@ -24,6 +24,6 @@ namespace manta {
 		ConstructedStringNodeOutput m_output;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* CONSTRUCTED_STRING_NODE_H */

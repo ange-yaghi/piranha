@@ -4,15 +4,15 @@
 #include <sdl_import_statement.h>
 #include <sdl_compilation_error.h>
 
-manta::SdlCompiler::SdlCompiler() {
+piranha::SdlCompiler::SdlCompiler() {
 	/* void */
 }
 
-manta::SdlCompiler::~SdlCompiler() {
+piranha::SdlCompiler::~SdlCompiler() {
 	/* void */
 }
 
-manta::SdlCompilationUnit *manta::SdlCompiler::analyze(const SdlPath &scriptPath) {
+piranha::SdlCompilationUnit *piranha::SdlCompiler::analyze(const SdlPath &scriptPath) {
 	SdlCompilationUnit *newUnit = getUnit(scriptPath);
 	Path rootDir;
 	scriptPath.getParentPath(&rootDir);
@@ -75,7 +75,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::analyze(const SdlPath &scriptPath
 	return newUnit;
 }
 
-manta::SdlCompilationUnit *manta::SdlCompiler::compile(const SdlPath &scriptPath) {
+piranha::SdlCompilationUnit *piranha::SdlCompiler::compile(const SdlPath &scriptPath) {
 	SdlCompilationUnit *topLevel = analyze(scriptPath);
 
 	// Expansion step
@@ -90,7 +90,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::compile(const SdlPath &scriptPath
 	return topLevel;
 }
 
-manta::SdlCompilationUnit *manta::SdlCompiler::getUnit(const SdlPath &scriptPath) const {
+piranha::SdlCompilationUnit *piranha::SdlCompiler::getUnit(const SdlPath &scriptPath) const {
 	int nUnits = (int)m_units.size();
 
 	for (int i = 0; i < nUnits; i++) {
@@ -103,11 +103,11 @@ manta::SdlCompilationUnit *manta::SdlCompiler::getUnit(const SdlPath &scriptPath
 	return nullptr;
 }
 
-void manta::SdlCompiler::addSearchPath(const SdlPath &path) {
+void piranha::SdlCompiler::addSearchPath(const SdlPath &path) {
 	m_searchPaths.push_back(path);
 }
 
-bool manta::SdlCompiler::resolvePath(const SdlPath &path, SdlPath *target) const {
+bool piranha::SdlCompiler::resolvePath(const SdlPath &path, SdlPath *target) const {
 	if (path.exists()) {
 		*target = path;
 		return true;
@@ -126,18 +126,18 @@ bool manta::SdlCompiler::resolvePath(const SdlPath &path, SdlPath *target) const
 	return false;
 }
 
-bool manta::SdlCompiler::isPathEquivalent(const SdlPath &a, const SdlPath &b) const {
+bool piranha::SdlCompiler::isPathEquivalent(const SdlPath &a, const SdlPath &b) const {
 	return (a == b);
 }
 
-bool manta::SdlCompiler::hasEnding(std::string const &fullString, std::string const &ending) {
+bool piranha::SdlCompiler::hasEnding(std::string const &fullString, std::string const &ending) {
 	if (fullString.length() >= ending.length()) {
 		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
 	}
 	else return false;
 }
 
-void manta::SdlCompiler::expand() {
+void piranha::SdlCompiler::expand() {
 	int unitCount = getUnitCount();
 	for (int i = 0; i < unitCount; i++) {
 		SdlCompilationUnit *unit = m_units[i];
@@ -145,7 +145,7 @@ void manta::SdlCompiler::expand() {
 	}
 }
 
-void manta::SdlCompiler::resolve() {
+void piranha::SdlCompiler::resolve() {
 	int unitCount = getUnitCount();
 	for (int i = 0; i < unitCount; i++) {
 		SdlCompilationUnit *unit = m_units[i];
@@ -154,7 +154,7 @@ void manta::SdlCompiler::resolve() {
 	}
 }
 
-void manta::SdlCompiler::validate() {
+void piranha::SdlCompiler::validate() {
 	int unitCount = getUnitCount();
 	for (int i = 0; i < unitCount; i++) {
 		SdlCompilationUnit *unit = m_units[i];

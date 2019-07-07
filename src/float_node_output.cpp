@@ -2,9 +2,9 @@
 
 #include <vector_map_2d.h>
 
-const manta::NodeType manta::FloatNodeOutput::FloatType("FloatNodeType");
+const piranha::NodeType piranha::FloatNodeOutput::FloatType("FloatNodeType");
 
-void manta::FloatNodeOutput::fullCompute(void *_target) const {
+void piranha::FloatNodeOutput::fullCompute(void *_target) const {
 	VectorMap2D *target = reinterpret_cast<VectorMap2D *>(_target);
 
 	int width, height;
