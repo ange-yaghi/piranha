@@ -1,20 +1,20 @@
-#include <sdl_error_list.h>
+#include "ir_error_list.h"
 
-#include <sdl_compilation_error.h>
+#include "ir_compilation_error.h"
 
-piranha::SdlErrorList::SdlErrorList() {
+piranha::IrErrorList::IrErrorList() {
 	/* void */
 }
 
-piranha::SdlErrorList::~SdlErrorList() {
+piranha::IrErrorList::~IrErrorList() {
 	/* void */
 }
 
-void piranha::SdlErrorList::addCompilationError(SdlCompilationError *err) {
+void piranha::IrErrorList::addCompilationError(IrCompilationError *err) {
 	m_compilationErrors.push_back(err);
 }
 
-void piranha::SdlErrorList::destroy() {
+void piranha::IrErrorList::destroy() {
 	int errorCount = getErrorCount();
 
 	for (int i = 0; i < errorCount; i++) {

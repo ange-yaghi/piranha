@@ -3,8 +3,8 @@
 
 #include <pch.h>
 
-#include <sdl_error_list.h>
-#include <sdl_compilation_error.h>
+#include "ir_error_list.h"
+#include "ir_compilation_error.h"
 
 #include <string>
 
@@ -13,9 +13,9 @@ using namespace piranha;
 #define CMF_PATH "../../../demos/cmfs/"
 #define WORKSPACE_PATH "../../../workspace/"
 #define TMP_PATH (WORKSPACE_PATH "tmp/")
-#define SDL_TEST_FILES "../../../test/sdl/"
+#define IR_TEST_FILES "../../../test/sdl/"
 
-#define CHECK_SDL_POS(parserStructure, _colStart, _colEnd, _lineStart, _lineEnd)	\
+#define CHECK_IR_POS(parserStructure, _colStart, _colEnd, _lineStart, _lineEnd)	\
 	EXPECT_EQ((parserStructure)->getSummaryToken()->colStart,	(_colStart));		\
 	EXPECT_EQ((parserStructure)->getSummaryToken()->colEnd,		(_colEnd));			\
 	EXPECT_EQ((parserStructure)->getSummaryToken()->lineStart,	(_lineStart));		\
@@ -30,7 +30,7 @@ using namespace piranha;
 	EXPECT_EQ((error)->getErrorCode().code, code_.code);	\
 	EXPECT_EQ((error)->getErrorLocation()->lineStart, line);
 
-bool findError(const SdlErrorList *errorList, const SdlErrorCode_struct &errorCode,
-	int line = -1, const SdlCompilationUnit *unit = nullptr, bool instantiationError = false);
+bool findError(const IrErrorList *errorList, const IrErrorCode_struct &errorCode,
+	int line = -1, const IrCompilationUnit *unit = nullptr, bool instantiationError = false);
 
 #endif /* TEST_UTILITIES_H */

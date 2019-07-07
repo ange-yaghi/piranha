@@ -1,10 +1,10 @@
-#include <sdl_input_connection.h>
+#include "ir_input_connection.h"
 
-piranha::SdlInputConnection::SdlInputConnection() {
+piranha::IrInputConnection::IrInputConnection() {
 	m_member = "";
 	m_inputAttribute = nullptr;
 }
 
-piranha::SdlInputConnection::~SdlInputConnection() {
+piranha::IrInputConnection::~IrInputConnection() {
 	/* void */
 }

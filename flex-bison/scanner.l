@@ -5,12 +5,12 @@
 #include <iostream>
 
 /* Implementation of yyFlexScanner */ 
-#include <sdl_scanner.h>
+#include <scanner.h>
 #undef  YY_DECL
-#define YY_DECL int piranha::SdlScanner::yylex( piranha::SdlParser::semantic_type *const lval, piranha::SdlParser::location_type *location)
+#define YY_DECL int piranha::IrScanner::yylex( piranha::IrParser::semantic_type *const lval, piranha::IrParser::location_type *location)
 
 /* using "token" to make the returns for the tokens shorter to type */
-using token = piranha::SdlParser::token;
+using token = piranha::IrParser::token;
 
 /* define yyterminate as this instead of NULL */
 #define yyterminate() return( token::END )
@@ -33,7 +33,7 @@ using token = piranha::SdlParser::token;
 
 %option debug
 %option nodefault
-%option yyclass="piranha::SdlScanner"
+%option yyclass="piranha::IrScanner"
 %option noyywrap
 %option c++
 
@@ -134,7 +134,7 @@ H				[a-fA-F0-9]
 .				{ BUILD_INVALID(location); return (token::UNRECOGNIZED); }
 %%
 
-void piranha::SdlScanner::comment(void) {
+void piranha::IrScanner::comment(void) {
 	char c, prev = 0;
 	while ((c = yyinput()) != 0) { /* (EOF maps to 0) */
 		countChar(c);
@@ -145,7 +145,7 @@ void piranha::SdlScanner::comment(void) {
 	LexerError("unterminated comment");
 }
 
-void piranha::SdlScanner::count() {
+void piranha::IrScanner::count() {
 	step();
 
 	for (int i = 0; yytext[i] != '\0'; i++) {
@@ -154,7 +154,7 @@ void piranha::SdlScanner::count() {
 	}
 }
 
-void piranha::SdlScanner::countChar(char c) {
+void piranha::IrScanner::countChar(char c) {
 	if (c == '\n') {
 		m_loc->lineEnd++;
 		m_loc->colEnd = 1;
@@ -167,7 +167,7 @@ void piranha::SdlScanner::countChar(char c) {
 	}
 }
 
-void piranha::SdlScanner::step() {
+void piranha::IrScanner::step() {
 	m_loc->lineStart = m_loc->lineEnd;
 	m_loc->colStart = m_loc->colEnd;
 }

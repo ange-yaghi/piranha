@@ -1,9 +1,9 @@
-#include <sdl_parser_structure.h>
+#include "ir_parser_structure.h"
 
-#include <sdl_compilation_unit.h>
-#include <sdl_context_tree.h>
+#include "ir_compilation_unit.h"
+#include "ir_context_tree.h"
 
-piranha::SdlParserStructure::SdlReferenceInfo::SdlReferenceInfo() {
+piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
 	newContext = nullptr;
 	err = nullptr;
 
@@ -12,11 +12,11 @@ piranha::SdlParserStructure::SdlReferenceInfo::SdlReferenceInfo() {
 	touchedMainContext = false;
 }
 
-piranha::SdlParserStructure::SdlReferenceInfo::~SdlReferenceInfo() {
+piranha::IrParserStructure::IrReferenceInfo::~IrReferenceInfo() {
 	/* void */
 }
 
-void piranha::SdlParserStructure::SdlReferenceInfo::reset() {
+void piranha::IrParserStructure::IrReferenceInfo::reset() {
 	newContext = nullptr;
 	err = nullptr;
 
@@ -25,17 +25,17 @@ void piranha::SdlParserStructure::SdlReferenceInfo::reset() {
 	touchedMainContext = false;
 }
 
-piranha::SdlParserStructure::SdlReferenceQuery::SdlReferenceQuery() {
+piranha::IrParserStructure::IrReferenceQuery::IrReferenceQuery() {
 	inputContext = nullptr;
 	recordErrors = false;
 }
 
-piranha::SdlParserStructure::SdlReferenceQuery::~SdlReferenceQuery() {
+piranha::IrParserStructure::IrReferenceQuery::~IrReferenceQuery() {
 	/* void */
 }
 
 
-piranha::SdlParserStructure::SdlParserStructure() {
+piranha::IrParserStructure::IrParserStructure() {
 	m_parentScope = nullptr;
 	m_logicalParent = nullptr;
 	m_checkReferences = true;
@@ -43,19 +43,19 @@ piranha::SdlParserStructure::SdlParserStructure() {
 	m_definitionsResolved = false;
 	m_validated = false;
 
-	m_visibility = SdlVisibility::DEFAULT;
-	m_defaultVisibility = SdlVisibility::PRIVATE;
+	m_visibility = IrVisibility::DEFAULT;
+	m_defaultVisibility = IrVisibility::PRIVATE;
 }
 
-piranha::SdlParserStructure::~SdlParserStructure() {
+piranha::IrParserStructure::~IrParserStructure() {
 	/* void */
 }
 
-void piranha::SdlParserStructure::registerToken(const SdlTokenInfo *tokenInfo) {
+void piranha::IrParserStructure::registerToken(const IrTokenInfo *tokenInfo) {
 	if (tokenInfo != nullptr) m_summaryToken.combine(tokenInfo);
 }
 
-void piranha::SdlParserStructure::registerComponent(SdlParserStructure *child) {
+void piranha::IrParserStructure::registerComponent(IrParserStructure *child) {
 	if (child != nullptr) {
 		m_summaryToken.combine(child->getSummaryToken());
 		child->setParentScope(this);
@@ -65,8 +65,8 @@ void piranha::SdlParserStructure::registerComponent(SdlParserStructure *child) {
 	}
 }
 
-piranha::SdlParserStructure *piranha::SdlParserStructure::resolveName(const std::string &name) const {
-	SdlParserStructure *local = resolveLocalName(name);
+piranha::IrParserStructure *piranha::IrParserStructure::resolveName(const std::string &name) const {
+	IrParserStructure *local = resolveLocalName(name);
 	if (local != nullptr) return local;
 	
 	if (m_parentScope != nullptr) {
@@ -76,52 +76,52 @@ piranha::SdlParserStructure *piranha::SdlParserStructure::resolveName(const std:
 	return nullptr;
 }
 
-piranha::SdlParserStructure *piranha::SdlParserStructure::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrParserStructure::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 	return nullptr;
 }
 
-piranha::SdlParserStructure *piranha::SdlParserStructure::getReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-	SDL_RESET(query);
+piranha::IrParserStructure *piranha::IrParserStructure::getReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+	IR_RESET(query);
 
-	SdlReferenceQuery immediateQuery = query;
-	SdlReferenceInfo immediateInfo;
-	SdlParserStructure *immediateReference = getImmediateReference(immediateQuery, &immediateInfo);
+	IrReferenceQuery immediateQuery = query;
+	IrReferenceInfo immediateInfo;
+	IrParserStructure *immediateReference = getImmediateReference(immediateQuery, &immediateInfo);
 
 	if (immediateInfo.failed) {
-		SDL_FAIL();
-		SDL_ERR_OUT(immediateInfo.err);
+		IR_FAIL();
+		IR_ERR_OUT(immediateInfo.err);
 		return nullptr;
 	}
 
 	if (immediateInfo.reachedDeadEnd) {
-		SDL_DEAD_END();
+		IR_DEAD_END();
 		return nullptr;
 	}
 
 	if (immediateReference != nullptr) {
-		SdlReferenceInfo nestedInfo;
-		SdlReferenceQuery nestedQuery;
+		IrReferenceInfo nestedInfo;
+		IrReferenceQuery nestedQuery;
 		nestedQuery.inputContext = immediateInfo.newContext;
 
 		// Error checking is not done on any parent nodes because it's assumed that errors have
 		// already been checked/reported
 		nestedQuery.recordErrors = false;
 
-		SdlParserStructure *fullReference = immediateReference->getReference(nestedQuery, &nestedInfo);
+		IrParserStructure *fullReference = immediateReference->getReference(nestedQuery, &nestedInfo);
 
 		if (nestedInfo.failed) {
-			SDL_FAIL();
-			SDL_ERR_OUT(nestedInfo.err);
+			IR_FAIL();
+			IR_ERR_OUT(nestedInfo.err);
 			return nullptr;
 		}
 
 		if (nestedInfo.reachedDeadEnd) {
-			SDL_DEAD_END();
+			IR_DEAD_END();
 			return nullptr;
 		}
 
-		SDL_INFO_OUT(newContext, nestedInfo.newContext);
-		SDL_INFO_OUT(touchedMainContext, nestedInfo.touchedMainContext || immediateInfo.touchedMainContext);
+		IR_INFO_OUT(newContext, nestedInfo.newContext);
+		IR_INFO_OUT(touchedMainContext, nestedInfo.touchedMainContext || immediateInfo.touchedMainContext);
 		return fullReference;
 	}
 	else {
@@ -129,7 +129,7 @@ piranha::SdlParserStructure *piranha::SdlParserStructure::getReference(const Sdl
 	}
 }
 
-void piranha::SdlParserStructure::resolveDefinitions() {
+void piranha::IrParserStructure::resolveDefinitions() {
 	if (m_definitionsResolved) return;
 
 	// Resolve components
@@ -143,7 +143,7 @@ void piranha::SdlParserStructure::resolveDefinitions() {
 	m_definitionsResolved = true;
 }
 
-void piranha::SdlParserStructure::checkReferences(SdlContextTree *inputContext) {
+void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {
 	// Check components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
@@ -151,12 +151,12 @@ void piranha::SdlParserStructure::checkReferences(SdlContextTree *inputContext) 
 	}
 
 	if (m_checkReferences) {
-		SdlReferenceQuery query;
+		IrReferenceQuery query;
 		query.inputContext = inputContext;
 		query.recordErrors = true;
-		SdlReferenceInfo info;
+		IrReferenceInfo info;
 
-		SdlParserStructure *reference = getReference(query, &info);
+		IrParserStructure *reference = getReference(query, &info);
 
 		if (info.err != nullptr) {
 			getParentUnit()->addCompilationError(info.err);
@@ -164,7 +164,7 @@ void piranha::SdlParserStructure::checkReferences(SdlContextTree *inputContext) 
 	}
 }
 
-void piranha::SdlParserStructure::checkInstantiation() {
+void piranha::IrParserStructure::checkInstantiation() {
 	// Check components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
@@ -174,7 +174,7 @@ void piranha::SdlParserStructure::checkInstantiation() {
 	_checkInstantiation();
 }
 
-void piranha::SdlParserStructure::validate() {
+void piranha::IrParserStructure::validate() {
 	if (m_validated) return;
 
 	// Validate components
@@ -188,7 +188,7 @@ void piranha::SdlParserStructure::validate() {
 	m_validated = true;
 }
 
-void piranha::SdlParserStructure::expand() {
+void piranha::IrParserStructure::expand() {
 	if (m_isExpanded) return;
 
 	// Expand components
@@ -211,15 +211,15 @@ void piranha::SdlParserStructure::expand() {
 	m_isExpanded = true;
 }
 
-void piranha::SdlParserStructure::_validate() {
+void piranha::IrParserStructure::_validate() {
 	/* void */
 }
 
-void piranha::SdlParserStructure::_checkInstantiation() {
+void piranha::IrParserStructure::_checkInstantiation() {
 	/* void */
 }
 
-void piranha::SdlParserStructure::writeReferencesToFile(std::ofstream &file, SdlContextTree *context, int tabLevel) {
+void piranha::IrParserStructure::writeReferencesToFile(std::ofstream &file, IrContextTree *context, int tabLevel) {
 	for (int i = 0; i < tabLevel; i++) {
 		file << " ";
 	}
@@ -233,13 +233,13 @@ void piranha::SdlParserStructure::writeReferencesToFile(std::ofstream &file, Sdl
 
 	file << "[" << m_summaryToken.colStart << "-" << m_summaryToken.colEnd << "]";
 
-	SdlReferenceInfo info;
-	SdlReferenceQuery query;
+	IrReferenceInfo info;
+	IrReferenceQuery query;
 	query.inputContext = context;
 	query.recordErrors = false;
 
-	SdlNode *asNode = getAsNode();
-	SdlParserStructure *immediateReference = getImmediateReference(query, &info);
+	IrNode *asNode = getAsNode();
+	IrParserStructure *immediateReference = getImmediateReference(query, &info);
 
 	if (info.failed) {
 		file << " => "; 
@@ -256,24 +256,24 @@ void piranha::SdlParserStructure::writeReferencesToFile(std::ofstream &file, Sdl
 	}
 }
 
-void piranha::SdlParserStructure::_resolveDefinitions() {
+void piranha::IrParserStructure::_resolveDefinitions() {
 	/* void */
 }
 
-void piranha::SdlParserStructure::_expand() {
+void piranha::IrParserStructure::_expand() {
 	m_expansion = nullptr;
 }
 
-piranha::SdlParserStructure *piranha::SdlParserStructure::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrParserStructure::resolveLocalName(const std::string &name) const {
 	return nullptr;
 }
 
-bool piranha::SdlParserStructure::allowsExternalAccess() const {
-	SdlVisibility visibility = (m_visibility == SdlVisibility::DEFAULT) ? m_defaultVisibility : m_visibility;
-	return visibility == SdlVisibility::PUBLIC;
+bool piranha::IrParserStructure::allowsExternalAccess() const {
+	IrVisibility visibility = (m_visibility == IrVisibility::DEFAULT) ? m_defaultVisibility : m_visibility;
+	return visibility == IrVisibility::PUBLIC;
 }
 
-piranha::SdlCompilationUnit *piranha::SdlParserStructure::getParentUnit() const {
+piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
 	if (m_parentUnit == nullptr) return m_logicalParent->getParentUnit();
 	else return m_parentUnit;
 }

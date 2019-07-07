@@ -1,27 +1,27 @@
-#include <sdl_compilation_error.h>
+#include "ir_compilation_error.h"
 
-#include <sdl_context_tree.h>
-#include <sdl_parser_structure.h>
+#include "ir_context_tree.h"
+#include "ir_parser_structure.h"
 
-piranha::SdlCompilationError::SdlCompilationError(const SdlTokenInfo &location, 
-			const SdlErrorCode_struct &code, SdlContextTree *instantiation) {
+piranha::IrCompilationError::IrCompilationError(const IrTokenInfo &location, 
+			const IrErrorCode_struct &code, IrContextTree *instantiation) {
 	m_errorLocation = location;
 	m_code = code;
 	m_instantiation = instantiation;
 }
 
-piranha::SdlCompilationError::~SdlCompilationError() {
+piranha::IrCompilationError::~IrCompilationError() {
 	/* void */
 }
 
-bool piranha::SdlCompilationError::isInstantiationError() const {
+bool piranha::IrCompilationError::isInstantiationError() const {
 	return (m_instantiation != nullptr && m_instantiation->getContext() != nullptr);
 }
 
 // Error definitions --------------------------------------
 
 // Helper macro
-#define ERR(tag) const piranha::SdlErrorCode_struct piranha::SdlErrorCode::tag
+#define ERR(tag) const piranha::IrErrorCode_struct piranha::IrErrorCode::tag
 
 // [IO] - IO Errors
 ERR(FileOpenFailed) =			{ "IO", "0010", "Could not open file" };

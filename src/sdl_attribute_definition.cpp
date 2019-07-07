@@ -1,13 +1,13 @@
-#include <sdl_attribute_definition.h>
+#include "ir_attribute_definition.h"
 
-#include <sdl_value.h>
-#include <sdl_input_connection.h>
-#include <sdl_compilation_unit.h>
-#include <sdl_compilation_error.h>
-#include <sdl_context_tree.h>
+#include "ir_value.h"
+#include "ir_input_connection.h"
+#include "ir_compilation_unit.h"
+#include "ir_compilation_error.h"
+#include "ir_context_tree.h"
 
-piranha::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string &directionToken,
-								const SdlTokenInfo_string &name, DIRECTION dir) {
+piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &directionToken,
+								const IrTokenInfo_string &name, DIRECTION dir) {
 	m_name = name;
 	registerToken(&m_name);
 
@@ -17,33 +17,33 @@ piranha::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_strin
 	m_direction = dir;
 
 	if (m_direction == OUTPUT) {
-		setVisibility(SdlVisibility::PUBLIC);
+		setVisibility(IrVisibility::PUBLIC);
 	}
 }
 
-piranha::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string &name) {
+piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &name) {
 	m_name = name;
 	registerToken(&m_name);
 
 	m_direction = OUTPUT;
-	setVisibility(SdlVisibility::PUBLIC);
+	setVisibility(IrVisibility::PUBLIC);
 }
 
-piranha::SdlAttributeDefinition::~SdlAttributeDefinition() {
+piranha::IrAttributeDefinition::~IrAttributeDefinition() {
 	/* void */
 }
 
-void piranha::SdlAttributeDefinition::setDefaultValue(SdlValue *value) {
+void piranha::IrAttributeDefinition::setDefaultValue(IrValue *value) {
 	m_defaultValue = value;
 	registerComponent(m_defaultValue);
 }
 
-void piranha::SdlAttributeDefinition::setDefaultToken(const SdlTokenInfo_string &defaultToken) {
+void piranha::IrAttributeDefinition::setDefaultToken(const IrTokenInfo_string &defaultToken) {
 	m_defaultToken = defaultToken;
 	registerToken(&m_defaultToken);
 }
 
-piranha::SdlInputConnection *piranha::SdlAttributeDefinition::getImpliedMember(const std::string &name) const {
+piranha::IrInputConnection *piranha::IrAttributeDefinition::getImpliedMember(const std::string &name) const {
 	int count = getImpliedMemberCount();
 
 	for (int i = 0; i < count; i++) {
@@ -55,15 +55,15 @@ piranha::SdlInputConnection *piranha::SdlAttributeDefinition::getImpliedMember(c
 	return nullptr;
 }
 
-piranha::SdlParserStructure *piranha::SdlAttributeDefinition::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-	SDL_RESET(query);
+piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+	IR_RESET(query);
 
 	// First check the input context for the reference
-	if (!SDL_EMPTY_CONTEXT()) {
-		SdlParserStructure *reference = query.inputContext->resolveDefinition(this);
+	if (!IR_EMPTY_CONTEXT()) {
+		IrParserStructure *reference = query.inputContext->resolveDefinition(this);
 		if (reference != nullptr) {
-			SDL_INFO_OUT(newContext, query.inputContext->getParent());
-			SDL_INFO_OUT(touchedMainContext, query.inputContext->isMainContext());
+			IR_INFO_OUT(newContext, query.inputContext->getParent());
+			IR_INFO_OUT(touchedMainContext, query.inputContext->isMainContext());
 
 			return reference;
 		}
@@ -71,13 +71,13 @@ piranha::SdlParserStructure *piranha::SdlAttributeDefinition::getImmediateRefere
 
 	// An attribute definition will by default point to its definition (ie default value)
 	if (m_defaultValue == nullptr) {
-		if (SDL_EMPTY_CONTEXT()) {
-			SDL_DEAD_END();
+		if (IR_EMPTY_CONTEXT()) {
+			IR_DEAD_END();
 			return nullptr;
 		}
 		else {
 			// This is the result of an unconnected input (that has no input)
-			SDL_FAIL();
+			IR_FAIL();
 			return nullptr;
 		}
 	}

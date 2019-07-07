@@ -1,27 +1,27 @@
-#include <sdl_attribute_definition_list.h>
+#include "ir_attribute_definition_list.h"
 
-#include <sdl_attribute_definition.h>
+#include "ir_attribute_definition.h"
 
-piranha::SdlAttributeDefinitionList::SdlAttributeDefinitionList() {
+piranha::IrAttributeDefinitionList::IrAttributeDefinitionList() {
 	/* void */
 }
 
-piranha::SdlAttributeDefinitionList::~SdlAttributeDefinitionList() {
+piranha::IrAttributeDefinitionList::~IrAttributeDefinitionList() {
 	/* void */
 }
 
-void piranha::SdlAttributeDefinitionList::addDefinition(SdlAttributeDefinition *definition) {
+void piranha::IrAttributeDefinitionList::addDefinition(IrAttributeDefinition *definition) {
 	if (definition != nullptr) {
 		m_definitions.push_back(definition);
 		registerComponent(definition);
 	}
 }
 
-piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getDefinition(int index, SdlAttributeDefinition::DIRECTION direction) const {
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getDefinition(int index, IrAttributeDefinition::DIRECTION direction) const {
 	int totalCount = getDefinitionCount();
 	int inputIndex = 0;
 	for (int i = 0; i < totalCount; i++) {
-		SdlAttributeDefinition *definition = m_definitions[i];
+		IrAttributeDefinition *definition = m_definitions[i];
 		if (definition->getDirection() == direction) {
 			if (inputIndex == index) {
 				return definition;
@@ -34,15 +34,15 @@ piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getDefinit
 	return nullptr;
 }
 
-piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getInputDefinition(int index) const {
-	return getDefinition(index, SdlAttributeDefinition::INPUT);
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getInputDefinition(int index) const {
+	return getDefinition(index, IrAttributeDefinition::INPUT);
 }
 
-int piranha::SdlAttributeDefinitionList::getCount(SdlAttributeDefinition::DIRECTION direction) const {
+int piranha::IrAttributeDefinitionList::getCount(IrAttributeDefinition::DIRECTION direction) const {
 	int totalCount = getDefinitionCount();
 	int inputs = 0;
 	for (int i = 0; i < totalCount; i++) {
-		SdlAttributeDefinition *definition = m_definitions[i];
+		IrAttributeDefinition *definition = m_definitions[i];
 		if (definition->getDirection() == direction) {
 			inputs++;
 		}
@@ -51,24 +51,24 @@ int piranha::SdlAttributeDefinitionList::getCount(SdlAttributeDefinition::DIRECT
 	return inputs;
 }
 
-int piranha::SdlAttributeDefinitionList::getInputCount() const {
-	return getCount(SdlAttributeDefinition::INPUT);
+int piranha::IrAttributeDefinitionList::getInputCount() const {
+	return getCount(IrAttributeDefinition::INPUT);
 }
 
-int piranha::SdlAttributeDefinitionList::getOutputCount() const {
-	return getCount(SdlAttributeDefinition::OUTPUT);
+int piranha::IrAttributeDefinitionList::getOutputCount() const {
+	return getCount(IrAttributeDefinition::OUTPUT);
 }
 
-piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getOutputDefinition(int index) const {
-	return getDefinition(index, SdlAttributeDefinition::OUTPUT);
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getOutputDefinition(int index) const {
+	return getDefinition(index, IrAttributeDefinition::OUTPUT);
 }
 
-piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getOutputDefinition(const std::string &name) const {
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getOutputDefinition(const std::string &name) const {
 	int totalCount = getDefinitionCount();
 	int inputs = 0;
 	for (int i = 0; i < totalCount; i++) {
-		SdlAttributeDefinition *definition = m_definitions[i];
-		if (definition->getDirection() == SdlAttributeDefinition::OUTPUT && name == definition->getName()) {
+		IrAttributeDefinition *definition = m_definitions[i];
+		if (definition->getDirection() == IrAttributeDefinition::OUTPUT && name == definition->getName()) {
 			return definition;
 		}
 	}
@@ -76,14 +76,14 @@ piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getOutputD
 	return nullptr;
 }
 
-piranha::SdlAttributeDefinition *piranha::SdlAttributeDefinitionList::getDefaultOutput() const {
-	SdlAttributeDefinition *firstOutput = nullptr;
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getDefaultOutput() const {
+	IrAttributeDefinition *firstOutput = nullptr;
 
 	int totalCount = getDefinitionCount();
 	int inputs = 0;
 	for (int i = 0; i < totalCount; i++) {
-		SdlAttributeDefinition *definition = m_definitions[i];
-		if (definition->getDirection() == SdlAttributeDefinition::OUTPUT) {
+		IrAttributeDefinition *definition = m_definitions[i];
+		if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
 			firstOutput = definition;
 
 			if (definition->isDefault()) {

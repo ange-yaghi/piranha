@@ -1,82 +1,82 @@
-#include <sdl_unary_operator.h>
+#include "ir_unary_operator.h"
 
-#include <sdl_compilation_error.h>
-#include <sdl_node.h>
+#include "ir_compilation_error.h"
+#include "ir_node.h"
 #include <node.h>
-#include <sdl_context_tree.h>
+#include "ir_context_tree.h"
 
-piranha::SdlUnaryOperator::SdlUnaryOperator(OPERATOR op, SdlValue *operand) : SdlValue(SdlValue::UNARY_OPERATION) {
+piranha::IrUnaryOperator::IrUnaryOperator(OPERATOR op, IrValue *operand) : IrValue(IrValue::UNARY_OPERATION) {
 	m_operand = operand;
 	m_operator = op;
 
 	registerComponent(operand);
 }
 
-piranha::SdlUnaryOperator::~SdlUnaryOperator() {
+piranha::IrUnaryOperator::~IrUnaryOperator() {
 	/* void */
 }
 
-piranha::SdlParserStructure *piranha::SdlUnaryOperator::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-	SDL_RESET(query);
+piranha::IrParserStructure *piranha::IrUnaryOperator::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+	IR_RESET(query);
 
-	SdlReferenceInfo basicInfo;
-	SdlReferenceQuery basicQuery;
+	IrReferenceInfo basicInfo;
+	IrReferenceQuery basicQuery;
 	basicQuery.inputContext = query.inputContext;
 	basicQuery.recordErrors = false;
-	SdlParserStructure *resolvedOperand = m_operand->getReference(basicQuery, &basicInfo);
+	IrParserStructure *resolvedOperand = m_operand->getReference(basicQuery, &basicInfo);
 
-	if (SDL_FAILED(&basicInfo) || resolvedOperand == nullptr) {
-		SDL_FAIL();
+	if (IR_FAILED(&basicInfo) || resolvedOperand == nullptr) {
+		IR_FAIL();
 		return nullptr;
 	}
 
-	if (basicInfo.touchedMainContext) SDL_INFO_OUT(touchedMainContext, true);
+	if (basicInfo.touchedMainContext) IR_INFO_OUT(touchedMainContext, true);
 
-	bool isValidError = (SDL_EMPTY_CONTEXT() || basicInfo.touchedMainContext);
+	bool isValidError = (IR_EMPTY_CONTEXT() || basicInfo.touchedMainContext);
 
 	if (m_operator == DEFAULT) {
-		SdlParserStructure *result = resolvedOperand;
+		IrParserStructure *result = resolvedOperand;
 
 		if (basicInfo.reachedDeadEnd) {
 			// This means that this references an input point with no default value. Obviously
 			// it makes no sense to check for further errors.
-			SDL_DEAD_END();
+			IR_DEAD_END();
 			return nullptr;
 		}
 
-		SdlNode *asNode = resolvedOperand->getAsNode();
+		IrNode *asNode = resolvedOperand->getAsNode();
 		if (asNode != nullptr) result = asNode->getDefaultOutputValue();
 
 		if (result == nullptr) {
-			SDL_FAIL();
+			IR_FAIL();
 
 			if (query.recordErrors && isValidError) {
 				// This object does not have a default value
-				SDL_ERR_OUT(new SdlCompilationError(*m_operand->getSummaryToken(),
-					SdlErrorCode::CannotFindDefaultValue, query.inputContext));
+				IR_ERR_OUT(new IrCompilationError(*m_operand->getSummaryToken(),
+					IrErrorCode::CannotFindDefaultValue, query.inputContext));
 			}
 
 			return nullptr;
 		}
 
-		if (query.inputContext != nullptr) SDL_INFO_OUT(newContext, query.inputContext->newChild(asNode));
+		if (query.inputContext != nullptr) IR_INFO_OUT(newContext, query.inputContext->newChild(asNode));
 
 		return result;
 	}
 
 	// Shouldn't reach here
-	SDL_FAIL();
+	IR_FAIL();
 	return nullptr;
 }
 
-piranha::NodeOutput *piranha::SdlUnaryOperator::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
-	SdlValue *resolvedOperand = m_operand;
+piranha::NodeOutput *piranha::IrUnaryOperator::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+	IrValue *resolvedOperand = m_operand;
 
 	if (resolvedOperand == nullptr) return nullptr;
 
 	Node *node = generateNode(context, program);
-	SdlNode *asNode = resolvedOperand->getAsNode();
-	SdlValue *value = resolvedOperand->getAsValue();
+	IrNode *asNode = resolvedOperand->getAsNode();
+	IrValue *value = resolvedOperand->getAsValue();
 	
 	if (m_operator == DEFAULT) {
 		return value->generateNode(context, program)->getPrimaryOutput();
@@ -85,12 +85,12 @@ piranha::NodeOutput *piranha::SdlUnaryOperator::_generateNodeOutput(SdlContextTr
 	return nullptr;
 }
 
-piranha::Node *piranha::SdlUnaryOperator::_generateNode(SdlContextTree *context, NodeProgram *program) {
-	SdlValue *resolvedOperand = m_operand;
+piranha::Node *piranha::IrUnaryOperator::_generateNode(IrContextTree *context, NodeProgram *program) {
+	IrValue *resolvedOperand = m_operand;
 
 	if (resolvedOperand == nullptr) return nullptr;
 
-	SdlValue *value = resolvedOperand->getAsValue();
+	IrValue *value = resolvedOperand->getAsValue();
 	Node *node = value->generateNode(context, program);
 
 	if (m_operator == DEFAULT) {

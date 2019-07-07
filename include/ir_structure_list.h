@@ -1,17 +1,17 @@
-#ifndef SDL_STRUCTURE_LIST_H
-#define SDL_STRUCTURE_LIST_H
+#ifndef IR_STRUCTURE_LIST_H
+#define IR_STRUCTURE_LIST_H
 
-#include <sdl_parser_structure.h>
+#include "ir_parser_structure.h"
 
 #include <vector>
 
 namespace piranha {
 
 	template <typename T>
-	class SdlStructureList : public SdlParserStructure {
+	class IrStructureList : public IrParserStructure {
 	public:
-		SdlStructureList() { /* void */ }
-		~SdlStructureList() { /* void */ }
+		IrStructureList() { /* void */ }
+		~IrStructureList() { /* void */ }
 
 		void add(T *item) { m_items.push_back(item); registerComponent(item); }
 		T *getItem(int index) const { return m_items[index]; }
@@ -21,10 +21,10 @@ namespace piranha {
 		std::vector<T *> m_items;
 	};
 
-	class SdlNode;
+	class IrNode;
 
-	typedef SdlStructureList<SdlNode> SdlNodeList;
+	typedef IrStructureList<IrNode> IrNodeList;
 
 } /* namespace piranha */
 
-#endif /* SDL_STRUCTURE_LIST_H */
+#endif /* IR_STRUCTURE_LIST_H */

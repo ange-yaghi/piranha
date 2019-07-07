@@ -1,35 +1,35 @@
-#include <sdl_context_tree.h>
+#include "ir_context_tree.h"
 
-#include <sdl_node.h>
-#include <sdl_attribute_definition.h>
-#include <sdl_attribute_list.h>
-#include <sdl_attribute.h>
+#include "ir_node.h"
+#include "ir_attribute_definition.h"
+#include "ir_attribute_list.h"
+#include "ir_attribute.h"
 
-piranha::SdlContextTree::SdlContextTree() {
+piranha::IrContextTree::IrContextTree() {
 	m_context = nullptr;
 	m_parent = nullptr;
 }
 
-piranha::SdlContextTree::SdlContextTree(SdlNode *context, bool mainContext) {
+piranha::IrContextTree::IrContextTree(IrNode *context, bool mainContext) {
 	m_context = context;
 	m_mainContext = mainContext;
 }
 
-piranha::SdlContextTree::~SdlContextTree() {
+piranha::IrContextTree::~IrContextTree() {
 	/* void */
 }
 
-piranha::SdlContextTree *piranha::SdlContextTree::getRoot() {
+piranha::IrContextTree *piranha::IrContextTree::getRoot() {
 	if (m_parent != nullptr) return m_parent->getRoot();
 	else return this;
 }
 
-piranha::SdlContextTree *piranha::SdlContextTree::search(const SdlContextTree *reference) const {
+piranha::IrContextTree *piranha::IrContextTree::search(const IrContextTree *reference) const {
 	return nullptr;
 }
 
-piranha::SdlContextTree *piranha::SdlContextTree::newChild(SdlNode *context, bool mainContext) {
-	SdlContextTree *newChild = new SdlContextTree(context, mainContext);
+piranha::IrContextTree *piranha::IrContextTree::newChild(IrNode *context, bool mainContext) {
+	IrContextTree *newChild = new IrContextTree(context, mainContext);
 	newChild->setParent(this);
 
 	m_children.push_back(newChild);
@@ -37,15 +37,15 @@ piranha::SdlContextTree *piranha::SdlContextTree::newChild(SdlNode *context, boo
 	return newChild;
 }
 
-piranha::SdlContextTree *piranha::SdlContextTree::findContext(SdlParserStructure *context) {
+piranha::IrContextTree *piranha::IrContextTree::findContext(IrParserStructure *context) {
 	if (m_context == context) return this;
 	else if (m_parent != nullptr) return m_parent->findContext(context);
 	else return nullptr;
 }
 
-piranha::SdlParserStructure *piranha::SdlContextTree::resolveDefinition(SdlAttributeDefinition *definition) {
+piranha::IrParserStructure *piranha::IrContextTree::resolveDefinition(IrAttributeDefinition *definition) {
 	if (m_context != nullptr) {
-		SdlAttributeList *attributes = m_context->getAttributes();
+		IrAttributeList *attributes = m_context->getAttributes();
 		if (attributes != nullptr) {
 			return attributes->getAttribute(definition);
 		}
@@ -54,9 +54,9 @@ piranha::SdlParserStructure *piranha::SdlContextTree::resolveDefinition(SdlAttri
 	return nullptr;
 }
 
-bool piranha::SdlContextTree::isEqual(const SdlContextTree *ref) const {
-	const SdlContextTree *currentRefNode = ref;
-	const SdlContextTree *currentNode = this;
+bool piranha::IrContextTree::isEqual(const IrContextTree *ref) const {
+	const IrContextTree *currentRefNode = ref;
+	const IrContextTree *currentNode = this;
 
 	while (true) {
 		if (currentNode->getContext() != currentRefNode->getContext()) return false;
