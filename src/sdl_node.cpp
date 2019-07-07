@@ -13,17 +13,8 @@
 #include <standard_allocator.h>
 #include <sdl_context_tree.h>
 
-#include <srgb_node.h>
-#include <constructed_vector_node.h>
 #include <constructed_float_node.h>
 #include <constructed_string_node.h>
-#include <simple_bsdf_material_node.h>
-#include <lambertian_bsdf.h>
-#include <phong_distribution.h>
-#include <ggx_distribution.h>
-#include <microfacet_reflection_bsdf.h>
-#include <obj_file_node.h>
-#include <kd_tree_node.h>
 #include <node_program.h>
 
 piranha::SdlNode::SdlNode() {
@@ -385,38 +376,11 @@ piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgr
 
 	Node *newNode = nullptr;
 	if (definition->isBuiltin()) {
-		if (definition->getBuiltinName() == "__builtin__vector") {
-			newNode = StandardAllocator::Global()->allocate<ConstructedVectorNode>();
-		}
-		else if (definition->getBuiltinName() == "__builtin__srgb") {
-			newNode = StandardAllocator::Global()->allocate<SrgbNode>();
-		}
-		else if (definition->getBuiltinName() == "__builtin__string") {
+		if (definition->getBuiltinName() == "__piranha__string") {
 			newNode = StandardAllocator::Global()->allocate<ConstructedStringNode>();
 		}
-		else if (definition->getBuiltinName() == "__builtin__float") {
+		else if (definition->getBuiltinName() == "__piranha__float") {
 			newNode = StandardAllocator::Global()->allocate<ConstructedFloatNode>();
-		}
-		else if (definition->getBuiltinName() == "__builtin__simple_bsdf_material") {
-			newNode = StandardAllocator::Global()->allocate<SimpleBsdfMaterialNode>();
-		}
-		else if (definition->getBuiltinName() == "__builtin__LambertianBsdf") {
-			newNode = StandardAllocator::Global()->allocate<LambertianBSDF>();
-		}
-		else if (definition->getBuiltinName() == "__builtin__PhongDistribution") {
-			newNode = StandardAllocator::Global()->allocate<PhongDistribution>();
-		}
-		else if (definition->getBuiltinName() == "__builtin__GgxDistribution") {
-			newNode = StandardAllocator::Global()->allocate<GgxDistribution>();
-		}
-		else if (definition->getBuiltinName() == "__builtin__MicrofacetReflectionBSDF") {
-			newNode = StandardAllocator::Global()->allocate<MicrofacetReflectionBSDF>();
-		}
-		else if (definition->getBuiltinName() == "__builtin__ObjFile") {
-			newNode = StandardAllocator::Global()->allocate<ObjFileNode>();
-		}
-		else if (definition->getBuiltinName() == "__builtin__KdTree") {
-			newNode = StandardAllocator::Global()->allocate<KdTreeNode>();
 		}
 	}
 	else {

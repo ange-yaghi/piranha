@@ -3,8 +3,6 @@
 
 #include <vector>
 
-#include <material_manager.h>
-
 namespace piranha {
 
 	class Node;
@@ -20,13 +18,8 @@ namespace piranha {
 
 		void execute();
 
-		MaterialManager *getMaterialManager() { return &m_materialManager; }
-
 	protected:
 		std::vector<Node *> m_nodes;
-
-		// High-level program context
-		MaterialManager m_materialManager;
 	};
 
 } /* namespace piranha */

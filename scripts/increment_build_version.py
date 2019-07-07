@@ -1,3 +1,5 @@
+#!python3
+
 # This is a short script which keeps track of how many local builds were made
 # and the overall line count of the project
 
@@ -44,7 +46,7 @@ if __name__ == "__main__":
     mypath = os.path.dirname(os.path.realpath(__file__)) + "/../"
 
     extensions = ['.h', '.cpp', '.py', '.cl', '.y', '.l', '.mr']
-    directories = ['src', 'test', 'include', 'scripts', 'opencl_programs', 'demos', 'utilities', 'flex-bison', 'sdl']
+    directories = ['src', 'test', 'include', 'scripts', 'demos', 'utilities', 'flex-bison']
     
     # Find the right file (previous versions used different naming conventions)
     possible_file_names = ['build_version.txt', 'BuildVersion.txt']

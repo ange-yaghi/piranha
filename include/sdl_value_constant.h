@@ -22,7 +22,7 @@ namespace piranha {
 	protected:
 		typedef T_SdlTokenInfo<T> _TokenInfo;
 
-		static NodeOutput *generateNodeOutput(math::real_d value, SdlContextTree *context) {
+		static NodeOutput *generateNodeOutput(double value, SdlContextTree *context) {
 			SingleFloatNodeOutput *newNode = StandardAllocator::Global()->allocate<SingleFloatNodeOutput>();
 			newNode->setValue(value);
 

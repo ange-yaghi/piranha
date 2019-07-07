@@ -16,9 +16,10 @@ void piranha::NodeProgram::addNode(Node *node) {
 
 	// This registers the node in case there is a node that
 	// has a dependency on materials
+	/*
 	if (node->isMaterial()) {
 		m_materialManager.addMaterialNode(node);
-	}
+	}*/
 }
 
 void piranha::NodeProgram::execute() {

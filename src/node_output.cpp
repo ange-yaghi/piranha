@@ -4,7 +4,6 @@
 
 piranha::NodeOutput::NodeOutput(const NodeType *singleType) {
 	m_singleType = singleType; 
-	m_dimensionsEvaluated = false;
 	m_evaluated = false;
 	m_interface = nullptr;
 }
