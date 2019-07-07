@@ -1,5 +1,5 @@
-#ifndef MEMORY_MANAGEMENT_H
-#define MEMORY_MANAGEMENT_H
+#ifndef PIRANHA_MEMORY_MANAGEMENT_H
+#define PIRANHA_MEMORY_MANAGEMENT_H
 
 #include <assert.h>
 
@@ -15,4 +15,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* MEMORY_MANAGEMENT_H */
+#endif /* PIRANHA_MEMORY_MANAGEMENT_H */

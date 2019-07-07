@@ -1,5 +1,5 @@
-#ifndef IR_IMPORT_STATEMENT_H
-#define IR_IMPORT_STATEMENT_H
+#ifndef PIRANHA_IR_IMPORT_STATEMENT_H
+#define PIRANHA_IR_IMPORT_STATEMENT_H
 
 #include <string>
 
@@ -33,4 +33,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IMPORT_STATEMENT */
+#endif /* PIRANHA_IMPORT_STATEMENT */

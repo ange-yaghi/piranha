@@ -1,9 +1,9 @@
-#ifndef CONSTRUCTED_FLOAT_NODE_OUTPUT_H
-#define CONSTRUCTED_FLOAT_NODE_OUTPUT_H
+#ifndef PIRANHA_CONSTRUCTED_FLOAT_NODE_OUTPUT_H
+#define PIRANHA_CONSTRUCTED_FLOAT_NODE_OUTPUT_H
 
-#include <float_node_output.h>
+#include "float_node_output.h"
 
-#include <constructed_float_node_output.h>
+#include "constructed_float_node_output.h"
 
 namespace piranha {
 
@@ -23,4 +23,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* CONSTRUCTED_FLOAT_NODE_OUTPUT_H */
+#endif /* PIRANHA_CONSTRUCTED_FLOAT_NODE_OUTPUT_H */

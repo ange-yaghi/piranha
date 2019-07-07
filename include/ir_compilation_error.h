@@ -1,5 +1,5 @@
-#ifndef IR_COMPILATION_ERROR_H
-#define IR_COMPILATION_ERROR_H
+#ifndef PIRANHA_IR_COMPILATION_ERROR_H
+#define PIRANHA_IR_COMPILATION_ERROR_H
 
 #include "ir_token_info.h"
 
@@ -78,4 +78,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_COMPILATION_ERROR_H */
+#endif /* PIRANHA_IR_COMPILATION_ERROR_H */

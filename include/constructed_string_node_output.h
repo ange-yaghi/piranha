@@ -1,7 +1,7 @@
-#ifndef CONSTRUCTED_STRING_NODE_OUTPUT_H
-#define CONSTRUCTED_STRING_NODE_OUTPUT_H
+#ifndef PIRANHA_CONSTRUCTED_STRING_NODE_OUTPUT_H
+#define PIRANHA_CONSTRUCTED_STRING_NODE_OUTPUT_H
 
-#include <string_node_output.h>
+#include "string_node_output.h"
 
 namespace piranha {
 
@@ -23,4 +23,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* CONSTRUCTED_VECTOR_NODE_OUTPUT_H */
+#endif /* PIRANHA_CONSTRUCTED_VECTOR_NODE_OUTPUT_H */

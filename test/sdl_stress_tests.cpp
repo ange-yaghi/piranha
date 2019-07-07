@@ -1,6 +1,6 @@
 #include <pch.h>
 
-#include <node.h>
+#include "node.h"
 #include "ir_compilation_unit.h"
 #include "ir_node.h"
 #include "ir_attribute_list.h"

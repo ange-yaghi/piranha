@@ -1,7 +1,7 @@
-#ifndef FLOAT_NODE_OUTPUT_H
-#define FLOAT_NODE_OUTPUT_H
+#ifndef PIRANHA_FLOAT_NODE_OUTPUT_H
+#define PIRANHA_FLOAT_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include "node_output.h"
 
 namespace piranha {
 
@@ -21,4 +21,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* FLOAT_NODE_OUTPUT_H */
+#endif /* PIRANHA_FLOAT_NODE_OUTPUT_H */

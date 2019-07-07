@@ -1,5 +1,5 @@
-#ifndef IR_ERROR_LIST_H
-#define IR_ERROR_LIST_H
+#ifndef PIRANHA_IR_ERROR_LIST_H
+#define PIRANHA_IR_ERROR_LIST_H
 
 #include <vector>
 
@@ -24,4 +24,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_ERROR_LIST_H */
+#endif /* PIRANHA_IR_ERROR_LIST_H */

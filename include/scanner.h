@@ -1,5 +1,5 @@
-#ifndef SCANNER_H
-#define SCANNER_H
+#ifndef PIRANHA_SCANNER_H
+#define PIRANHA_SCANNER_H
 
 #if !defined(yyFlexLexerOnce)
 #include <FlexLexer.h>
@@ -47,4 +47,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* SCANNER_H */
+#endif /* PIRANHA_SCANNER_H */
