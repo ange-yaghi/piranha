@@ -16,7 +16,7 @@
 
 #include "utilities.h"
 
-using namespace manta;
+using namespace piranha;
 	
 
 TEST(SdlTests, SdlSanityCheck) {

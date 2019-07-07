@@ -15,12 +15,10 @@
 #include <sdl_error_list.h>
 #include <sdl_compiler.h>
 #include <sdl_generator.h>
-#include <rgb_space.h>
-#include <material_manager.h>
 
 #include "utilities.h"
 
-using namespace manta;
+using namespace piranha;
 
 const SdlErrorList *compileFile(const std::string &filename) {
 	SdlCompiler *compiler = new SdlCompiler();
