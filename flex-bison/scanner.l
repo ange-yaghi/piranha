@@ -7,10 +7,10 @@
 /* Implementation of yyFlexScanner */ 
 #include <sdl_scanner.h>
 #undef  YY_DECL
-#define YY_DECL int manta::SdlScanner::yylex( manta::SdlParser::semantic_type *const lval, manta::SdlParser::location_type *location)
+#define YY_DECL int piranha::SdlScanner::yylex( piranha::SdlParser::semantic_type *const lval, piranha::SdlParser::location_type *location)
 
 /* using "token" to make the returns for the tokens shorter to type */
-using token = manta::SdlParser::token;
+using token = piranha::SdlParser::token;
 
 /* define yyterminate as this instead of NULL */
 #define yyterminate() return( token::END )
@@ -33,7 +33,7 @@ using token = manta::SdlParser::token;
 
 %option debug
 %option nodefault
-%option yyclass="manta::SdlScanner"
+%option yyclass="piranha::SdlScanner"
 %option noyywrap
 %option c++
 
@@ -134,7 +134,7 @@ H				[a-fA-F0-9]
 .				{ BUILD_INVALID(location); return (token::UNRECOGNIZED); }
 %%
 
-void manta::SdlScanner::comment(void) {
+void piranha::SdlScanner::comment(void) {
 	char c, prev = 0;
 	while ((c = yyinput()) != 0) { /* (EOF maps to 0) */
 		countChar(c);
@@ -145,7 +145,7 @@ void manta::SdlScanner::comment(void) {
 	LexerError("unterminated comment");
 }
 
-void manta::SdlScanner::count() {
+void piranha::SdlScanner::count() {
 	step();
 
 	for (int i = 0; yytext[i] != '\0'; i++) {
@@ -154,7 +154,7 @@ void manta::SdlScanner::count() {
 	}
 }
 
-void manta::SdlScanner::countChar(char c) {
+void piranha::SdlScanner::countChar(char c) {
 	if (c == '\n') {
 		m_loc->lineEnd++;
 		m_loc->colEnd = 1;
@@ -167,7 +167,7 @@ void manta::SdlScanner::countChar(char c) {
 	}
 }
 
-void manta::SdlScanner::step() {
+void piranha::SdlScanner::step() {
 	m_loc->lineStart = m_loc->lineEnd;
 	m_loc->colStart = m_loc->colEnd;
 }

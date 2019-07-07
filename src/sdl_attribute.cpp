@@ -2,11 +2,11 @@
 
 #include <sdl_value.h>
 
-manta::SdlAttribute::SdlAttribute() {
+piranha::SdlAttribute::SdlAttribute() {
 	/* void */
 }
 
-manta::SdlAttribute::SdlAttribute(const SdlTokenInfo_string &name, SdlValue *value) {
+piranha::SdlAttribute::SdlAttribute(const SdlTokenInfo_string &name, SdlValue *value) {
 	m_name = name;
 	m_value = value;
 	m_position = -1;
@@ -17,23 +17,23 @@ manta::SdlAttribute::SdlAttribute(const SdlTokenInfo_string &name, SdlValue *val
 	m_definition = nullptr;
 }
 
-manta::SdlAttribute::SdlAttribute(SdlValue *value) {
+piranha::SdlAttribute::SdlAttribute(SdlValue *value) {
 	m_value = value;
 	m_position = -1;
 
 	registerComponent(value);
 }
 
-manta::SdlAttribute::~SdlAttribute() {
+piranha::SdlAttribute::~SdlAttribute() {
 	/* void */
 }
 
-void manta::SdlAttribute::setValue(SdlValue *value) {
+void piranha::SdlAttribute::setValue(SdlValue *value) {
 	m_value = value;
 	registerComponent(value);
 }
 
-manta::SdlParserStructure *manta::SdlAttribute::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+piranha::SdlParserStructure *piranha::SdlAttribute::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	SDL_INFO_OUT(err, nullptr);
 	SDL_INFO_OUT(newContext, query.inputContext);
 	SDL_INFO_OUT(failed, false);

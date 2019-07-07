@@ -2,19 +2,19 @@
 
 #include <sdl_compilation_error.h>
 
-manta::SdlErrorList::SdlErrorList() {
+piranha::SdlErrorList::SdlErrorList() {
 	/* void */
 }
 
-manta::SdlErrorList::~SdlErrorList() {
+piranha::SdlErrorList::~SdlErrorList() {
 	/* void */
 }
 
-void manta::SdlErrorList::addCompilationError(SdlCompilationError *err) {
+void piranha::SdlErrorList::addCompilationError(SdlCompilationError *err) {
 	m_compilationErrors.push_back(err);
 }
 
-void manta::SdlErrorList::destroy() {
+void piranha::SdlErrorList::destroy() {
 	int errorCount = getErrorCount();
 
 	for (int i = 0; i < errorCount; i++) {

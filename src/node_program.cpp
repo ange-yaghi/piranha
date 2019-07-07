@@ -2,15 +2,15 @@
 
 #include <node.h>
 
-manta::NodeProgram::NodeProgram() {
+piranha::NodeProgram::NodeProgram() {
 	/* void */
 }
 
-manta::NodeProgram::~NodeProgram() {
+piranha::NodeProgram::~NodeProgram() {
 	/* void */
 }
 
-void manta::NodeProgram::addNode(Node *node) {
+void piranha::NodeProgram::addNode(Node *node) {
 	node->setProgram(this);
 	m_nodes.push_back(node);
 
@@ -21,7 +21,7 @@ void manta::NodeProgram::addNode(Node *node) {
 	}
 }
 
-void manta::NodeProgram::execute() {
+void piranha::NodeProgram::execute() {
 	int nodeCount = getNodeCount();
 
 	// Initialize all nodes

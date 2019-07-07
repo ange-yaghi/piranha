@@ -5,7 +5,7 @@
 
 #include <constructed_float_node_output.h>
 
-namespace manta {
+namespace piranha {
 
 	class ConstructedFloatNode : public Node {
 	public:
@@ -24,6 +24,6 @@ namespace manta {
 		ConstructedFloatNodeOutput m_output;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* CONSTRUCTED_FLOAT_NODE_H */

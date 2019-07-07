@@ -2,15 +2,15 @@
 
 #include <node.h>
 
-manta::SdlValue::SdlValue(manta::SdlValue::VALUE_TYPE type) {
+piranha::SdlValue::SdlValue(piranha::SdlValue::VALUE_TYPE type) {
 	m_type = type;
 }
 
-manta::SdlValue::~SdlValue() {
+piranha::SdlValue::~SdlValue() {
 	/* void */
 }
 
-manta::NodeOutput *manta::SdlValue::generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::SdlValue::generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 	GenerationTableEntry *entry = getEntry(context);
 	if (entry == nullptr) entry = newEntry(context);
 
@@ -29,7 +29,7 @@ manta::NodeOutput *manta::SdlValue::generateNodeOutput(SdlContextTree *context, 
 	return entry->nodeGeneratedOutput;
 }
 
-manta::Node *manta::SdlValue::generateNode(SdlContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::SdlValue::generateNode(SdlContextTree *context, NodeProgram *program) {
 	GenerationTableEntry *entry = getEntry(context);
 	if (entry == nullptr) entry = newEntry(context);
 
@@ -40,15 +40,15 @@ manta::Node *manta::SdlValue::generateNode(SdlContextTree *context, NodeProgram 
 	else return entry->nodeReference;
 }
 
-manta::NodeOutput *manta::SdlValue::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::SdlValue::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 	return nullptr;
 }
 
-manta::Node *manta::SdlValue::_generateNode(SdlContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::SdlValue::_generateNode(SdlContextTree *context, NodeProgram *program) {
 	return nullptr;
 }
 
-manta::SdlValue::GenerationTableEntry *manta::SdlValue::getEntry(SdlContextTree *context) {
+piranha::SdlValue::GenerationTableEntry *piranha::SdlValue::getEntry(SdlContextTree *context) {
 	int entryCount = (int)m_generationTable.size();
 	for (int i = 0; i < entryCount; i++) {
 		if (m_generationTable[i].context == context) {
@@ -59,7 +59,7 @@ manta::SdlValue::GenerationTableEntry *manta::SdlValue::getEntry(SdlContextTree 
 	return nullptr;
 }
 
-manta::SdlValue::GenerationTableEntry *manta::SdlValue::newEntry(SdlContextTree *context) {
+piranha::SdlValue::GenerationTableEntry *piranha::SdlValue::newEntry(SdlContextTree *context) {
 	GenerationTableEntry *newEntry = new GenerationTableEntry();
 	newEntry->context = context;
 	newEntry->nodeGeneratedOutput = nullptr;

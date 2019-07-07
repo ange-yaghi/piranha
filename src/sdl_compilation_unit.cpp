@@ -11,7 +11,7 @@
 #include <cassert>
 #include <sstream>
 
-manta::SdlCompilationUnit::~SdlCompilationUnit() {
+piranha::SdlCompilationUnit::~SdlCompilationUnit() {
 	delete m_scanner;
 	m_scanner = nullptr;
 
@@ -19,14 +19,14 @@ manta::SdlCompilationUnit::~SdlCompilationUnit() {
 	m_parser = nullptr;
 }
 
-void manta::SdlCompilationUnit::build(NodeProgram *program) {
+void piranha::SdlCompilationUnit::build(NodeProgram *program) {
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		m_nodes[i]->generateNode(nullptr, program);
 	}
 }
 
-manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseFile(const Path &filename, 
+piranha::SdlCompilationUnit::ParseResult piranha::SdlCompilationUnit::parseFile(const Path &filename, 
 																		SdlCompilationUnit *topLevel) {
 	m_path = filename;
 	
@@ -38,13 +38,13 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseFile(cons
 	return parseHelper(inFile);
 }
 
-manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(const char *sdl, 
+piranha::SdlCompilationUnit::ParseResult piranha::SdlCompilationUnit::parse(const char *sdl, 
 															SdlCompilationUnit *topLevel) {
 	std::istringstream sdlStream(sdl);
 	return parse(sdlStream);
 }
 
-manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(std::istream &stream, 
+piranha::SdlCompilationUnit::ParseResult piranha::SdlCompilationUnit::parse(std::istream &stream, 
 																SdlCompilationUnit *topLevel) {
 	if (!stream.good() && stream.eof()) {
 		return IO_ERROR;
@@ -53,11 +53,11 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(std::ist
 	return parseHelper(stream);
 }
 
-manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
+piranha::SdlCompilationUnit::ParseResult piranha::SdlCompilationUnit::parseHelper(
 							std::istream &stream, SdlCompilationUnit *topLevel) {
 	delete m_scanner;
 	try {
-		m_scanner = new manta::SdlScanner(&stream);
+		m_scanner = new piranha::SdlScanner(&stream);
 	}
 	catch (std::bad_alloc) {
 		return FAIL;
@@ -65,7 +65,7 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
 
 	delete m_parser;
 	try {
-		m_parser = new manta::SdlParser(*m_scanner, *this);
+		m_parser = new piranha::SdlParser(*m_scanner, *this);
 	}
 	catch (std::bad_alloc) {
 		return FAIL;
@@ -81,10 +81,10 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
 	}
 }
 
-manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(const std::string &name, int *count,
+piranha::SdlNodeDefinition *piranha::SdlCompilationUnit::resolveNodeDefinition(const std::string &name, int *count,
 														const std::string &libraryName, bool external) {
 	*count = 0;
-	manta::SdlNodeDefinition *definition = nullptr;
+	piranha::SdlNodeDefinition *definition = nullptr;
 	std::string typeName = name;
 
 	// First search local node definitions if a library is not specified
@@ -130,9 +130,9 @@ manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(const
 	return definition;
 }
 
-manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveLocalNodeDefinition(const std::string &name, int *count, bool external) {
+piranha::SdlNodeDefinition *piranha::SdlCompilationUnit::resolveLocalNodeDefinition(const std::string &name, int *count, bool external) {
 	*count = 0;
-	manta::SdlNodeDefinition *definition = nullptr;
+	piranha::SdlNodeDefinition *definition = nullptr;
 	std::string typeName = name;
 
 	int localNodeDefinitions = (int)m_nodeDefinitions.size();
@@ -151,7 +151,7 @@ manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveLocalNodeDefinition(
 	return definition;
 }
 
-void manta::SdlCompilationUnit::_validate() {
+void piranha::SdlCompilationUnit::_validate() {
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		SdlNode *node = m_nodes[i];
@@ -176,7 +176,7 @@ void manta::SdlCompilationUnit::_validate() {
 	}
 }
 
-void manta::SdlCompilationUnit::addNode(SdlNode *node) {
+void piranha::SdlCompilationUnit::addNode(SdlNode *node) {
 	if (node != nullptr) {
 		m_nodes.push_back(node);
 		registerComponent(node);
@@ -185,15 +185,15 @@ void manta::SdlCompilationUnit::addNode(SdlNode *node) {
 	}
 }
 
-manta::SdlNode *manta::SdlCompilationUnit::getNode(int index) const {
+piranha::SdlNode *piranha::SdlCompilationUnit::getNode(int index) const {
 	return m_nodes[index];
 }
 
-int manta::SdlCompilationUnit::getNodeCount() const {
+int piranha::SdlCompilationUnit::getNodeCount() const {
 	return (int)m_nodes.size();
 }
 
-void manta::SdlCompilationUnit::addImportStatement(SdlImportStatement *statement) {
+void piranha::SdlCompilationUnit::addImportStatement(SdlImportStatement *statement) {
 	if (statement != nullptr) {
 		m_importStatements.push_back(statement);
 		registerComponent(statement);
@@ -202,11 +202,11 @@ void manta::SdlCompilationUnit::addImportStatement(SdlImportStatement *statement
 	}
 }
 
-int manta::SdlCompilationUnit::getImportStatementCount() const {
+int piranha::SdlCompilationUnit::getImportStatementCount() const {
 	return (int)m_importStatements.size();
 }
 
-void manta::SdlCompilationUnit::addNodeDefinition(SdlNodeDefinition *nodeDefinition) {
+void piranha::SdlCompilationUnit::addNodeDefinition(SdlNodeDefinition *nodeDefinition) {
 	if (nodeDefinition != nullptr) {
 		m_nodeDefinitions.push_back(nodeDefinition);
 		registerComponent(nodeDefinition);
@@ -215,11 +215,11 @@ void manta::SdlCompilationUnit::addNodeDefinition(SdlNodeDefinition *nodeDefinit
 	}
 }
 
-int manta::SdlCompilationUnit::getNodeDefinitionCount() const {
+int piranha::SdlCompilationUnit::getNodeDefinitionCount() const {
 	return (int)m_nodeDefinitions.size();
 }
 
-manta::SdlParserStructure *manta::SdlCompilationUnit::resolveLocalName(const std::string &name) const {
+piranha::SdlParserStructure *piranha::SdlCompilationUnit::resolveLocalName(const std::string &name) const {
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		SdlNode *node = m_nodes[i];
@@ -231,7 +231,7 @@ manta::SdlParserStructure *manta::SdlCompilationUnit::resolveLocalName(const std
 	return nullptr;
 }
 
-int manta::SdlCompilationUnit::countSymbolIncidence(const std::string &name) const {
+int piranha::SdlCompilationUnit::countSymbolIncidence(const std::string &name) const {
 	int count = 0;
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
@@ -244,7 +244,7 @@ int manta::SdlCompilationUnit::countSymbolIncidence(const std::string &name) con
 	return count;
 }
 
-void manta::SdlCompilationUnit::addCompilationError(SdlCompilationError *err) {
+void piranha::SdlCompilationUnit::addCompilationError(SdlCompilationError *err) {
 	if (m_errorList != nullptr) {
 		err->setCompilationUnit(this);
 		m_errorList->addCompilationError(err);
@@ -254,6 +254,6 @@ void manta::SdlCompilationUnit::addCompilationError(SdlCompilationError *err) {
 	}
 }
 
-std::ostream& manta::SdlCompilationUnit::print(std::ostream &stream) {
+std::ostream& piranha::SdlCompilationUnit::print(std::ostream &stream) {
 	return stream;
 }

@@ -3,25 +3,25 @@
 #include <sdl_context_tree.h>
 #include <sdl_parser_structure.h>
 
-manta::SdlCompilationError::SdlCompilationError(const SdlTokenInfo &location, 
+piranha::SdlCompilationError::SdlCompilationError(const SdlTokenInfo &location, 
 			const SdlErrorCode_struct &code, SdlContextTree *instantiation) {
 	m_errorLocation = location;
 	m_code = code;
 	m_instantiation = instantiation;
 }
 
-manta::SdlCompilationError::~SdlCompilationError() {
+piranha::SdlCompilationError::~SdlCompilationError() {
 	/* void */
 }
 
-bool manta::SdlCompilationError::isInstantiationError() const {
+bool piranha::SdlCompilationError::isInstantiationError() const {
 	return (m_instantiation != nullptr && m_instantiation->getContext() != nullptr);
 }
 
 // Error definitions --------------------------------------
 
 // Helper macro
-#define ERR(tag) const manta::SdlErrorCode_struct manta::SdlErrorCode::tag
+#define ERR(tag) const piranha::SdlErrorCode_struct piranha::SdlErrorCode::tag
 
 // [IO] - IO Errors
 ERR(FileOpenFailed) =			{ "IO", "0010", "Could not open file" };

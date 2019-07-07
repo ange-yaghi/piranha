@@ -4,7 +4,7 @@
 #include <ostream>
 #include <string>
 
-namespace manta {
+namespace piranha {
 
 	struct SdlTokenInfo {
 		SdlTokenInfo(int lineStart, int lineEnd, int colStart, int colEnd) :
@@ -104,6 +104,6 @@ namespace manta {
 	typedef T_SdlTokenInfo<double> SdlTokenInfo_float;
 	typedef T_SdlTokenInfo<bool> SdlTokenInfo_bool;
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_TOKEN_INFO_H */

@@ -4,24 +4,24 @@
 #include <sdl_compilation_error.h>
 #include <sdl_node_definition.h>
 
-manta::SdlGenericValue::SdlGenericValue(const SdlTokenInfoSet<std::string, 2> &type) 
+piranha::SdlGenericValue::SdlGenericValue(const SdlTokenInfoSet<std::string, 2> &type) 
 														: SdlValue(SdlValue::GENERIC) {
 	m_typeInfo = type;
 	m_typeDefinition = nullptr;
 }
 
-manta::SdlGenericValue::~SdlGenericValue() {
+piranha::SdlGenericValue::~SdlGenericValue() {
 	/* void */
 }
 
-manta::SdlParserStructure *manta::SdlGenericValue::resolveLocalName(const std::string &name) const {
+piranha::SdlParserStructure *piranha::SdlGenericValue::resolveLocalName(const std::string &name) const {
 	if (m_typeDefinition != nullptr) {
 		return m_typeDefinition->resolveLocalName(name);
 	}
 	else return nullptr;
 }
 
-void manta::SdlGenericValue::_resolveDefinitions() {
+void piranha::SdlGenericValue::_resolveDefinitions() {
 	int definitionCount = 0;
 	SdlNodeDefinition *definition = nullptr;
 	SdlCompilationUnit *unit = getParentUnit();

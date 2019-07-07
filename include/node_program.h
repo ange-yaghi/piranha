@@ -5,7 +5,7 @@
 
 #include <material_manager.h>
 
-namespace manta {
+namespace piranha {
 
 	class Node;
 
@@ -29,6 +29,6 @@ namespace manta {
 		MaterialManager m_materialManager;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* NODE_PROGRAM_H */

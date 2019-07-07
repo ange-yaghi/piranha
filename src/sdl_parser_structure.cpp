@@ -3,7 +3,7 @@
 #include <sdl_compilation_unit.h>
 #include <sdl_context_tree.h>
 
-manta::SdlParserStructure::SdlReferenceInfo::SdlReferenceInfo() {
+piranha::SdlParserStructure::SdlReferenceInfo::SdlReferenceInfo() {
 	newContext = nullptr;
 	err = nullptr;
 
@@ -12,11 +12,11 @@ manta::SdlParserStructure::SdlReferenceInfo::SdlReferenceInfo() {
 	touchedMainContext = false;
 }
 
-manta::SdlParserStructure::SdlReferenceInfo::~SdlReferenceInfo() {
+piranha::SdlParserStructure::SdlReferenceInfo::~SdlReferenceInfo() {
 	/* void */
 }
 
-void manta::SdlParserStructure::SdlReferenceInfo::reset() {
+void piranha::SdlParserStructure::SdlReferenceInfo::reset() {
 	newContext = nullptr;
 	err = nullptr;
 
@@ -25,17 +25,17 @@ void manta::SdlParserStructure::SdlReferenceInfo::reset() {
 	touchedMainContext = false;
 }
 
-manta::SdlParserStructure::SdlReferenceQuery::SdlReferenceQuery() {
+piranha::SdlParserStructure::SdlReferenceQuery::SdlReferenceQuery() {
 	inputContext = nullptr;
 	recordErrors = false;
 }
 
-manta::SdlParserStructure::SdlReferenceQuery::~SdlReferenceQuery() {
+piranha::SdlParserStructure::SdlReferenceQuery::~SdlReferenceQuery() {
 	/* void */
 }
 
 
-manta::SdlParserStructure::SdlParserStructure() {
+piranha::SdlParserStructure::SdlParserStructure() {
 	m_parentScope = nullptr;
 	m_logicalParent = nullptr;
 	m_checkReferences = true;
@@ -47,15 +47,15 @@ manta::SdlParserStructure::SdlParserStructure() {
 	m_defaultVisibility = SdlVisibility::PRIVATE;
 }
 
-manta::SdlParserStructure::~SdlParserStructure() {
+piranha::SdlParserStructure::~SdlParserStructure() {
 	/* void */
 }
 
-void manta::SdlParserStructure::registerToken(const SdlTokenInfo *tokenInfo) {
+void piranha::SdlParserStructure::registerToken(const SdlTokenInfo *tokenInfo) {
 	if (tokenInfo != nullptr) m_summaryToken.combine(tokenInfo);
 }
 
-void manta::SdlParserStructure::registerComponent(SdlParserStructure *child) {
+void piranha::SdlParserStructure::registerComponent(SdlParserStructure *child) {
 	if (child != nullptr) {
 		m_summaryToken.combine(child->getSummaryToken());
 		child->setParentScope(this);
@@ -65,7 +65,7 @@ void manta::SdlParserStructure::registerComponent(SdlParserStructure *child) {
 	}
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::string &name) const {
+piranha::SdlParserStructure *piranha::SdlParserStructure::resolveName(const std::string &name) const {
 	SdlParserStructure *local = resolveLocalName(name);
 	if (local != nullptr) return local;
 	
@@ -76,11 +76,11 @@ manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::str
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+piranha::SdlParserStructure *piranha::SdlParserStructure::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::getReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+piranha::SdlParserStructure *piranha::SdlParserStructure::getReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	SDL_RESET(query);
 
 	SdlReferenceQuery immediateQuery = query;
@@ -129,7 +129,7 @@ manta::SdlParserStructure *manta::SdlParserStructure::getReference(const SdlRefe
 	}
 }
 
-void manta::SdlParserStructure::resolveDefinitions() {
+void piranha::SdlParserStructure::resolveDefinitions() {
 	if (m_definitionsResolved) return;
 
 	// Resolve components
@@ -143,7 +143,7 @@ void manta::SdlParserStructure::resolveDefinitions() {
 	m_definitionsResolved = true;
 }
 
-void manta::SdlParserStructure::checkReferences(SdlContextTree *inputContext) {
+void piranha::SdlParserStructure::checkReferences(SdlContextTree *inputContext) {
 	// Check components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
@@ -164,7 +164,7 @@ void manta::SdlParserStructure::checkReferences(SdlContextTree *inputContext) {
 	}
 }
 
-void manta::SdlParserStructure::checkInstantiation() {
+void piranha::SdlParserStructure::checkInstantiation() {
 	// Check components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
@@ -174,7 +174,7 @@ void manta::SdlParserStructure::checkInstantiation() {
 	_checkInstantiation();
 }
 
-void manta::SdlParserStructure::validate() {
+void piranha::SdlParserStructure::validate() {
 	if (m_validated) return;
 
 	// Validate components
@@ -188,7 +188,7 @@ void manta::SdlParserStructure::validate() {
 	m_validated = true;
 }
 
-void manta::SdlParserStructure::expand() {
+void piranha::SdlParserStructure::expand() {
 	if (m_isExpanded) return;
 
 	// Expand components
@@ -211,15 +211,15 @@ void manta::SdlParserStructure::expand() {
 	m_isExpanded = true;
 }
 
-void manta::SdlParserStructure::_validate() {
+void piranha::SdlParserStructure::_validate() {
 	/* void */
 }
 
-void manta::SdlParserStructure::_checkInstantiation() {
+void piranha::SdlParserStructure::_checkInstantiation() {
 	/* void */
 }
 
-void manta::SdlParserStructure::writeReferencesToFile(std::ofstream &file, SdlContextTree *context, int tabLevel) {
+void piranha::SdlParserStructure::writeReferencesToFile(std::ofstream &file, SdlContextTree *context, int tabLevel) {
 	for (int i = 0; i < tabLevel; i++) {
 		file << " ";
 	}
@@ -256,24 +256,24 @@ void manta::SdlParserStructure::writeReferencesToFile(std::ofstream &file, SdlCo
 	}
 }
 
-void manta::SdlParserStructure::_resolveDefinitions() {
+void piranha::SdlParserStructure::_resolveDefinitions() {
 	/* void */
 }
 
-void manta::SdlParserStructure::_expand() {
+void piranha::SdlParserStructure::_expand() {
 	m_expansion = nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::resolveLocalName(const std::string &name) const {
+piranha::SdlParserStructure *piranha::SdlParserStructure::resolveLocalName(const std::string &name) const {
 	return nullptr;
 }
 
-bool manta::SdlParserStructure::allowsExternalAccess() const {
+bool piranha::SdlParserStructure::allowsExternalAccess() const {
 	SdlVisibility visibility = (m_visibility == SdlVisibility::DEFAULT) ? m_defaultVisibility : m_visibility;
 	return visibility == SdlVisibility::PUBLIC;
 }
 
-manta::SdlCompilationUnit *manta::SdlParserStructure::getParentUnit() const {
+piranha::SdlCompilationUnit *piranha::SdlParserStructure::getParentUnit() const {
 	if (m_parentUnit == nullptr) return m_logicalParent->getParentUnit();
 	else return m_parentUnit;
 }

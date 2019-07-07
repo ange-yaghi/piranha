@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace manta {
+namespace piranha {
 
 	class SdlCompilationUnit;
 	class SdlContextTree;
@@ -76,6 +76,6 @@ namespace manta {
 		SdlContextTree *m_instantiation;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_COMPILATION_ERROR_H */

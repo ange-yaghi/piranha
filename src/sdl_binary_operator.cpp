@@ -3,7 +3,7 @@
 #include <sdl_value_constant.h>
 #include <node.h>
 
-manta::SdlBinaryOperator::SdlBinaryOperator(OPERATOR op, SdlValue *left, SdlValue *right) :
+piranha::SdlBinaryOperator::SdlBinaryOperator(OPERATOR op, SdlValue *left, SdlValue *right) :
 							SdlValue(SdlValue::BINARY_OPERATION) {
 	m_operator = op;
 	m_leftOperand = left;
@@ -22,11 +22,11 @@ manta::SdlBinaryOperator::SdlBinaryOperator(OPERATOR op, SdlValue *left, SdlValu
 	}
 }
 
-manta::SdlBinaryOperator::~SdlBinaryOperator() {
+piranha::SdlBinaryOperator::~SdlBinaryOperator() {
 	/* void */
 }
 
-manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
+piranha::SdlParserStructure *piranha::SdlBinaryOperator::getImmediateReference(
 					const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	SDL_RESET(query);
 	
@@ -149,7 +149,7 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 	return nullptr;
 }
 
-manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::SdlBinaryOperator::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
 		return nullptr;
@@ -200,7 +200,7 @@ manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlContextTree 
 	return nullptr;
 }
 
-manta::Node *manta::SdlBinaryOperator::_generateNode(SdlContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::SdlBinaryOperator::_generateNode(SdlContextTree *context, NodeProgram *program) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
 		return nullptr;

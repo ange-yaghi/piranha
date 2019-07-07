@@ -7,7 +7,7 @@
 #include <sdl_token_info.h>
 #include <sdl_visibility.h>
 
-namespace manta {
+namespace piranha {
 
 	class SdlCompilationUnit;
 
@@ -31,6 +31,6 @@ namespace manta {
 		SdlCompilationUnit *m_unit;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* IMPORT_STATEMENT */

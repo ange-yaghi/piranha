@@ -15,7 +15,7 @@
 #define SDL_FAILED(output)			(((output) != nullptr) ? (output)->failed : false)
 #define SDL_EMPTY_CONTEXT()			(query.inputContext == nullptr || query.inputContext->getContext() == nullptr)
 
-namespace manta {
+namespace piranha {
 
 	class SdlValue;
 	class SdlCompilationUnit;
@@ -136,6 +136,6 @@ namespace manta {
 		void writeReferencesToFile(std::ofstream &file, SdlContextTree *context, int tabLevel = 0);
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_PARSER_STRUCTURE_H */

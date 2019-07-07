@@ -10,7 +10,7 @@
 #include <istream>
 #include <vector>
 
-namespace manta {
+namespace piranha {
 
 	class SdlParser;
 	class SdlScanner;
@@ -95,6 +95,6 @@ namespace manta {
 		virtual void _validate();
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_COMPILATION_UNIT_H */

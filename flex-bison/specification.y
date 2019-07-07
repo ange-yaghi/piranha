@@ -2,11 +2,11 @@
 %require "3.0"
 %debug
 %defines
-%define api.namespace {manta}
+%define api.namespace {piranha}
 %define api.parser.class {SdlParser}
 
 %code requires {
-	namespace manta {
+	namespace piranha {
 		class SdlCompilationUnit;
 		class SdlScanner;
 	}
@@ -73,86 +73,86 @@
 }
 
 %define api.value.type variant
-%define api.location.type {manta::SdlTokenInfo}
+%define api.location.type {piranha::SdlTokenInfo}
 %define parse.assert
 
 %token END 0
-%token <manta::SdlTokenInfo_string> CHAR
-%token <manta::SdlTokenInfo_string> IMPORT
-%token <manta::SdlTokenInfo_string> AS
-%token <manta::SdlTokenInfo_string> NODE
-%token <manta::SdlTokenInfo_string> DEFAULT
-%token <manta::SdlTokenInfo_string> INPUT
-%token <manta::SdlTokenInfo_string> OUTPUT
-%token <manta::SdlTokenInfo_string> LABEL
-%token <manta::SdlTokenInfo_int>	INT
-%token <manta::SdlTokenInfo_float>	FLOAT
-%token <manta::SdlTokenInfo_bool>	BOOL
-%token <manta::SdlTokenInfo_string> STRING
-%token <manta::SdlTokenInfo_string> DECORATOR
-%token <manta::SdlTokenInfo_string> PUBLIC
-%token <manta::SdlTokenInfo_string> PRIVATE
-%token <manta::SdlTokenInfo_string> BUILTIN_POINTER
-%token <manta::SdlTokenInfo_string> POINTER
-%token <manta::SdlTokenInfo_string> NAMESPACE_POINTER
-%token <manta::SdlTokenInfo_string> UNRECOGNIZED
-%token <manta::SdlTokenInfo_string> OPERATOR
-%token <manta::SdlTokenInfo_string> MODULE
+%token <piranha::SdlTokenInfo_string> CHAR
+%token <piranha::SdlTokenInfo_string> IMPORT
+%token <piranha::SdlTokenInfo_string> AS
+%token <piranha::SdlTokenInfo_string> NODE
+%token <piranha::SdlTokenInfo_string> DEFAULT
+%token <piranha::SdlTokenInfo_string> INPUT
+%token <piranha::SdlTokenInfo_string> OUTPUT
+%token <piranha::SdlTokenInfo_string> LABEL
+%token <piranha::SdlTokenInfo_int>	INT
+%token <piranha::SdlTokenInfo_float>	FLOAT
+%token <piranha::SdlTokenInfo_bool>	BOOL
+%token <piranha::SdlTokenInfo_string> STRING
+%token <piranha::SdlTokenInfo_string> DECORATOR
+%token <piranha::SdlTokenInfo_string> PUBLIC
+%token <piranha::SdlTokenInfo_string> PRIVATE
+%token <piranha::SdlTokenInfo_string> BUILTIN_POINTER
+%token <piranha::SdlTokenInfo_string> POINTER
+%token <piranha::SdlTokenInfo_string> NAMESPACE_POINTER
+%token <piranha::SdlTokenInfo_string> UNRECOGNIZED
+%token <piranha::SdlTokenInfo_string> OPERATOR
+%token <piranha::SdlTokenInfo_string> MODULE
 
-%token <manta::SdlTokenInfo_string> '='
-%token <manta::SdlTokenInfo_string> '+'
-%token <manta::SdlTokenInfo_string> '-'
-%token <manta::SdlTokenInfo_string> '/'
-%token <manta::SdlTokenInfo_string> '*'
-%token <manta::SdlTokenInfo_string> '('
-%token <manta::SdlTokenInfo_string> ')'
-%token <manta::SdlTokenInfo_string> '{'
-%token <manta::SdlTokenInfo_string> '}'
-%token <manta::SdlTokenInfo_string> '['
-%token <manta::SdlTokenInfo_string> ']'
-%token <manta::SdlTokenInfo_string> ':'
-%token <manta::SdlTokenInfo_string> ';'
-%token <manta::SdlTokenInfo_string> ','
-%token <manta::SdlTokenInfo_string> '.'
-%token <manta::SdlTokenInfo_string> '^'
+%token <piranha::SdlTokenInfo_string> '='
+%token <piranha::SdlTokenInfo_string> '+'
+%token <piranha::SdlTokenInfo_string> '-'
+%token <piranha::SdlTokenInfo_string> '/'
+%token <piranha::SdlTokenInfo_string> '*'
+%token <piranha::SdlTokenInfo_string> '('
+%token <piranha::SdlTokenInfo_string> ')'
+%token <piranha::SdlTokenInfo_string> '{'
+%token <piranha::SdlTokenInfo_string> '}'
+%token <piranha::SdlTokenInfo_string> '['
+%token <piranha::SdlTokenInfo_string> ']'
+%token <piranha::SdlTokenInfo_string> ':'
+%token <piranha::SdlTokenInfo_string> ';'
+%token <piranha::SdlTokenInfo_string> ','
+%token <piranha::SdlTokenInfo_string> '.'
+%token <piranha::SdlTokenInfo_string> '^'
 
-%type <manta::SdlTokenInfo_string> standard_operator;
-%type <manta::SdlTokenInfo_string> type_name;
-%type <manta::SdlTokenInfoSet<std::string, 2>> type_name_namespace;
-%type <manta::SdlNode *> node;
-%type <manta::SdlNodeList *> node_list;
-%type <manta::SdlAttributeList *> attribute_list;
-%type <manta::SdlAttributeList *> connection_block;
-%type <manta::SdlAttribute *> attribute;
-%type <manta::SdlValue *> value;
-%type <manta::SdlValue *> port_value;
-%type <manta::SdlValue *> atomic_value;
-%type <manta::SdlValue *> label_value;
-%type <manta::SdlNode *> inline_node;
-%type <manta::SdlValue *> constant;
-%type <manta::SdlValue *> data_access;
-%type <manta::SdlValue *> default_operator;
-%type <manta::SdlValue *> mul_exp;
-%type <manta::SdlValue *> add_exp;
-%type <manta::SdlValue *> primary_exp;
-%type <manta::SdlImportStatement *> import_statement;
-%type <manta::SdlImportStatement *> import_statement_visibility;
-%type <manta::SdlImportStatement *> import_statement_short_name;
-%type <manta::SdlTokenInfo_string> string;
+%type <piranha::SdlTokenInfo_string> standard_operator;
+%type <piranha::SdlTokenInfo_string> type_name;
+%type <piranha::SdlTokenInfoSet<std::string, 2>> type_name_namespace;
+%type <piranha::SdlNode *> node;
+%type <piranha::SdlNodeList *> node_list;
+%type <piranha::SdlAttributeList *> attribute_list;
+%type <piranha::SdlAttributeList *> connection_block;
+%type <piranha::SdlAttribute *> attribute;
+%type <piranha::SdlValue *> value;
+%type <piranha::SdlValue *> port_value;
+%type <piranha::SdlValue *> atomic_value;
+%type <piranha::SdlValue *> label_value;
+%type <piranha::SdlNode *> inline_node;
+%type <piranha::SdlValue *> constant;
+%type <piranha::SdlValue *> data_access;
+%type <piranha::SdlValue *> default_operator;
+%type <piranha::SdlValue *> mul_exp;
+%type <piranha::SdlValue *> add_exp;
+%type <piranha::SdlValue *> primary_exp;
+%type <piranha::SdlImportStatement *> import_statement;
+%type <piranha::SdlImportStatement *> import_statement_visibility;
+%type <piranha::SdlImportStatement *> import_statement_short_name;
+%type <piranha::SdlTokenInfo_string> string;
 
-%type <manta::SdlNodeDefinition *> node_name;
-%type <manta::SdlNodeDefinition *> node_shadow;
-%type <manta::SdlNodeDefinition *> node_decorator;
-%type <manta::SdlNodeDefinition *> node_definition;
-%type <manta::SdlNodeDefinition *> node_port_definitions;
-%type <manta::SdlNodeDefinition *> specific_node_definition;
+%type <piranha::SdlNodeDefinition *> node_name;
+%type <piranha::SdlNodeDefinition *> node_shadow;
+%type <piranha::SdlNodeDefinition *> node_decorator;
+%type <piranha::SdlNodeDefinition *> node_definition;
+%type <piranha::SdlNodeDefinition *> node_port_definitions;
+%type <piranha::SdlNodeDefinition *> specific_node_definition;
 
-%type <manta::SdlAttributeDefinition *> port_declaration;
-%type <manta::SdlAttributeDefinition *> port_status;
-%type <manta::SdlAttributeDefinition *> port_connection;
-%type <manta::SdlAttributeDefinition *> documented_port_definition;
+%type <piranha::SdlAttributeDefinition *> port_declaration;
+%type <piranha::SdlAttributeDefinition *> port_status;
+%type <piranha::SdlAttributeDefinition *> port_connection;
+%type <piranha::SdlAttributeDefinition *> documented_port_definition;
 
-%type <manta::SdlAttributeDefinitionList *> port_definitions;
+%type <piranha::SdlAttributeDefinitionList *> port_definitions;
 
 %locations
 
@@ -470,7 +470,7 @@ add_exp
   ;
 %%
 
-void manta::SdlParser::error(const SdlTokenInfo &l, const std::string &err_message) {
+void piranha::SdlParser::error(const SdlTokenInfo &l, const std::string &err_message) {
 	SdlCompilationError *err;
 	
 	if (l.valid) {

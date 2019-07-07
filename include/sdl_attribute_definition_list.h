@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 
-namespace manta {
+namespace piranha {
 
 	class SdlAttributeDefinitionList : public SdlParserStructure {
 	public:
@@ -34,6 +34,6 @@ namespace manta {
 		std::vector<SdlAttributeDefinition *> m_definitions;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_ATTRIBUTE_DEFINITION_LIST_H */

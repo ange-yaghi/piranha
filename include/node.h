@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace manta {
+namespace piranha {
 
 	struct IntersectionPoint;
 	class StackAllocator;
@@ -120,6 +120,6 @@ namespace manta {
 		NodeProgram *m_program;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* NODE_H */

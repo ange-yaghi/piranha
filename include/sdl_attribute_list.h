@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace manta {
+namespace piranha {
 
 	class SdlAttribute;
 	class SdlAttributeDefinition;
@@ -24,6 +24,6 @@ namespace manta {
 		std::vector<SdlAttribute *> m_attributes;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_ATTRIBUTE_LIST_H */

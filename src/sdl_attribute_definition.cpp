@@ -6,7 +6,7 @@
 #include <sdl_compilation_error.h>
 #include <sdl_context_tree.h>
 
-manta::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string &directionToken,
+piranha::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string &directionToken,
 								const SdlTokenInfo_string &name, DIRECTION dir) {
 	m_name = name;
 	registerToken(&m_name);
@@ -21,7 +21,7 @@ manta::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string 
 	}
 }
 
-manta::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string &name) {
+piranha::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string &name) {
 	m_name = name;
 	registerToken(&m_name);
 
@@ -29,21 +29,21 @@ manta::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string 
 	setVisibility(SdlVisibility::PUBLIC);
 }
 
-manta::SdlAttributeDefinition::~SdlAttributeDefinition() {
+piranha::SdlAttributeDefinition::~SdlAttributeDefinition() {
 	/* void */
 }
 
-void manta::SdlAttributeDefinition::setDefaultValue(SdlValue *value) {
+void piranha::SdlAttributeDefinition::setDefaultValue(SdlValue *value) {
 	m_defaultValue = value;
 	registerComponent(m_defaultValue);
 }
 
-void manta::SdlAttributeDefinition::setDefaultToken(const SdlTokenInfo_string &defaultToken) {
+void piranha::SdlAttributeDefinition::setDefaultToken(const SdlTokenInfo_string &defaultToken) {
 	m_defaultToken = defaultToken;
 	registerToken(&m_defaultToken);
 }
 
-manta::SdlInputConnection *manta::SdlAttributeDefinition::getImpliedMember(const std::string &name) const {
+piranha::SdlInputConnection *piranha::SdlAttributeDefinition::getImpliedMember(const std::string &name) const {
 	int count = getImpliedMemberCount();
 
 	for (int i = 0; i < count; i++) {
@@ -55,7 +55,7 @@ manta::SdlInputConnection *manta::SdlAttributeDefinition::getImpliedMember(const
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+piranha::SdlParserStructure *piranha::SdlAttributeDefinition::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	SDL_RESET(query);
 
 	// First check the input context for the reference

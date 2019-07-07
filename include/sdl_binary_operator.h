@@ -3,7 +3,7 @@
 
 #include <sdl_value.h>
 
-namespace manta {
+namespace piranha {
 
 	class SdlCompilationError;
 
@@ -38,6 +38,6 @@ namespace manta {
 		SdlValue *m_rightOperand;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_BINARY_OPERATOR_H */

@@ -1,7 +1,7 @@
 #ifndef SDL_VISIBILITY_H
 #define SDL_VISIBILITY_H
 
-namespace manta {
+namespace piranha {
 
 		enum SdlVisibility {
 			PRIVATE,
@@ -9,6 +9,6 @@ namespace manta {
 			DEFAULT
 		};
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* SDL_VISIBILITY_H */

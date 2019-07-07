@@ -11,14 +11,14 @@
 #include <sdl_attribute_definition_list.h>
 #include <standard_allocator.h>
 
-manta::SdlGenerator::SdlGenerator() {
+piranha::SdlGenerator::SdlGenerator() {
 	/* void */
 }
 
-manta::SdlGenerator::~SdlGenerator() {
+piranha::SdlGenerator::~SdlGenerator() {
 	/* void */
 }
 
-manta::Node *manta::SdlGenerator::generateNode(SdlNode *reference) const {
+piranha::Node *piranha::SdlGenerator::generateNode(SdlNode *reference) const {
 	return nullptr;
 }

@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-namespace manta {
+namespace piranha {
 
 	typedef unsigned __int64 mem_size;
 
@@ -13,6 +13,6 @@ namespace manta {
 
 #define CHECK_ALIGNMENT(pointer, required) assert((((unsigned __int64)((char *)(pointer))) % (required)) == 0)
 
-} /* namespace manta */
+} /* namespace piranha */
 
 #endif /* MEMORY_MANAGEMENT_H */
