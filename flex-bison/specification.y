@@ -3,31 +3,31 @@
 %debug
 %defines
 %define api.namespace {piranha}
-%define api.parser.class {SdlParser}
+%define api.parser.class {IrParser}
 
 %code requires {
 	namespace piranha {
-		class SdlCompilationUnit;
-		class SdlScanner;
+		class IrCompilationUnit;
+		class IrScanner;
 	}
 
-	#include <sdl_compilation_unit.h>
-	#include <sdl_node.h>
-	#include <sdl_attribute_list.h>
-	#include <sdl_attribute.h>
-	#include <sdl_value.h>
-	#include <sdl_value_constant.h>
-	#include <sdl_binary_operator.h>
-	#include <sdl_import_statement.h>
-	#include <sdl_token_info.h>
-	#include <sdl_node_definition.h>
-	#include <sdl_attribute_definition.h>
-	#include <sdl_attribute_definition_list.h>
-	#include <sdl_compilation_error.h>
-	#include <sdl_structure_list.h>
-	#include <sdl_visibility.h>
-	#include <sdl_unary_operator.h>
-	#include <sdl_generic_value.h>
+	#include "ir_compilation_unit.h"
+	#include "ir_node.h"
+	#include "ir_attribute_list.h"
+	#include "ir_attribute.h"
+	#include "ir_value.h"
+	#include "ir_value_constant.h"
+	#include "ir_binary_operator.h"
+	#include "ir_import_statement.h"
+	#include "ir_token_info.h"
+	#include "ir_node_definition.h"
+	#include "ir_attribute_definition.h"
+	#include "ir_attribute_definition_list.h"
+	#include "ir_compilation_error.h"
+	#include "ir_structure_list.h"
+	#include "ir_visibility.h"
+	#include "ir_unary_operator.h"
+	#include "ir_generic_value.h"
 
 	#include <string>
 
@@ -57,102 +57,102 @@
     #endif
 }
 
-%parse-param {SdlScanner &scanner}
-%parse-param {SdlCompilationUnit &driver}
+%parse-param {IrScanner &scanner}
+%parse-param {IrCompilationUnit &driver}
 
 %code {
   #include <iostream>
   #include <cstdlib>
   #include <fstream>
 
-  #include <sdl_compilation_unit.h>
-  #include <sdl_scanner.h>
+  #include "ir_compilation_unit.h"
+  #include <scanner.h>
 
 #undef yylex
 #define yylex scanner.yylex
 }
 
 %define api.value.type variant
-%define api.location.type {piranha::SdlTokenInfo}
+%define api.location.type {piranha::IrTokenInfo}
 %define parse.assert
 
 %token END 0
-%token <piranha::SdlTokenInfo_string> CHAR
-%token <piranha::SdlTokenInfo_string> IMPORT
-%token <piranha::SdlTokenInfo_string> AS
-%token <piranha::SdlTokenInfo_string> NODE
-%token <piranha::SdlTokenInfo_string> DEFAULT
-%token <piranha::SdlTokenInfo_string> INPUT
-%token <piranha::SdlTokenInfo_string> OUTPUT
-%token <piranha::SdlTokenInfo_string> LABEL
-%token <piranha::SdlTokenInfo_int>	INT
-%token <piranha::SdlTokenInfo_float>	FLOAT
-%token <piranha::SdlTokenInfo_bool>	BOOL
-%token <piranha::SdlTokenInfo_string> STRING
-%token <piranha::SdlTokenInfo_string> DECORATOR
-%token <piranha::SdlTokenInfo_string> PUBLIC
-%token <piranha::SdlTokenInfo_string> PRIVATE
-%token <piranha::SdlTokenInfo_string> BUILTIN_POINTER
-%token <piranha::SdlTokenInfo_string> POINTER
-%token <piranha::SdlTokenInfo_string> NAMESPACE_POINTER
-%token <piranha::SdlTokenInfo_string> UNRECOGNIZED
-%token <piranha::SdlTokenInfo_string> OPERATOR
-%token <piranha::SdlTokenInfo_string> MODULE
+%token <piranha::IrTokenInfo_string> CHAR
+%token <piranha::IrTokenInfo_string> IMPORT
+%token <piranha::IrTokenInfo_string> AS
+%token <piranha::IrTokenInfo_string> NODE
+%token <piranha::IrTokenInfo_string> DEFAULT
+%token <piranha::IrTokenInfo_string> INPUT
+%token <piranha::IrTokenInfo_string> OUTPUT
+%token <piranha::IrTokenInfo_string> LABEL
+%token <piranha::IrTokenInfo_int>	INT
+%token <piranha::IrTokenInfo_float>	FLOAT
+%token <piranha::IrTokenInfo_bool>	BOOL
+%token <piranha::IrTokenInfo_string> STRING
+%token <piranha::IrTokenInfo_string> DECORATOR
+%token <piranha::IrTokenInfo_string> PUBLIC
+%token <piranha::IrTokenInfo_string> PRIVATE
+%token <piranha::IrTokenInfo_string> BUILTIN_POINTER
+%token <piranha::IrTokenInfo_string> POINTER
+%token <piranha::IrTokenInfo_string> NAMESPACE_POINTER
+%token <piranha::IrTokenInfo_string> UNRECOGNIZED
+%token <piranha::IrTokenInfo_string> OPERATOR
+%token <piranha::IrTokenInfo_string> MODULE
 
-%token <piranha::SdlTokenInfo_string> '='
-%token <piranha::SdlTokenInfo_string> '+'
-%token <piranha::SdlTokenInfo_string> '-'
-%token <piranha::SdlTokenInfo_string> '/'
-%token <piranha::SdlTokenInfo_string> '*'
-%token <piranha::SdlTokenInfo_string> '('
-%token <piranha::SdlTokenInfo_string> ')'
-%token <piranha::SdlTokenInfo_string> '{'
-%token <piranha::SdlTokenInfo_string> '}'
-%token <piranha::SdlTokenInfo_string> '['
-%token <piranha::SdlTokenInfo_string> ']'
-%token <piranha::SdlTokenInfo_string> ':'
-%token <piranha::SdlTokenInfo_string> ';'
-%token <piranha::SdlTokenInfo_string> ','
-%token <piranha::SdlTokenInfo_string> '.'
-%token <piranha::SdlTokenInfo_string> '^'
+%token <piranha::IrTokenInfo_string> '='
+%token <piranha::IrTokenInfo_string> '+'
+%token <piranha::IrTokenInfo_string> '-'
+%token <piranha::IrTokenInfo_string> '/'
+%token <piranha::IrTokenInfo_string> '*'
+%token <piranha::IrTokenInfo_string> '('
+%token <piranha::IrTokenInfo_string> ')'
+%token <piranha::IrTokenInfo_string> '{'
+%token <piranha::IrTokenInfo_string> '}'
+%token <piranha::IrTokenInfo_string> '['
+%token <piranha::IrTokenInfo_string> ']'
+%token <piranha::IrTokenInfo_string> ':'
+%token <piranha::IrTokenInfo_string> ';'
+%token <piranha::IrTokenInfo_string> ','
+%token <piranha::IrTokenInfo_string> '.'
+%token <piranha::IrTokenInfo_string> '^'
 
-%type <piranha::SdlTokenInfo_string> standard_operator;
-%type <piranha::SdlTokenInfo_string> type_name;
-%type <piranha::SdlTokenInfoSet<std::string, 2>> type_name_namespace;
-%type <piranha::SdlNode *> node;
-%type <piranha::SdlNodeList *> node_list;
-%type <piranha::SdlAttributeList *> attribute_list;
-%type <piranha::SdlAttributeList *> connection_block;
-%type <piranha::SdlAttribute *> attribute;
-%type <piranha::SdlValue *> value;
-%type <piranha::SdlValue *> port_value;
-%type <piranha::SdlValue *> atomic_value;
-%type <piranha::SdlValue *> label_value;
-%type <piranha::SdlNode *> inline_node;
-%type <piranha::SdlValue *> constant;
-%type <piranha::SdlValue *> data_access;
-%type <piranha::SdlValue *> default_operator;
-%type <piranha::SdlValue *> mul_exp;
-%type <piranha::SdlValue *> add_exp;
-%type <piranha::SdlValue *> primary_exp;
-%type <piranha::SdlImportStatement *> import_statement;
-%type <piranha::SdlImportStatement *> import_statement_visibility;
-%type <piranha::SdlImportStatement *> import_statement_short_name;
-%type <piranha::SdlTokenInfo_string> string;
+%type <piranha::IrTokenInfo_string> standard_operator;
+%type <piranha::IrTokenInfo_string> type_name;
+%type <piranha::IrTokenInfoSet<std::string, 2>> type_name_namespace;
+%type <piranha::IrNode *> node;
+%type <piranha::IrNodeList *> node_list;
+%type <piranha::IrAttributeList *> attribute_list;
+%type <piranha::IrAttributeList *> connection_block;
+%type <piranha::IrAttribute *> attribute;
+%type <piranha::IrValue *> value;
+%type <piranha::IrValue *> port_value;
+%type <piranha::IrValue *> atomic_value;
+%type <piranha::IrValue *> label_value;
+%type <piranha::IrNode *> inline_node;
+%type <piranha::IrValue *> constant;
+%type <piranha::IrValue *> data_access;
+%type <piranha::IrValue *> default_operator;
+%type <piranha::IrValue *> mul_exp;
+%type <piranha::IrValue *> add_exp;
+%type <piranha::IrValue *> primary_exp;
+%type <piranha::IrImportStatement *> import_statement;
+%type <piranha::IrImportStatement *> import_statement_visibility;
+%type <piranha::IrImportStatement *> import_statement_short_name;
+%type <piranha::IrTokenInfo_string> string;
 
-%type <piranha::SdlNodeDefinition *> node_name;
-%type <piranha::SdlNodeDefinition *> node_shadow;
-%type <piranha::SdlNodeDefinition *> node_decorator;
-%type <piranha::SdlNodeDefinition *> node_definition;
-%type <piranha::SdlNodeDefinition *> node_port_definitions;
-%type <piranha::SdlNodeDefinition *> specific_node_definition;
+%type <piranha::IrNodeDefinition *> node_name;
+%type <piranha::IrNodeDefinition *> node_shadow;
+%type <piranha::IrNodeDefinition *> node_decorator;
+%type <piranha::IrNodeDefinition *> node_definition;
+%type <piranha::IrNodeDefinition *> node_port_definitions;
+%type <piranha::IrNodeDefinition *> specific_node_definition;
 
-%type <piranha::SdlAttributeDefinition *> port_declaration;
-%type <piranha::SdlAttributeDefinition *> port_status;
-%type <piranha::SdlAttributeDefinition *> port_connection;
-%type <piranha::SdlAttributeDefinition *> documented_port_definition;
+%type <piranha::IrAttributeDefinition *> port_declaration;
+%type <piranha::IrAttributeDefinition *> port_status;
+%type <piranha::IrAttributeDefinition *> port_connection;
+%type <piranha::IrAttributeDefinition *> documented_port_definition;
 
-%type <piranha::SdlAttributeDefinitionList *> port_definitions;
+%type <piranha::IrAttributeDefinitionList *> port_definitions;
 
 %locations
 
@@ -185,9 +185,9 @@ statement_list
   ;
 
 import_statement
-  : IMPORT string					{ $$ = new SdlImportStatement($2); }
+  : IMPORT string					{ $$ = new IrImportStatement($2); }
   | IMPORT LABEL					{ 
-										$$ = new SdlImportStatement($2); 
+										$$ = new IrImportStatement($2); 
 
 										/* The name is a valid label so it can be used as a short name */
 										$$->setShortName($2); 
@@ -195,9 +195,9 @@ import_statement
   ;
 
 import_statement_visibility
-  : PUBLIC import_statement			{ $$ = $2; $$->setVisibility(SdlVisibility::PUBLIC); }
-  | PRIVATE import_statement		{ $$ = $2; $$->setVisibility(SdlVisibility::PRIVATE); }
-  | import_statement				{ $$ = $1; $$->setVisibility(SdlVisibility::DEFAULT); }
+  : PUBLIC import_statement			{ $$ = $2; $$->setVisibility(IrVisibility::PUBLIC); }
+  | PRIVATE import_statement		{ $$ = $2; $$->setVisibility(IrVisibility::PRIVATE); }
+  | import_statement				{ $$ = $1; $$->setVisibility(IrVisibility::DEFAULT); }
   ;
 
 import_statement_short_name
@@ -208,7 +208,7 @@ import_statement_short_name
 type_name
   : LABEL							{ $$ = $1; }
   | OPERATOR standard_operator		{
-										SdlTokenInfo_string info = $1;
+										IrTokenInfo_string info = $1;
 										info.combine(&$2);
 										info.data = std::string("operator") + $2.data;
 										$$ = info;										
@@ -217,18 +217,18 @@ type_name
 
 type_name_namespace
   : type_name							{ 
-											SdlTokenInfoSet<std::string, 2> set; 
+											IrTokenInfoSet<std::string, 2> set; 
 											set.data[1] = $1; 
 											$$ = set; 
 										}
   | LABEL NAMESPACE_POINTER type_name	{ 
-											SdlTokenInfoSet<std::string, 2> set; 
+											IrTokenInfoSet<std::string, 2> set; 
 											set.data[0] = $1; 
 											set.data[1] = $3; 
 											$$ = set; 
 										}
   | NAMESPACE_POINTER type_name			{ 
-											SdlTokenInfoSet<std::string, 2> set; 
+											IrTokenInfoSet<std::string, 2> set; 
 											set.data[0].specified = true; 
 											set.data[1] = $2; 
 											$$ = set; 
@@ -236,19 +236,19 @@ type_name_namespace
   ;
 
 node
-  : type_name_namespace LABEL connection_block			{ $$ = new SdlNode($1.data[1], $2, $3, $1.data[0]); }
+  : type_name_namespace LABEL connection_block			{ $$ = new IrNode($1.data[1], $2, $3, $1.data[0]); }
   | type_name_namespace connection_block				{
-															SdlTokenInfo_string name;
+															IrTokenInfo_string name;
 															name.specified = false;
 															name.data = "";
 
-															$$ = new SdlNode($1.data[1], name, $2, $1.data[0]);
+															$$ = new IrNode($1.data[1], name, $2, $1.data[0]);
 														}
   ;
 
 node_list
   : node											{
-															$$ = new SdlNodeList();
+															$$ = new IrNodeList();
 															$$->add($1);
 														}
   | node_list node									{ 
@@ -265,12 +265,12 @@ standard_operator
   ;
 
 node_name
-  : NODE LABEL											{ $$ = new SdlNodeDefinition($2); }
+  : NODE LABEL											{ $$ = new IrNodeDefinition($2); }
   | NODE OPERATOR standard_operator						{
-															SdlTokenInfo_string info = $2;
+															IrTokenInfo_string info = $2;
 															info.combine(&$3);
 															info.data = std::string("operator") + $3.data;
-															$$ = new SdlNodeDefinition(info);
+															$$ = new IrNodeDefinition(info);
 														}
   ;
 
@@ -283,7 +283,7 @@ node_port_definitions
   : node_shadow '{' port_definitions					{ $$ = $1; $$->setAttributeDefinitionList($3); }
   | node_shadow '{'										{ 
 															$$ = $1; 
-															$$->setAttributeDefinitionList(new SdlAttributeDefinitionList()); 
+															$$->setAttributeDefinitionList(new IrAttributeDefinitionList()); 
 														}
   ;
 
@@ -299,7 +299,7 @@ specific_node_definition
   | PRIVATE node_definition								{ 
 															if ($2 != nullptr) {
 																$$ = $2; 
-																$$->setVisibility(SdlVisibility::PRIVATE); 
+																$$->setVisibility(IrVisibility::PRIVATE); 
 																$$->setScopeToken($1);
 															}
 															else $$ = nullptr;
@@ -307,7 +307,7 @@ specific_node_definition
   | PUBLIC node_definition								{ 
 															if ($2 != nullptr) {
 																$$ = $2;
-																$$->setVisibility(SdlVisibility::PUBLIC);
+																$$->setVisibility(IrVisibility::PUBLIC);
 																$$->setScopeToken($1);
 															}
 															else $$ = nullptr;
@@ -321,15 +321,15 @@ node_decorator
 
 port_definitions
   : documented_port_definition							{ 
-															$$ = new SdlAttributeDefinitionList(); 
+															$$ = new IrAttributeDefinitionList(); 
 															$$->addDefinition($1); 
 														}
   | port_definitions documented_port_definition			{ $$ = $1; $$->addDefinition($2); }
   ;
 
 port_declaration
-  : INPUT LABEL													{ $$ = new SdlAttributeDefinition($1, $2, SdlAttributeDefinition::INPUT); }
-  | OUTPUT LABEL												{ $$ = new SdlAttributeDefinition($1, $2, SdlAttributeDefinition::OUTPUT); }
+  : INPUT LABEL													{ $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::INPUT); }
+  | OUTPUT LABEL												{ $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::OUTPUT); }
   ;
 
 port_status
@@ -338,7 +338,7 @@ port_status
   ;
 
 port_value
-  : '[' type_name_namespace ']'			{ $$ = new SdlGenericValue($2); }
+  : '[' type_name_namespace ']'			{ $$ = new IrGenericValue($2); }
   | value								{ $$ = $1; }
   ;
 
@@ -354,12 +354,12 @@ documented_port_definition
   ;
 
 inline_node
-  : type_name_namespace connection_block	{ $$ = new SdlNode($1.data[1], $2, $1.data[0]); }
+  : type_name_namespace connection_block	{ $$ = new IrNode($1.data[1], $2, $1.data[0]); }
   ;
 
 connection_block 
   : '(' ')'							{ 
-										$$ = new SdlAttributeList(); 
+										$$ = new IrAttributeList(); 
 										$$->registerToken(&$1); 
 										$$->registerToken(&$2); 
 									}
@@ -373,7 +373,7 @@ connection_block
 
 attribute_list
   : attribute					    { 
-										$$ = new SdlAttributeList();
+										$$ = new IrAttributeList();
 										$$->addAttribute($1); 
 									}
   | attribute_list ',' attribute	{
@@ -381,18 +381,18 @@ attribute_list
 										$$ = $1; 
 									}
   | error ',' attribute				{
-										$$ = new SdlAttributeList();
+										$$ = new IrAttributeList();
 										$$->addAttribute($3);
 									}
   ;
 
 attribute
-  : LABEL ':' value					{ $$ = new SdlAttribute($1, $3); }
-  | value							{ $$ = new SdlAttribute($1); }
+  : LABEL ':' value					{ $$ = new IrAttribute($1, $3); }
+  | value							{ $$ = new IrAttribute($1); }
   ;
 
 label_value
-  : LABEL							{ $$ = static_cast<SdlValue *>(new SdlValueLabel($1)); }
+  : LABEL							{ $$ = static_cast<IrValue *>(new IrValueLabel($1)); }
   ;
 
 value
@@ -402,7 +402,7 @@ value
 string
   : STRING							{ $$ = $1; @$ = $1; }
   | string STRING					{ 
-										$$ = SdlTokenInfo_string();
+										$$ = IrTokenInfo_string();
 										$$.data = $1.data + $2.data;
 										$$.combine(&$1);
 										$$.combine(&$2);
@@ -410,15 +410,15 @@ string
   ;
 
 constant
-  : INT								{ $$ = static_cast<SdlValue *>(new SdlValueInt($1)); @$ = $1; }
-  | string							{ $$ = static_cast<SdlValue *>(new SdlValueString($1)); }
-  | FLOAT							{ $$ = static_cast<SdlValue *>(new SdlValueFloat($1)); @$ = $1; }
-  | BOOL							{ $$ = static_cast<SdlValue *>(new SdlValueBool($1)); @$ = $1; }
+  : INT								{ $$ = static_cast<IrValue *>(new IrValueInt($1)); @$ = $1; }
+  | string							{ $$ = static_cast<IrValue *>(new IrValueString($1)); }
+  | FLOAT							{ $$ = static_cast<IrValue *>(new IrValueFloat($1)); @$ = $1; }
+  | BOOL							{ $$ = static_cast<IrValue *>(new IrValueBool($1)); @$ = $1; }
   ;
 
 atomic_value
   : label_value						{ $$ = $1; }
-  | inline_node						{ $$ = static_cast<SdlValue *>(new SdlValueNodeRef($1)); }
+  | inline_node						{ $$ = static_cast<IrValue *>(new IrValueNodeRef($1)); }
   | constant						{ $$ = $1; }
   ;
 
@@ -430,54 +430,54 @@ primary_exp
 
 default_operator
   : primary_exp						{ $$ = $1; }
-  | default_operator '^'			{ $$ = new SdlUnaryOperator(SdlUnaryOperator::DEFAULT, $1); }
+  | default_operator '^'			{ $$ = new IrUnaryOperator(IrUnaryOperator::DEFAULT, $1); }
   ;
 
 data_access
   : default_operator				{ $$ = $1; }
   | data_access '.' label_value		{ 
-										$$ = static_cast<SdlValue *>(
-											new SdlBinaryOperator(SdlBinaryOperator::DOT, $1, $3));
+										$$ = static_cast<IrValue *>(
+											new IrBinaryOperator(IrBinaryOperator::DOT, $1, $3));
 									}
   | data_access POINTER label_value { 
-										$$ = static_cast<SdlValue *>(
-											new SdlBinaryOperator(SdlBinaryOperator::POINTER, $1, $3));
+										$$ = static_cast<IrValue *>(
+											new IrBinaryOperator(IrBinaryOperator::POINTER, $1, $3));
 									}
   ;
 
 mul_exp
   : data_access						{ $$ = $1; }
   | mul_exp '*' data_access			{
-										$$ = static_cast<SdlValue *>(
-											new SdlBinaryOperator(SdlBinaryOperator::MUL, $1, $3));
+										$$ = static_cast<IrValue *>(
+											new IrBinaryOperator(IrBinaryOperator::MUL, $1, $3));
 									}
   | mul_exp '/' data_access			{
-										$$ = static_cast<SdlValue *>(
-											new SdlBinaryOperator(SdlBinaryOperator::DIV, $1, $3));
+										$$ = static_cast<IrValue *>(
+											new IrBinaryOperator(IrBinaryOperator::DIV, $1, $3));
 									}
   ;
 
 add_exp
   : mul_exp							{ $$ = $1; }
   | add_exp '+' mul_exp				{
-										$$ = static_cast<SdlValue *>(
-											new SdlBinaryOperator(SdlBinaryOperator::ADD, $1, $3));
+										$$ = static_cast<IrValue *>(
+											new IrBinaryOperator(IrBinaryOperator::ADD, $1, $3));
 									}
   | add_exp '-' mul_exp				{
-										$$ = static_cast<SdlValue *>(
-											new SdlBinaryOperator(SdlBinaryOperator::SUB, $1, $3));
+										$$ = static_cast<IrValue *>(
+											new IrBinaryOperator(IrBinaryOperator::SUB, $1, $3));
 									}
   ;
 %%
 
-void piranha::SdlParser::error(const SdlTokenInfo &l, const std::string &err_message) {
-	SdlCompilationError *err;
+void piranha::IrParser::error(const IrTokenInfo &l, const std::string &err_message) {
+	IrCompilationError *err;
 	
 	if (l.valid) {
-		err = new SdlCompilationError(l, SdlErrorCode::UnexpectedToken);
+		err = new IrCompilationError(l, IrErrorCode::UnexpectedToken);
 	}
 	else {
-		err = new SdlCompilationError(l, SdlErrorCode::UnidentifiedToken);
+		err = new IrCompilationError(l, IrErrorCode::UnidentifiedToken);
 	}
 
 	driver.addCompilationError(err);

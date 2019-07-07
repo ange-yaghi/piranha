@@ -1,12 +1,12 @@
-#include <sdl_attribute.h>
+#include "ir_attribute.h"
 
-#include <sdl_value.h>
+#include "ir_value.h"
 
-piranha::SdlAttribute::SdlAttribute() {
+piranha::IrAttribute::IrAttribute() {
 	/* void */
 }
 
-piranha::SdlAttribute::SdlAttribute(const SdlTokenInfo_string &name, SdlValue *value) {
+piranha::IrAttribute::IrAttribute(const IrTokenInfo_string &name, IrValue *value) {
 	m_name = name;
 	m_value = value;
 	m_position = -1;
@@ -17,26 +17,26 @@ piranha::SdlAttribute::SdlAttribute(const SdlTokenInfo_string &name, SdlValue *v
 	m_definition = nullptr;
 }
 
-piranha::SdlAttribute::SdlAttribute(SdlValue *value) {
+piranha::IrAttribute::IrAttribute(IrValue *value) {
 	m_value = value;
 	m_position = -1;
 
 	registerComponent(value);
 }
 
-piranha::SdlAttribute::~SdlAttribute() {
+piranha::IrAttribute::~IrAttribute() {
 	/* void */
 }
 
-void piranha::SdlAttribute::setValue(SdlValue *value) {
+void piranha::IrAttribute::setValue(IrValue *value) {
 	m_value = value;
 	registerComponent(value);
 }
 
-piranha::SdlParserStructure *piranha::SdlAttribute::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-	SDL_INFO_OUT(err, nullptr);
-	SDL_INFO_OUT(newContext, query.inputContext);
-	SDL_INFO_OUT(failed, false);
+piranha::IrParserStructure *piranha::IrAttribute::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+	IR_INFO_OUT(err, nullptr);
+	IR_INFO_OUT(newContext, query.inputContext);
+	IR_INFO_OUT(failed, false);
 
 	return m_value;
 }

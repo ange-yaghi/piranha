@@ -1,28 +1,28 @@
-#include <sdl_node.h>
+#include "ir_node.h"
 
-#include <sdl_attribute.h>
-#include <sdl_attribute_list.h>
-#include <sdl_compilation_unit.h>
-#include <sdl_node_definition.h>
-#include <sdl_attribute_definition.h>
-#include <sdl_compilation_error.h>
-#include <sdl_attribute_definition_list.h>
-#include <sdl_value.h>
+#include "ir_attribute.h"
+#include "ir_attribute_list.h"
+#include "ir_compilation_unit.h"
+#include "ir_node_definition.h"
+#include "ir_attribute_definition.h"
+#include "ir_compilation_error.h"
+#include "ir_attribute_definition_list.h"
+#include "ir_value.h"
 #include <node.h>
 #include <custom_node.h>
 #include <standard_allocator.h>
-#include <sdl_context_tree.h>
+#include "ir_context_tree.h"
 
 #include <constructed_float_node.h>
 #include <constructed_string_node.h>
 #include <node_program.h>
 
-piranha::SdlNode::SdlNode() {
+piranha::IrNode::IrNode() {
 	/* void */
 }
 
-piranha::SdlNode::SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_string &name, 
-			SdlAttributeList *attributes, const SdlTokenInfo_string &library) {
+piranha::IrNode::IrNode(const IrTokenInfo_string &type, const IrTokenInfo_string &name, 
+			IrAttributeList *attributes, const IrTokenInfo_string &library) {
 	m_type = type;
 	m_name = name;
 	m_attributes = attributes;
@@ -36,10 +36,10 @@ piranha::SdlNode::SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_st
 	m_definition = nullptr;
 }
 
-piranha::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attributes,
-			const SdlTokenInfo_string &library) {
+piranha::IrNode::IrNode(const IrTokenInfo_string &type, IrAttributeList *attributes,
+			const IrTokenInfo_string &library) {
 	m_type = type;
-	m_name = SdlTokenInfo_string("");
+	m_name = IrTokenInfo_string("");
 	m_attributes = attributes;
 	m_library = library;
 
@@ -48,24 +48,24 @@ piranha::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *att
 	registerComponent(attributes);
 }
 
-piranha::SdlNode::~SdlNode() {
+piranha::IrNode::~IrNode() {
 	/* void */
 }
 
-void piranha::SdlNode::setAttributes(SdlAttributeList *list) {
+void piranha::IrNode::setAttributes(IrAttributeList *list) {
 	m_attributes = list;
 	registerComponent(list);
 }
 
-piranha::SdlAttribute *piranha::SdlNode::getAttribute(const std::string &name, int *count) const {
+piranha::IrAttribute *piranha::IrNode::getAttribute(const std::string &name, int *count) const {
 	if (m_attributes == nullptr) return nullptr;
 
 	if (count != nullptr) *count = 0;
 
-	SdlAttribute *result = nullptr;
+	IrAttribute *result = nullptr;
 	int attributeCount = m_attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
-		SdlAttribute *attribute = m_attributes->getAttribute(i);
+		IrAttribute *attribute = m_attributes->getAttribute(i);
 		bool definitionMatches = attribute->getAttributeDefinition() != nullptr
 			? attribute->getAttributeDefinition()->getName() == name
 			: false;
@@ -78,22 +78,22 @@ piranha::SdlAttribute *piranha::SdlNode::getAttribute(const std::string &name, i
 	return result;
 }
 
-void piranha::SdlNode::setParentScope(SdlParserStructure *parentScope) {
-	SdlParserStructure::setParentScope(parentScope);
+void piranha::IrNode::setParentScope(IrParserStructure *parentScope) {
+	IrParserStructure::setParentScope(parentScope);
 	if (m_attributes != nullptr) {
 		m_attributes->setParentScope(parentScope);
 	}
 }
 
-piranha::SdlAttribute *piranha::SdlNode::getAttribute(SdlAttributeDefinition *definition, int *count) const {
+piranha::IrAttribute *piranha::IrNode::getAttribute(IrAttributeDefinition *definition, int *count) const {
 	if (m_attributes == nullptr) return nullptr;
 
 	if (count != nullptr) *count = 0;
 
-	SdlAttribute *result = nullptr;
+	IrAttribute *result = nullptr;
 	int attributeCount = m_attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
-		SdlAttribute *attribute = m_attributes->getAttribute(i);
+		IrAttribute *attribute = m_attributes->getAttribute(i);
 		if (attribute->getAttributeDefinition() == definition) {
 			if (result == nullptr) result = attribute;
 			if (count != nullptr) (*count)++;
@@ -103,22 +103,22 @@ piranha::SdlAttribute *piranha::SdlNode::getAttribute(SdlAttributeDefinition *de
 	return result;
 }
 
-piranha::SdlParserStructure *piranha::SdlNode::resolveLocalName(const std::string &name) const {
-	SdlParserStructure *attribute = getAttribute(name);
+piranha::IrParserStructure *piranha::IrNode::resolveLocalName(const std::string &name) const {
+	IrParserStructure *attribute = getAttribute(name);
 	if (attribute != nullptr) return attribute;
 	
 	if (m_definition != nullptr) return m_definition->resolveLocalName(name);
 	else return nullptr;
 }
 
-void piranha::SdlNode::_resolveDefinitions() {
+void piranha::IrNode::_resolveDefinitions() {
 	resolveNodeDefinition();
 	resolveAttributeDefinitions();
 }
 
-void piranha::SdlNode::_validate() {
-	SdlAttributeList *attributes = m_attributes;
-	SdlCompilationUnit *unit = getParentUnit();
+void piranha::IrNode::_validate() {
+	IrAttributeList *attributes = m_attributes;
+	IrCompilationUnit *unit = getParentUnit();
 
 	if (attributes == nullptr) {
 		// There was a syntax error before this step
@@ -128,12 +128,12 @@ void piranha::SdlNode::_validate() {
 	// Check for symbols used more than once
 	int attributeCount = attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
-		SdlAttribute *attribute = attributes->getAttribute(i);
+		IrAttribute *attribute = attributes->getAttribute(i);
 
 		int count;
 		bool positional = attribute->isPositional();
 
-		SdlAttributeDefinition *definition = attribute->getAttributeDefinition();
+		IrAttributeDefinition *definition = attribute->getAttributeDefinition();
 
 		// If there was an error resolving the definition, skip this validation step
 		if (definition != nullptr) getAttribute(definition, &count);
@@ -144,12 +144,12 @@ void piranha::SdlNode::_validate() {
 
 			if (positional) {
 				// Log a more specific message for clarify if the attribute is positional
-				unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(),
-					SdlErrorCode::InputSpecifiedMultipleTimesPositional));
+				unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(),
+					IrErrorCode::InputSpecifiedMultipleTimesPositional));
 			}
 			else {
-				unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(),
-					SdlErrorCode::InputSpecifiedMultipleTimes));
+				unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(),
+					IrErrorCode::InputSpecifiedMultipleTimes));
 			}
 		}
 	}
@@ -163,26 +163,26 @@ void piranha::SdlNode::_validate() {
 			int inputCount = attributeList->getInputCount();
 
 			for (int i = 0; i < inputCount; i++) {
-				SdlAttributeDefinition *input = attributeList->getInputDefinition(i);
-				SdlParserStructure *attribute = getAttribute(input);
+				IrAttributeDefinition *input = attributeList->getInputDefinition(i);
+				IrParserStructure *attribute = getAttribute(input);
 
 				if (attribute == nullptr && input->getDefaultValue() == nullptr) {
 					// This input port is not conencted and has no default value
-					unit->addCompilationError(new SdlCompilationError(*getSummaryToken(),
-						SdlErrorCode::InputNotConnected));
+					unit->addCompilationError(new IrCompilationError(*getSummaryToken(),
+						IrErrorCode::InputNotConnected));
 				}
 			}
 		}
 	}
 }
 
-void piranha::SdlNode::_checkInstantiation() {
+void piranha::IrNode::_checkInstantiation() {
 	// Check all references relating to the connection of inputs from this
 	// node to the actual definition.
-	SdlContextTree *parentContext = new SdlContextTree(nullptr);
-	SdlContextTree *mainContext = parentContext->newChild(this, true);
+	IrContextTree *parentContext = new IrContextTree(nullptr);
+	IrContextTree *mainContext = parentContext->newChild(this, true);
 
-	SdlAttributeList *attributes = getAttributes();
+	IrAttributeList *attributes = getAttributes();
 	if (attributes != nullptr) {
 		int attributeCount = attributes->getAttributeCount();
 		for (int i = 0; i < attributeCount; i++) {
@@ -195,10 +195,10 @@ void piranha::SdlNode::_checkInstantiation() {
 	}
 }
 
-void piranha::SdlNode::resolveNodeDefinition() {
+void piranha::IrNode::resolveNodeDefinition() {
 	int definitionCount = 0;
-	SdlNodeDefinition *definition = nullptr;
-	SdlCompilationUnit *unit = getParentUnit();
+	IrNodeDefinition *definition = nullptr;
+	IrCompilationUnit *unit = getParentUnit();
 
 	if (m_library.specified) {
 		if (!m_library.data.empty()) {
@@ -218,8 +218,8 @@ void piranha::SdlNode::resolveNodeDefinition() {
 	}
 
 	if (definition == nullptr) {
-		unit->addCompilationError(new SdlCompilationError(getTypeToken(), 
-			SdlErrorCode::UndefinedNodeType));
+		unit->addCompilationError(new IrCompilationError(getTypeToken(), 
+			IrErrorCode::UndefinedNodeType));
 	}
 
 	else {
@@ -227,7 +227,7 @@ void piranha::SdlNode::resolveNodeDefinition() {
 	}
 }
 
-void piranha::SdlNode::resolveAttributeDefinitions() {
+void piranha::IrNode::resolveAttributeDefinitions() {
 	if (m_definition == nullptr) {
 		// The definition wasn't found so resolving any attributes doesn't make sense
 		return;
@@ -238,22 +238,22 @@ void piranha::SdlNode::resolveAttributeDefinitions() {
 		return;
 	}
 
-	SdlCompilationUnit *unit = getParentUnit();
+	IrCompilationUnit *unit = getParentUnit();
 
 	int attributeCount = m_attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
-		SdlAttribute *attribute = m_attributes->getAttribute(i);
+		IrAttribute *attribute = m_attributes->getAttribute(i);
 
-		SdlAttributeDefinition *definition;
+		IrAttributeDefinition *definition;
 		
 		if (attribute->isPositional()) {
-			const SdlAttributeDefinitionList *list = m_definition->getAttributeDefinitionList();
+			const IrAttributeDefinitionList *list = m_definition->getAttributeDefinitionList();
 			int position = attribute->getPosition();
 
 			// Check position is not out of bounds
 			if (position >= list->getInputCount()) {
-				unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), 
-					SdlErrorCode::ArgumentPositionOutOfBounds));
+				unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(), 
+					IrErrorCode::ArgumentPositionOutOfBounds));
 				attribute->setAttributeDefinition(nullptr);
 				return;
 			}
@@ -269,14 +269,14 @@ void piranha::SdlNode::resolveAttributeDefinitions() {
 
 		if (definition == nullptr) {
 			// Port not found
-			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), 
-				SdlErrorCode::PortNotFound));
+			unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(), 
+				IrErrorCode::PortNotFound));
 			attribute->setAttributeDefinition(nullptr);
 		}
-		else if (definition->getDirection() == SdlAttributeDefinition::OUTPUT) {
+		else if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
 			// Can't assign an output port
-			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), 
-				SdlErrorCode::UsingOutputPortAsInput));
+			unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(), 
+				IrErrorCode::UsingOutputPortAsInput));
 			attribute->setAttributeDefinition(nullptr);
 		}
 		else {
@@ -286,11 +286,11 @@ void piranha::SdlNode::resolveAttributeDefinitions() {
 	}
 }
 
-piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgram *program) {
-	SdlContextTree *newContext;
-	SdlContextTree *parentContext = context;
+piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram *program) {
+	IrContextTree *newContext;
+	IrContextTree *parentContext = context;
 	if (parentContext == nullptr) {
-		parentContext = new SdlContextTree(nullptr);
+		parentContext = new IrContextTree(nullptr);
 	}
 
 	newContext = parentContext->newChild(this);
@@ -300,9 +300,9 @@ piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgr
 
 	entry = newTableEntry(parentContext);
 
-	SdlNodeDefinition *definition = getDefinition();
-	const SdlAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
-	const SdlAttributeList *specifiedAttributes = getAttributes();
+	IrNodeDefinition *definition = getDefinition();
+	const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
+	const IrAttributeList *specifiedAttributes = getAttributes();
 	int attributeCount = allAttributes->getDefinitionCount();
 
 	struct Mapping {
@@ -315,17 +315,17 @@ piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgr
 	std::vector<Mapping> outputs;
 
 	for (int i = 0; i < attributeCount; i++) {
-		SdlAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
+		IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
 
-		if (attributeDefinition->getDirection() == SdlAttributeDefinition::INPUT) {
-			SdlAttribute *attribute = specifiedAttributes->getAttribute(attributeDefinition);
+		if (attributeDefinition->getDirection() == IrAttributeDefinition::INPUT) {
+			IrAttribute *attribute = specifiedAttributes->getAttribute(attributeDefinition);
 
 			if (attribute != nullptr) {
 				// Input was specified
-				SdlReferenceQuery query;
+				IrReferenceQuery query;
 				query.inputContext = parentContext;
 				query.recordErrors = false;
-				SdlValue *asValue = attribute->getImmediateReference(query, nullptr)->getAsValue();
+				IrValue *asValue = attribute->getImmediateReference(query, nullptr)->getAsValue();
 
 				Mapping inputPort;
 				inputPort.output = asValue->generateNodeOutput(parentContext, program);
@@ -334,10 +334,10 @@ piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgr
 			}
 			else {
 				// Use the default value in the definition
-				SdlReferenceQuery query;
+				IrReferenceQuery query;
 				query.inputContext = parentContext;
 				query.recordErrors = false;
-				SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
+				IrValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
 				Mapping inputPort;
 				inputPort.output = asValue->generateNodeOutput(parentContext, program);
@@ -345,12 +345,12 @@ piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgr
 				inputs.push_back(inputPort);
 			}
 		}
-		else if (attributeDefinition->getDirection() == SdlAttributeDefinition::OUTPUT &&
+		else if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT &&
 																	!definition->isBuiltin()) {
-			SdlReferenceQuery query;
+			IrReferenceQuery query;
 			query.inputContext = parentContext;
 			query.recordErrors = false;
-			SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
+			IrValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
 			Mapping outputPort;
 			outputPort.output = asValue->generateNodeOutput(newContext, program);
@@ -362,11 +362,11 @@ piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgr
 	}
 
 	// Generate internal nodes
-	SdlNodeList *nestedNodeList = definition->getBody();
+	IrNodeList *nestedNodeList = definition->getBody();
 	if (nestedNodeList != nullptr) {
 		int nestedNodeCount = nestedNodeList->getItemCount();
 		for (int i = 0; i < nestedNodeCount; i++) {
-			SdlNode *node = nestedNodeList->getItem(i);
+			IrNode *node = nestedNodeList->getItem(i);
 			node->generateNode(newContext, program);
 		}
 	}
@@ -399,7 +399,7 @@ piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgr
 
 	if (newNode != nullptr) {
 		newNode->setName(getName());
-		newNode->setSdlNode(this);
+		newNode->setIrNode(this);
 		newNode->initialize();
 
 		for (int i = 0; i < inputCount; i++) {
@@ -414,7 +414,7 @@ piranha::Node *piranha::SdlNode::generateNode(SdlContextTree *context, NodeProgr
 	return newNode;
 }
 
-piranha::SdlNode::NodeTableEntry *piranha::SdlNode::getTableEntry(SdlContextTree *context) {
+piranha::IrNode::NodeTableEntry *piranha::IrNode::getTableEntry(IrContextTree *context) {
 	int entryCount = (int)m_nodeTable.size();
 	for (int i = 0; i < entryCount; i++) {
 		if (m_nodeTable[i]->context->isEqual(context)) {
@@ -425,7 +425,7 @@ piranha::SdlNode::NodeTableEntry *piranha::SdlNode::getTableEntry(SdlContextTree
 	return nullptr;
 }
 
-piranha::SdlNode::NodeTableEntry *piranha::SdlNode::newTableEntry(SdlContextTree *context) {
+piranha::IrNode::NodeTableEntry *piranha::IrNode::newTableEntry(IrContextTree *context) {
 	NodeTableEntry *newEntry = new NodeTableEntry();
 	newEntry->context = context;
 	newEntry->generatedNode = nullptr;
@@ -435,7 +435,7 @@ piranha::SdlNode::NodeTableEntry *piranha::SdlNode::newTableEntry(SdlContextTree
 	return newEntry;
 }
 
-piranha::SdlValue *piranha::SdlNode::getDefaultOutputValue() {
+piranha::IrValue *piranha::IrNode::getDefaultOutputValue() {
 	auto definition = m_definition;
 	if (definition == nullptr) return nullptr;
 
@@ -451,9 +451,9 @@ piranha::SdlValue *piranha::SdlNode::getDefaultOutputValue() {
 	return defaultValue->getAsValue();
 }
 
-void piranha::SdlNode::writeTraceToFile(std::ofstream &file) {
-	SdlContextTree *parentContext = new SdlContextTree(nullptr);
-	SdlContextTree *thisContext = parentContext->newChild(this);
+void piranha::IrNode::writeTraceToFile(std::ofstream &file) {
+	IrContextTree *parentContext = new IrContextTree(nullptr);
+	IrContextTree *thisContext = parentContext->newChild(this);
 
 	int attributeDefinitions = m_definition->getAttributeDefinitionList()->getDefinitionCount();
 	for (int i = 0; i < attributeDefinitions; i++) {
@@ -464,9 +464,9 @@ void piranha::SdlNode::writeTraceToFile(std::ofstream &file) {
 	}
 }
 
-void piranha::SdlNode::checkReferences(SdlContextTree *inputContext) {
-	SdlContextTree *thisContext = inputContext->newChild(this, false);
-	SdlAttributeList *attributes = getAttributes();
+void piranha::IrNode::checkReferences(IrContextTree *inputContext) {
+	IrContextTree *thisContext = inputContext->newChild(this, false);
+	IrAttributeList *attributes = getAttributes();
 
 	if (attributes != nullptr) {
 		int attributeCount = attributes->getAttributeCount();

@@ -114,78 +114,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\sdl_visibility.h">
-      <Filter>Header Files\syntax\common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_attribute.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_attribute_definition.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_attribute_definition_list.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_attribute_list.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_binary_operator.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_compilation_error.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_context_tree.h">
-      <Filter>Header Files\syntax\generator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_error_list.h">
-      <Filter>Header Files\syntax\error-handling</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_generator.h">
-      <Filter>Header Files\syntax\generator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_generic_value.h">
-      <Filter>Header Files\syntax\values</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_import_statement.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_input_connection.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_node.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_node_definition.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_parser_structure.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_scanner.h">
-      <Filter>Header Files\syntax\scanner</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_structure_list.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_token_info.h">
-      <Filter>Header Files\syntax\scanner</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_unary_operator.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_value.h">
-      <Filter>Header Files\syntax\values</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_value_constant.h">
-      <Filter>Header Files\syntax\values</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_compilation_unit.h">
-      <Filter>Header Files\syntax\unit</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_compiler.h">
-      <Filter>Header Files\syntax\compiler</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\constructed_float_node.h">
       <Filter>Header Files\nodes\nodes</Filter>
     </ClInclude>
@@ -239,6 +167,78 @@
     </ClInclude>
     <ClInclude Include="..\..\autogen\stack.hh">
       <Filter>Header Files\syntax\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_attribute.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_attribute_definition.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_attribute_definition_list.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_attribute_list.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_binary_operator.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_import_statement.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_input_connection.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_node.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_node_definition.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_parser_structure.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_structure_list.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_unary_operator.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_generic_value.h">
+      <Filter>Header Files\syntax\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_value.h">
+      <Filter>Header Files\syntax\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_value_constant.h">
+      <Filter>Header Files\syntax\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\scanner.h">
+      <Filter>Header Files\syntax\scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_visibility.h">
+      <Filter>Header Files\syntax\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\compiler.h">
+      <Filter>Header Files\syntax\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_error_list.h">
+      <Filter>Header Files\syntax\error-handling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_compilation_error.h">
+      <Filter>Header Files\syntax\error-handling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_token_info.h">
+      <Filter>Header Files\syntax\scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_compilation_unit.h">
+      <Filter>Header Files\syntax\unit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_context_tree.h">
+      <Filter>Header Files\syntax\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\generator.h">
+      <Filter>Header Files\syntax\generator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

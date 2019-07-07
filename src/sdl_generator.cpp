@@ -1,13 +1,13 @@
-#include <sdl_generator.h>
+#include "generator.h"
 
-piranha::SdlGenerator::SdlGenerator() {
+piranha::IrGenerator::IrGenerator() {
 	/* void */
 }
 
-piranha::SdlGenerator::~SdlGenerator() {
+piranha::IrGenerator::~IrGenerator() {
 	/* void */
 }
 
-piranha::Node *piranha::SdlGenerator::generateNode(SdlNode *reference) const {
+piranha::Node *piranha::IrGenerator::generateNode(IrNode *reference) const {
 	return nullptr;
 }

@@ -1,47 +1,47 @@
-#include <sdl_node_definition.h>
+#include "ir_node_definition.h"
 
-#include <sdl_attribute_definition_list.h>
-#include <sdl_attribute_definition.h>
-#include <sdl_compilation_unit.h>
-#include <sdl_node.h>
-#include <sdl_compilation_error.h>
-#include <sdl_value.h>
-#include <sdl_context_tree.h>
+#include "ir_attribute_definition_list.h"
+#include "ir_attribute_definition.h"
+#include "ir_compilation_unit.h"
+#include "ir_node.h"
+#include "ir_compilation_error.h"
+#include "ir_value.h"
+#include "ir_context_tree.h"
 
-piranha::SdlNodeDefinition::SdlNodeDefinition(const SdlTokenInfo_string &name) {
+piranha::IrNodeDefinition::IrNodeDefinition(const IrTokenInfo_string &name) {
 	m_name = name;
 	registerToken(&name);
 
 	// Node definitions are public by default
-	setDefaultVisibility(SdlVisibility::PUBLIC);
+	setDefaultVisibility(IrVisibility::PUBLIC);
 }
 
-piranha::SdlNodeDefinition::~SdlNodeDefinition() {
+piranha::IrNodeDefinition::~IrNodeDefinition() {
 	/* void */
 }
 
-void piranha::SdlNodeDefinition::setBuiltinName(const SdlTokenInfo_string &builtinName) {
+void piranha::IrNodeDefinition::setBuiltinName(const IrTokenInfo_string &builtinName) {
 	m_builtinName = builtinName;
 	registerToken(&m_builtinName);
 }
 
-void piranha::SdlNodeDefinition::setAttributeDefinitionList(SdlAttributeDefinitionList *definitions) {
+void piranha::IrNodeDefinition::setAttributeDefinitionList(IrAttributeDefinitionList *definitions) {
 	m_attributes = definitions;
 	registerComponent(definitions);
 }
 
-void piranha::SdlNodeDefinition::setScopeToken(const SdlTokenInfo_string &scopeToken) {
+void piranha::IrNodeDefinition::setScopeToken(const IrTokenInfo_string &scopeToken) {
 	m_scopeToken = scopeToken;
 	registerToken(&scopeToken);
 }
 
-piranha::SdlAttributeDefinition *piranha::SdlNodeDefinition::getAttributeDefinition(const std::string &attributeName) const {
+piranha::IrAttributeDefinition *piranha::IrNodeDefinition::getAttributeDefinition(const std::string &attributeName) const {
 	if (m_attributes == nullptr) return nullptr;
 
 	int attributeCount = m_attributes->getDefinitionCount();
 
 	for (int i = 0; i < attributeCount; i++) {
-		SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
+		IrAttributeDefinition *definition = m_attributes->getDefinition(i);
 
 		if (definition->getName() == attributeName) {
 			return definition;
@@ -51,19 +51,19 @@ piranha::SdlAttributeDefinition *piranha::SdlNodeDefinition::getAttributeDefinit
 	return nullptr;
 }
 
-piranha::SdlParserStructure *piranha::SdlNodeDefinition::resolveName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrNodeDefinition::resolveName(const std::string &name) const {
 	// Node definitions are not able to see variables outside of themselves for now
 	return resolveLocalName(name);
 }
 
-int piranha::SdlNodeDefinition::countSymbolIncidence(const std::string &name) const {
+int piranha::IrNodeDefinition::countSymbolIncidence(const std::string &name) const {
 	if (name.empty()) return 0;
 
 	int count = 0;
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {
-			SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
+			IrAttributeDefinition *definition = m_attributes->getDefinition(i);
 
 			if (definition->getName() == name) {
 				count++;
@@ -74,7 +74,7 @@ int piranha::SdlNodeDefinition::countSymbolIncidence(const std::string &name) co
 	if (m_body != nullptr) {
 		int nodeCount = m_body->getItemCount();
 		for (int i = 0; i < nodeCount; i++) {
-			SdlNode *node = m_body->getItem(i);
+			IrNode *node = m_body->getItem(i);
 			if (node->getName() == name) {
 				count++;
 			}
@@ -84,11 +84,11 @@ int piranha::SdlNodeDefinition::countSymbolIncidence(const std::string &name) co
 	return count;
 }
 
-piranha::SdlParserStructure *piranha::SdlNodeDefinition::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrNodeDefinition::resolveLocalName(const std::string &name) const {
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {
-			SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
+			IrAttributeDefinition *definition = m_attributes->getDefinition(i);
 
 			if (definition->getName() == name) {
 				return definition;
@@ -99,7 +99,7 @@ piranha::SdlParserStructure *piranha::SdlNodeDefinition::resolveLocalName(const 
 	if (m_body != nullptr) {
 		int nodeCount = m_body->getItemCount();
 		for (int i = 0; i < nodeCount; i++) {
-			SdlNode *node = m_body->getItem(i);
+			IrNode *node = m_body->getItem(i);
 			if (node->getName() == name) {
 				return node;
 			}
@@ -109,18 +109,18 @@ piranha::SdlParserStructure *piranha::SdlNodeDefinition::resolveLocalName(const 
 	return nullptr;
 }
 
-void piranha::SdlNodeDefinition::_validate() {
-	SdlCompilationUnit *unit = getParentUnit();
+void piranha::IrNodeDefinition::_validate() {
+	IrCompilationUnit *unit = getParentUnit();
 
 	// Check that no symbol is used more than once
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {
-			SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
+			IrAttributeDefinition *definition = m_attributes->getDefinition(i);
 			int incidence = countSymbolIncidence(definition->getName());
 			if (incidence > 1) {
-				unit->addCompilationError(new SdlCompilationError(*definition->getNameToken(),
-					SdlErrorCode::SymbolUsedMultipleTimes));
+				unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
+					IrErrorCode::SymbolUsedMultipleTimes));
 			}
 		}
 	}
@@ -128,11 +128,11 @@ void piranha::SdlNodeDefinition::_validate() {
 	if (m_body != nullptr) {
 		int nodeCount = m_body->getItemCount();
 		for (int i = 0; i < nodeCount; i++) {
-			SdlNode *node = m_body->getItem(i);
+			IrNode *node = m_body->getItem(i);
 			int incidence = countSymbolIncidence(node->getName());
 			if (incidence > 1) {
-				unit->addCompilationError(new SdlCompilationError(node->getNameToken(),
-					SdlErrorCode::SymbolUsedMultipleTimes));
+				unit->addCompilationError(new IrCompilationError(node->getNameToken(),
+					IrErrorCode::SymbolUsedMultipleTimes));
 			}
 		}
 	}
@@ -141,29 +141,29 @@ void piranha::SdlNodeDefinition::_validate() {
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {
-			SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
-			if (definition->getDirection() == SdlAttributeDefinition::OUTPUT) {
-				SdlValue *value = definition->getDefaultValue();
+			IrAttributeDefinition *definition = m_attributes->getDefinition(i);
+			if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
+				IrValue *value = definition->getDefaultValue();
 				if (value != nullptr) {
 					if (value->isGeneric() && !isBuiltin()) {
-						unit->addCompilationError(new SdlCompilationError(*definition->getNameToken(),
-							SdlErrorCode::StandardOutputWithType));
+						unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
+							IrErrorCode::StandardOutputWithType));
 					}
 					else if (!value->isGeneric() && isBuiltin()) {
-						unit->addCompilationError(new SdlCompilationError(*definition->getNameToken(),
-							SdlErrorCode::BuiltinOutputWithDefinition));
+						unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
+							IrErrorCode::BuiltinOutputWithDefinition));
 					}
 				}
 				else {
-					unit->addCompilationError(new SdlCompilationError(*definition->getNameToken(),
-						SdlErrorCode::OutputWithNoDefinition));
+					unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
+						IrErrorCode::OutputWithNoDefinition));
 				}
 			}
 		}
 	}
 }
 
-void piranha::SdlNodeDefinition::_checkInstantiation() {
-	SdlContextTree *mainContext = new SdlContextTree(nullptr, true);
+void piranha::IrNodeDefinition::_checkInstantiation() {
+	IrContextTree *mainContext = new IrContextTree(nullptr, true);
 	checkReferences(mainContext);
 }

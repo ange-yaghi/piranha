@@ -1,14 +1,14 @@
-#ifndef SDL_GENERATOR_H
-#define SDL_GENERATOR_H
+#ifndef IR_GENERATOR_H
+#define IR_GENERATOR_H
 
 #include <string>
 
 namespace piranha {
 
 	class Node;
-	class SdlNode;
+	class IrNode;
 
-	class SdlGenerator {
+	class IrGenerator {
 	public:
 		enum BuiltinCode {
 			BUILTIN_CONSOLE_WRITE
@@ -20,12 +20,12 @@ namespace piranha {
 		};
 
 	public:
-		SdlGenerator();
-		~SdlGenerator();
+		IrGenerator();
+		~IrGenerator();
 
-		Node *generateNode(SdlNode *reference) const;
+		Node *generateNode(IrNode *reference) const;
 	};
 
 } /* namespace piranha */
 
-#endif /* SDL_GENERATOR_H */
+#endif /* IR_GENERATOR_H */

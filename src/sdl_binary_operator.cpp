@@ -1,10 +1,10 @@
-#include <sdl_binary_operator.h>
+#include "ir_binary_operator.h"
 
-#include <sdl_value_constant.h>
+#include "ir_value_constant.h"
 #include <node.h>
 
-piranha::SdlBinaryOperator::SdlBinaryOperator(OPERATOR op, SdlValue *left, SdlValue *right) :
-							SdlValue(SdlValue::BINARY_OPERATION) {
+piranha::IrBinaryOperator::IrBinaryOperator(OPERATOR op, IrValue *left, IrValue *right) :
+							IrValue(IrValue::BINARY_OPERATION) {
 	m_operator = op;
 	m_leftOperand = left;
 	m_rightOperand = right;
@@ -22,61 +22,61 @@ piranha::SdlBinaryOperator::SdlBinaryOperator(OPERATOR op, SdlValue *left, SdlVa
 	}
 }
 
-piranha::SdlBinaryOperator::~SdlBinaryOperator() {
+piranha::IrBinaryOperator::~IrBinaryOperator() {
 	/* void */
 }
 
-piranha::SdlParserStructure *piranha::SdlBinaryOperator::getImmediateReference(
-					const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-	SDL_RESET(query);
+piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
+					const IrReferenceQuery &query, IrReferenceInfo *output) {
+	IR_RESET(query);
 	
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
-		SDL_FAIL();
+		IR_FAIL();
 		return nullptr;
 	}
 
 	// The dot is the reference operator
 	if (m_operator == DOT || m_operator == POINTER) {
-		SdlReferenceQuery basicQuery;
+		IrReferenceQuery basicQuery;
 		basicQuery.inputContext = query.inputContext;
 		basicQuery.recordErrors = false;
-		SdlReferenceInfo basicInfo;
-		SdlParserStructure *resolvedLeft = m_leftOperand->getReference(basicQuery, &basicInfo);
+		IrReferenceInfo basicInfo;
+		IrParserStructure *resolvedLeft = m_leftOperand->getReference(basicQuery, &basicInfo);
 
 		if (basicInfo.failed) {
-			SDL_FAIL();
+			IR_FAIL();
 			return nullptr;
 		}
 
 		if (basicInfo.reachedDeadEnd) {
-			SDL_DEAD_END();
+			IR_DEAD_END();
 			return nullptr;
 		}
 
 		bool touchedMainContext = false;
 		if (basicInfo.touchedMainContext) {
-			SDL_INFO_OUT(touchedMainContext, true);
+			IR_INFO_OUT(touchedMainContext, true);
 			touchedMainContext = true;
 		}
 
-		SdlContextTree *currentContext = basicInfo.newContext;
+		IrContextTree *currentContext = basicInfo.newContext;
 
 		// Perform code specific to the pointer operator
 		if (m_operator == POINTER) {
-			SdlNode *asNode = resolvedLeft->getAsNode();
-			SdlValue *asValue = resolvedLeft->getAsValue();
+			IrNode *asNode = resolvedLeft->getAsNode();
+			IrValue *asValue = resolvedLeft->getAsValue();
 
 			if (asValue != nullptr) resolvedLeft = asValue;
 			else if (asNode != nullptr) resolvedLeft = asNode->getDefaultOutputValue();
 
 			if (resolvedLeft == nullptr) {
-				SDL_FAIL();
+				IR_FAIL();
 
-				bool isValidError = (SDL_EMPTY_CONTEXT() || touchedMainContext);
+				bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
 				if (query.recordErrors && isValidError) {
-					SDL_ERR_OUT(new SdlCompilationError(*m_leftOperand->getSummaryToken(),
-						SdlErrorCode::CannotFindDefaultValue, query.inputContext));
+					IR_ERR_OUT(new IrCompilationError(*m_leftOperand->getSummaryToken(),
+						IrErrorCode::CannotFindDefaultValue, query.inputContext));
 				}
 
 				return nullptr;
@@ -86,41 +86,41 @@ piranha::SdlParserStructure *piranha::SdlBinaryOperator::getImmediateReference(
 				currentContext = currentContext->newChild(asNode);
 			}
 
-			SdlReferenceInfo refInfo;
-			SdlReferenceQuery refQuery;
+			IrReferenceInfo refInfo;
+			IrReferenceQuery refQuery;
 			refQuery.inputContext = currentContext;
 			refQuery.recordErrors = false;
 			resolvedLeft = resolvedLeft->getReference(refQuery, &refInfo);
 
-			if (SDL_FAILED(&refInfo)) {
-				SDL_FAIL();
+			if (IR_FAILED(&refInfo)) {
+				IR_FAIL();
 				return nullptr;
 			}
 
 			if (refInfo.reachedDeadEnd) {
-				SDL_DEAD_END();
+				IR_DEAD_END();
 				return nullptr;
 			}
 
 			if (refInfo.touchedMainContext) {
-				SDL_INFO_OUT(touchedMainContext, true);
+				IR_INFO_OUT(touchedMainContext, true);
 				touchedMainContext = true;
 			}
 
 			currentContext = refInfo.newContext;
 		}
 
-		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);
-		SdlParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
+		IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
+		IrParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
 
 		if (publicAttribute == nullptr) {
-			SDL_FAIL();
+			IR_FAIL();
 
-			bool isValidError = (SDL_EMPTY_CONTEXT() || touchedMainContext);
+			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
 			if (query.recordErrors && isValidError) {
 				// Left hand does not have this member
-				SDL_ERR_OUT(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-					SdlErrorCode::UndefinedMember, query.inputContext));
+				IR_ERR_OUT(new IrCompilationError(*m_rightOperand->getSummaryToken(),
+					IrErrorCode::UndefinedMember, query.inputContext));
 			}
 
 			return nullptr;
@@ -128,19 +128,19 @@ piranha::SdlParserStructure *piranha::SdlBinaryOperator::getImmediateReference(
 
 		// Check to make sure that the user is not accidentally trying to use a hidden member
 		if (!publicAttribute->allowsExternalAccess()) {
-			SDL_FAIL();
+			IR_FAIL();
 
-			bool isValidError = (SDL_EMPTY_CONTEXT() || touchedMainContext);
+			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
 			if (query.recordErrors && isValidError) {
-				SDL_ERR_OUT(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-					SdlErrorCode::AccessingInternalMember, query.inputContext));
+				IR_ERR_OUT(new IrCompilationError(*m_rightOperand->getSummaryToken(),
+					IrErrorCode::AccessingInternalMember, query.inputContext));
 			}
 
 			return nullptr;
 		}
 
 		if (currentContext != nullptr) {
-			SDL_INFO_OUT(newContext, currentContext->newChild(resolvedLeft->getAsNode()));
+			IR_INFO_OUT(newContext, currentContext->newChild(resolvedLeft->getAsNode()));
 		}
 
 		return publicAttribute;
@@ -149,7 +149,7 @@ piranha::SdlParserStructure *piranha::SdlBinaryOperator::getImmediateReference(
 	return nullptr;
 }
 
-piranha::NodeOutput *piranha::SdlBinaryOperator::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::IrBinaryOperator::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
 		return nullptr;
@@ -157,9 +157,9 @@ piranha::NodeOutput *piranha::SdlBinaryOperator::_generateNodeOutput(SdlContextT
 
 	// The dot is the reference operator
 	if (m_operator == DOT || m_operator == POINTER) {
-		SdlValue *value = m_leftOperand;
+		IrValue *value = m_leftOperand;
 
-		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);
+		IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
 
 		const NodeOutput *leftOutput = m_leftOperand->generateNodeOutput(context, program);
 		const Node *leftNode = m_leftOperand->generateNode(context, program);
@@ -200,7 +200,7 @@ piranha::NodeOutput *piranha::SdlBinaryOperator::_generateNodeOutput(SdlContextT
 	return nullptr;
 }
 
-piranha::Node *piranha::SdlBinaryOperator::_generateNode(SdlContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::IrBinaryOperator::_generateNode(IrContextTree *context, NodeProgram *program) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
 		return nullptr;
@@ -208,13 +208,13 @@ piranha::Node *piranha::SdlBinaryOperator::_generateNode(SdlContextTree *context
 
 	// The dot is the reference operator
 	if (m_operator == DOT || m_operator == POINTER) {
-		SdlReferenceInfo info;
-		SdlReferenceQuery query;
+		IrReferenceInfo info;
+		IrReferenceQuery query;
 		query.inputContext = context;
 		query.recordErrors = false;
 
-		SdlParserStructure *reference = getReference(query, &info);
-		SdlNode *asNode = reference->getAsNode();
+		IrParserStructure *reference = getReference(query, &info);
+		IrNode *asNode = reference->getAsNode();
 
 		if (asNode != nullptr) {
 			return asNode->generateNode(info.newContext, program);

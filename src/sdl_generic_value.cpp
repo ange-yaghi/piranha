@@ -1,33 +1,33 @@
-#include <sdl_generic_value.h>
+#include "ir_generic_value.h"
 
-#include <sdl_compilation_unit.h>
-#include <sdl_compilation_error.h>
-#include <sdl_node_definition.h>
+#include "ir_compilation_unit.h"
+#include "ir_compilation_error.h"
+#include "ir_node_definition.h"
 
-piranha::SdlGenericValue::SdlGenericValue(const SdlTokenInfoSet<std::string, 2> &type) 
-														: SdlValue(SdlValue::GENERIC) {
+piranha::IrGenericValue::IrGenericValue(const IrTokenInfoSet<std::string, 2> &type) 
+														: IrValue(IrValue::GENERIC) {
 	m_typeInfo = type;
 	m_typeDefinition = nullptr;
 }
 
-piranha::SdlGenericValue::~SdlGenericValue() {
+piranha::IrGenericValue::~IrGenericValue() {
 	/* void */
 }
 
-piranha::SdlParserStructure *piranha::SdlGenericValue::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrGenericValue::resolveLocalName(const std::string &name) const {
 	if (m_typeDefinition != nullptr) {
 		return m_typeDefinition->resolveLocalName(name);
 	}
 	else return nullptr;
 }
 
-void piranha::SdlGenericValue::_resolveDefinitions() {
+void piranha::IrGenericValue::_resolveDefinitions() {
 	int definitionCount = 0;
-	SdlNodeDefinition *definition = nullptr;
-	SdlCompilationUnit *unit = getParentUnit();
+	IrNodeDefinition *definition = nullptr;
+	IrCompilationUnit *unit = getParentUnit();
 
-	const SdlTokenInfo_string &libraryToken = m_typeInfo.data[0];
-	const SdlTokenInfo_string &typeToken = m_typeInfo.data[1];
+	const IrTokenInfo_string &libraryToken = m_typeInfo.data[0];
+	const IrTokenInfo_string &typeToken = m_typeInfo.data[1];
 
 	const std::string &library = libraryToken.data;
 	const std::string &type = typeToken.data;
@@ -57,8 +57,8 @@ void piranha::SdlGenericValue::_resolveDefinitions() {
 	}
 
 	if (definition == nullptr) {
-		unit->addCompilationError(new SdlCompilationError(typeToken,
-			SdlErrorCode::UndefinedNodeType));
+		unit->addCompilationError(new IrCompilationError(typeToken,
+			IrErrorCode::UndefinedNodeType));
 		m_typeDefinition = nullptr;
 	}
 

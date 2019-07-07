@@ -1,16 +1,16 @@
-#include <sdl_attribute_list.h>
+#include "ir_attribute_list.h"
 
-#include <sdl_attribute.h>
+#include "ir_attribute.h"
 
-piranha::SdlAttributeList::SdlAttributeList() {
+piranha::IrAttributeList::IrAttributeList() {
 	/* void */
 }
 
-piranha::SdlAttributeList::~SdlAttributeList() {
+piranha::IrAttributeList::~IrAttributeList() {
 	/* void */
 }
 
-void piranha::SdlAttributeList::addAttribute(SdlAttribute *attribute) {
+void piranha::IrAttributeList::addAttribute(IrAttribute *attribute) {
 	if (attribute != nullptr) {
 		int index = getAttributeCount();
 
@@ -21,10 +21,10 @@ void piranha::SdlAttributeList::addAttribute(SdlAttribute *attribute) {
 	}
 }
 
-piranha::SdlAttribute *piranha::SdlAttributeList::getAttribute(SdlAttributeDefinition *definition) const {
+piranha::IrAttribute *piranha::IrAttributeList::getAttribute(IrAttributeDefinition *definition) const {
 	int attributeCount = getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
-		SdlAttribute *attribute = getAttribute(i);
+		IrAttribute *attribute = getAttribute(i);
 		if (attribute->getAttributeDefinition() == definition) {
 			return attribute;
 		}

@@ -1,16 +1,16 @@
-#include <sdl_value.h>
+#include "ir_value.h"
 
 #include <node.h>
 
-piranha::SdlValue::SdlValue(piranha::SdlValue::VALUE_TYPE type) {
+piranha::IrValue::IrValue(piranha::IrValue::VALUE_TYPE type) {
 	m_type = type;
 }
 
-piranha::SdlValue::~SdlValue() {
+piranha::IrValue::~IrValue() {
 	/* void */
 }
 
-piranha::NodeOutput *piranha::SdlValue::generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::IrValue::generateNodeOutput(IrContextTree *context, NodeProgram *program) {
 	GenerationTableEntry *entry = getEntry(context);
 	if (entry == nullptr) entry = newEntry(context);
 
@@ -29,7 +29,7 @@ piranha::NodeOutput *piranha::SdlValue::generateNodeOutput(SdlContextTree *conte
 	return entry->nodeGeneratedOutput;
 }
 
-piranha::Node *piranha::SdlValue::generateNode(SdlContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::IrValue::generateNode(IrContextTree *context, NodeProgram *program) {
 	GenerationTableEntry *entry = getEntry(context);
 	if (entry == nullptr) entry = newEntry(context);
 
@@ -40,15 +40,15 @@ piranha::Node *piranha::SdlValue::generateNode(SdlContextTree *context, NodeProg
 	else return entry->nodeReference;
 }
 
-piranha::NodeOutput *piranha::SdlValue::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::IrValue::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
 	return nullptr;
 }
 
-piranha::Node *piranha::SdlValue::_generateNode(SdlContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::IrValue::_generateNode(IrContextTree *context, NodeProgram *program) {
 	return nullptr;
 }
 
-piranha::SdlValue::GenerationTableEntry *piranha::SdlValue::getEntry(SdlContextTree *context) {
+piranha::IrValue::GenerationTableEntry *piranha::IrValue::getEntry(IrContextTree *context) {
 	int entryCount = (int)m_generationTable.size();
 	for (int i = 0; i < entryCount; i++) {
 		if (m_generationTable[i].context == context) {
@@ -59,7 +59,7 @@ piranha::SdlValue::GenerationTableEntry *piranha::SdlValue::getEntry(SdlContextT
 	return nullptr;
 }
 
-piranha::SdlValue::GenerationTableEntry *piranha::SdlValue::newEntry(SdlContextTree *context) {
+piranha::IrValue::GenerationTableEntry *piranha::IrValue::newEntry(IrContextTree *context) {
 	GenerationTableEntry *newEntry = new GenerationTableEntry();
 	newEntry->context = context;
 	newEntry->nodeGeneratedOutput = nullptr;

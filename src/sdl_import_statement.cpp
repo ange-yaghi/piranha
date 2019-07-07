@@ -1,10 +1,10 @@
-#include <sdl_import_statement.h>
+#include "ir_import_statement.h"
 
-piranha::SdlImportStatement::SdlImportStatement(const SdlTokenInfo_string &libName) : m_libName(libName) {
+piranha::IrImportStatement::IrImportStatement(const IrTokenInfo_string &libName) : m_libName(libName) {
 	registerToken(&libName);
 	m_unit = nullptr;
 }
 
-piranha::SdlImportStatement::~SdlImportStatement() {
+piranha::IrImportStatement::~IrImportStatement() {
 	/* void */
 }
