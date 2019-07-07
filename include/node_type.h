@@ -1,5 +1,5 @@
-#ifndef NODE_TYPE_H
-#define NODE_TYPE_H
+#ifndef PIRANHA_NODE_TYPE_H
+#define PIRANHA_NODE_TYPE_H
 
 #include <cstring>
 
@@ -30,4 +30,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* NODE_TYPE_H */
+#endif /* PIRANHA_NODE_TYPE_H */

@@ -1,5 +1,5 @@
-#ifndef NODE_PROGRAM_H
-#define NODE_PROGRAM_H
+#ifndef PIRANHA_NODE_PROGRAM_H
+#define PIRANHA_NODE_PROGRAM_H
 
 #include <vector>
 
@@ -24,4 +24,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* NODE_PROGRAM_H */
+#endif /* PIRANHA_NODE_PROGRAM_H */

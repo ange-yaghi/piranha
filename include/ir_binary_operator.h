@@ -1,5 +1,5 @@
-#ifndef IR_BINARY_OPERATOR_H
-#define IR_BINARY_OPERATOR_H
+#ifndef PIRANHA_IR_BINARY_OPERATOR_H
+#define PIRANHA_IR_BINARY_OPERATOR_H
 
 #include "ir_value.h"
 
@@ -40,4 +40,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_BINARY_OPERATOR_H */
+#endif /* PIRANHA_IR_BINARY_OPERATOR_H */

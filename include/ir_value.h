@@ -1,5 +1,5 @@
-#ifndef IR_VALUE_H
-#define IR_VALUE_H
+#ifndef PIRANHA_IR_VALUE_H
+#define PIRANHA_IR_VALUE_H
 
 #include "ir_parser_structure.h"
 
@@ -65,4 +65,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_VALUE_H */
+#endif /* PIRANHA_IR_VALUE_H */

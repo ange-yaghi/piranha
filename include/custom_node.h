@@ -1,7 +1,7 @@
-#ifndef CUSTOM_NODE_H
-#define CUSTOM_NODE_H
+#ifndef PIRANHA_CUSTOM_NODE_H
+#define PIRANHA_CUSTOM_NODE_H
 
-#include <node.h>
+#include "node.h"
 
 namespace piranha {
 
@@ -36,4 +36,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* CUSTOM_NODE_H */
+#endif /* PIRANHA_CUSTOM_NODE_H */

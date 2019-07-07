@@ -1,5 +1,5 @@
-#ifndef IR_ATTRIBUTE_DEFINITION_LIST_H
-#define IR_ATTRIBUTE_DEFINITION_LIST_H
+#ifndef PIRANHA_IR_ATTRIBUTE_DEFINITION_LIST_H
+#define PIRANHA_IR_ATTRIBUTE_DEFINITION_LIST_H
 
 #include "ir_parser_structure.h"
 
@@ -36,4 +36,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_ATTRIBUTE_DEFINITION_LIST_H */
+#endif /* PIRANHA_IR_ATTRIBUTE_DEFINITION_LIST_H */

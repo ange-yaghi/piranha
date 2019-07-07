@@ -1,5 +1,5 @@
-#ifndef IR_STRUCTURE_LIST_H
-#define IR_STRUCTURE_LIST_H
+#ifndef PIRANHA_IR_STRUCTURE_LIST_H
+#define PIRANHA_IR_STRUCTURE_LIST_H
 
 #include "ir_parser_structure.h"
 
@@ -27,4 +27,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_STRUCTURE_LIST_H */
+#endif /* PIRANHA_IR_STRUCTURE_LIST_H */

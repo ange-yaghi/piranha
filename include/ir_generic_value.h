@@ -1,5 +1,5 @@
-#ifndef IR_GENERIC_VALUE_H
-#define IR_GENERIC_VALUE_H
+#ifndef PIRANHA_IR_GENERIC_VALUE_H
+#define PIRANHA_IR_GENERIC_VALUE_H
 
 #include "ir_value.h"
 
@@ -31,4 +31,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_GENERIC_VALUE_H */
+#endif /* PIRANHA_IR_GENERIC_VALUE_H */

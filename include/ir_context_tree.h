@@ -1,5 +1,5 @@
-#ifndef IR_CONTEXT_TREE_H
-#define IR_CONTEXT_TREE_H
+#ifndef PIRANHA_IR_CONTEXT_TREE_H
+#define PIRANHA_IR_CONTEXT_TREE_H
 
 #include <vector>
 
@@ -43,4 +43,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_CONTEXT_TREE_H */
+#endif /* PIRANHA_IR_CONTEXT_TREE_H */

@@ -1,5 +1,5 @@
-#ifndef IR_VISIBILITY_H
-#define IR_VISIBILITY_H
+#ifndef PIRANHA_IR_VISIBILITY_H
+#define PIRANHA_IR_VISIBILITY_H
 
 namespace piranha {
 
@@ -11,4 +11,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_VISIBILITY_H */
+#endif /* PIRANHA_IR_VISIBILITY_H */

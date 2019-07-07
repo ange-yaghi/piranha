@@ -1,5 +1,5 @@
-#ifndef IR_GENERATOR_H
-#define IR_GENERATOR_H
+#ifndef PIRANHA_IR_GENERATOR_H
+#define PIRANHA_IR_GENERATOR_H
 
 #include <string>
 
@@ -28,4 +28,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_GENERATOR_H */
+#endif /* PIRANHA_IR_GENERATOR_H */

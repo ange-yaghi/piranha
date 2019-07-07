@@ -1,5 +1,5 @@
-#ifndef IR_PARSER_STRUCTURE_H
-#define IR_PARSER_STRUCTURE_H
+#ifndef PIRANHA_IR_PARSER_STRUCTURE_H
+#define PIRANHA_IR_PARSER_STRUCTURE_H
 
 #include "ir_token_info.h"
 #include "ir_visibility.h"
@@ -138,4 +138,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_PARSER_STRUCTURE_H */
+#endif /* PIRANHA_IR_PARSER_STRUCTURE_H */

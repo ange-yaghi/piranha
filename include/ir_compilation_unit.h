@@ -1,5 +1,5 @@
-#ifndef IR_COMPILATION_UNIT_H
-#define IR_COMPILATION_UNIT_H
+#ifndef PIRANHA_IR_COMPILATION_UNIT_H
+#define PIRANHA_IR_COMPILATION_UNIT_H
 
 #include "ir_parser_structure.h"
 
@@ -97,4 +97,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_COMPILATION_UNIT_H */
+#endif /* PIRANHA_IR_COMPILATION_UNIT_H */

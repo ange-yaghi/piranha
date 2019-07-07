@@ -1,7 +1,7 @@
-#ifndef SINGLE_STRING_NODE_OUTPUT_H
-#define SINGLE_STRING_NODE_OUTPUT_H
+#ifndef PIRANHA_SINGLE_STRING_NODE_OUTPUT_H
+#define PIRANHA_SINGLE_STRING_NODE_OUTPUT_H
 
-#include <string_node_output.h>
+#include "string_node_output.h"
 
 #include <string>
 
@@ -23,4 +23,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* SINGLE_STRING_NODE_OUTPUT_H */
+#endif /* PIRANHA_SINGLE_STRING_NODE_OUTPUT_H */

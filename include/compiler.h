@@ -1,5 +1,5 @@
-#ifndef IR_COMPILER_H
-#define IR_COMPILER_H
+#ifndef PIRANHA_IR_COMPILER_H
+#define PIRANHA_IR_COMPILER_H
 
 #include "path.h"
 #include "ir_error_list.h"
@@ -51,4 +51,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_COMPILER_H */
+#endif /* PIRANHA_IR_COMPILER_H */

@@ -1,5 +1,5 @@
-#ifndef IR_NODE_DEFINITION_H
-#define IR_NODE_DEFINITION_H
+#ifndef PIRANHA_IR_NODE_DEFINITION_H
+#define PIRANHA_IR_NODE_DEFINITION_H
 
 #include "ir_parser_structure.h"
 
@@ -63,4 +63,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_NODE_DEFINITION_H */
+#endif /* PIRANHA_IR_NODE_DEFINITION_H */

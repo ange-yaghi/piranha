@@ -1,9 +1,9 @@
-#ifndef CONSTRUCTED_STRING_NODE_H
-#define CONSTRUCTED_STRING_NODE_H
+#ifndef PIRANHA_CONSTRUCTED_STRING_NODE_H
+#define PIRANHA_CONSTRUCTED_STRING_NODE_H
 
-#include <node.h>
+#include "node.h"
 
-#include <constructed_string_node_output.h>
+#include "constructed_string_node_output.h"
 
 namespace piranha {
 
@@ -26,4 +26,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* CONSTRUCTED_STRING_NODE_H */
+#endif /* PIRANHA_CONSTRUCTED_STRING_NODE_H */

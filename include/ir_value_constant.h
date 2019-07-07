@@ -1,5 +1,5 @@
-#ifndef IR_VALUE_CONSTANT_H
-#define IR_VALUE_CONSTANT_H
+#ifndef PIRANHA_IR_VALUE_CONSTANT_H
+#define PIRANHA_IR_VALUE_CONSTANT_H
 
 #include "ir_value.h"
 
@@ -163,4 +163,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_VALUE_CONSTANT_H */
+#endif /* PIRANHA_IR_VALUE_CONSTANT_H */

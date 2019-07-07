@@ -1,7 +1,7 @@
-#ifndef NODE_OUTPUT_H
-#define NODE_OUTPUT_H
+#ifndef PIRANHA_NODE_OUTPUT_H
+#define PIRANHA_NODE_OUTPUT_H
 
-#include <node_type.h>
+#include "node_type.h"
 
 #include <string>
 #include <vector>
@@ -64,4 +64,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* NODE_OUTPUT_H */
+#endif /* PIRANHA_NODE_OUTPUT_H */

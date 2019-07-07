@@ -1,5 +1,5 @@
-#ifndef IR_INPUT_CONNECTION_H
-#define IR_INPUT_CONNECTION_H
+#ifndef PIRANHA_IR_INPUT_CONNECTION_H
+#define PIRANHA_IR_INPUT_CONNECTION_H
 
 #include "ir_parser_structure.h"
 
@@ -27,4 +27,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_INPUT_CONNECTION_H */
+#endif /* PIRANHA_IR_INPUT_CONNECTION_H */

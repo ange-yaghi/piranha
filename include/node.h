@@ -1,8 +1,8 @@
-#ifndef NODE_H
-#define NODE_H
+#ifndef PIRANHA_NODE_H
+#define PIRANHA_NODE_H
 
-#include <node_type.h>
-#include <node_output.h>
+#include "node_type.h"
+#include "node_output.h"
 
 #include <string>
 #include <vector>
@@ -115,4 +115,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* NODE_H */
+#endif /* PIRANHA_NODE_H */

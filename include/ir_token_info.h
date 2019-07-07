@@ -1,5 +1,5 @@
-#ifndef IR_TOKEN_INFO_H
-#define IR_TOKEN_INFO_H
+#ifndef PIRANHA_IR_TOKEN_INFO_H
+#define PIRANHA_IR_TOKEN_INFO_H
 
 #include <ostream>
 #include <string>
@@ -106,4 +106,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_TOKEN_INFO_H */
+#endif /* PIRANHA_IR_TOKEN_INFO_H */

@@ -1,5 +1,5 @@
-#ifndef PATH_H
-#define PATH_H
+#ifndef PIRANHA_PATH_H
+#define PIRANHA_PATH_H
 
 #include <string>
 
@@ -46,4 +46,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* PATH_H */
+#endif /* PIRANHA_PATH_H */

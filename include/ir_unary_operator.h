@@ -1,5 +1,5 @@
-#ifndef IR_UNARY_OPERATOR_H
-#define IR_UNARY_OPERATOR_H
+#ifndef PIRANHA_IR_UNARY_OPERATOR_H
+#define PIRANHA_IR_UNARY_OPERATOR_H
 
 #include "ir_value.h"
 
@@ -35,5 +35,5 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* IR_UNARY_OPERATOR_H */
+#endif /* PIRANHA_IR_UNARY_OPERATOR_H */
 
