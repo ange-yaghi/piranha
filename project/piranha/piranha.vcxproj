@@ -70,23 +70,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)/..\autogen;$(SolutionDir)/..\dependencies\libraries\flex\include;$(SolutionDir)/..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)/../include;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)/..\autogen;$(SolutionDir)/..\dependencies\libraries\flex\include;$(SolutionDir)/..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)/../include;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)/..\autogen;$(SolutionDir)/..\dependencies\libraries\flex\include;$(SolutionDir)/..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)/../include;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)/..\autogen;$(SolutionDir)/..\dependencies\libraries\flex\include;$(SolutionDir)/..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)/../include;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -97,11 +97,11 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <PreBuildEvent>
-      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>py $(SolutionDir)\..\scripts\increment_build_version.py
-py $(SolutionDir)\..\scripts\package.py  $(PlatformTarget) $(Configuration)</Command>
+      <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
+py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -112,11 +112,11 @@ py $(SolutionDir)\..\scripts\package.py  $(PlatformTarget) $(Configuration)</Com
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <PreBuildEvent>
-      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>py $(SolutionDir)\..\scripts\increment_build_version.py
-py $(SolutionDir)\..\scripts\package.py  $(PlatformTarget) $(Configuration)</Command>
+      <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
+py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -133,11 +133,11 @@ py $(SolutionDir)\..\scripts\package.py  $(PlatformTarget) $(Configuration)</Com
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>py $(SolutionDir)\..\scripts\increment_build_version.py
-py $(SolutionDir)\..\scripts\package.py  $(PlatformTarget) $(Configuration)</Command>
+      <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
+py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,11 +154,11 @@ py $(SolutionDir)\..\scripts\package.py  $(PlatformTarget) $(Configuration)</Com
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>py $(SolutionDir)\..\scripts\increment_build_version.py
-py $(SolutionDir)\..\scripts\package.py  $(PlatformTarget) $(Configuration)</Command>
+      <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
+py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
