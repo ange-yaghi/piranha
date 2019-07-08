@@ -1,9 +1,9 @@
-#ifndef STRING_NODE_OUTPUT_H
-#define STRING_NODE_OUTPUT_H
+#ifndef PIRANHA_STRING_NODE_OUTPUT_H
+#define PIRANHA_STRING_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include "node_output.h"
 
-namespace manta {
+namespace piranha {
 
 	class StringNodeOutput : public NodeOutput {
 	public:
@@ -14,6 +14,6 @@ namespace manta {
 		virtual ~StringNodeOutput();
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
-#endif /* STRING_NODE_OUTPUT_H */
+#endif /* PIRANHA_STRING_NODE_OUTPUT_H */

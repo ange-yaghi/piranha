@@ -1,5 +1,5 @@
-#ifndef PATH_H
-#define PATH_H
+#ifndef PIRANHA_PATH_H
+#define PIRANHA_PATH_H
 
 #include <string>
 
@@ -10,7 +10,7 @@ namespace boost {
 	} /* namespace filesystem */
 } /* namespace boost */
 
-namespace manta {
+namespace piranha {
 
 	class Path {		
 	protected: Path(const boost::filesystem::path &path);
@@ -44,6 +44,6 @@ namespace manta {
 		const boost::filesystem::path &getBoostPath() const { return *m_path; }
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
-#endif /* PATH_H */
+#endif /* PIRANHA_PATH_H */

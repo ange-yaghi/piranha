@@ -2,26 +2,27 @@
 
 #include <node.h>
 
-manta::NodeProgram::NodeProgram() {
+piranha::NodeProgram::NodeProgram() {
 	/* void */
 }
 
-manta::NodeProgram::~NodeProgram() {
+piranha::NodeProgram::~NodeProgram() {
 	/* void */
 }
 
-void manta::NodeProgram::addNode(Node *node) {
+void piranha::NodeProgram::addNode(Node *node) {
 	node->setProgram(this);
 	m_nodes.push_back(node);
 
 	// This registers the node in case there is a node that
 	// has a dependency on materials
+	/*
 	if (node->isMaterial()) {
 		m_materialManager.addMaterialNode(node);
-	}
+	}*/
 }
 
-void manta::NodeProgram::execute() {
+void piranha::NodeProgram::execute() {
 	int nodeCount = getNodeCount();
 
 	// Initialize all nodes

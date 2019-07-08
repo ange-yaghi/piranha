@@ -1,9 +1,9 @@
-#ifndef FLOAT_NODE_OUTPUT_H
-#define FLOAT_NODE_OUTPUT_H
+#ifndef PIRANHA_FLOAT_NODE_OUTPUT_H
+#define PIRANHA_FLOAT_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include "node_output.h"
 
-namespace manta {
+namespace piranha {
 
 	class FloatNodeOutput: public NodeOutput {
 	protected:
@@ -17,10 +17,8 @@ namespace manta {
 		virtual ~FloatNodeOutput() {
 			/* void */
 		}
-
-		virtual void fullCompute(void *target) const;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
-#endif /* FLOAT_NODE_OUTPUT_H */
+#endif /* PIRANHA_FLOAT_NODE_OUTPUT_H */

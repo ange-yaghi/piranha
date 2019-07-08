@@ -1,30 +1,30 @@
 #include <constructed_float_node.h>
 
-manta::ConstructedFloatNode::ConstructedFloatNode() {
+piranha::ConstructedFloatNode::ConstructedFloatNode() {
 	/* void */
 }
 
-manta::ConstructedFloatNode::~ConstructedFloatNode() {
+piranha::ConstructedFloatNode::~ConstructedFloatNode() {
 	/* void */
 }
 
-void manta::ConstructedFloatNode::_initialize() {
+void piranha::ConstructedFloatNode::_initialize() {
 	/* void */
 }
 
-void manta::ConstructedFloatNode::_evaluate() {
+void piranha::ConstructedFloatNode::_evaluate() {
 	/* void */
 }
 
-void manta::ConstructedFloatNode::_destroy() {
+void piranha::ConstructedFloatNode::_destroy() {
 	/* void */
 }
 
-void manta::ConstructedFloatNode::registerOutputs() {
+void piranha::ConstructedFloatNode::registerOutputs() {
 	setPrimaryOutput(&m_output);
 	registerOutput(&m_output, "$primary");
 }
 
-void manta::ConstructedFloatNode::registerInputs() {
+void piranha::ConstructedFloatNode::registerInputs() {
 	registerInput(m_output.getInputConnection(), "__in");
 }

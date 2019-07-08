@@ -1,9 +1,9 @@
-#ifndef CUSTOM_NODE_H
-#define CUSTOM_NODE_H
+#ifndef PIRANHA_CUSTOM_NODE_H
+#define PIRANHA_CUSTOM_NODE_H
 
-#include <node.h>
+#include "node.h"
 
-namespace manta {
+namespace piranha {
 
 	class CustomNode : public Node {
 	public:
@@ -34,6 +34,6 @@ namespace manta {
 		std::vector<CustomPort *> m_customOutputs;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
-#endif /* CUSTOM_NODE_H */
+#endif /* PIRANHA_CUSTOM_NODE_H */

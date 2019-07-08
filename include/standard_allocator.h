@@ -1,5 +1,5 @@
-#ifndef STANDARD_ALLOCATOR_H
-#define STANDARD_ALLOCATOR_H
+#ifndef PIRANHA_STANDARD_ALLOCATOR_H
+#define PIRANHA_STANDARD_ALLOCATOR_H
 
 #include <assert.h>
 #include <new>
@@ -8,7 +8,7 @@
 
 #define STD_ALLOC_ENABLE_LEDGER (true)
 
-namespace manta {
+namespace piranha {
 
 	class StandardAllocator {
 	public:
@@ -108,6 +108,6 @@ namespace manta {
 		static StandardAllocator *Global();
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
-#endif /* STANDARD_ALLOCATOR_H */
+#endif /* PIRANHA_STANDARD_ALLOCATOR_H */

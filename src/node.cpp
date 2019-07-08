@@ -1,10 +1,9 @@
 #include <node.h>
 
 #include <node_output.h>
-#include <stack_allocator.h>
 #include <node_program.h>
 
-manta::Node::Node() {
+piranha::Node::Node() {
 	m_id = -1;
 	m_name = "";
 
@@ -13,11 +12,11 @@ manta::Node::Node() {
 	m_primaryOutput = nullptr;
 }
 
-manta::Node::~Node() {
+piranha::Node::~Node() {
 	/* void */
 }
 
-void manta::Node::initialize() {
+void piranha::Node::initialize() {
 	if (isInitialized()) return;
 
 	// Set initialized flag
@@ -30,7 +29,7 @@ void manta::Node::initialize() {
 	_initialize();
 }
 
-void manta::Node::evaluate() {
+void piranha::Node::evaluate() {
 	if (isEvaluated()) return;
 
 	// Set evaluated flag
@@ -45,22 +44,15 @@ void manta::Node::evaluate() {
 		}
 	}
 
+	/*
 	if (requiresMaterials()) {
 		getProgram()
 			->getMaterialManager()
 			->evaluateAllMaterialNodes();
-	}
+	}*/
 
 	// Node can now self-evaluate
 	_evaluate();
-
-	// All dependencies are evaluated so outputs can now determine their
-	// dimensions
-	int outputCount = getOutputCount();
-	for (int i = 0; i < outputCount; i++) {
-		NodeOutput *node = m_outputs[i].output;
-		node->evaluateDimensions();
-	}
 
 	int outputReferenceCount = getOutputReferenceCount();
 	for (int i = 0; i < outputReferenceCount; i++) {
@@ -69,25 +61,14 @@ void manta::Node::evaluate() {
 	}
 }
 
-void manta::Node::destroy() {
+void piranha::Node::destroy() {
 	m_initialized = false;
 	m_evaluated = false;
 
 	_destroy();
 }
 
-void manta::Node::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
-	memset(memory, 0, sizeof(NodeSessionMemory));
-}
-
-void manta::Node::destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
-	if (memory->extraMemory != nullptr) {
-		stackAllocator->free(memory->extraMemory);
-		memory->extraMemory = nullptr;
-	}
-}
-
-void manta::Node::connectInput(pNodeInput input, const std::string &name) {
+void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
 	int inputCount = getInputCount();
 
 	for (int i = 0; i < inputCount; i++) {
@@ -100,11 +81,11 @@ void manta::Node::connectInput(pNodeInput input, const std::string &name) {
 	}
 }
 
-manta::NodeOutput *manta::Node::getPrimaryOutput() const {
+piranha::NodeOutput *piranha::Node::getPrimaryOutput() const {
 	return m_primaryOutput;
 }
 
-manta::NodeOutput *manta::Node::getOutput(const std::string &name) const {
+piranha::NodeOutput *piranha::Node::getOutput(const std::string &name) const {
 	int outputCount = getOutputCount();
 
 	for (int i = 0; i < outputCount; i++) {
@@ -123,39 +104,39 @@ manta::NodeOutput *manta::Node::getOutput(const std::string &name) const {
 	return nullptr;
 }
 
-void manta::Node::_initialize() {
+void piranha::Node::_initialize() {
 	/* void */
 }
 
-void manta::Node::_evaluate() {
+void piranha::Node::_evaluate() {
 	/* void */
 }
 
-void manta::Node::_destroy() {
+void piranha::Node::_destroy() {
 	/* void */
 }
 
-void manta::Node::registerInputs() {
+void piranha::Node::registerInputs() {
 	/* void */
 }
 
-void manta::Node::registerInput(pNodeInput *node, const std::string &name) {
+void piranha::Node::registerInput(pNodeInput *node, const std::string &name) {
 	m_inputs.push_back({ node, name });
 }
 
-void manta::Node::registerOutput(NodeOutput *node, const std::string &name) {
+void piranha::Node::registerOutput(NodeOutput *node, const std::string &name) {
 	m_outputs.push_back({ node, name });
 	node->setParentNode(this);
 }
 
-void manta::Node::setPrimaryOutput(NodeOutput *node) {
+void piranha::Node::setPrimaryOutput(NodeOutput *node) {
 	m_primaryOutput = node;
 }
 
-void manta::Node::registerOutputReference(NodeOutput *const *node, const std::string &name) {
+void piranha::Node::registerOutputReference(NodeOutput *const *node, const std::string &name) {
 	m_outputReferences.push_back({ node, name });
 }
 
-void manta::Node::registerOutputs() {
+void piranha::Node::registerOutputs() {
 	/* void */
 }

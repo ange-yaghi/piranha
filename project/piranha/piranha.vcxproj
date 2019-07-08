@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{3D4E1702-A9C0-4441-88AA-FC978C86B4D1}</ProjectGuid>
+    <RootNamespace>piranha</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
+py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
+py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PreBuildEvent>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
+py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PreBuildEvent>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
+py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\autogen\parser.auto.h" />
+    <ClInclude Include="..\..\autogen\stack.hh" />
+    <ClInclude Include="..\..\include\constructed_float_node.h" />
+    <ClInclude Include="..\..\include\constructed_float_node_output.h" />
+    <ClInclude Include="..\..\include\constructed_string_node.h" />
+    <ClInclude Include="..\..\include\constructed_string_node_output.h" />
+    <ClInclude Include="..\..\include\custom_node.h" />
+    <ClInclude Include="..\..\include\float_node_output.h" />
+    <ClInclude Include="..\..\include\memory_management.h" />
+    <ClInclude Include="..\..\include\node.h" />
+    <ClInclude Include="..\..\include\node_output.h" />
+    <ClInclude Include="..\..\include\node_program.h" />
+    <ClInclude Include="..\..\include\node_type.h" />
+    <ClInclude Include="..\..\include\path.h" />
+    <ClInclude Include="..\..\include\ir_attribute.h" />
+    <ClInclude Include="..\..\include\ir_attribute_definition.h" />
+    <ClInclude Include="..\..\include\ir_attribute_definition_list.h" />
+    <ClInclude Include="..\..\include\ir_attribute_list.h" />
+    <ClInclude Include="..\..\include\ir_binary_operator.h" />
+    <ClInclude Include="..\..\include\ir_compilation_error.h" />
+    <ClInclude Include="..\..\include\ir_compilation_unit.h" />
+    <ClInclude Include="..\..\include\compiler.h" />
+    <ClInclude Include="..\..\include\ir_context_tree.h" />
+    <ClInclude Include="..\..\include\ir_error_list.h" />
+    <ClInclude Include="..\..\include\generator.h" />
+    <ClInclude Include="..\..\include\ir_generic_value.h" />
+    <ClInclude Include="..\..\include\ir_import_statement.h" />
+    <ClInclude Include="..\..\include\ir_input_connection.h" />
+    <ClInclude Include="..\..\include\ir_node.h" />
+    <ClInclude Include="..\..\include\ir_node_definition.h" />
+    <ClInclude Include="..\..\include\ir_parser_structure.h" />
+    <ClInclude Include="..\..\include\conf.h" />
+    <ClInclude Include="..\..\include\scanner.h" />
+    <ClInclude Include="..\..\include\ir_structure_list.h" />
+    <ClInclude Include="..\..\include\ir_token_info.h" />
+    <ClInclude Include="..\..\include\ir_unary_operator.h" />
+    <ClInclude Include="..\..\include\ir_value.h" />
+    <ClInclude Include="..\..\include\ir_value_constant.h" />
+    <ClInclude Include="..\..\include\ir_visibility.h" />
+    <ClInclude Include="..\..\include\single_float_node_output.h" />
+    <ClInclude Include="..\..\include\single_string_node_output.h" />
+    <ClInclude Include="..\..\include\standard_allocator.h" />
+    <ClInclude Include="..\..\include\string_node_output.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\autogen\parser.auto.cpp" />
+    <ClCompile Include="..\..\autogen\scanner.auto.cpp" />
+    <ClCompile Include="..\..\src\constructed_float_node.cpp" />
+    <ClCompile Include="..\..\src\constructed_float_node_output.cpp" />
+    <ClCompile Include="..\..\src\constructed_string_node.cpp" />
+    <ClCompile Include="..\..\src\constructed_string_node_output.cpp" />
+    <ClCompile Include="..\..\src\custom_node.cpp" />
+    <ClCompile Include="..\..\src\float_node_output.cpp" />
+    <ClCompile Include="..\..\src\node.cpp" />
+    <ClCompile Include="..\..\src\node_output.cpp" />
+    <ClCompile Include="..\..\src\node_program.cpp" />
+    <ClCompile Include="..\..\src\node_type.cpp" />
+    <ClCompile Include="..\..\src\path.cpp" />
+    <ClCompile Include="..\..\src\ir_attribute.cpp" />
+    <ClCompile Include="..\..\src\ir_attribute_definition.cpp" />
+    <ClCompile Include="..\..\src\ir_attribute_definition_list.cpp" />
+    <ClCompile Include="..\..\src\ir_attribute_list.cpp" />
+    <ClCompile Include="..\..\src\ir_binary_operator.cpp" />
+    <ClCompile Include="..\..\src\ir_compilation_error.cpp" />
+    <ClCompile Include="..\..\src\ir_compilation_unit.cpp" />
+    <ClCompile Include="..\..\src\ir_compiler.cpp" />
+    <ClCompile Include="..\..\src\ir_context_tree.cpp" />
+    <ClCompile Include="..\..\src\ir_error_list.cpp" />
+    <ClCompile Include="..\..\src\ir_generator.cpp" />
+    <ClCompile Include="..\..\src\ir_generic_value.cpp" />
+    <ClCompile Include="..\..\src\ir_import_statement.cpp" />
+    <ClCompile Include="..\..\src\ir_input_connection.cpp" />
+    <ClCompile Include="..\..\src\ir_node.cpp" />
+    <ClCompile Include="..\..\src\ir_node_definition.cpp" />
+    <ClCompile Include="..\..\src\ir_parser_structure.cpp" />
+    <ClCompile Include="..\..\src\ir_unary_operator.cpp" />
+    <ClCompile Include="..\..\src\ir_value.cpp" />
+    <ClCompile Include="..\..\src\single_float_node_output.cpp" />
+    <ClCompile Include="..\..\src\single_string_node_output.cpp" />
+    <ClCompile Include="..\..\src\standard_allocator.cpp" />
+    <ClCompile Include="..\..\src\string_node_output.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\flex-bison\scanner.l" />
+    <None Include="..\..\flex-bison\specification.y" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
