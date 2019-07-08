@@ -9,10 +9,14 @@ import sys
 import os
 import os.path
 import shutil
+import datetime
+
+from standard_logging import *
 
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = SCRIPT_PATH + "/../"
-OUTPUT_DIR = ROOT_DIR + "/build/"
+BUILD_DIR = ROOT_DIR + "/build/"
+OUTPUT_DIR = BUILD_DIR + "/piranha/"
 BINARY_PATH = ROOT_DIR + "/project/"
 INCLUDE_DIR = ROOT_DIR + "/include/"
 
@@ -20,16 +24,12 @@ BINARY_NAME = 'piranha.lib'
 PDB_NAME = 'piranha.pdb'
 
 
-def log(level, data):
-    print("{0}: {1}".format(level, data))
-
-
 def generate_build_lib_path(architecture, mode):
     return OUTPUT_DIR + "/lib/{0}/{1}/".format(architecture, mode)
 
 
 def generate_build_include_path():
-    return OUTPUT_DIR + "/include/"
+    return OUTPUT_DIR + "/include/piranha/"
 
 
 def genrate_binary_source_path(architecture, mode):
@@ -64,10 +64,14 @@ def generate_dir():
 def copy_binary(architecture, mode):
     binary_path = genrate_binary_source_path(architecture, mode)
     output_path = generate_build_lib_path(architecture, mode)
-
+    
+    log("INFO", "Generating new output path: {}".format(output_path))
     make_directory(output_path)
+
+    log("INFO", "Copying .lib binary")
     shutil.copy(binary_path + BINARY_NAME, output_path)
 
+    log("INFO", "Copying PDB (debug) information")
     try:
         shutil.copy(binary_path + PDB_NAME, output_path)
     except FileNotFoundError:
@@ -76,6 +80,8 @@ def copy_binary(architecture, mode):
 
 
 def copy_include_files(architecture, mode):
+    log("INFO", "Copying include headers")
+
     output_path = generate_build_include_path()
     make_directory(output_path)
 
@@ -84,11 +90,23 @@ def copy_include_files(architecture, mode):
             shutil.copy(os.path.join(root, file_entry.strip()), output_path)
 
 
+def write_info_file(architecture, mode):
+    log("INFO", "Writing info file")
+
+    with open(BUILD_DIR + 'build_info.txt', 'w') as f:
+        f.write("{} = {}\n".format("timestamp", str(datetime.datetime.now())))
+        f.write("{} = {}\n".format("architecture", architecture))
+        f.write("{} = {}\n".format("configuration", mode))
+
+
 if __name__ == "__main__":
     architecture = sys.argv[1]
     mode = sys.argv[2]
 
+    print_full_header("Packaging Piranha Build")
     clean_build()
     generate_dir()
     copy_binary(architecture, mode)
     copy_include_files(architecture, mode)
+    write_info_file(architecture, mode)
+    print_footer()
