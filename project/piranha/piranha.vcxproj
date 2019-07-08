@@ -97,7 +97,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <PreBuildEvent>
-      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
+      <Command>py $(ProjectDir)\..\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
@@ -112,7 +112,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <PreBuildEvent>
-      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
+      <Command>py $(ProjectDir)\..\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
@@ -133,7 +133,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
+      <Command>py $(ProjectDir)\..\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
@@ -154,7 +154,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
+      <Command>py $(ProjectDir)\..\..\scripts\run_batch_file.py compile_flex_bison.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>py $(ProjectDir)\..\..\scripts\increment_build_version.py
@@ -172,6 +172,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\float_node_output.h" />
     <ClInclude Include="..\..\include\memory_management.h" />
     <ClInclude Include="..\..\include\node.h" />
+    <ClInclude Include="..\..\include\node_builder.h" />
     <ClInclude Include="..\..\include\node_output.h" />
     <ClInclude Include="..\..\include\node_program.h" />
     <ClInclude Include="..\..\include\node_type.h" />
@@ -230,7 +231,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\ir_compiler.cpp" />
     <ClCompile Include="..\..\src\ir_context_tree.cpp" />
     <ClCompile Include="..\..\src\ir_error_list.cpp" />
-    <ClCompile Include="..\..\src\ir_generator.cpp" />
+    <ClCompile Include="..\..\src\generator.cpp" />
     <ClCompile Include="..\..\src\ir_generic_value.cpp" />
     <ClCompile Include="..\..\src\ir_import_statement.cpp" />
     <ClCompile Include="..\..\src\ir_input_connection.cpp" />
