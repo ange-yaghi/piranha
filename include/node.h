@@ -1,17 +1,17 @@
-#ifndef NODE_H
-#define NODE_H
+#ifndef PIRANHA_NODE_H
+#define PIRANHA_NODE_H
 
-#include <node_type.h>
-#include <node_output.h>
+#include "node_type.h"
+#include "node_output.h"
 
 #include <string>
 #include <vector>
 
-namespace manta {
+namespace piranha {
 
 	struct IntersectionPoint;
 	class StackAllocator;
-	class SdlNode;
+	class IrNode;
 	class NodeProgram;
 
 	class Node {
@@ -40,8 +40,6 @@ namespace manta {
 		Node();
 		virtual ~Node();
 
-		void destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
-
 		void initialize();
 		void evaluate();
 		void destroy();
@@ -64,8 +62,8 @@ namespace manta {
 		bool isInitialized() const { return m_initialized; }
 		bool isEvaluated() const { return m_evaluated; }
 
-		void setSdlNode(SdlNode *node) { m_sdlNode = node; }
-		SdlNode *getSdlNode() const { return m_sdlNode; }
+		void setIrNode(IrNode *node) { m_sdlNode = node; }
+		IrNode *getIrNode() const { return m_sdlNode; }
 
 		void setProgram(NodeProgram *program) { m_program = program; }
 		NodeProgram *getProgram() const { return m_program; }
@@ -73,11 +71,6 @@ namespace manta {
 		// Context dependencies
 		virtual bool isMaterial() const { return false; }
 		virtual bool requiresMaterials() const { return false; }
-
-		// Main Interface
-	public:
-		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
-			NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
 	protected:
 		virtual void _initialize();
@@ -91,7 +84,7 @@ namespace manta {
 		int m_id;
 		std::string m_name;
 
-		SdlNode *m_sdlNode;
+		IrNode *m_sdlNode;
 
 	protected:
 		std::vector<NodeInputPort> m_inputs;
@@ -120,6 +113,6 @@ namespace manta {
 		NodeProgram *m_program;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
-#endif /* NODE_H */
+#endif /* PIRANHA_NODE_H */

@@ -2,23 +2,22 @@
 
 #include <node.h>
 
-manta::NodeOutput::NodeOutput(const NodeType *singleType) {
+piranha::NodeOutput::NodeOutput(const NodeType *singleType) {
 	m_singleType = singleType; 
-	m_dimensionsEvaluated = false;
 	m_evaluated = false;
 	m_interface = nullptr;
 }
 
-manta::NodeOutput::~NodeOutput() {
+piranha::NodeOutput::~NodeOutput() {
 	/* void */
 }
 
-void manta::NodeOutput::initialize() {
+void piranha::NodeOutput::initialize() {
 	m_interface = generateInterface();
 	registerInputs();
 }
 
-void manta::NodeOutput::evaluate() {
+void piranha::NodeOutput::evaluate() {
 	if (m_evaluated) return;
 	m_evaluated = true;
 

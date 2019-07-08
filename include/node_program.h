@@ -1,11 +1,9 @@
-#ifndef NODE_PROGRAM_H
-#define NODE_PROGRAM_H
+#ifndef PIRANHA_NODE_PROGRAM_H
+#define PIRANHA_NODE_PROGRAM_H
 
 #include <vector>
 
-#include <material_manager.h>
-
-namespace manta {
+namespace piranha {
 
 	class Node;
 
@@ -20,15 +18,10 @@ namespace manta {
 
 		void execute();
 
-		MaterialManager *getMaterialManager() { return &m_materialManager; }
-
 	protected:
 		std::vector<Node *> m_nodes;
-
-		// High-level program context
-		MaterialManager m_materialManager;
 	};
 
-} /* namespace manta */
+} /* namespace piranha */
 
-#endif /* NODE_PROGRAM_H */
+#endif /* PIRANHA_NODE_PROGRAM_H */
