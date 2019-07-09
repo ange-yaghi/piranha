@@ -66,12 +66,9 @@ namespace piranha {
 		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
 
 		bool getDefinitionsResolved() const { return m_definitionsResolved; }
-		bool isExpanded() const { return m_isExpanded; }
 		bool isValidated() const { return m_validated; }
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
 		IrParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
-
-		IrParserStructure *getExpansion() const { return m_expansion; }
 
 		virtual IrValue *getAsValue() { return nullptr; }
 
@@ -96,28 +93,23 @@ namespace piranha {
 
 	public:
 		// Compilation stages
-		void expand();
 		void resolveDefinitions();
 		virtual void checkReferences(IrContextTree *inputContext = nullptr);
 		void checkInstantiation();
 		void validate();
 
 	protected:
-		virtual void _expand();
 		virtual void _resolveDefinitions();
 		virtual void _validate();
 		virtual void _checkInstantiation();
 
 	protected:
+		IrCompilationUnit *m_parentUnit;
 		IrParserStructure *m_parentScope;
 		IrParserStructure *m_logicalParent;
 		IrTokenInfo m_summaryToken;
 
-		IrParserStructure *m_expansion;
-
 		std::vector<IrParserStructure *> m_components;
-
-		IrCompilationUnit *m_parentUnit;
 
 	protected:
 		// Visibility
@@ -125,7 +117,6 @@ namespace piranha {
 		IrVisibility m_visibility;
 
 		// Compilation flags
-		bool m_isExpanded;
 		bool m_definitionsResolved;
 		bool m_validated;
 

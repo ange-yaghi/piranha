@@ -1,0 +1,5 @@
+public node float => __piranha__float {
+    default input __in;
+}
+
+float(5.0)

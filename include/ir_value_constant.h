@@ -8,10 +8,13 @@
 #include "ir_compilation_unit.h"
 #include "ir_node.h"
 #include "ir_context_tree.h"
-#include "single_float_node_output.h"
+#include "float_literal_node.h"
 #include "single_string_node_output.h"
 #include "standard_allocator.h"
+#include "node_program.h"
+#include "generator.h"
 #include "node.h"
+#include "literal_node.h"
 
 namespace piranha {
 
@@ -22,26 +25,25 @@ namespace piranha {
 	protected:
 		typedef T_IrTokenInfo<T> _TokenInfo;
 
-		static NodeOutput *generateNodeOutput(double value, IrContextTree *context) {
-			SingleFloatNodeOutput *newNode = StandardAllocator::Global()->allocate<SingleFloatNodeOutput>();
+		Node *generateNode(double value, IrContextTree *context, NodeProgram *program) {
+			FloatLiteralNode *newNode = (FloatLiteralNode *)program->getGenerator()->generateLiteral(this, context);
 			newNode->setValue(value);
+			newNode->initialize();
 
 			return newNode;
 		}
 
-		static NodeOutput *generateNodeOutput(const std::string &value, IrContextTree *context) {
-			SingleStringNodeOutput *newNode = StandardAllocator::Global()->allocate<SingleStringNodeOutput>();
-			newNode->setValue(value);
-
-			return newNode;
-		}
-
-		static NodeOutput *generateNodeOutput(bool value, IrContextTree *context) {
+		Node *generateNode(const std::string &value, IrContextTree *context, NodeProgram *program) {
 			// TODO
 			return nullptr;
 		}
 
-		static NodeOutput *generateNodeOutput(int value, IrContextTree *context) {
+		Node *generateNode(bool value, IrContextTree *context, NodeProgram *program) {
+			// TODO
+			return nullptr;
+		}
+
+		Node *generateNode(int value, IrContextTree *context, NodeProgram *program) {
 			// TODO
 			return nullptr;
 		}
@@ -56,8 +58,8 @@ namespace piranha {
 		virtual void setValue(const T &value) { m_value = value; }
 		T getValue() const { return m_value; }
 
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-			return generateNodeOutput(m_value, context);
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
+			return generateNode(m_value, context, program);
 		}
 
 	protected:

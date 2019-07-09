@@ -21,7 +21,7 @@
 using namespace piranha;
 
 const IrErrorList *compileFile(const std::string &filename) {
-	IrCompiler *compiler = new IrCompiler();
+	Compiler *compiler = new Compiler();
 	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
 	EXPECT_NE(unit, nullptr);
 

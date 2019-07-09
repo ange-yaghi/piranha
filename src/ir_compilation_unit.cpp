@@ -5,6 +5,8 @@
 #include "ir_attribute_list.h"
 #include "ir_attribute.h"
 #include "ir_error_list.h"
+#include "node_program.h"
+#include "generator.h"
 
 #include <cctype>
 #include <fstream>
@@ -20,6 +22,8 @@ piranha::IrCompilationUnit::~IrCompilationUnit() {
 }
 
 void piranha::IrCompilationUnit::build(NodeProgram *program) {
+	program->getGenerator()->registerBuiltinNodeTypes();
+
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		m_nodes[i]->generateNode(nullptr, program);

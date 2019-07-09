@@ -21,10 +21,7 @@ namespace piranha {
 
 		void initialize();
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const { /* void */ }
-		virtual void discreteSample2D(int x, int y, void *target) const { /* void */ }
 		virtual void fullCompute(void *target) const { /* void */ }
-		virtual void getDataReference(const void **target) const { *target = nullptr; }
 
 		void evaluate();
 		virtual void registerInputs() {}

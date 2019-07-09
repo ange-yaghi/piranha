@@ -354,7 +354,7 @@ TEST(IrTests, IrSyntaxErrorTest) {
 }
 
 TEST(IrTests, IrCompilerTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "dependency_test.mr");
 
 	int dependencyCount = unit->getDependencyCount();
@@ -366,7 +366,7 @@ TEST(IrTests, IrCompilerTest) {
 }
 
 TEST(IrTests, IrDependencyTreeTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "dependency_tree.mr");
 
 	EXPECT_NE(unit, nullptr);
@@ -398,7 +398,7 @@ TEST(IrTests, IrDependencyTreeTest) {
 }
 
 TEST(IrTests, IrMissingNodeDefinitionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "single_empty_node.mr");
 
 	const IrErrorList *errors = compiler.getErrorList();
@@ -413,7 +413,7 @@ TEST(IrTests, IrMissingNodeDefinitionTest) {
 }
 
 TEST(IrTests, IrAttributeDefinitionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "attribute_definition_test.mr");
 
 	const IrErrorList *errors = compiler.getErrorList();
@@ -437,7 +437,7 @@ TEST(IrTests, IrAttributeDefinitionTest) {
 }
 
 TEST(IrTests, IrPositionAttributeTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "position_attribute_test.mr");
 
 	const IrErrorList *errors = compiler.getErrorList();
@@ -457,7 +457,7 @@ TEST(IrTests, IrPositionAttributeTest) {
 }
 
 TEST(IrTests, IrNodeBodyTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "node_body.mr");
 
 	const IrErrorList *errors = compiler.getErrorList();
@@ -479,7 +479,7 @@ TEST(IrTests, IrNodeBodyTest) {
 }
 
 TEST(IrTests, IrMissingDependencyTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "missing_dependency.mr");
 
 	const IrErrorList *errors = compiler.getErrorList();
@@ -493,7 +493,7 @@ TEST(IrTests, IrMissingDependencyTest) {
 }
 
 TEST(IrTests, IrReferenceResolutionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "reference_resolution.mr");
 
 	const IrErrorList *errors = compiler.getErrorList();
@@ -517,7 +517,7 @@ TEST(IrTests, IrReferenceResolutionTest) {
 }
 
 TEST(IrTests, IrReferenceResolutionError1Test) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "resolution-tests/resolution_errors_1.mr");
 	EXPECT_NE(unit, nullptr);
 
@@ -536,7 +536,7 @@ TEST(IrTests, IrReferenceResolutionError1Test) {
 }
 
 TEST(IrTests, IrReferenceResolutionError2Test) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "resolution-tests/resolution_errors_2.mr");
 	EXPECT_NE(unit, nullptr);
 
@@ -563,7 +563,7 @@ TEST(IrTests, IrReferenceResolutionError2Test) {
 }
 
 TEST(IrTests, IrFullErrorTest1) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "full-error-testing/test_case_1.mr");
 	EXPECT_NE(unit, nullptr);
 
@@ -576,7 +576,7 @@ TEST(IrTests, IrFullErrorTest1) {
 }
 
 TEST(IrTests, IrFullErrorTest2) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "full-error-testing/test_case_2.mr");
 	EXPECT_NE(unit, nullptr);
 
@@ -592,7 +592,7 @@ TEST(IrTests, IrFullErrorTest2) {
 }
 
 TEST(IrTests, IrFullErrorTest3) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "full-error-testing/test_case_3.mr");
 	EXPECT_NE(unit, nullptr);
 
@@ -610,7 +610,7 @@ TEST(IrTests, IrFullErrorTest3) {
 }
 
 TEST(IrTests, IrInputConnectionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "input_connection_test.mr");
 	EXPECT_NE(unit, nullptr);
 
@@ -623,7 +623,7 @@ TEST(IrTests, IrInputConnectionTest) {
 }
 
 TEST(IrTests, IrOperationDefinitionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "operation_definition.mr");
 	EXPECT_NE(unit, nullptr);
 
@@ -640,7 +640,7 @@ TEST(IrTests, IrOperationDefinitionTest) {
 }
 
 TEST(IrTests, IrVisibilityTest1) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "/visibility-tests/visibility_test_1.mr");
 	EXPECT_NE(unit, nullptr);
 
@@ -656,7 +656,7 @@ TEST(IrTests, IrVisibilityTest1) {
 }
 
 TEST(IrTests, IrVisibilityTest2) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "/visibility-tests/visibility_test_2.mr");
 	EXPECT_NE(unit, nullptr);
 
@@ -670,7 +670,7 @@ TEST(IrTests, IrVisibilityTest2) {
 }
 
 TEST(IrTests, IrDuplicateNodeDefinitionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "duplicate_node_definition.mr");
 	EXPECT_NE(unit, nullptr);
 
