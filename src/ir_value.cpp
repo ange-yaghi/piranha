@@ -1,5 +1,8 @@
 #include "ir_value.h"
 
+#include "node_program.h"
+#include "generator.h"
+
 #include <node.h>
 
 piranha::IrValue::IrValue(piranha::IrValue::VALUE_TYPE type) {
@@ -11,33 +14,18 @@ piranha::IrValue::~IrValue() {
 }
 
 piranha::NodeOutput *piranha::IrValue::generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-	GenerationTableEntry *entry = getEntry(context);
-	if (entry == nullptr) entry = newEntry(context);
+	Node *node = program->getGenerator()->getCachedInstance(this, context);
 
-	if (entry->nodeReference == nullptr) {
-		entry->nodeReference = generateNode(context, program);
-	}
-
-	if (entry->nodeReference != nullptr) {
-		return entry->nodeReference->getPrimaryOutput();
-	}
-
-	if (entry->nodeGeneratedOutput == nullptr) {
-		entry->nodeGeneratedOutput = _generateNodeOutput(context, program);
-	}
-
-	return entry->nodeGeneratedOutput;
+	if (node == nullptr) node = generateNode(context, program);
+	if (node != nullptr) return node->getPrimaryOutput();
+	else return nullptr;
 }
 
 piranha::Node *piranha::IrValue::generateNode(IrContextTree *context, NodeProgram *program) {
-	GenerationTableEntry *entry = getEntry(context);
-	if (entry == nullptr) entry = newEntry(context);
+	Node *node = program->getGenerator()->getCachedInstance(this, context);
 
-	if (entry->nodeReference == nullptr) {
-		entry->nodeReference = _generateNode(context, program);
-		return entry->nodeReference;
-	}
-	else return entry->nodeReference;
+	if (node == nullptr) return _generateNode(context, program);
+	else return node;
 }
 
 piranha::NodeOutput *piranha::IrValue::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {

@@ -35,26 +35,37 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)/../../include;$(ProjectDir)/../piranha_test;$(ProjectDir)/../../test;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)/../../include;$(ProjectDir)/../piranha_test;$(ProjectDir)/../../test;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)/../../include;$(ProjectDir)/../piranha_test;$(ProjectDir)/../../test;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)/../../include;$(ProjectDir)/../piranha_test;$(ProjectDir)/../../test;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\test\test_generator.h" />
     <ClInclude Include="..\..\test\utilities.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\test\compilation_tests.cpp" />
     <ClCompile Include="..\..\test\sdl_stress_tests.cpp" />
     <ClCompile Include="..\..\test\sdl_tests.cpp" />
+    <ClCompile Include="..\..\test\test_generator.cpp" />
     <ClCompile Include="..\..\test\utilities.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

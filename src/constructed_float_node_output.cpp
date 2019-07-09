@@ -2,6 +2,7 @@
 
 #include <float_node_output.h>
 #include <string_node_output.h>
+#include <literal_node_output.h>
 
 #include <sstream>
 
@@ -27,6 +28,9 @@ void piranha::ConstructedFloatNodeOutput::fullCompute(void *_target) const {
 
 		double *target = reinterpret_cast<double *>(_target);
 		*target = v;
+	}
+	else if (m_input->isType(LiteralNodeOutputBase::FloatType)) {
+		m_input->fullCompute(_target);
 	}
 }
 

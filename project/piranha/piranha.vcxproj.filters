@@ -123,9 +123,6 @@
     <ClInclude Include="..\..\include\constructed_string_node_output.h">
       <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\float_node_output.h">
-      <Filter>Header Files\nodes\nodes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\string_node_output.h">
       <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
@@ -243,6 +240,18 @@
     <ClInclude Include="..\..\include\node_builder.h">
       <Filter>Header Files\syntax\generator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\float_literal_node.h">
+      <Filter>Header Files\nodes\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\float_node_output.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\literal_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\literal_node_output.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\constructed_float_node_output.cpp">
@@ -295,9 +304,6 @@
     </ClCompile>
     <ClCompile Include="..\..\autogen\scanner.auto.cpp">
       <Filter>Source Files\syntax\autogen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ir_compiler.cpp">
-      <Filter>Source Files\syntax\compiler</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ir_compilation_error.cpp">
       <Filter>Source Files\syntax\error-handling</Filter>
@@ -352,6 +358,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\generator.cpp">
       <Filter>Source Files\syntax\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\compiler.cpp">
+      <Filter>Source Files\syntax\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\float_literal_node.cpp">
+      <Filter>Source Files\nodes\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\literal_node_output.cpp">
+      <Filter>Source Files\nodes\node-outputs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

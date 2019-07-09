@@ -169,7 +169,10 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\constructed_string_node.h" />
     <ClInclude Include="..\..\include\constructed_string_node_output.h" />
     <ClInclude Include="..\..\include\custom_node.h" />
+    <ClInclude Include="..\..\include\float_literal_node.h" />
     <ClInclude Include="..\..\include\float_node_output.h" />
+    <ClInclude Include="..\..\include\literal_node.h" />
+    <ClInclude Include="..\..\include\literal_node_output.h" />
     <ClInclude Include="..\..\include\memory_management.h" />
     <ClInclude Include="..\..\include\node.h" />
     <ClInclude Include="..\..\include\node_builder.h" />
@@ -215,7 +218,9 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\constructed_string_node.cpp" />
     <ClCompile Include="..\..\src\constructed_string_node_output.cpp" />
     <ClCompile Include="..\..\src\custom_node.cpp" />
+    <ClCompile Include="..\..\src\float_literal_node.cpp" />
     <ClCompile Include="..\..\src\float_node_output.cpp" />
+    <ClCompile Include="..\..\src\literal_node_output.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
     <ClCompile Include="..\..\src\node_output.cpp" />
     <ClCompile Include="..\..\src\node_program.cpp" />
@@ -228,7 +233,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\ir_binary_operator.cpp" />
     <ClCompile Include="..\..\src\ir_compilation_error.cpp" />
     <ClCompile Include="..\..\src\ir_compilation_unit.cpp" />
-    <ClCompile Include="..\..\src\ir_compiler.cpp" />
+    <ClCompile Include="..\..\src\compiler.cpp" />
     <ClCompile Include="..\..\src\ir_context_tree.cpp" />
     <ClCompile Include="..\..\src\ir_error_list.cpp" />
     <ClCompile Include="..\..\src\generator.cpp" />

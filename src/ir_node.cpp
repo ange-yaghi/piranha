@@ -8,10 +8,11 @@
 #include "ir_compilation_error.h"
 #include "ir_attribute_definition_list.h"
 #include "ir_value.h"
+#include "ir_context_tree.h"
+#include "generator.h"
 #include <node.h>
 #include <custom_node.h>
 #include <standard_allocator.h>
-#include "ir_context_tree.h"
 
 #include <constructed_float_node.h>
 #include <constructed_string_node.h>
@@ -295,10 +296,8 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 
 	newContext = parentContext->newChild(this);
 
-	NodeTableEntry *entry = getTableEntry(parentContext);
-	if (entry != nullptr) return entry->generatedNode;
-
-	entry = newTableEntry(parentContext);
+	Node *generatedNode = program->getGenerator()->getCachedInstance(this, context);
+	if (generatedNode != nullptr) return generatedNode;
 
 	IrNodeDefinition *definition = getDefinition();
 	const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
@@ -374,32 +373,22 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 	int inputCount = (int)inputs.size();
 	int outputCount = (int)outputs.size();
 
-	Node *newNode = nullptr;
-	if (definition->isBuiltin()) {
-		if (definition->getBuiltinName() == "__piranha__string") {
-			newNode = StandardAllocator::Global()->allocate<ConstructedStringNode>();
-		}
-		else if (definition->getBuiltinName() == "__piranha__float") {
-			newNode = StandardAllocator::Global()->allocate<ConstructedFloatNode>();
-		}
-	}
-	else {
-		CustomNode *newCustomNode = StandardAllocator::Global()->allocate<CustomNode>();
+	Node *newNode = program->getGenerator()->generateNode(this, parentContext);
+	if (!definition->isBuiltin() && newNode != nullptr) {
+		CustomNode *customNode = static_cast<CustomNode *>(newNode);
 
 		for (int i = 0; i < inputCount; i++) {
-			newCustomNode->addCustomInput(inputs[i].name);
+			customNode->addCustomInput(inputs[i].name);
 		}
 
 		for (int i = 0; i < outputCount; i++) {
-			newCustomNode->addCustomOutput(outputs[i].output, outputs[i].name, outputs[i].primary);
+			customNode->addCustomOutput(outputs[i].output, outputs[i].name, outputs[i].primary);
 		}
-
-		newNode = newCustomNode;
 	}
 
 	if (newNode != nullptr) {
 		newNode->setName(getName());
-		newNode->setIrNode(this);
+		newNode->setIrStructure(this);
 		newNode->initialize();
 
 		for (int i = 0; i < inputCount; i++) {
@@ -410,29 +399,7 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 	// Add the new node to the program
 	program->addNode(newNode);
 
-	entry->generatedNode = newNode;
 	return newNode;
-}
-
-piranha::IrNode::NodeTableEntry *piranha::IrNode::getTableEntry(IrContextTree *context) {
-	int entryCount = (int)m_nodeTable.size();
-	for (int i = 0; i < entryCount; i++) {
-		if (m_nodeTable[i]->context->isEqual(context)) {
-			return m_nodeTable[i];
-		}
-	}
-
-	return nullptr;
-}
-
-piranha::IrNode::NodeTableEntry *piranha::IrNode::newTableEntry(IrContextTree *context) {
-	NodeTableEntry *newEntry = new NodeTableEntry();
-	newEntry->context = context;
-	newEntry->generatedNode = nullptr;
-
-	m_nodeTable.push_back(newEntry);
-
-	return newEntry;
 }
 
 piranha::IrValue *piranha::IrNode::getDefaultOutputValue() {

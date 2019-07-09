@@ -11,8 +11,8 @@ namespace piranha {
 
 	struct IntersectionPoint;
 	class StackAllocator;
-	class IrNode;
 	class IrContextTree;
+	class IrParserStructure;
 	class NodeProgram;
 
 	class Node {

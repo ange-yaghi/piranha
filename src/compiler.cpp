@@ -4,15 +4,15 @@
 #include "ir_import_statement.h"
 #include "ir_compilation_error.h"
 
-piranha::IrCompiler::IrCompiler() {
+piranha::Compiler::Compiler() {
 	/* void */
 }
 
-piranha::IrCompiler::~IrCompiler() {
+piranha::Compiler::~Compiler() {
 	/* void */
 }
 
-piranha::IrCompilationUnit *piranha::IrCompiler::analyze(const IrPath &scriptPath) {
+piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath) {
 	IrCompilationUnit *newUnit = getUnit(scriptPath);
 	Path rootDir;
 	scriptPath.getParentPath(&rootDir);
@@ -75,11 +75,8 @@ piranha::IrCompilationUnit *piranha::IrCompiler::analyze(const IrPath &scriptPat
 	return newUnit;
 }
 
-piranha::IrCompilationUnit *piranha::IrCompiler::compile(const IrPath &scriptPath) {
+piranha::IrCompilationUnit *piranha::Compiler::compile(const IrPath &scriptPath) {
 	IrCompilationUnit *topLevel = analyze(scriptPath);
-
-	// Expansion step
-	expand();
 
 	// Resolution step
 	resolve();
@@ -90,7 +87,7 @@ piranha::IrCompilationUnit *piranha::IrCompiler::compile(const IrPath &scriptPat
 	return topLevel;
 }
 
-piranha::IrCompilationUnit *piranha::IrCompiler::getUnit(const IrPath &scriptPath) const {
+piranha::IrCompilationUnit *piranha::Compiler::getUnit(const IrPath &scriptPath) const {
 	int nUnits = (int)m_units.size();
 
 	for (int i = 0; i < nUnits; i++) {
@@ -103,11 +100,11 @@ piranha::IrCompilationUnit *piranha::IrCompiler::getUnit(const IrPath &scriptPat
 	return nullptr;
 }
 
-void piranha::IrCompiler::addSearchPath(const IrPath &path) {
+void piranha::Compiler::addSearchPath(const IrPath &path) {
 	m_searchPaths.push_back(path);
 }
 
-bool piranha::IrCompiler::resolvePath(const IrPath &path, IrPath *target) const {
+bool piranha::Compiler::resolvePath(const IrPath &path, IrPath *target) const {
 	if (path.exists()) {
 		*target = path;
 		return true;
@@ -126,26 +123,18 @@ bool piranha::IrCompiler::resolvePath(const IrPath &path, IrPath *target) const 
 	return false;
 }
 
-bool piranha::IrCompiler::isPathEquivalent(const IrPath &a, const IrPath &b) const {
+bool piranha::Compiler::isPathEquivalent(const IrPath &a, const IrPath &b) const {
 	return (a == b);
 }
 
-bool piranha::IrCompiler::hasEnding(std::string const &fullString, std::string const &ending) {
+bool piranha::Compiler::hasEnding(std::string const &fullString, std::string const &ending) {
 	if (fullString.length() >= ending.length()) {
 		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
 	}
 	else return false;
 }
 
-void piranha::IrCompiler::expand() {
-	int unitCount = getUnitCount();
-	for (int i = 0; i < unitCount; i++) {
-		IrCompilationUnit *unit = m_units[i];
-		unit->expand();
-	}
-}
-
-void piranha::IrCompiler::resolve() {
+void piranha::Compiler::resolve() {
 	int unitCount = getUnitCount();
 	for (int i = 0; i < unitCount; i++) {
 		IrCompilationUnit *unit = m_units[i];
@@ -154,7 +143,7 @@ void piranha::IrCompiler::resolve() {
 	}
 }
 
-void piranha::IrCompiler::validate() {
+void piranha::Compiler::validate() {
 	int unitCount = getUnitCount();
 	for (int i = 0; i < unitCount; i++) {
 		IrCompilationUnit *unit = m_units[i];

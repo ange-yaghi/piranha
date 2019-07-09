@@ -188,29 +188,6 @@ void piranha::IrParserStructure::validate() {
 	m_validated = true;
 }
 
-void piranha::IrParserStructure::expand() {
-	if (m_isExpanded) return;
-
-	// Expand components
-	int componentCount = getComponentCount();
-	for (int i = 0; i < componentCount; i++) {
-		m_components[i]->expand();
-	}
-
-	_expand();
-
-	if (m_expansion != nullptr) {
-		// If this structure is found to result in an expanded form,
-		// then it will also be assumed that it references that expansion
-		//m_reference = m_expansion;
-		//m_referencesResolved = true;
-
-		registerComponent(m_expansion);
-	}
-
-	m_isExpanded = true;
-}
-
 void piranha::IrParserStructure::_validate() {
 	/* void */
 }
@@ -258,10 +235,6 @@ void piranha::IrParserStructure::writeReferencesToFile(std::ofstream &file, IrCo
 
 void piranha::IrParserStructure::_resolveDefinitions() {
 	/* void */
-}
-
-void piranha::IrParserStructure::_expand() {
-	m_expansion = nullptr;
 }
 
 piranha::IrParserStructure *piranha::IrParserStructure::resolveLocalName(const std::string &name) const {

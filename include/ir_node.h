@@ -41,7 +41,6 @@ namespace piranha {
 		virtual void setParentScope(IrParserStructure *parentScope);
 
 		virtual IrValue *getDefaultOutputValue();
-
 		virtual IrNode *getAsNode() { return this; }
 
 		void writeTraceToFile(std::ofstream &file);
@@ -76,17 +75,6 @@ namespace piranha {
 
 	public:
 		Node *generateNode(IrContextTree *context, NodeProgram *program);
-
-	protected:
-		struct NodeTableEntry {
-			Node *generatedNode;
-			IrContextTree *context;
-		};
-
-		NodeTableEntry *getTableEntry(IrContextTree *context);
-		NodeTableEntry *newTableEntry(IrContextTree *context);
-
-		std::vector<NodeTableEntry *> m_nodeTable;
 	};
 
 } /* namespace piranha */

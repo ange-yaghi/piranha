@@ -1,5 +1,5 @@
-#ifndef PIRANHA_IR_COMPILER_H
-#define PIRANHA_IR_COMPILER_H
+#ifndef PIRANHA_COMPILER_H
+#define PIRANHA_COMPILER_H
 
 #include "path.h"
 #include "ir_error_list.h"
@@ -13,10 +13,10 @@ namespace piranha {
 
 	typedef Path IrPath;
 
-	class IrCompiler {
+	class Compiler {
 	public:
-		IrCompiler();
-		~IrCompiler();
+		Compiler();
+		~Compiler();
 
 		IrCompilationUnit *compile(const IrPath &scriptPath);
 		IrCompilationUnit *getUnit(const IrPath &scriptPath) const;
@@ -38,7 +38,6 @@ namespace piranha {
 
 	protected:
 		// Build steps
-		void expand();
 		void resolve();
 		void validate();
 
@@ -51,4 +50,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* PIRANHA_IR_COMPILER_H */
+#endif /* PIRANHA_COMPILER_H */
