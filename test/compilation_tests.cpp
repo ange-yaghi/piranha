@@ -42,8 +42,14 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
 
 	Node *node1 = program.getNode(0);
 	EXPECT_EQ(node1->getName(), "");
+
+	Node *node2 = program.getNode(1);
+	EXPECT_EQ(node2->getName(), "string_to_float");
 	
 	double value;
 	node1->getPrimaryOutput()->fullCompute((void *)&value);
 	EXPECT_EQ(value, 5.0);
+
+	node2->getPrimaryOutput()->fullCompute((void *)&value);
+	EXPECT_EQ(value, 15.0);
 }

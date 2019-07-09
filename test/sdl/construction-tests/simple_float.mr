@@ -3,3 +3,4 @@ public node float => __piranha__float {
 }
 
 float(5.0)
+float string_to_float("15.0")

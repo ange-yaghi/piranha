@@ -26,16 +26,21 @@ namespace piranha {
 		typedef T_IrTokenInfo<T> _TokenInfo;
 
 		Node *generateNode(double value, IrContextTree *context, NodeProgram *program) {
-			FloatLiteralNode *newNode = (FloatLiteralNode *)program->getGenerator()->generateLiteral(this, context);
-			newNode->setValue(value);
+			SpecializedLiteralNode<double> *newNode = 
+				(SpecializedLiteralNode<double> *)program->getGenerator()->generateLiteral(this, context);
+			newNode->setData(value);
 			newNode->initialize();
 
 			return newNode;
 		}
 
 		Node *generateNode(const std::string &value, IrContextTree *context, NodeProgram *program) {
-			// TODO
-			return nullptr;
+			SpecializedLiteralNode<std::string> *newNode = 
+				(SpecializedLiteralNode<std::string> *)program->getGenerator()->generateLiteral(this, context);
+			newNode->setData(value);
+			newNode->initialize();
+
+			return newNode;
 		}
 
 		Node *generateNode(bool value, IrContextTree *context, NodeProgram *program) {

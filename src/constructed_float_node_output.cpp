@@ -18,9 +18,9 @@ void piranha::ConstructedFloatNodeOutput::fullCompute(void *_target) const {
 	if (m_input->isType(FloatNodeOutput::FloatType)) {
 		m_input->fullCompute(_target);
 	}
-	else if (m_input->isType(StringNodeOutput::StringType)) {
+	else if (m_input->isType(LiteralNodeOutputBase::StringType)) {
 		std::string str;
-		m_input->fullCompute(_target);
+		m_input->fullCompute((void *)&str);
 
 		std::stringstream ss(str);
 		double v;
