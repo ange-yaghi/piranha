@@ -109,23 +109,20 @@
     <Filter Include="Header Files\configuration">
       <UniqueIdentifier>{d1006f49-9f2a-42f5-b732-e17b871033d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\conversions">
+      <UniqueIdentifier>{bb042c19-3df7-47ed-a51e-795f2e5dfa9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\conversions">
+      <UniqueIdentifier>{b3e98f5f-8f27-4399-a6d8-0be38aa6caa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\casts">
+      <UniqueIdentifier>{9ae33182-4f75-49d9-8c20-164753bc4477}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\casts">
+      <UniqueIdentifier>{e74d8e77-c798-4e05-bb3b-06688a8830b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\constructed_float_node.h">
-      <Filter>Header Files\nodes\nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\constructed_float_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\constructed_string_node.h">
-      <Filter>Header Files\nodes\nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\constructed_string_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\string_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\node_output.h">
       <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
@@ -146,12 +143,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\path.h">
       <Filter>Header Files\os</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\single_string_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\single_float_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\custom_node.h">
       <Filter>Header Files\nodes</Filter>
@@ -216,12 +207,6 @@
     <ClInclude Include="..\..\include\compiler.h">
       <Filter>Header Files\syntax\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\ir_error_list.h">
-      <Filter>Header Files\syntax\error-handling</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\ir_compilation_error.h">
-      <Filter>Header Files\syntax\error-handling</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\ir_token_info.h">
       <Filter>Header Files\syntax\scanner</Filter>
     </ClInclude>
@@ -240,40 +225,49 @@
     <ClInclude Include="..\..\include\node_builder.h">
       <Filter>Header Files\syntax\generator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\float_literal_node.h">
-      <Filter>Header Files\nodes\nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\float_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\literal_node.h">
       <Filter>Header Files\nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\literal_node_output.h">
       <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\fundamental_types.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pipe_node.h">
+      <Filter>Header Files\nodes\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\string_conversions.h">
+      <Filter>Header Files\nodes\conversions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\float_conversions.h">
+      <Filter>Header Files\nodes\conversions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\float_cast_node.h">
+      <Filter>Header Files\nodes\casts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\string_cast_node.h">
+      <Filter>Header Files\nodes\casts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\default_literal_node.h">
+      <Filter>Header Files\nodes\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fundamental_output.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\compilation_error.h">
+      <Filter>Header Files\syntax\error-handling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\error_list.h">
+      <Filter>Header Files\syntax\error-handling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\constructed_float_node_output.cpp">
-      <Filter>Source Files\nodes\node-outputs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\constructed_string_node_output.cpp">
-      <Filter>Source Files\nodes\node-outputs</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\node_output.cpp">
       <Filter>Source Files\nodes\node-outputs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\constructed_float_node.cpp">
-      <Filter>Source Files\nodes\nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\constructed_string_node.cpp">
-      <Filter>Source Files\nodes\nodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\node.cpp">
       <Filter>Source Files\nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\float_node_output.cpp">
-      <Filter>Source Files\nodes\node-outputs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\node_program.cpp">
       <Filter>Source Files\program</Filter>
@@ -284,17 +278,8 @@
     <ClCompile Include="..\..\src\path.cpp">
       <Filter>Source Files\os</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\string_node_output.cpp">
-      <Filter>Source Files\nodes\node-outputs</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\standard_allocator.cpp">
       <Filter>Source Files\memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\single_string_node_output.cpp">
-      <Filter>Source Files\nodes\node-outputs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\single_float_node_output.cpp">
-      <Filter>Source Files\nodes\node-outputs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\custom_node.cpp">
       <Filter>Source Files\nodes</Filter>
@@ -304,12 +289,6 @@
     </ClCompile>
     <ClCompile Include="..\..\autogen\scanner.auto.cpp">
       <Filter>Source Files\syntax\autogen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ir_compilation_error.cpp">
-      <Filter>Source Files\syntax\error-handling</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ir_error_list.cpp">
-      <Filter>Source Files\syntax\error-handling</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ir_context_tree.cpp">
       <Filter>Source Files\syntax\generator</Filter>
@@ -362,11 +341,26 @@
     <ClCompile Include="..\..\src\compiler.cpp">
       <Filter>Source Files\syntax\compiler</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\float_literal_node.cpp">
-      <Filter>Source Files\nodes\nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\literal_node_output.cpp">
+    <ClCompile Include="..\..\src\fundamental_types.cpp">
       <Filter>Source Files\nodes\node-outputs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\string_conversions.cpp">
+      <Filter>Source Files\nodes\conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\float_conversions.cpp">
+      <Filter>Source Files\nodes\conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\string_cast_node.cpp">
+      <Filter>Source Files\nodes\casts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\float_cast_node.cpp">
+      <Filter>Source Files\nodes\casts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\compilation_error.cpp">
+      <Filter>Source Files\syntax\error-handling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\error_list.cpp">
+      <Filter>Source Files\syntax\error-handling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

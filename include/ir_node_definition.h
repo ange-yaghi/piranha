@@ -12,7 +12,7 @@ namespace piranha {
 	class IrAttributeDefinition;
 	class IrCompilationUnit;
 
-	class IrNodeDefinition : public IrParserStructure {
+	class IrNodeDefinition : public ParserStructure {
 	public:
 		IrNodeDefinition(const IrTokenInfo_string &name);
 		virtual ~IrNodeDefinition();
@@ -38,7 +38,7 @@ namespace piranha {
 		void setBody(IrNodeList *body) { m_body = body; registerComponent(body); }
 		IrNodeList *getBody() const { return m_body; }
 
-		virtual IrParserStructure *resolveName(const std::string &name) const;
+		virtual ParserStructure *resolveName(const std::string &name) const;
 
 	protected:
 		IrTokenInfo_string m_name;
@@ -54,7 +54,7 @@ namespace piranha {
 		// Resolution stage
 	public:
 		int countSymbolIncidence(const std::string &name) const;
-		IrParserStructure *resolveLocalName(const std::string &name) const;
+		ParserStructure *resolveLocalName(const std::string &name) const;
 
 	protected:
 		virtual void _validate();

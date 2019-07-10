@@ -5,7 +5,7 @@
 #include "ir_compilation_unit.h"
 #include "ir_node_definition.h"
 #include "ir_attribute_definition.h"
-#include "ir_compilation_error.h"
+#include "compilation_error.h"
 #include "ir_attribute_definition_list.h"
 #include "ir_value.h"
 #include "ir_context_tree.h"
@@ -14,8 +14,6 @@
 #include <custom_node.h>
 #include <standard_allocator.h>
 
-#include <constructed_float_node.h>
-#include <constructed_string_node.h>
 #include <node_program.h>
 
 piranha::IrNode::IrNode() {
@@ -79,8 +77,8 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(const std::string &name, int
 	return result;
 }
 
-void piranha::IrNode::setParentScope(IrParserStructure *parentScope) {
-	IrParserStructure::setParentScope(parentScope);
+void piranha::IrNode::setParentScope(ParserStructure *parentScope) {
+	ParserStructure::setParentScope(parentScope);
 	if (m_attributes != nullptr) {
 		m_attributes->setParentScope(parentScope);
 	}
@@ -104,8 +102,8 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(IrAttributeDefinition *defin
 	return result;
 }
 
-piranha::IrParserStructure *piranha::IrNode::resolveLocalName(const std::string &name) const {
-	IrParserStructure *attribute = getAttribute(name);
+piranha::ParserStructure *piranha::IrNode::resolveLocalName(const std::string &name) const {
+	ParserStructure *attribute = getAttribute(name);
 	if (attribute != nullptr) return attribute;
 	
 	if (m_definition != nullptr) return m_definition->resolveLocalName(name);
@@ -145,12 +143,12 @@ void piranha::IrNode::_validate() {
 
 			if (positional) {
 				// Log a more specific message for clarify if the attribute is positional
-				unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(),
-					IrErrorCode::InputSpecifiedMultipleTimesPositional));
+				unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(),
+					ErrorCode::InputSpecifiedMultipleTimesPositional));
 			}
 			else {
-				unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(),
-					IrErrorCode::InputSpecifiedMultipleTimes));
+				unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(),
+					ErrorCode::InputSpecifiedMultipleTimes));
 			}
 		}
 	}
@@ -165,12 +163,12 @@ void piranha::IrNode::_validate() {
 
 			for (int i = 0; i < inputCount; i++) {
 				IrAttributeDefinition *input = attributeList->getInputDefinition(i);
-				IrParserStructure *attribute = getAttribute(input);
+				ParserStructure *attribute = getAttribute(input);
 
 				if (attribute == nullptr && input->getDefaultValue() == nullptr) {
 					// This input port is not conencted and has no default value
-					unit->addCompilationError(new IrCompilationError(*getSummaryToken(),
-						IrErrorCode::InputNotConnected));
+					unit->addCompilationError(new CompilationError(*getSummaryToken(),
+						ErrorCode::InputNotConnected));
 				}
 			}
 		}
@@ -219,8 +217,8 @@ void piranha::IrNode::resolveNodeDefinition() {
 	}
 
 	if (definition == nullptr) {
-		unit->addCompilationError(new IrCompilationError(getTypeToken(), 
-			IrErrorCode::UndefinedNodeType));
+		unit->addCompilationError(new CompilationError(getTypeToken(), 
+			ErrorCode::UndefinedNodeType));
 	}
 
 	else {
@@ -253,8 +251,8 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 
 			// Check position is not out of bounds
 			if (position >= list->getInputCount()) {
-				unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(), 
-					IrErrorCode::ArgumentPositionOutOfBounds));
+				unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(), 
+					ErrorCode::ArgumentPositionOutOfBounds));
 				attribute->setAttributeDefinition(nullptr);
 				return;
 			}
@@ -270,14 +268,14 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 
 		if (definition == nullptr) {
 			// Port not found
-			unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(), 
-				IrErrorCode::PortNotFound));
+			unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(), 
+				ErrorCode::PortNotFound));
 			attribute->setAttributeDefinition(nullptr);
 		}
 		else if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
 			// Can't assign an output port
-			unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(), 
-				IrErrorCode::UsingOutputPortAsInput));
+			unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(), 
+				ErrorCode::UsingOutputPortAsInput));
 			attribute->setAttributeDefinition(nullptr);
 		}
 		else {
@@ -392,7 +390,30 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 		newNode->initialize();
 
 		for (int i = 0; i < inputCount; i++) {
-			newNode->connectInput(inputs[i].output, inputs[i].name.c_str());
+			pNodeInput input = inputs[i].output;
+			std::string name = inputs[i].name;
+
+			const NodeType *conversionType = newNode->getConversion(input, name);
+			
+			if (conversionType != nullptr) {
+				// A conversion is needed
+				const NodeType *originalType = input->getType();
+				Node *conversionNode = program->getGenerator()->generateConversion({ originalType, conversionType });
+				conversionNode->setName("$autoconversion");
+				conversionNode->setIrStructure(nullptr);
+				conversionNode->setIrContext(nullptr);
+				conversionNode->initialize();
+
+				if (conversionNode == nullptr) {
+					// TODO: Error for no valid conversion being found
+				}
+				else {
+					conversionNode->connectDefaultInput(input);
+					input = conversionNode->getPrimaryOutput();
+				}
+			}
+
+			newNode->connectInput(input, name.c_str());
 		}
 	}
 

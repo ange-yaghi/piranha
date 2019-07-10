@@ -5,7 +5,7 @@
 
 namespace piranha {
 
-	class IrCompilationError;
+	class CompilationError;
 
 	class IrUnaryOperator : public IrValue {
 	public:
@@ -22,7 +22,7 @@ namespace piranha {
 		OPERATOR getOperator() const { return m_operator; }
 		IrValue *getOperand() const { return m_operand; }
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
 	protected:
 		OPERATOR m_operator;

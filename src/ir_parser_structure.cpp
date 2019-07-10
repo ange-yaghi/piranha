@@ -3,7 +3,7 @@
 #include "ir_compilation_unit.h"
 #include "ir_context_tree.h"
 
-piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
+piranha::ParserStructure::IrReferenceInfo::IrReferenceInfo() {
 	newContext = nullptr;
 	err = nullptr;
 
@@ -12,11 +12,11 @@ piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
 	touchedMainContext = false;
 }
 
-piranha::IrParserStructure::IrReferenceInfo::~IrReferenceInfo() {
+piranha::ParserStructure::IrReferenceInfo::~IrReferenceInfo() {
 	/* void */
 }
 
-void piranha::IrParserStructure::IrReferenceInfo::reset() {
+void piranha::ParserStructure::IrReferenceInfo::reset() {
 	newContext = nullptr;
 	err = nullptr;
 
@@ -25,17 +25,17 @@ void piranha::IrParserStructure::IrReferenceInfo::reset() {
 	touchedMainContext = false;
 }
 
-piranha::IrParserStructure::IrReferenceQuery::IrReferenceQuery() {
+piranha::ParserStructure::IrReferenceQuery::IrReferenceQuery() {
 	inputContext = nullptr;
 	recordErrors = false;
 }
 
-piranha::IrParserStructure::IrReferenceQuery::~IrReferenceQuery() {
+piranha::ParserStructure::IrReferenceQuery::~IrReferenceQuery() {
 	/* void */
 }
 
 
-piranha::IrParserStructure::IrParserStructure() {
+piranha::ParserStructure::ParserStructure() {
 	m_parentScope = nullptr;
 	m_logicalParent = nullptr;
 	m_checkReferences = true;
@@ -47,15 +47,15 @@ piranha::IrParserStructure::IrParserStructure() {
 	m_defaultVisibility = IrVisibility::PRIVATE;
 }
 
-piranha::IrParserStructure::~IrParserStructure() {
+piranha::ParserStructure::~ParserStructure() {
 	/* void */
 }
 
-void piranha::IrParserStructure::registerToken(const IrTokenInfo *tokenInfo) {
+void piranha::ParserStructure::registerToken(const IrTokenInfo *tokenInfo) {
 	if (tokenInfo != nullptr) m_summaryToken.combine(tokenInfo);
 }
 
-void piranha::IrParserStructure::registerComponent(IrParserStructure *child) {
+void piranha::ParserStructure::registerComponent(ParserStructure *child) {
 	if (child != nullptr) {
 		m_summaryToken.combine(child->getSummaryToken());
 		child->setParentScope(this);
@@ -65,8 +65,8 @@ void piranha::IrParserStructure::registerComponent(IrParserStructure *child) {
 	}
 }
 
-piranha::IrParserStructure *piranha::IrParserStructure::resolveName(const std::string &name) const {
-	IrParserStructure *local = resolveLocalName(name);
+piranha::ParserStructure *piranha::ParserStructure::resolveName(const std::string &name) const {
+	ParserStructure *local = resolveLocalName(name);
 	if (local != nullptr) return local;
 	
 	if (m_parentScope != nullptr) {
@@ -76,16 +76,16 @@ piranha::IrParserStructure *piranha::IrParserStructure::resolveName(const std::s
 	return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrParserStructure::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::ParserStructure *piranha::ParserStructure::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 	return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrParserStructure::getReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::ParserStructure *piranha::ParserStructure::getReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 	IR_RESET(query);
 
 	IrReferenceQuery immediateQuery = query;
 	IrReferenceInfo immediateInfo;
-	IrParserStructure *immediateReference = getImmediateReference(immediateQuery, &immediateInfo);
+	ParserStructure *immediateReference = getImmediateReference(immediateQuery, &immediateInfo);
 
 	if (immediateInfo.failed) {
 		IR_FAIL();
@@ -107,7 +107,7 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(const IrRef
 		// already been checked/reported
 		nestedQuery.recordErrors = false;
 
-		IrParserStructure *fullReference = immediateReference->getReference(nestedQuery, &nestedInfo);
+		ParserStructure *fullReference = immediateReference->getReference(nestedQuery, &nestedInfo);
 
 		if (nestedInfo.failed) {
 			IR_FAIL();
@@ -129,7 +129,7 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(const IrRef
 	}
 }
 
-void piranha::IrParserStructure::resolveDefinitions() {
+void piranha::ParserStructure::resolveDefinitions() {
 	if (m_definitionsResolved) return;
 
 	// Resolve components
@@ -143,7 +143,7 @@ void piranha::IrParserStructure::resolveDefinitions() {
 	m_definitionsResolved = true;
 }
 
-void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {
+void piranha::ParserStructure::checkReferences(IrContextTree *inputContext) {
 	// Check components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
@@ -156,7 +156,7 @@ void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {
 		query.recordErrors = true;
 		IrReferenceInfo info;
 
-		IrParserStructure *reference = getReference(query, &info);
+		ParserStructure *reference = getReference(query, &info);
 
 		if (info.err != nullptr) {
 			getParentUnit()->addCompilationError(info.err);
@@ -164,7 +164,7 @@ void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {
 	}
 }
 
-void piranha::IrParserStructure::checkInstantiation() {
+void piranha::ParserStructure::checkInstantiation() {
 	// Check components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
@@ -174,7 +174,7 @@ void piranha::IrParserStructure::checkInstantiation() {
 	_checkInstantiation();
 }
 
-void piranha::IrParserStructure::validate() {
+void piranha::ParserStructure::validate() {
 	if (m_validated) return;
 
 	// Validate components
@@ -188,15 +188,15 @@ void piranha::IrParserStructure::validate() {
 	m_validated = true;
 }
 
-void piranha::IrParserStructure::_validate() {
+void piranha::ParserStructure::_validate() {
 	/* void */
 }
 
-void piranha::IrParserStructure::_checkInstantiation() {
+void piranha::ParserStructure::_checkInstantiation() {
 	/* void */
 }
 
-void piranha::IrParserStructure::writeReferencesToFile(std::ofstream &file, IrContextTree *context, int tabLevel) {
+void piranha::ParserStructure::writeReferencesToFile(std::ofstream &file, IrContextTree *context, int tabLevel) {
 	for (int i = 0; i < tabLevel; i++) {
 		file << " ";
 	}
@@ -216,7 +216,7 @@ void piranha::IrParserStructure::writeReferencesToFile(std::ofstream &file, IrCo
 	query.recordErrors = false;
 
 	IrNode *asNode = getAsNode();
-	IrParserStructure *immediateReference = getImmediateReference(query, &info);
+	ParserStructure *immediateReference = getImmediateReference(query, &info);
 
 	if (info.failed) {
 		file << " => "; 
@@ -233,20 +233,20 @@ void piranha::IrParserStructure::writeReferencesToFile(std::ofstream &file, IrCo
 	}
 }
 
-void piranha::IrParserStructure::_resolveDefinitions() {
+void piranha::ParserStructure::_resolveDefinitions() {
 	/* void */
 }
 
-piranha::IrParserStructure *piranha::IrParserStructure::resolveLocalName(const std::string &name) const {
+piranha::ParserStructure *piranha::ParserStructure::resolveLocalName(const std::string &name) const {
 	return nullptr;
 }
 
-bool piranha::IrParserStructure::allowsExternalAccess() const {
+bool piranha::ParserStructure::allowsExternalAccess() const {
 	IrVisibility visibility = (m_visibility == IrVisibility::DEFAULT) ? m_defaultVisibility : m_visibility;
 	return visibility == IrVisibility::PUBLIC;
 }
 
-piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
+piranha::IrCompilationUnit *piranha::ParserStructure::getParentUnit() const {
 	if (m_parentUnit == nullptr) return m_logicalParent->getParentUnit();
 	else return m_parentUnit;
 }

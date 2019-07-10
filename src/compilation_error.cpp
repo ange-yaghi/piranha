@@ -1,27 +1,27 @@
-#include "ir_compilation_error.h"
+#include "compilation_error.h"
 
 #include "ir_context_tree.h"
 #include "ir_parser_structure.h"
 
-piranha::IrCompilationError::IrCompilationError(const IrTokenInfo &location, 
-			const IrErrorCode_struct &code, IrContextTree *instantiation) {
+piranha::CompilationError::CompilationError(const IrTokenInfo &location, 
+			const ErrorCode_struct &code, IrContextTree *instantiation) {
 	m_errorLocation = location;
 	m_code = code;
 	m_instantiation = instantiation;
 }
 
-piranha::IrCompilationError::~IrCompilationError() {
+piranha::CompilationError::~CompilationError() {
 	/* void */
 }
 
-bool piranha::IrCompilationError::isInstantiationError() const {
+bool piranha::CompilationError::isInstantiationError() const {
 	return (m_instantiation != nullptr && m_instantiation->getContext() != nullptr);
 }
 
 // Error definitions --------------------------------------
 
 // Helper macro
-#define ERR(tag) const piranha::IrErrorCode_struct piranha::IrErrorCode::tag
+#define ERR(tag) const piranha::ErrorCode_struct piranha::ErrorCode::tag
 
 // [IO] - IO Errors
 ERR(FileOpenFailed) =			{ "IO", "0010", "Could not open file" };

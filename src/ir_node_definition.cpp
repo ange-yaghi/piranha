@@ -4,7 +4,7 @@
 #include "ir_attribute_definition.h"
 #include "ir_compilation_unit.h"
 #include "ir_node.h"
-#include "ir_compilation_error.h"
+#include "compilation_error.h"
 #include "ir_value.h"
 #include "ir_context_tree.h"
 
@@ -51,7 +51,7 @@ piranha::IrAttributeDefinition *piranha::IrNodeDefinition::getAttributeDefinitio
 	return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrNodeDefinition::resolveName(const std::string &name) const {
+piranha::ParserStructure *piranha::IrNodeDefinition::resolveName(const std::string &name) const {
 	// Node definitions are not able to see variables outside of themselves for now
 	return resolveLocalName(name);
 }
@@ -84,7 +84,7 @@ int piranha::IrNodeDefinition::countSymbolIncidence(const std::string &name) con
 	return count;
 }
 
-piranha::IrParserStructure *piranha::IrNodeDefinition::resolveLocalName(const std::string &name) const {
+piranha::ParserStructure *piranha::IrNodeDefinition::resolveLocalName(const std::string &name) const {
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {
@@ -119,8 +119,8 @@ void piranha::IrNodeDefinition::_validate() {
 			IrAttributeDefinition *definition = m_attributes->getDefinition(i);
 			int incidence = countSymbolIncidence(definition->getName());
 			if (incidence > 1) {
-				unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
-					IrErrorCode::SymbolUsedMultipleTimes));
+				unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+					ErrorCode::SymbolUsedMultipleTimes));
 			}
 		}
 	}
@@ -131,8 +131,8 @@ void piranha::IrNodeDefinition::_validate() {
 			IrNode *node = m_body->getItem(i);
 			int incidence = countSymbolIncidence(node->getName());
 			if (incidence > 1) {
-				unit->addCompilationError(new IrCompilationError(node->getNameToken(),
-					IrErrorCode::SymbolUsedMultipleTimes));
+				unit->addCompilationError(new CompilationError(node->getNameToken(),
+					ErrorCode::SymbolUsedMultipleTimes));
 			}
 		}
 	}
@@ -146,17 +146,17 @@ void piranha::IrNodeDefinition::_validate() {
 				IrValue *value = definition->getDefaultValue();
 				if (value != nullptr) {
 					if (value->isGeneric() && !isBuiltin()) {
-						unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
-							IrErrorCode::StandardOutputWithType));
+						unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+							ErrorCode::StandardOutputWithType));
 					}
 					else if (!value->isGeneric() && isBuiltin()) {
-						unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
-							IrErrorCode::BuiltinOutputWithDefinition));
+						unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+							ErrorCode::BuiltinOutputWithDefinition));
 					}
 				}
 				else {
-					unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
-						IrErrorCode::OutputWithNoDefinition));
+					unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+						ErrorCode::OutputWithNoDefinition));
 				}
 			}
 		}

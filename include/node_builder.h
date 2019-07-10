@@ -1,5 +1,5 @@
-#ifndef NODE_BUILDER_H
-#define NODE_BUILDER_H
+#ifndef PIRANHA_NODE_BUILDER_H
+#define PIRANHA_NODE_BUILDER_H
 
 #include <string>
 
@@ -18,7 +18,7 @@ namespace piranha {
 	template <typename NodeType, typename NodeBase, typename KeyType>
 	class SpecializedNodeBuilder : public NodeBuilder<KeyType, NodeBase> {
 	public:
-		SpecializedNodeBuilder(const  KeyType &key, const std::string &compiler) {
+		SpecializedNodeBuilder(const KeyType &key, const std::string &compiler) {
 			m_key = key;
 			m_compiler = compiler;
 		}
@@ -42,4 +42,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* NODE_BUILDER_H */
+#endif /* PIRANHA_NODE_BUILDER_H */

@@ -4,7 +4,7 @@
 #include "ir_node.h"
 #include "ir_attribute_list.h"
 #include "ir_attribute.h"
-#include "ir_error_list.h"
+#include "error_list.h"
 #include "node_program.h"
 #include "generator.h"
 
@@ -61,7 +61,7 @@ piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parseHelper(
 							std::istream &stream, IrCompilationUnit *topLevel) {
 	delete m_scanner;
 	try {
-		m_scanner = new piranha::IrScanner(&stream);
+		m_scanner = new piranha::Scanner(&stream);
 	}
 	catch (std::bad_alloc) {
 		return FAIL;
@@ -69,7 +69,7 @@ piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parseHelper(
 
 	delete m_parser;
 	try {
-		m_parser = new piranha::IrParser(*m_scanner, *this);
+		m_parser = new piranha::Parser(*m_scanner, *this);
 	}
 	catch (std::bad_alloc) {
 		return FAIL;
@@ -162,8 +162,8 @@ void piranha::IrCompilationUnit::_validate() {
 		int count = countSymbolIncidence(node->getName());
 
 		if (count > 1) {
-			this->addCompilationError(new IrCompilationError(node->getNameToken(),
-				IrErrorCode::SymbolUsedMultipleTimes));
+			this->addCompilationError(new CompilationError(node->getNameToken(),
+				ErrorCode::SymbolUsedMultipleTimes));
 		}
 	}
 
@@ -174,8 +174,8 @@ void piranha::IrCompilationUnit::_validate() {
 		resolveLocalNodeDefinition(def->getName(), &count);
 
 		if (count > 1) {
-			this->addCompilationError(new IrCompilationError(*def->getNameToken(),
-				IrErrorCode::DuplicateNodeDefinition));
+			this->addCompilationError(new CompilationError(*def->getNameToken(),
+				ErrorCode::DuplicateNodeDefinition));
 		}
 	}
 }
@@ -223,7 +223,7 @@ int piranha::IrCompilationUnit::getNodeDefinitionCount() const {
 	return (int)m_nodeDefinitions.size();
 }
 
-piranha::IrParserStructure *piranha::IrCompilationUnit::resolveLocalName(const std::string &name) const {
+piranha::ParserStructure *piranha::IrCompilationUnit::resolveLocalName(const std::string &name) const {
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		IrNode *node = m_nodes[i];
@@ -248,7 +248,7 @@ int piranha::IrCompilationUnit::countSymbolIncidence(const std::string &name) co
 	return count;
 }
 
-void piranha::IrCompilationUnit::addCompilationError(IrCompilationError *err) {
+void piranha::IrCompilationUnit::addCompilationError(CompilationError *err) {
 	if (m_errorList != nullptr) {
 		err->setCompilationUnit(this);
 		m_errorList->addCompilationError(err);

@@ -12,7 +12,7 @@ namespace piranha {
 	struct IntersectionPoint;
 	class StackAllocator;
 	class IrContextTree;
-	class IrParserStructure;
+	class ParserStructure;
 	class NodeProgram;
 
 	class Node {
@@ -25,6 +25,8 @@ namespace piranha {
 		struct NodeInputPort {
 			pNodeInput *input;
 			std::string name;
+
+			const NodeType *requiredType;
 		};
 
 		struct NodeOutputPort {
@@ -51,7 +53,9 @@ namespace piranha {
 		void setName(const std::string &name) { m_name = name; }
 		std::string getName() const { return m_name; }
 
+		const NodeType *getConversion(pNodeInput input, const std::string &name);
 		void connectInput(pNodeInput input, const std::string &name);
+		void connectDefaultInput(pNodeInput input);
 		int getInputCount() const { return (int)m_inputs.size(); }
 
 		NodeOutput *getPrimaryOutput() const;
@@ -63,8 +67,8 @@ namespace piranha {
 		bool isInitialized() const { return m_initialized; }
 		bool isEvaluated() const { return m_evaluated; }
 
-		void setIrStructure(IrParserStructure *irStructure) { m_irStructure = irStructure; }
-		IrParserStructure *getIrStructure() const { return m_irStructure; }
+		void setIrStructure(ParserStructure *irStructure) { m_irStructure = irStructure; }
+		ParserStructure *getIrStructure() const { return m_irStructure; }
 
 		void setIrContext(IrContextTree *context) { m_context = context; }
 		IrContextTree *getContext() const { return m_context; }
@@ -89,11 +93,11 @@ namespace piranha {
 		std::string m_name;
 
 		IrContextTree *m_context;
-		IrParserStructure *m_irStructure;
+		ParserStructure *m_irStructure;
 
 	protected:
 		std::vector<NodeInputPort> m_inputs;
-		void registerInput(pNodeInput *node, const std::string &name);
+		void registerInput(pNodeInput *node, const std::string &name, const NodeType *requiredType = nullptr);
 
 		std::vector<NodeOutputPort> m_outputs;
 		void registerOutput(NodeOutput *node, const std::string &name);
@@ -102,9 +106,11 @@ namespace piranha {
 		void registerOutputReference(NodeOutput *const *node, const std::string &name);
 
 		void setPrimaryOutput(NodeOutput *node);
+		void setPrimaryOutputReference(NodeOutput **node);
 
 	protected:
 		NodeOutput *m_primaryOutput;
+		NodeOutput **m_primaryReference;
 
 	private:
 		// State variables

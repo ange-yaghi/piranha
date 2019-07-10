@@ -1,7 +1,7 @@
 #include "ir_generic_value.h"
 
 #include "ir_compilation_unit.h"
-#include "ir_compilation_error.h"
+#include "compilation_error.h"
 #include "ir_node_definition.h"
 
 piranha::IrGenericValue::IrGenericValue(const IrTokenInfoSet<std::string, 2> &type) 
@@ -14,7 +14,7 @@ piranha::IrGenericValue::~IrGenericValue() {
 	/* void */
 }
 
-piranha::IrParserStructure *piranha::IrGenericValue::resolveLocalName(const std::string &name) const {
+piranha::ParserStructure *piranha::IrGenericValue::resolveLocalName(const std::string &name) const {
 	if (m_typeDefinition != nullptr) {
 		return m_typeDefinition->resolveLocalName(name);
 	}
@@ -57,8 +57,8 @@ void piranha::IrGenericValue::_resolveDefinitions() {
 	}
 
 	if (definition == nullptr) {
-		unit->addCompilationError(new IrCompilationError(typeToken,
-			IrErrorCode::UndefinedNodeType));
+		unit->addCompilationError(new CompilationError(typeToken,
+			ErrorCode::UndefinedNodeType));
 		m_typeDefinition = nullptr;
 	}
 

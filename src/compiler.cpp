@@ -2,7 +2,7 @@
 
 #include "ir_compilation_unit.h"
 #include "ir_import_statement.h"
-#include "ir_compilation_error.h"
+#include "compilation_error.h"
 
 piranha::Compiler::Compiler() {
 	/* void */
@@ -54,8 +54,8 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
 				bool fileFound = resolvePath(importPath, &resolvedPath);
 
 				if (!fileFound) {
-					newUnit->addCompilationError(new IrCompilationError(*s->getSummaryToken(),
-						IrErrorCode::FileOpenFailed));
+					newUnit->addCompilationError(new CompilationError(*s->getSummaryToken(),
+						ErrorCode::FileOpenFailed));
 					continue;
 				}
 				else fullImportPath = resolvedPath;
@@ -65,8 +65,8 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
 			IrCompilationUnit *importUnit = analyze(fullImportPath);
 			s->setUnit(importUnit);
 			if (importUnit == nullptr) {
-				newUnit->addCompilationError(new IrCompilationError(*s->getSummaryToken(),
-					IrErrorCode::FileOpenFailed));
+				newUnit->addCompilationError(new CompilationError(*s->getSummaryToken(),
+					ErrorCode::FileOpenFailed));
 			}
 			else newUnit->addDependency(importUnit);
 		}

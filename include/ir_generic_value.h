@@ -21,7 +21,7 @@ namespace piranha {
 
 		// Resolution stage
 	public:
-		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
+		virtual ParserStructure *resolveLocalName(const std::string &name) const;
 
 	protected:
 		virtual void _resolveDefinitions();

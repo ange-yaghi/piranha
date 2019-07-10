@@ -2,7 +2,7 @@
 #define PIRANHA_COMPILER_H
 
 #include "path.h"
-#include "ir_error_list.h"
+#include "error_list.h"
 
 #include <vector>
 #include <string>
@@ -23,7 +23,7 @@ namespace piranha {
 
 		int getUnitCount() const { return (int)m_units.size(); }
 
-		const IrErrorList *getErrorList() const { return &m_errorList; }
+		const ErrorList *getErrorList() const { return &m_errorList; }
 
 		void addSearchPath(const IrPath &path);
 		int getSearchPathCount() const { return (int)m_searchPaths.size(); }
@@ -42,7 +42,7 @@ namespace piranha {
 		void validate();
 
 	protected:
-		IrErrorList m_errorList;
+		ErrorList m_errorList;
 		std::vector<IrCompilationUnit *> m_units;
 
 		std::vector<IrPath> m_searchPaths;

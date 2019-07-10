@@ -10,7 +10,7 @@
 
 namespace piranha {
 
-	class IrAttributeDefinitionList : public IrParserStructure {
+	class IrAttributeDefinitionList : public ParserStructure {
 	public:
 		IrAttributeDefinitionList();
 		~IrAttributeDefinitionList();

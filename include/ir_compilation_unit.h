@@ -12,19 +12,19 @@
 
 namespace piranha {
 
-	class IrParser;
-	class IrScanner;
+	class Parser;
+	class Scanner;
 	class IrNode;
 	class IrNodeDefinition;
 	class IrAttributeList;
 	class IrAttribute;
 	class IrValue;
 	class IrImportStatement;
-	class IrCompilationError;
-	class IrErrorList;
+	class CompilationError;
+	class ErrorList;
 	class NodeProgram;
 
-	class IrCompilationUnit : public IrParserStructure {
+	class IrCompilationUnit : public ParserStructure {
 	public:
 		enum ParseResult {
 			IO_ERROR,
@@ -54,10 +54,10 @@ namespace piranha {
 		IrNodeDefinition *getNodeDefinition(int index) const { return m_nodeDefinitions[index]; }
 		int getNodeDefinitionCount() const;
 
-		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
+		virtual ParserStructure *resolveLocalName(const std::string &name) const;
 		int countSymbolIncidence(const std::string &name) const;
 
-		void addCompilationError(IrCompilationError *err);
+		void addCompilationError(CompilationError *err);
 
 		std::ostream& print(std::ostream &stream);
 
@@ -66,14 +66,14 @@ namespace piranha {
 		int getDependencyCount() const { return (int)m_dependencies.size(); }
 		const Path &getPath() const { return m_path; }
 
-		void setErrorList(IrErrorList *list) { m_errorList = list; }
-		IrErrorList *getErrorList() const { return m_errorList; }
+		void setErrorList(ErrorList *list) { m_errorList = list; }
+		ErrorList *getErrorList() const { return m_errorList; }
 
 	private:
 		ParseResult parseHelper(std::istream &stream, IrCompilationUnit *topLevel = nullptr);
 
-		IrParser *m_parser = nullptr;
-		IrScanner *m_scanner = nullptr;
+		Parser *m_parser = nullptr;
+		Scanner *m_scanner = nullptr;
 
 		Path m_path;
 
@@ -82,7 +82,7 @@ namespace piranha {
 		std::vector<IrNodeDefinition *> m_nodeDefinitions;
 		std::vector<IrCompilationUnit *> m_dependencies;
 
-		IrErrorList *m_errorList = nullptr;
+		ErrorList *m_errorList = nullptr;
 
 		// Resolution stage
 	public:

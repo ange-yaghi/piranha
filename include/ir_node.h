@@ -19,7 +19,7 @@ namespace piranha {
 	class Node;
 	class NodeProgram;
 
-	class IrNode : public IrParserStructure {
+	class IrNode : public ParserStructure {
 	public:
 		IrNode();
 		IrNode(const IrTokenInfo_string &type, const IrTokenInfo_string &name, IrAttributeList *attributes, 
@@ -38,7 +38,7 @@ namespace piranha {
 		IrAttributeList *getAttributes() const { return m_attributes; }
 		IrAttribute *getAttribute(const std::string &name, int *count = nullptr) const;
 
-		virtual void setParentScope(IrParserStructure *parentScope);
+		virtual void setParentScope(ParserStructure *parentScope);
 
 		virtual IrValue *getDefaultOutputValue();
 		virtual IrNode *getAsNode() { return this; }
@@ -61,7 +61,7 @@ namespace piranha {
 		IrNodeDefinition *getDefinition() const { return m_definition; }
 		void setDefinition(IrNodeDefinition *definition) { m_definition = definition; }
 
-		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
+		virtual ParserStructure *resolveLocalName(const std::string &name) const;
 
 	protected:
 		virtual void _resolveDefinitions();

@@ -7,10 +7,10 @@
 /* Implementation of yyFlexScanner */ 
 #include <scanner.h>
 #undef  YY_DECL
-#define YY_DECL int piranha::IrScanner::yylex( piranha::IrParser::semantic_type *const lval, piranha::IrParser::location_type *location)
+#define YY_DECL int piranha::Scanner::yylex( piranha::Parser::semantic_type *const lval, piranha::Parser::location_type *location)
 
 /* using "token" to make the returns for the tokens shorter to type */
-using token = piranha::IrParser::token;
+using token = piranha::Parser::token;
 
 /* define yyterminate as this instead of NULL */
 #define yyterminate() return( token::END )
@@ -33,7 +33,7 @@ using token = piranha::IrParser::token;
 
 %option debug
 %option nodefault
-%option yyclass="piranha::IrScanner"
+%option yyclass="piranha::Scanner"
 %option noyywrap
 %option c++
 
@@ -134,7 +134,7 @@ H				[a-fA-F0-9]
 .				{ BUILD_INVALID(location); return (token::UNRECOGNIZED); }
 %%
 
-void piranha::IrScanner::comment(void) {
+void piranha::Scanner::comment(void) {
 	char c, prev = 0;
 	while ((c = yyinput()) != 0) { /* (EOF maps to 0) */
 		countChar(c);
@@ -145,7 +145,7 @@ void piranha::IrScanner::comment(void) {
 	LexerError("unterminated comment");
 }
 
-void piranha::IrScanner::count() {
+void piranha::Scanner::count() {
 	step();
 
 	for (int i = 0; yytext[i] != '\0'; i++) {
@@ -154,7 +154,7 @@ void piranha::IrScanner::count() {
 	}
 }
 
-void piranha::IrScanner::countChar(char c) {
+void piranha::Scanner::countChar(char c) {
 	if (c == '\n') {
 		m_loc->lineEnd++;
 		m_loc->colEnd = 1;
@@ -167,7 +167,7 @@ void piranha::IrScanner::countChar(char c) {
 	}
 }
 
-void piranha::IrScanner::step() {
+void piranha::Scanner::step() {
 	m_loc->lineStart = m_loc->lineEnd;
 	m_loc->colStart = m_loc->colEnd;
 }

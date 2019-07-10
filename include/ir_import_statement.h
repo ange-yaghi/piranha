@@ -11,7 +11,7 @@ namespace piranha {
 
 	class IrCompilationUnit;
 
-	class IrImportStatement : public IrParserStructure {
+	class IrImportStatement : public ParserStructure {
 	public:
 		IrImportStatement(const IrTokenInfo_string &libName);
 		~IrImportStatement();

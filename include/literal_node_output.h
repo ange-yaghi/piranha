@@ -1,37 +1,22 @@
 #ifndef PIRANHA_LITERAL_NODE_OUTPUT_H
 #define PIRANHA_LITERAL_NODE_OUTPUT_H
 
-#include "node_output.h"
+#include "fundamental_output.h"
+
+#include "fundamental_types.h"
 
 #include <string>
 
 namespace piranha {
 
-	class LiteralNodeOutputBase : public NodeOutput {
-	public:
-		static const NodeType FloatType;
-		static const NodeType IntType;
-		static const NodeType StringType;
-		static const NodeType BoolType;
-
-	public:
-		LiteralNodeOutputBase(const NodeType *type) : NodeOutput(type) {
-			/* void */
-		}
-
-		virtual ~LiteralNodeOutputBase() {
-			/* void */
-		}
-	};
-
 	template <typename LiteralType>
-	class LiteralNodeOutputSpecialized : public LiteralNodeOutputBase {
+	class LiteralNodeOutput : public FundamentalOutput<LiteralType> {
 	public:
-		LiteralNodeOutputSpecialized(const NodeType *type) : LiteralNodeOutputBase(type) {
+		LiteralNodeOutput() {
 			/* void */
 		}
 
-		virtual ~LiteralNodeOutputSpecialized() {
+		virtual ~LiteralNodeOutput() {
 			/* void */
 		}
 
@@ -52,36 +37,10 @@ namespace piranha {
 		LiteralType m_data;
 	};
 
-	template <typename LiteralType>
-	class LiteralNodeOutput : public LiteralNodeOutputSpecialized<LiteralType> {};
-
-	template <>
-	class LiteralNodeOutput<int> : public LiteralNodeOutputSpecialized<int>{
-	public:
-		LiteralNodeOutput() : LiteralNodeOutputSpecialized<int>(&IntType) {}
-		~LiteralNodeOutput() {}
-	};
-
-	template <>
-	class LiteralNodeOutput<double> : public LiteralNodeOutputSpecialized<double> {
-	public:
-		LiteralNodeOutput() : LiteralNodeOutputSpecialized<double>(&FloatType) {}
-		~LiteralNodeOutput() {}
-	};
-
-	template <>
-	class LiteralNodeOutput<bool> : public LiteralNodeOutputSpecialized<bool> {
-	public:
-		LiteralNodeOutput() : LiteralNodeOutputSpecialized<bool>(&BoolType) {}
-		~LiteralNodeOutput() {}
-	};
-
-	template <>
-	class LiteralNodeOutput<std::string> : public LiteralNodeOutputSpecialized<std::string> {
-	public:
-		LiteralNodeOutput() : LiteralNodeOutputSpecialized<std::string>(&StringType) {}
-		~LiteralNodeOutput() {}
-	};
+	typedef LiteralNodeOutput<float> LiteralFloatOutput;
+	typedef LiteralNodeOutput<int> LiteralIntOutput;
+	typedef LiteralNodeOutput<std::string> LiteralStringOutput;
+	typedef LiteralNodeOutput<bool> LiteralBoolOutput;
 
 } /* namespace piranha */
 

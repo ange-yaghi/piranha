@@ -4,12 +4,10 @@
 #include "ir_value.h"
 
 #include "ir_token_info.h"
-#include "ir_compilation_error.h"
+#include "compilation_error.h"
 #include "ir_compilation_unit.h"
 #include "ir_node.h"
 #include "ir_context_tree.h"
-#include "float_literal_node.h"
-#include "single_string_node_output.h"
 #include "standard_allocator.h"
 #include "node_program.h"
 #include "generator.h"
@@ -26,31 +24,31 @@ namespace piranha {
 		typedef T_IrTokenInfo<T> _TokenInfo;
 
 		Node *generateNode(double value, IrContextTree *context, NodeProgram *program) {
-			SpecializedLiteralNode<double> *newNode = 
-				(SpecializedLiteralNode<double> *)program->getGenerator()->generateLiteral(this, context);
+			FloatLiteralNode *newNode = program->getGenerator()->generateLiteral<double>();
 			newNode->setData(value);
-			newNode->initialize();
 
 			return newNode;
 		}
 
 		Node *generateNode(const std::string &value, IrContextTree *context, NodeProgram *program) {
-			SpecializedLiteralNode<std::string> *newNode = 
-				(SpecializedLiteralNode<std::string> *)program->getGenerator()->generateLiteral(this, context);
+			StringLiteralNode *newNode = program->getGenerator()->generateLiteral<std::string>();
 			newNode->setData(value);
-			newNode->initialize();
 
 			return newNode;
 		}
 
 		Node *generateNode(bool value, IrContextTree *context, NodeProgram *program) {
-			// TODO
-			return nullptr;
+			BoolLiteralNode *newNode = program->getGenerator()->generateLiteral<bool>();
+			newNode->setData(value);
+
+			return newNode;
 		}
 
 		Node *generateNode(int value, IrContextTree *context, NodeProgram *program) {
-			// TODO
-			return nullptr;
+			IntLiteralNode *newNode = program->getGenerator()->generateLiteral<int>();
+			newNode->setData(value);
+
+			return newNode;
 		}
 
 	public:
@@ -64,7 +62,16 @@ namespace piranha {
 		T getValue() const { return m_value; }
 
 		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-			return generateNode(m_value, context, program);
+			Node *cachedNode = program->getGenerator()->getCachedInstance(this, context);
+			if (cachedNode != nullptr) return cachedNode;
+			else {
+				Node *newNode = generateNode(m_value, context, program);
+				newNode->initialize();
+				newNode->setIrContext(context);
+				newNode->setIrStructure(this);
+
+				return newNode;
+			}
 		}
 
 	protected:
@@ -78,18 +85,18 @@ namespace piranha {
 		IrValueLabel(const _TokenInfo &value) : IrValueConstant(value) { /* void */ }
 		~IrValueLabel() { /* void */ }
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 			IR_RESET(query);
 
-			IrParserStructure *reference = resolveName(m_value);
+			ParserStructure *reference = resolveName(m_value);
 
 			// Do error checking
 			if (reference == nullptr) {
 				IR_FAIL();
 
 				if (query.recordErrors && IR_EMPTY_CONTEXT()) {
-					IR_ERR_OUT(new IrCompilationError(m_summaryToken,
-						IrErrorCode::UnresolvedReference, query.inputContext));
+					IR_ERR_OUT(new CompilationError(m_summaryToken,
+						ErrorCode::UnresolvedReference, query.inputContext));
 				}
 
 				return nullptr;
@@ -103,7 +110,7 @@ namespace piranha {
 			IrReferenceQuery query;
 			query.inputContext = context;
 			query.recordErrors = false;
-			IrParserStructure *reference = getReference(query, &info);
+			ParserStructure *reference = getReference(query, &info);
 			if (reference == nullptr) return nullptr;
 
 			IrNode *asNode = reference->getAsNode();
@@ -118,7 +125,7 @@ namespace piranha {
 			IrReferenceQuery query;
 			query.inputContext = context;
 			query.recordErrors = false;
-			IrParserStructure *reference = getReference(query, &info);
+			ParserStructure *reference = getReference(query, &info);
 			if (reference == nullptr) return nullptr;
 
 			IrNode *asNode = reference->getAsNode();
@@ -144,7 +151,7 @@ namespace piranha {
 			registerComponent(value); 
 		}
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 			IR_RESET(query);
 
 			return m_value;

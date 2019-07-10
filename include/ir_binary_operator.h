@@ -5,7 +5,7 @@
 
 namespace piranha {
 
-	class IrCompilationError;
+	class CompilationError;
 
 	class IrBinaryOperator : public IrValue {
 	public:
@@ -26,7 +26,7 @@ namespace piranha {
 		IrValue *getLeft() const { return m_leftOperand; }
 		IrValue *getRight() const { return m_rightOperand; }
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
 	protected:
 		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
