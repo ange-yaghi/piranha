@@ -1,10 +1,14 @@
 #include <pch.h>
 
-#include <test_generator.h>
+#include "test_generator.h"
 
-#include <constructed_float_node.h>
-#include <constructed_string_node.h>
-#include <literal_node.h>
+#include "../include/float_cast_node.h"
+#include "../include/string_cast_node.h"
+#include "../include/literal_node.h"
+#include "../include/float_conversions.h"
+#include "../include/string_conversions.h"
+#include "../include/fundamental_types.h"
+#include "../include/default_literal_node.h"
 
 TestGenerator::TestGenerator() {
 	/* void */
@@ -15,11 +19,21 @@ TestGenerator::~TestGenerator() {
 }
 
 void TestGenerator::registerBuiltinNodeTypes() {
-	registerBuiltinType<piranha::ConstructedFloatNode>("__piranha__float");
-	registerBuiltinType<piranha::ConstructedStringNode>("__piranha__string");
+	// Builtin Types
+	registerBuiltinType<piranha::FloatCastNode>("__piranha__float");
+	registerBuiltinType<piranha::StringCastNode>("__piranha__string");
 
-	registerLiteralType<piranha::SpecializedLiteralNode<std::string> >(piranha::IrValue::CONSTANT_STRING);
-	registerLiteralType<piranha::SpecializedLiteralNode<int> >(piranha::IrValue::CONSTANT_INT);
-	registerLiteralType<piranha::SpecializedLiteralNode<double> >(piranha::IrValue::CONSTANT_FLOAT);
-	registerLiteralType<piranha::SpecializedLiteralNode<bool> >(piranha::IrValue::CONSTANT_BOOL);
+	// Literals
+	registerLiteralType<piranha::DefaultLiteralStringNode, piranha::LiteralStringType>();
+	registerLiteralType<piranha::DefaultLiteralIntNode, piranha::LiteralIntType>();
+	registerLiteralType<piranha::DefaultLiteralFloatNode, piranha::LiteralFloatType>();
+	registerLiteralType<piranha::DefaultLiteralBoolNode, piranha::LiteralBoolType>();
+
+	// Conversions
+	registerConversion<piranha::StringToFloatConversionNode>(
+		{&piranha::FundamentalType::StringType, &piranha::FundamentalType::FloatType }
+	);
+	registerConversion<piranha::FloatToStringConversionNode>(
+		{ &piranha::FundamentalType::FloatType, &piranha::FundamentalType::StringType }
+	);
 }

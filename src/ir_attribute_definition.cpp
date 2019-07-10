@@ -3,7 +3,7 @@
 #include "ir_value.h"
 #include "ir_input_connection.h"
 #include "ir_compilation_unit.h"
-#include "ir_compilation_error.h"
+#include "compilation_error.h"
 #include "ir_context_tree.h"
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &directionToken,
@@ -55,12 +55,12 @@ piranha::IrInputConnection *piranha::IrAttributeDefinition::getImpliedMember(con
 	return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::ParserStructure *piranha::IrAttributeDefinition::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 	IR_RESET(query);
 
 	// First check the input context for the reference
 	if (!IR_EMPTY_CONTEXT()) {
-		IrParserStructure *reference = query.inputContext->resolveDefinition(this);
+		ParserStructure *reference = query.inputContext->resolveDefinition(this);
 		if (reference != nullptr) {
 			IR_INFO_OUT(newContext, query.inputContext->getParent());
 			IR_INFO_OUT(touchedMainContext, query.inputContext->isMainContext());

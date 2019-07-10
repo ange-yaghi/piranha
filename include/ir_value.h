@@ -13,7 +13,7 @@ namespace piranha {
 	class NodeProgram;
 	class IrContextTree;
 
-	class IrValue : public IrParserStructure {
+	class IrValue : public ParserStructure {
 	public:
 		enum VALUE_TYPE {
 			CONSTANT_FLOAT,

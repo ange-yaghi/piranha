@@ -1,6 +1,6 @@
 #include "ir_unary_operator.h"
 
-#include "ir_compilation_error.h"
+#include "compilation_error.h"
 #include "ir_node.h"
 #include <node.h>
 #include "ir_context_tree.h"
@@ -16,14 +16,14 @@ piranha::IrUnaryOperator::~IrUnaryOperator() {
 	/* void */
 }
 
-piranha::IrParserStructure *piranha::IrUnaryOperator::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::ParserStructure *piranha::IrUnaryOperator::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 	IR_RESET(query);
 
 	IrReferenceInfo basicInfo;
 	IrReferenceQuery basicQuery;
 	basicQuery.inputContext = query.inputContext;
 	basicQuery.recordErrors = false;
-	IrParserStructure *resolvedOperand = m_operand->getReference(basicQuery, &basicInfo);
+	ParserStructure *resolvedOperand = m_operand->getReference(basicQuery, &basicInfo);
 
 	if (IR_FAILED(&basicInfo) || resolvedOperand == nullptr) {
 		IR_FAIL();
@@ -35,7 +35,7 @@ piranha::IrParserStructure *piranha::IrUnaryOperator::getImmediateReference(cons
 	bool isValidError = (IR_EMPTY_CONTEXT() || basicInfo.touchedMainContext);
 
 	if (m_operator == DEFAULT) {
-		IrParserStructure *result = resolvedOperand;
+		ParserStructure *result = resolvedOperand;
 
 		if (basicInfo.reachedDeadEnd) {
 			// This means that this references an input point with no default value. Obviously
@@ -52,8 +52,8 @@ piranha::IrParserStructure *piranha::IrUnaryOperator::getImmediateReference(cons
 
 			if (query.recordErrors && isValidError) {
 				// This object does not have a default value
-				IR_ERR_OUT(new IrCompilationError(*m_operand->getSummaryToken(),
-					IrErrorCode::CannotFindDefaultValue, query.inputContext));
+				IR_ERR_OUT(new CompilationError(*m_operand->getSummaryToken(),
+					ErrorCode::CannotFindDefaultValue, query.inputContext));
 			}
 
 			return nullptr;

@@ -3,6 +3,8 @@
 #include <node_output.h>
 #include <node_program.h>
 
+#include <assert.h>
+
 piranha::Node::Node() {
 	m_id = -1;
 	m_name = "";
@@ -10,6 +12,7 @@ piranha::Node::Node() {
 	m_initialized = false;
 	m_evaluated = false;
 	m_primaryOutput = nullptr;
+	m_primaryReference = nullptr;
 }
 
 piranha::Node::~Node() {
@@ -22,11 +25,11 @@ void piranha::Node::initialize() {
 	// Set initialized flag
 	m_initialized = true;
 
-	registerInputs();
-	registerOutputs();
-
 	// Initialize
 	_initialize();
+
+	registerInputs();
+	registerOutputs();
 }
 
 void piranha::Node::evaluate() {
@@ -68,6 +71,28 @@ void piranha::Node::destroy() {
 	_destroy();
 }
 
+const piranha::NodeType *piranha::Node::getConversion(pNodeInput input, const std::string &name) {
+	int inputCount = getInputCount();
+
+	for (int i = 0; i < inputCount; i++) {
+		if (name == m_inputs[i].name) {
+			const NodeType *requiredType = m_inputs[i].requiredType;
+
+			// Check if the input doesn't care about input type
+			if (requiredType == nullptr) continue;
+
+			if (!input->getType()->isCompatibleWith(*requiredType)) {
+				return requiredType;
+			}
+
+			// Warning: do not break here! There could potentially be multiple
+			// inputs with the same name referencing different endpoints
+		}
+	}
+
+	return nullptr;
+}
+
 void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
 	int inputCount = getInputCount();
 
@@ -81,8 +106,16 @@ void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
 	}
 }
 
+void piranha::Node::connectDefaultInput(pNodeInput input) {
+	assert(getInputCount() == 1); // Use of this function is reserved with single input nodes
+
+	*m_inputs[0].input = input;
+}
+
 piranha::NodeOutput *piranha::Node::getPrimaryOutput() const {
-	return m_primaryOutput;
+	return (m_primaryOutput != nullptr) ? m_primaryOutput
+		: (m_primaryReference != nullptr) ? *m_primaryReference
+			: nullptr;
 }
 
 piranha::NodeOutput *piranha::Node::getOutput(const std::string &name) const {
@@ -120,8 +153,8 @@ void piranha::Node::registerInputs() {
 	/* void */
 }
 
-void piranha::Node::registerInput(pNodeInput *node, const std::string &name) {
-	m_inputs.push_back({ node, name });
+void piranha::Node::registerInput(pNodeInput *node, const std::string &name, const NodeType *requiredNodeType) {
+	m_inputs.push_back({ node, name, requiredNodeType });
 }
 
 void piranha::Node::registerOutput(NodeOutput *node, const std::string &name) {
@@ -131,6 +164,10 @@ void piranha::Node::registerOutput(NodeOutput *node, const std::string &name) {
 
 void piranha::Node::setPrimaryOutput(NodeOutput *node) {
 	m_primaryOutput = node;
+}
+
+void piranha::Node::setPrimaryOutputReference(NodeOutput **node) {
+	m_primaryReference = node;
 }
 
 void piranha::Node::registerOutputReference(NodeOutput *const *node, const std::string &name) {

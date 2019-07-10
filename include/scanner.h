@@ -5,24 +5,24 @@
 #include <FlexLexer.h>
 #endif
 
-#include <parser.auto.h>
+#include "../autogen/parser.auto.h"
 #include "ir_token_info.h"
 #include "ir_token_info.h"
 
 namespace piranha {
 
-	class IrScanner : public yyFlexLexer {
+	class Scanner : public yyFlexLexer {
 	public:
-		IrScanner(std::istream *in) : yyFlexLexer(in) {
-			m_loc = new piranha::IrParser::location_type();
+		Scanner(std::istream *in) : yyFlexLexer(in) {
+			m_loc = new piranha::Parser::location_type();
 			m_loc->colStart = m_loc->colEnd = 1;
 			m_loc->lineStart = m_loc->lineEnd = 1;
 		}
 
 		using FlexLexer::yylex;
 
-		virtual int yylex(piranha::IrParser::semantic_type *lval,
-			piranha::IrParser::location_type *location);
+		virtual int yylex(piranha::Parser::semantic_type *lval,
+			piranha::Parser::location_type *location);
 
 	private:
 		void comment();
@@ -31,7 +31,7 @@ namespace piranha {
 		void step();
 
 		template <typename T>
-		void buildValue(const T &data, piranha::IrParser::location_type *location, bool valid=true) {
+		void buildValue(const T &data, piranha::Parser::location_type *location, bool valid=true) {
 			typedef T_IrTokenInfo<T> _TokenInfo;
 
 			_TokenInfo info(data, m_loc->lineStart, m_loc->lineEnd, 
@@ -41,8 +41,8 @@ namespace piranha {
 			*location = info;
 		}
 
-		piranha::IrParser::semantic_type *m_yylval = nullptr;
-		piranha::IrParser::location_type *m_loc = nullptr;
+		piranha::Parser::semantic_type *m_yylval = nullptr;
+		piranha::Parser::location_type *m_loc = nullptr;
 	};
 
 } /* namespace piranha */

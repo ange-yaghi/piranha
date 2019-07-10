@@ -26,7 +26,7 @@ piranha::IrBinaryOperator::~IrBinaryOperator() {
 	/* void */
 }
 
-piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
+piranha::ParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 					const IrReferenceQuery &query, IrReferenceInfo *output) {
 	IR_RESET(query);
 	
@@ -42,7 +42,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 		basicQuery.inputContext = query.inputContext;
 		basicQuery.recordErrors = false;
 		IrReferenceInfo basicInfo;
-		IrParserStructure *resolvedLeft = m_leftOperand->getReference(basicQuery, &basicInfo);
+		ParserStructure *resolvedLeft = m_leftOperand->getReference(basicQuery, &basicInfo);
 
 		if (basicInfo.failed) {
 			IR_FAIL();
@@ -75,8 +75,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 
 				bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
 				if (query.recordErrors && isValidError) {
-					IR_ERR_OUT(new IrCompilationError(*m_leftOperand->getSummaryToken(),
-						IrErrorCode::CannotFindDefaultValue, query.inputContext));
+					IR_ERR_OUT(new CompilationError(*m_leftOperand->getSummaryToken(),
+						ErrorCode::CannotFindDefaultValue, query.inputContext));
 				}
 
 				return nullptr;
@@ -111,7 +111,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 		}
 
 		IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
-		IrParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
+		ParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
 
 		if (publicAttribute == nullptr) {
 			IR_FAIL();
@@ -119,8 +119,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
 			if (query.recordErrors && isValidError) {
 				// Left hand does not have this member
-				IR_ERR_OUT(new IrCompilationError(*m_rightOperand->getSummaryToken(),
-					IrErrorCode::UndefinedMember, query.inputContext));
+				IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),
+					ErrorCode::UndefinedMember, query.inputContext));
 			}
 
 			return nullptr;
@@ -132,8 +132,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 
 			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
 			if (query.recordErrors && isValidError) {
-				IR_ERR_OUT(new IrCompilationError(*m_rightOperand->getSummaryToken(),
-					IrErrorCode::AccessingInternalMember, query.inputContext));
+				IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),
+					ErrorCode::AccessingInternalMember, query.inputContext));
 			}
 
 			return nullptr;
@@ -213,7 +213,7 @@ piranha::Node *piranha::IrBinaryOperator::_generateNode(IrContextTree *context, 
 		query.inputContext = context;
 		query.recordErrors = false;
 
-		IrParserStructure *reference = getReference(query, &info);
+		ParserStructure *reference = getReference(query, &info);
 		IrNode *asNode = reference->getAsNode();
 
 		if (asNode != nullptr) {

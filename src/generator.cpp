@@ -18,18 +18,6 @@ piranha::Generator::~Generator() {
 	/* void */
 }
 
-piranha::Node *piranha::Generator::generateLiteral(IrValue *ir, IrContextTree *context) {
-	Node *cachedNode = getCachedInstance(ir, context);
-	if (cachedNode != nullptr) return cachedNode;
-	else {
-		Node *newNode = generateLiteral(ir->getType());
-		newNode->setIrContext(context);
-		newNode->setIrStructure(ir);
-
-		return newNode;
-	}
-}
-
 piranha::Node *piranha::Generator::generateNode(IrNode *node, IrContextTree *context) {
 	Node *cachedNode = getCachedInstance(node, context);
 	if (cachedNode != nullptr) return cachedNode;
@@ -68,7 +56,7 @@ piranha::Node *piranha::Generator::generateOperatorNode(IrBinaryOperator *binOp,
 	return node;
 }
 
-piranha::Node *piranha::Generator::getCachedInstance(IrParserStructure *ir, IrContextTree *context) {
+piranha::Node *piranha::Generator::getCachedInstance(ParserStructure *ir, IrContextTree *context) {
 	// TODO: this lookup could be made faster by having the lookup table be a tree
 	// with the first level being a lookup by node and the second by context
 
@@ -98,11 +86,11 @@ piranha::Node *piranha::Generator::generateBuiltinType(const std::string &typeNa
 	return nullptr;
 }
 
-piranha::Node *piranha::Generator::generateLiteral(IrValue::VALUE_TYPE valueType) {
-	int literalTypeCount = getLiteralTypeCount();
-	for (int i = 0; i < literalTypeCount; i++) {
-		if (m_valueBuilders[i]->checkKey(valueType)) {
-			Node *newNode = m_valueBuilders[i]->buildNode();
+piranha::Node *piranha::Generator::generateConversion(const NodeTypeConversion &conversion) {
+	int conversionTypeCount = getConversionTypeCount();
+	for (int i = 0; i < conversionTypeCount; i++) {
+		if (m_conversionBuilders[i]->checkKey(conversion)) {
+			Node *newNode = m_conversionBuilders[i]->buildNode();
 			m_nodes.push_back(newNode);
 
 			return newNode;
@@ -121,6 +109,6 @@ void piranha::Generator::registerNodeBuilder(BuiltinBuilder *builder) {
 	m_nodeBuilders.push_back(builder);
 }
 
-void piranha::Generator::registerLiteralBuilder(LiteralBuilder *builder) {
-	m_valueBuilders.push_back(builder);
+void piranha::Generator::registerConversionBuilder(ConversionBuilder *builder) {
+	m_conversionBuilders.push_back(builder);
 }

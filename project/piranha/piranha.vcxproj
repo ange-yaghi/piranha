@@ -164,13 +164,12 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
   <ItemGroup>
     <ClInclude Include="..\..\autogen\parser.auto.h" />
     <ClInclude Include="..\..\autogen\stack.hh" />
-    <ClInclude Include="..\..\include\constructed_float_node.h" />
-    <ClInclude Include="..\..\include\constructed_float_node_output.h" />
-    <ClInclude Include="..\..\include\constructed_string_node.h" />
-    <ClInclude Include="..\..\include\constructed_string_node_output.h" />
     <ClInclude Include="..\..\include\custom_node.h" />
-    <ClInclude Include="..\..\include\float_literal_node.h" />
-    <ClInclude Include="..\..\include\float_node_output.h" />
+    <ClInclude Include="..\..\include\default_literal_node.h" />
+    <ClInclude Include="..\..\include\float_cast_node.h" />
+    <ClInclude Include="..\..\include\float_conversions.h" />
+    <ClInclude Include="..\..\include\fundamental_output.h" />
+    <ClInclude Include="..\..\include\fundamental_types.h" />
     <ClInclude Include="..\..\include\literal_node.h" />
     <ClInclude Include="..\..\include\literal_node_output.h" />
     <ClInclude Include="..\..\include\memory_management.h" />
@@ -185,11 +184,11 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\ir_attribute_definition_list.h" />
     <ClInclude Include="..\..\include\ir_attribute_list.h" />
     <ClInclude Include="..\..\include\ir_binary_operator.h" />
-    <ClInclude Include="..\..\include\ir_compilation_error.h" />
+    <ClInclude Include="..\..\include\compilation_error.h" />
     <ClInclude Include="..\..\include\ir_compilation_unit.h" />
     <ClInclude Include="..\..\include\compiler.h" />
     <ClInclude Include="..\..\include\ir_context_tree.h" />
-    <ClInclude Include="..\..\include\ir_error_list.h" />
+    <ClInclude Include="..\..\include\error_list.h" />
     <ClInclude Include="..\..\include\generator.h" />
     <ClInclude Include="..\..\include\ir_generic_value.h" />
     <ClInclude Include="..\..\include\ir_import_statement.h" />
@@ -205,22 +204,18 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\ir_value.h" />
     <ClInclude Include="..\..\include\ir_value_constant.h" />
     <ClInclude Include="..\..\include\ir_visibility.h" />
-    <ClInclude Include="..\..\include\single_float_node_output.h" />
-    <ClInclude Include="..\..\include\single_string_node_output.h" />
+    <ClInclude Include="..\..\include\pipe_node.h" />
     <ClInclude Include="..\..\include\standard_allocator.h" />
-    <ClInclude Include="..\..\include\string_node_output.h" />
+    <ClInclude Include="..\..\include\string_cast_node.h" />
+    <ClInclude Include="..\..\include\string_conversions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\autogen\parser.auto.cpp" />
     <ClCompile Include="..\..\autogen\scanner.auto.cpp" />
-    <ClCompile Include="..\..\src\constructed_float_node.cpp" />
-    <ClCompile Include="..\..\src\constructed_float_node_output.cpp" />
-    <ClCompile Include="..\..\src\constructed_string_node.cpp" />
-    <ClCompile Include="..\..\src\constructed_string_node_output.cpp" />
     <ClCompile Include="..\..\src\custom_node.cpp" />
-    <ClCompile Include="..\..\src\float_literal_node.cpp" />
-    <ClCompile Include="..\..\src\float_node_output.cpp" />
-    <ClCompile Include="..\..\src\literal_node_output.cpp" />
+    <ClCompile Include="..\..\src\float_cast_node.cpp" />
+    <ClCompile Include="..\..\src\float_conversions.cpp" />
+    <ClCompile Include="..\..\src\fundamental_types.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
     <ClCompile Include="..\..\src\node_output.cpp" />
     <ClCompile Include="..\..\src\node_program.cpp" />
@@ -231,11 +226,11 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\ir_attribute_definition_list.cpp" />
     <ClCompile Include="..\..\src\ir_attribute_list.cpp" />
     <ClCompile Include="..\..\src\ir_binary_operator.cpp" />
-    <ClCompile Include="..\..\src\ir_compilation_error.cpp" />
+    <ClCompile Include="..\..\src\compilation_error.cpp" />
     <ClCompile Include="..\..\src\ir_compilation_unit.cpp" />
     <ClCompile Include="..\..\src\compiler.cpp" />
     <ClCompile Include="..\..\src\ir_context_tree.cpp" />
-    <ClCompile Include="..\..\src\ir_error_list.cpp" />
+    <ClCompile Include="..\..\src\error_list.cpp" />
     <ClCompile Include="..\..\src\generator.cpp" />
     <ClCompile Include="..\..\src\ir_generic_value.cpp" />
     <ClCompile Include="..\..\src\ir_import_statement.cpp" />
@@ -245,10 +240,9 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\ir_parser_structure.cpp" />
     <ClCompile Include="..\..\src\ir_unary_operator.cpp" />
     <ClCompile Include="..\..\src\ir_value.cpp" />
-    <ClCompile Include="..\..\src\single_float_node_output.cpp" />
-    <ClCompile Include="..\..\src\single_string_node_output.cpp" />
     <ClCompile Include="..\..\src\standard_allocator.cpp" />
-    <ClCompile Include="..\..\src\string_node_output.cpp" />
+    <ClCompile Include="..\..\src\string_cast_node.cpp" />
+    <ClCompile Include="..\..\src\string_conversions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\flex-bison\scanner.l" />

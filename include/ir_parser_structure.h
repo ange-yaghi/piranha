@@ -19,12 +19,12 @@ namespace piranha {
 
 	class IrValue;
 	class IrCompilationUnit;
-	class IrCompilationError;
+	class CompilationError;
 	class IrNode;
 	class IrContextTree;
 	class Node;
 
-	class IrParserStructure {
+	class ParserStructure {
 	public:
 		struct IrReferenceQuery {
 			IrReferenceQuery();
@@ -43,7 +43,7 @@ namespace piranha {
 
 			// Ouputs
 			IrContextTree *newContext;
-			IrCompilationError *err;
+			CompilationError *err;
 
 			bool failed;
 			bool reachedDeadEnd;
@@ -51,24 +51,24 @@ namespace piranha {
 		};
 
 	public:
-		IrParserStructure();
-		virtual ~IrParserStructure();
+		ParserStructure();
+		virtual ~ParserStructure();
 
 		const IrTokenInfo *getSummaryToken() const { return &m_summaryToken; }
 		void registerToken(const IrTokenInfo *tokenInfo);
 
-		void registerComponent(IrParserStructure *child);
+		void registerComponent(ParserStructure *child);
 		int getComponentCount() const { return (int)m_components.size(); }
 
-		virtual void setParentScope(IrParserStructure *parentScope) { m_parentScope = parentScope; }
-		virtual void setLogicalParent(IrParserStructure *parent) { m_logicalParent = parent; }
-		virtual IrParserStructure *resolveName(const std::string &name) const;
-		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
+		virtual void setParentScope(ParserStructure *parentScope) { m_parentScope = parentScope; }
+		virtual void setLogicalParent(ParserStructure *parent) { m_logicalParent = parent; }
+		virtual ParserStructure *resolveName(const std::string &name) const;
+		virtual ParserStructure *resolveLocalName(const std::string &name) const;
 
 		bool getDefinitionsResolved() const { return m_definitionsResolved; }
 		bool isValidated() const { return m_validated; }
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
-		IrParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
+		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
+		ParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
 
 		virtual IrValue *getAsValue() { return nullptr; }
 
@@ -105,11 +105,11 @@ namespace piranha {
 
 	protected:
 		IrCompilationUnit *m_parentUnit;
-		IrParserStructure *m_parentScope;
-		IrParserStructure *m_logicalParent;
+		ParserStructure *m_parentScope;
+		ParserStructure *m_logicalParent;
 		IrTokenInfo m_summaryToken;
 
-		std::vector<IrParserStructure *> m_components;
+		std::vector<ParserStructure *> m_components;
 
 	protected:
 		// Visibility

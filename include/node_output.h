@@ -16,15 +16,18 @@ namespace piranha {
 		NodeOutput(const NodeType *singleType);
 		virtual ~NodeOutput();
 
+		virtual void fullCompute(void *target) const { /* void */ }
+		virtual void registerInputs() {}
+
+		int getInputCount() const { return (int)m_inputs.size(); }
+		NodeOutput **getInputConnection(int index) { return m_inputs[index]; }
+
+	public:
 		bool isType(const NodeType &type) const { return m_singleType == &type; }
 		const NodeType *getType() const { return m_singleType; }
 
 		void initialize();
-
-		virtual void fullCompute(void *target) const { /* void */ }
-
 		void evaluate();
-		virtual void registerInputs() {}
 
 		void setName(const std::string &name) { m_name = name; }
 		const std::string &getName() const { return m_name; }
@@ -51,7 +54,6 @@ namespace piranha {
 
 	protected:
 		virtual void registerInput(NodeOutput **nodeInput) { m_inputs.push_back(nodeInput); }
-		int getInputCount() const { return (int)m_inputs.size(); }
 
 		std::vector<NodeOutput **> m_inputs;
 	};

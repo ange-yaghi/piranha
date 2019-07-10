@@ -1,0 +1,25 @@
+public node float => __piranha__float {
+    default input __in: 10.0;
+}
+
+public node string => __piranha__string {
+    default input __in: "DEFAULT";
+}
+
+float top_level(
+    string(
+        float(
+            string(
+                string(
+                    float(
+                        float(
+                            float(
+                                string("10.5")
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+)

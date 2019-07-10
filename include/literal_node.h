@@ -7,40 +7,19 @@
 
 namespace piranha {
 
+	template <typename LiteralType>
 	class LiteralNode : public Node {
 	public:
 		LiteralNode() {}
 		~LiteralNode() {}
 
-		virtual void setData(double) {}
-		virtual void setData(int) {}
-		virtual void setData(const std::string &) {}
-		virtual void setData(bool) {}
+		virtual void setData(LiteralType data) = 0;
 	};
 
-	template <typename LiteralType>
-	class SpecializedLiteralNode : public LiteralNode {
-	public:
-		SpecializedLiteralNode() {}
-		~SpecializedLiteralNode() {}
-
-		virtual void setData(LiteralType data) { m_literalData = data; }
-
-	protected:
-		virtual void _initialize() {}
-		virtual void _evaluate() {
-			m_output.setData(m_literalData);
-		}
-
-		virtual void registerOutputs() {
-			setPrimaryOutput(&m_output);
-			registerOutput(&m_output, "$primary");
-		}
-
-	protected:
-		LiteralNodeOutput<LiteralType> m_output;
-		LiteralType m_literalData;
-	};
+	typedef LiteralNode<piranha::literal_string> StringLiteralNode;
+	typedef LiteralNode<piranha::literal_int> IntLiteralNode;
+	typedef LiteralNode<piranha::literal_float> FloatLiteralNode;
+	typedef LiteralNode<piranha::literal_bool> BoolLiteralNode;
 
 } /* namespace piranha */
 

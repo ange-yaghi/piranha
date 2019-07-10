@@ -8,7 +8,7 @@
 namespace piranha {
 
 	template <typename T>
-	class IrStructureList : public IrParserStructure {
+	class IrStructureList : public ParserStructure {
 	public:
 		IrStructureList() { /* void */ }
 		~IrStructureList() { /* void */ }

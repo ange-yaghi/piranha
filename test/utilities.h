@@ -3,8 +3,8 @@
 
 #include <pch.h>
 
-#include "ir_error_list.h"
-#include "ir_compilation_error.h"
+#include "error_list.h"
+#include "compilation_error.h"
 
 #include <string>
 
@@ -30,7 +30,7 @@ using namespace piranha;
 	EXPECT_EQ((error)->getErrorCode().code, code_.code);	\
 	EXPECT_EQ((error)->getErrorLocation()->lineStart, line);
 
-bool findError(const IrErrorList *errorList, const IrErrorCode_struct &errorCode,
+bool findError(const ErrorList *errorList, const ErrorCode_struct &errorCode,
 	int line = -1, const IrCompilationUnit *unit = nullptr, bool instantiationError = false);
 
 #endif /* TEST_UTILITIES_H */
