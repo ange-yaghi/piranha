@@ -223,7 +223,7 @@ int piranha::IrCompilationUnit::getNodeDefinitionCount() const {
 	return (int)m_nodeDefinitions.size();
 }
 
-piranha::ParserStructure *piranha::IrCompilationUnit::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrCompilationUnit::resolveLocalName(const std::string &name) const {
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		IrNode *node = m_nodes[i];

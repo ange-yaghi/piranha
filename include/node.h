@@ -12,7 +12,7 @@ namespace piranha {
 	struct IntersectionPoint;
 	class StackAllocator;
 	class IrContextTree;
-	class ParserStructure;
+	class IrParserStructure;
 	class NodeProgram;
 
 	class Node {
@@ -67,8 +67,8 @@ namespace piranha {
 		bool isInitialized() const { return m_initialized; }
 		bool isEvaluated() const { return m_evaluated; }
 
-		void setIrStructure(ParserStructure *irStructure) { m_irStructure = irStructure; }
-		ParserStructure *getIrStructure() const { return m_irStructure; }
+		void setIrStructure(IrParserStructure *irStructure) { m_irStructure = irStructure; }
+		IrParserStructure *getIrStructure() const { return m_irStructure; }
 
 		void setIrContext(IrContextTree *context) { m_context = context; }
 		IrContextTree *getContext() const { return m_context; }
@@ -93,7 +93,7 @@ namespace piranha {
 		std::string m_name;
 
 		IrContextTree *m_context;
-		ParserStructure *m_irStructure;
+		IrParserStructure *m_irStructure;
 
 	protected:
 		std::vector<NodeInputPort> m_inputs;

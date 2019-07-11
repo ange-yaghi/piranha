@@ -24,7 +24,7 @@ namespace piranha {
 	class ErrorList;
 	class NodeProgram;
 
-	class IrCompilationUnit : public ParserStructure {
+	class IrCompilationUnit : public IrParserStructure {
 	public:
 		enum ParseResult {
 			IO_ERROR,
@@ -54,7 +54,7 @@ namespace piranha {
 		IrNodeDefinition *getNodeDefinition(int index) const { return m_nodeDefinitions[index]; }
 		int getNodeDefinitionCount() const;
 
-		virtual ParserStructure *resolveLocalName(const std::string &name) const;
+		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
 		int countSymbolIncidence(const std::string &name) const;
 
 		void addCompilationError(CompilationError *err);

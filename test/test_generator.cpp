@@ -9,6 +9,7 @@
 #include "../include/string_conversions.h"
 #include "../include/fundamental_types.h"
 #include "../include/default_literal_node.h"
+#include "../include/operation_node.h"
 
 TestGenerator::TestGenerator() {
 	/* void */
@@ -35,5 +36,16 @@ void TestGenerator::registerBuiltinNodeTypes() {
 	);
 	registerConversion<piranha::FloatToStringConversionNode>(
 		{ &piranha::FundamentalType::FloatType, &piranha::FundamentalType::StringType }
+	);
+
+	// Operations
+	registerOperator<piranha::OperationNodeSpecialized<piranha::native_int>>(
+		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType }
+	);
+	registerOperator<piranha::OperationNodeSpecialized<piranha::native_float>>(
+		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType }
+	);
+	registerOperator<piranha::OperationNodeSpecialized<piranha::native_float>>(
+		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType }
 	);
 }

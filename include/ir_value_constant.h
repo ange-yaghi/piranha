@@ -85,10 +85,10 @@ namespace piranha {
 		IrValueLabel(const _TokenInfo &value) : IrValueConstant(value) { /* void */ }
 		~IrValueLabel() { /* void */ }
 
-		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 			IR_RESET(query);
 
-			ParserStructure *reference = resolveName(m_value);
+			IrParserStructure *reference = resolveName(m_value);
 
 			// Do error checking
 			if (reference == nullptr) {
@@ -110,7 +110,7 @@ namespace piranha {
 			IrReferenceQuery query;
 			query.inputContext = context;
 			query.recordErrors = false;
-			ParserStructure *reference = getReference(query, &info);
+			IrParserStructure *reference = getReference(query, &info);
 			if (reference == nullptr) return nullptr;
 
 			IrNode *asNode = reference->getAsNode();
@@ -125,7 +125,7 @@ namespace piranha {
 			IrReferenceQuery query;
 			query.inputContext = context;
 			query.recordErrors = false;
-			ParserStructure *reference = getReference(query, &info);
+			IrParserStructure *reference = getReference(query, &info);
 			if (reference == nullptr) return nullptr;
 
 			IrNode *asNode = reference->getAsNode();
@@ -151,7 +151,7 @@ namespace piranha {
 			registerComponent(value); 
 		}
 
-		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 			IR_RESET(query);
 
 			return m_value;

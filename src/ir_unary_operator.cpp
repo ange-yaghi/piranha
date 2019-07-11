@@ -16,14 +16,14 @@ piranha::IrUnaryOperator::~IrUnaryOperator() {
 	/* void */
 }
 
-piranha::ParserStructure *piranha::IrUnaryOperator::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrUnaryOperator::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 	IR_RESET(query);
 
 	IrReferenceInfo basicInfo;
 	IrReferenceQuery basicQuery;
 	basicQuery.inputContext = query.inputContext;
 	basicQuery.recordErrors = false;
-	ParserStructure *resolvedOperand = m_operand->getReference(basicQuery, &basicInfo);
+	IrParserStructure *resolvedOperand = m_operand->getReference(basicQuery, &basicInfo);
 
 	if (IR_FAILED(&basicInfo) || resolvedOperand == nullptr) {
 		IR_FAIL();
@@ -35,7 +35,7 @@ piranha::ParserStructure *piranha::IrUnaryOperator::getImmediateReference(const 
 	bool isValidError = (IR_EMPTY_CONTEXT() || basicInfo.touchedMainContext);
 
 	if (m_operator == DEFAULT) {
-		ParserStructure *result = resolvedOperand;
+		IrParserStructure *result = resolvedOperand;
 
 		if (basicInfo.reachedDeadEnd) {
 			// This means that this references an input point with no default value. Obviously

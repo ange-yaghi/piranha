@@ -22,7 +22,7 @@ namespace piranha {
 		OPERATOR getOperator() const { return m_operator; }
 		IrValue *getOperand() const { return m_operand; }
 
-		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
 	protected:
 		OPERATOR m_operator;

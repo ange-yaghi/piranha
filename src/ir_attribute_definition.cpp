@@ -55,12 +55,12 @@ piranha::IrInputConnection *piranha::IrAttributeDefinition::getImpliedMember(con
 	return nullptr;
 }
 
-piranha::ParserStructure *piranha::IrAttributeDefinition::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 	IR_RESET(query);
 
 	// First check the input context for the reference
 	if (!IR_EMPTY_CONTEXT()) {
-		ParserStructure *reference = query.inputContext->resolveDefinition(this);
+		IrParserStructure *reference = query.inputContext->resolveDefinition(this);
 		if (reference != nullptr) {
 			IR_INFO_OUT(newContext, query.inputContext->getParent());
 			IR_INFO_OUT(touchedMainContext, query.inputContext->isMainContext());

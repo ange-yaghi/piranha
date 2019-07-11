@@ -15,11 +15,11 @@ using namespace piranha;
 #define TMP_PATH (WORKSPACE_PATH "tmp/")
 #define IR_TEST_FILES "../../../test/sdl/"
 
-#define CHECK_IR_POS(parserStructure, _colStart, _colEnd, _lineStart, _lineEnd)	\
-	EXPECT_EQ((parserStructure)->getSummaryToken()->colStart,	(_colStart));		\
-	EXPECT_EQ((parserStructure)->getSummaryToken()->colEnd,		(_colEnd));			\
-	EXPECT_EQ((parserStructure)->getSummaryToken()->lineStart,	(_lineStart));		\
-	EXPECT_EQ((parserStructure)->getSummaryToken()->lineEnd,	(_lineEnd));
+#define CHECK_IR_POS(IrParserStructure, _colStart, _colEnd, _lineStart, _lineEnd)	\
+	EXPECT_EQ((IrParserStructure)->getSummaryToken()->colStart,	(_colStart));		\
+	EXPECT_EQ((IrParserStructure)->getSummaryToken()->colEnd,		(_colEnd));			\
+	EXPECT_EQ((IrParserStructure)->getSummaryToken()->lineStart,	(_lineStart));		\
+	EXPECT_EQ((IrParserStructure)->getSummaryToken()->lineEnd,	(_lineEnd));
 
 #define EXPECT_ERROR_CODE(error, code_)						\
 	EXPECT_EQ((error)->getErrorCode().stage, code_.stage);	\

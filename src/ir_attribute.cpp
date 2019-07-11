@@ -33,7 +33,7 @@ void piranha::IrAttribute::setValue(IrValue *value) {
 	registerComponent(value);
 }
 
-piranha::ParserStructure *piranha::IrAttribute::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrAttribute::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 	IR_INFO_OUT(err, nullptr);
 	IR_INFO_OUT(newContext, query.inputContext);
 	IR_INFO_OUT(failed, false);

@@ -15,18 +15,26 @@ namespace piranha {
 	};
 
 	// Native types
-	typedef double			literal_float;
-	typedef bool			literal_bool;
-	typedef std::string		literal_string;
-	typedef int				literal_int;
+	typedef double			native_float;
+	typedef bool			native_bool;
+	typedef std::string		native_string;
+	typedef int				native_int;
 
 	template <typename BaseType>
 	class LiteralType {};
 
-	class LiteralFloatType :	public LiteralType<piranha::literal_float> {};
-	class LiteralBoolType :		public LiteralType<piranha::literal_bool> {};
-	class LiteralStringType :	public LiteralType<piranha::literal_string> {};
-	class LiteralIntType :		public LiteralType<piranha::literal_int> {};
+	class LiteralFloatType :	public LiteralType<piranha::native_float> {};
+	class LiteralBoolType :		public LiteralType<piranha::native_bool> {};
+	class LiteralStringType :	public LiteralType<piranha::native_string> {};
+	class LiteralIntType :		public LiteralType<piranha::native_int> {};
+
+	template <typename NativeType>
+	struct NativeTypeLookup { };// static_assert(false, "Looking up a type that does not exist");};
+
+	template <> struct NativeTypeLookup<native_float> { static const NodeType *get() { return &FundamentalType::FloatType; } };
+	template <> struct NativeTypeLookup<native_bool> { static const NodeType *get() { return &FundamentalType::BoolType; } };
+	template <> struct NativeTypeLookup<native_int> { static const NodeType *get() { return &FundamentalType::IntType; } };
+	template <> struct NativeTypeLookup<native_string> { static const NodeType *get() { return &FundamentalType::StringType; } };
 
 } /* namespace piranha */
 

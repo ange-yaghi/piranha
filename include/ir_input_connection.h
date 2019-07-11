@@ -9,7 +9,7 @@ namespace piranha {
 
 	class IrAttributeDefinition;
 
-	class IrInputConnection : public ParserStructure {
+	class IrInputConnection : public IrParserStructure {
 	public:
 		IrInputConnection();
 		~IrInputConnection();

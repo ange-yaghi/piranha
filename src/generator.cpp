@@ -45,7 +45,7 @@ piranha::Node *piranha::Generator::generateOperatorNode(IrBinaryOperator *binOp,
 	NodeOutput *leftNodeOutput = left->generateNodeOutput(context, m_nodeProgram);
 	NodeOutput *rightNodeOutput = right->generateNodeOutput(context, m_nodeProgram);
 	
-	Node *node = generateOperator(binOp->getOperator(), leftNodeOutput, rightNodeOutput);
+	Node *node = generateOperator(binOp->getOperator(), leftNodeOutput->getType(), rightNodeOutput->getType());
 
 	// Make sure the user actually registered the node
 	assert(node == nullptr || getCachedInstance(binOp, context) != nullptr);
@@ -56,7 +56,7 @@ piranha::Node *piranha::Generator::generateOperatorNode(IrBinaryOperator *binOp,
 	return node;
 }
 
-piranha::Node *piranha::Generator::getCachedInstance(ParserStructure *ir, IrContextTree *context) {
+piranha::Node *piranha::Generator::getCachedInstance(IrParserStructure *ir, IrContextTree *context) {
 	// TODO: this lookup could be made faster by having the lookup table be a tree
 	// with the first level being a lookup by node and the second by context
 
@@ -66,6 +66,20 @@ piranha::Node *piranha::Generator::getCachedInstance(ParserStructure *ir, IrCont
 			if (m_nodes[i]->getContext()->isEqual(context)) {
 				return m_nodes[i];
 			}
+		}
+	}
+
+	return nullptr;
+}
+
+piranha::Node *piranha::Generator::generateOperator(IrBinaryOperator::OPERATOR op, const NodeType *left, const NodeType *right) {
+	int operatorTypeCount = getOperatorTypeCount();
+	for (int i = 0; i < operatorTypeCount; i++) {
+		if (m_operatorBuilders[i]->checkKey({op, left, right})) {
+			Node *newNode = m_operatorBuilders[i]->buildNode();
+			m_nodes.push_back(newNode);
+
+			return newNode;
 		}
 	}
 
@@ -111,4 +125,8 @@ void piranha::Generator::registerNodeBuilder(BuiltinBuilder *builder) {
 
 void piranha::Generator::registerConversionBuilder(ConversionBuilder *builder) {
 	m_conversionBuilders.push_back(builder);
+}
+
+void piranha::Generator::registerOperatorBuilder(OperatorBuilder *builder) {
+	m_operatorBuilders.push_back(builder);
 }

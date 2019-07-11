@@ -37,10 +37,10 @@ namespace piranha {
 		LiteralType m_data;
 	};
 
-	typedef LiteralNodeOutput<float> LiteralFloatOutput;
-	typedef LiteralNodeOutput<int> LiteralIntOutput;
-	typedef LiteralNodeOutput<std::string> LiteralStringOutput;
-	typedef LiteralNodeOutput<bool> LiteralBoolOutput;
+	typedef LiteralNodeOutput<piranha::native_float> LiteralFloatOutput;
+	typedef LiteralNodeOutput<piranha::native_int> LiteralIntOutput;
+	typedef LiteralNodeOutput<piranha::native_string> LiteralStringOutput;
+	typedef LiteralNodeOutput<piranha::native_bool> LiteralBoolOutput;
 
 } /* namespace piranha */
 
