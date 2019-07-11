@@ -26,7 +26,7 @@ piranha::IrBinaryOperator::~IrBinaryOperator() {
 	/* void */
 }
 
-piranha::ParserStructure *piranha::IrBinaryOperator::getImmediateReference(
+piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 					const IrReferenceQuery &query, IrReferenceInfo *output) {
 	IR_RESET(query);
 	
@@ -42,7 +42,7 @@ piranha::ParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 		basicQuery.inputContext = query.inputContext;
 		basicQuery.recordErrors = false;
 		IrReferenceInfo basicInfo;
-		ParserStructure *resolvedLeft = m_leftOperand->getReference(basicQuery, &basicInfo);
+		IrParserStructure *resolvedLeft = m_leftOperand->getReference(basicQuery, &basicInfo);
 
 		if (basicInfo.failed) {
 			IR_FAIL();
@@ -111,7 +111,7 @@ piranha::ParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 		}
 
 		IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
-		ParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
+		IrParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
 
 		if (publicAttribute == nullptr) {
 			IR_FAIL();
@@ -213,7 +213,7 @@ piranha::Node *piranha::IrBinaryOperator::_generateNode(IrContextTree *context, 
 		query.inputContext = context;
 		query.recordErrors = false;
 
-		ParserStructure *reference = getReference(query, &info);
+		IrParserStructure *reference = getReference(query, &info);
 		IrNode *asNode = reference->getAsNode();
 
 		if (asNode != nullptr) {

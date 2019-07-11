@@ -10,7 +10,7 @@ namespace piranha {
 	class IrValue;
 	class IrAttributeDefinition;
 
-	class IrAttribute : public ParserStructure {
+	class IrAttribute : public IrParserStructure {
 	public:
 		IrAttribute();
 		IrAttribute(const IrTokenInfo_string &name, IrValue *value);
@@ -42,7 +42,7 @@ namespace piranha {
 		void setAttributeDefinition(IrAttributeDefinition *definition) { m_definition = definition; }
 		IrAttributeDefinition *getAttributeDefinition() const { return m_definition; }
 
-		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
 	protected:
 		IrAttributeDefinition *m_definition;

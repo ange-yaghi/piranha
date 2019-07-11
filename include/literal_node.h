@@ -16,10 +16,10 @@ namespace piranha {
 		virtual void setData(LiteralType data) = 0;
 	};
 
-	typedef LiteralNode<piranha::literal_string> StringLiteralNode;
-	typedef LiteralNode<piranha::literal_int> IntLiteralNode;
-	typedef LiteralNode<piranha::literal_float> FloatLiteralNode;
-	typedef LiteralNode<piranha::literal_bool> BoolLiteralNode;
+	typedef LiteralNode<piranha::native_string> StringLiteralNode;
+	typedef LiteralNode<piranha::native_int> IntLiteralNode;
+	typedef LiteralNode<piranha::native_float> FloatLiteralNode;
+	typedef LiteralNode<piranha::native_bool> BoolLiteralNode;
 
 } /* namespace piranha */
 

@@ -40,10 +40,10 @@ namespace piranha {
 		~FundamentalOutput() {}
 	};
 
-	typedef FundamentalOutput<double> FloatValueOutput;
-	typedef FundamentalOutput<int> IntValueOutput;
-	typedef FundamentalOutput<bool> BoolValueOutput;
-	typedef FundamentalOutput<std::string> StringValueOutput;
+	typedef FundamentalOutput<piranha::native_float> FloatValueOutput;
+	typedef FundamentalOutput<piranha::native_int> IntValueOutput;
+	typedef FundamentalOutput<piranha::native_bool> BoolValueOutput;
+	typedef FundamentalOutput<piranha::native_string> StringValueOutput;
 
 } /* namespace piranha */
 

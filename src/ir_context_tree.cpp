@@ -37,13 +37,13 @@ piranha::IrContextTree *piranha::IrContextTree::newChild(IrNode *context, bool m
 	return newChild;
 }
 
-piranha::IrContextTree *piranha::IrContextTree::findContext(ParserStructure *context) {
+piranha::IrContextTree *piranha::IrContextTree::findContext(IrParserStructure *context) {
 	if (m_context == context) return this;
 	else if (m_parent != nullptr) return m_parent->findContext(context);
 	else return nullptr;
 }
 
-piranha::ParserStructure *piranha::IrContextTree::resolveDefinition(IrAttributeDefinition *definition) {
+piranha::IrParserStructure *piranha::IrContextTree::resolveDefinition(IrAttributeDefinition *definition) {
 	if (m_context != nullptr) {
 		IrAttributeList *attributes = m_context->getAttributes();
 		if (attributes != nullptr) {

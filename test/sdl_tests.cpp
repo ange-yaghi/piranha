@@ -503,15 +503,15 @@ TEST(IrTests, IrReferenceResolutionTest) {
 	EXPECT_EQ(errorCount, 0);
 
 	IrNode *node = unit->getNode(0);
-	ParserStructure *b = node->resolveLocalName("B");
+	IrParserStructure *b = node->resolveLocalName("B");
 	EXPECT_TRUE(b->allowsExternalAccess());
 
-	ParserStructure::IrReferenceInfo info;
-	ParserStructure *definition = b->getReference(ParserStructure::IrReferenceQuery(), &info);
+	IrParserStructure::IrReferenceInfo info;
+	IrParserStructure *definition = b->getReference(IrParserStructure::IrReferenceQuery(), &info);
 	EXPECT_EQ(definition, nullptr);
 	EXPECT_TRUE(info.reachedDeadEnd);
 
-	IrNode *childNode = (IrNode *)node->resolveLocalName("C")->getReference(ParserStructure::IrReferenceQuery());
+	IrNode *childNode = (IrNode *)node->resolveLocalName("C")->getReference(IrParserStructure::IrReferenceQuery());
 	EXPECT_EQ(childNode->getType(), "ChildNode");
 	EXPECT_EQ(childNode->getName(), "childNode");
 }

@@ -13,6 +13,10 @@ piranha::IrValue::~IrValue() {
 	/* void */
 }
 
+bool piranha::IrValue::isGeneric() const {
+	return (m_type == GENERIC);
+}
+
 piranha::NodeOutput *piranha::IrValue::generateNodeOutput(IrContextTree *context, NodeProgram *program) {
 	Node *node = program->getGenerator()->getCachedInstance(this, context);
 
@@ -34,24 +38,4 @@ piranha::NodeOutput *piranha::IrValue::_generateNodeOutput(IrContextTree *contex
 
 piranha::Node *piranha::IrValue::_generateNode(IrContextTree *context, NodeProgram *program) {
 	return nullptr;
-}
-
-piranha::IrValue::GenerationTableEntry *piranha::IrValue::getEntry(IrContextTree *context) {
-	int entryCount = (int)m_generationTable.size();
-	for (int i = 0; i < entryCount; i++) {
-		if (m_generationTable[i].context == context) {
-			return &m_generationTable[i];
-		}
-	}
-
-	return nullptr;
-}
-
-piranha::IrValue::GenerationTableEntry *piranha::IrValue::newEntry(IrContextTree *context) {
-	GenerationTableEntry *newEntry = new GenerationTableEntry();
-	newEntry->context = context;
-	newEntry->nodeGeneratedOutput = nullptr;
-	newEntry->nodeReference = nullptr;
-
-	return newEntry;
 }

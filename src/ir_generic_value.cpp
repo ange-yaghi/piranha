@@ -14,7 +14,7 @@ piranha::IrGenericValue::~IrGenericValue() {
 	/* void */
 }
 
-piranha::ParserStructure *piranha::IrGenericValue::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrGenericValue::resolveLocalName(const std::string &name) const {
 	if (m_typeDefinition != nullptr) {
 		return m_typeDefinition->resolveLocalName(name);
 	}

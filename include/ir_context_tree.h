@@ -7,7 +7,7 @@ namespace piranha {
 
 	class IrNode;
 	class IrAttributeDefinition;
-	class ParserStructure;
+	class IrParserStructure;
 	class Node;
 	class NodeOutput;
 
@@ -25,9 +25,9 @@ namespace piranha {
 		IrContextTree *newChild(IrNode *context, bool mainContext = false);
 
 		IrNode *getContext() const { return m_context; }
-		IrContextTree *findContext(ParserStructure *context);
+		IrContextTree *findContext(IrParserStructure *context);
 
-		ParserStructure *resolveDefinition(IrAttributeDefinition *definition);
+		IrParserStructure *resolveDefinition(IrAttributeDefinition *definition);
 
 		bool isMainContext() const { return m_mainContext; }
 

@@ -12,7 +12,7 @@ namespace piranha {
 	class CompilationError;
 	class IrNodeDefinition;
 
-	class IrAttributeDefinition : public ParserStructure {
+	class IrAttributeDefinition : public IrParserStructure {
 	public:
 		enum DIRECTION {
 			INPUT,
@@ -44,7 +44,7 @@ namespace piranha {
 		int getImpliedMemberCount() const { return (int)m_impliedMembers.size(); }
 		IrInputConnection *getImpliedMember(const std::string &name) const;
 
-		virtual ParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
 		virtual bool isInputPoint() const { return m_direction == INPUT; }
 

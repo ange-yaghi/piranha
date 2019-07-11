@@ -77,10 +77,10 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(const std::string &name, int
 	return result;
 }
 
-void piranha::IrNode::setParentScope(ParserStructure *parentScope) {
-	ParserStructure::setParentScope(parentScope);
+void piranha::IrNode::setParentScope(IrParserStructure *parentScope) {
+	IrParserStructure::setScopeParent(parentScope);
 	if (m_attributes != nullptr) {
-		m_attributes->setParentScope(parentScope);
+		m_attributes->setScopeParent(parentScope);
 	}
 }
 
@@ -102,8 +102,8 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(IrAttributeDefinition *defin
 	return result;
 }
 
-piranha::ParserStructure *piranha::IrNode::resolveLocalName(const std::string &name) const {
-	ParserStructure *attribute = getAttribute(name);
+piranha::IrParserStructure *piranha::IrNode::resolveLocalName(const std::string &name) const {
+	IrParserStructure *attribute = getAttribute(name);
 	if (attribute != nullptr) return attribute;
 	
 	if (m_definition != nullptr) return m_definition->resolveLocalName(name);
@@ -163,7 +163,7 @@ void piranha::IrNode::_validate() {
 
 			for (int i = 0; i < inputCount; i++) {
 				IrAttributeDefinition *input = attributeList->getInputDefinition(i);
-				ParserStructure *attribute = getAttribute(input);
+				IrParserStructure *attribute = getAttribute(input);
 
 				if (attribute == nullptr && input->getDefaultValue() == nullptr) {
 					// This input port is not conencted and has no default value

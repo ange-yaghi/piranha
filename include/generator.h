@@ -5,6 +5,7 @@
 #include "ir_binary_operator.h"
 #include "ir_value.h"
 #include "node_builder.h"
+#include "operation_node.h"
 
 #include <string>
 #include <vector>
@@ -15,7 +16,7 @@ namespace piranha {
 	class NodeProgram;
 	class IrNode;
 	class IrContextTree;
-	class ParserStructure;
+	class IrParserStructure;
 	class IrBinaryOperator;
 
 	struct NodeTypeConversion {
@@ -27,8 +28,22 @@ namespace piranha {
 		}
 	};
 
+	struct OperatorMapping {
+		IrBinaryOperator::OPERATOR op;
+		const NodeType *leftType;
+		const NodeType *rightType;
+
+		bool operator==(const OperatorMapping &ref) const {
+			bool typesMatch = (leftType == ref.leftType && rightType == ref.rightType) ||
+				(leftType == ref.rightType && rightType == ref.leftType);
+
+			return	typesMatch && (op == ref.op);
+		}
+	};
+
 	typedef NodeBuilder<std::string, Node> BuiltinBuilder;
 	typedef NodeBuilder<NodeTypeConversion, Node> ConversionBuilder;
+	typedef NodeBuilder<OperatorMapping, OperationNode> OperatorBuilder;
 	template <typename BaseType> using LiteralBuilder = 
 		NodeBuilder<int, LiteralNode<BaseType>>;
 
@@ -37,7 +52,7 @@ namespace piranha {
 		Generator();
 		~Generator();
 
-		Node *getCachedInstance(ParserStructure *ir, IrContextTree *context);
+		Node *getCachedInstance(IrParserStructure *ir, IrContextTree *context);
 
 		template <typename BaseType>
 		LiteralNode<BaseType> *generateLiteral() { return nullptr; }
@@ -46,6 +61,7 @@ namespace piranha {
 
 		virtual void registerBuiltinNodeTypes() = 0;
 
+		int getOperatorTypeCount() const { return (int)m_operatorBuilders.size(); }
 		int getNodeTypeCount() const { return (int)m_nodeBuilders.size(); }
 		int getConversionTypeCount() const { return (int)m_conversionBuilders.size(); }
 		int getNodeCount() const { return (int)m_nodes.size(); }
@@ -57,9 +73,7 @@ namespace piranha {
 
 	protected:
 		// Main operator hook
-		virtual Node *generateOperator(IrBinaryOperator::OPERATOR op, NodeOutput *left, NodeOutput *right) {
-			return nullptr;
-		}
+		virtual Node *generateOperator(IrBinaryOperator::OPERATOR op, const NodeType *left, const NodeType *right);
 
 	protected:
 		Node *generateBuiltinType(const std::string &typeName);
@@ -92,9 +106,17 @@ namespace piranha {
 			);
 		}
 
+		template <typename NodeType>
+		void registerOperator(const OperatorMapping &op) {
+			registerOperatorBuilder(
+				new SpecializedNodeBuilder<NodeType, OperationNode, OperatorMapping>(op, "")
+			);
+		}
+
 	private:
 		void registerNodeBuilder(BuiltinBuilder *builder);
 		void registerConversionBuilder(ConversionBuilder *builder);
+		void registerOperatorBuilder(OperatorBuilder *builder);
 
 	private:
 		template <typename NodeType, typename InvalidType>
@@ -136,28 +158,28 @@ namespace piranha {
 
 	public:
 		template <>
-		IntLiteralNode *generateLiteral<piranha::literal_int>() {
+		IntLiteralNode *generateLiteral<piranha::native_int>() {
 			return (m_intBuilder != nullptr)
 				? m_intBuilder->buildNode()
 				: nullptr;
 		}
 
 		template <>
-		FloatLiteralNode *generateLiteral<piranha::literal_float>() {
+		FloatLiteralNode *generateLiteral<piranha::native_float>() {
 			return (m_floatBuilder != nullptr)
 				? m_floatBuilder->buildNode()
 				: nullptr;
 		}
 
 		template <>
-		StringLiteralNode *generateLiteral<piranha::literal_string>() {
+		StringLiteralNode *generateLiteral<piranha::native_string>() {
 			return (m_stringBuilder != nullptr)
 				? m_stringBuilder->buildNode()
 				: nullptr;
 		}
 
 		template <>
-		BoolLiteralNode *generateLiteral<piranha::literal_bool>() {
+		BoolLiteralNode *generateLiteral<piranha::native_bool>() {
 			return (m_boolBuilder != nullptr)
 				? m_boolBuilder->buildNode()
 				: nullptr;
@@ -168,11 +190,12 @@ namespace piranha {
 
 		std::vector<BuiltinBuilder *> m_nodeBuilders;
 		std::vector<ConversionBuilder *> m_conversionBuilders;
+		std::vector<OperatorBuilder *> m_operatorBuilders;
 
-		LiteralBuilder<piranha::literal_int> *m_intBuilder;
-		LiteralBuilder<piranha::literal_float> *m_floatBuilder;
-		LiteralBuilder<piranha::literal_bool> *m_boolBuilder;
-		LiteralBuilder<piranha::literal_string> *m_stringBuilder;
+		LiteralBuilder<piranha::native_int> *m_intBuilder;
+		LiteralBuilder<piranha::native_float> *m_floatBuilder;
+		LiteralBuilder<piranha::native_bool> *m_boolBuilder;
+		LiteralBuilder<piranha::native_string> *m_stringBuilder;
 
 		NodeProgram *m_nodeProgram;
 	};

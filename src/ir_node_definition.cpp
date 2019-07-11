@@ -51,7 +51,7 @@ piranha::IrAttributeDefinition *piranha::IrNodeDefinition::getAttributeDefinitio
 	return nullptr;
 }
 
-piranha::ParserStructure *piranha::IrNodeDefinition::resolveName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrNodeDefinition::resolveName(const std::string &name) const {
 	// Node definitions are not able to see variables outside of themselves for now
 	return resolveLocalName(name);
 }
@@ -84,7 +84,7 @@ int piranha::IrNodeDefinition::countSymbolIncidence(const std::string &name) con
 	return count;
 }
 
-piranha::ParserStructure *piranha::IrNodeDefinition::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrNodeDefinition::resolveLocalName(const std::string &name) const {
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {

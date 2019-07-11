@@ -14,14 +14,12 @@ namespace piranha {
 
 		IrNodeDefinition *getTypeDefinition() const { return m_typeDefinition; }
 
-		virtual bool isGeneric() const { return true; }
-
 	protected:
 		IrTokenInfoSet<std::string, 2> m_typeInfo;
 
 		// Resolution stage
 	public:
-		virtual ParserStructure *resolveLocalName(const std::string &name) const;
+		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
 
 	protected:
 		virtual void _resolveDefinitions();

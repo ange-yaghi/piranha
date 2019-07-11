@@ -121,6 +121,12 @@
     <Filter Include="Source Files\nodes\casts">
       <UniqueIdentifier>{e74d8e77-c798-4e05-bb3b-06688a8830b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\operations">
+      <UniqueIdentifier>{5d9c3d66-f676-41bf-8992-fcf63c41fe94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\operations">
+      <UniqueIdentifier>{4e662081-2139-47d8-aac3-a7737e60aedd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\node_output.h">
@@ -260,6 +266,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\error_list.h">
       <Filter>Header Files\syntax\error-handling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\add_operation_output.h">
+      <Filter>Header Files\nodes\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\operation_node.h">
+      <Filter>Header Files\nodes\operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

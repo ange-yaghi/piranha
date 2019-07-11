@@ -37,10 +37,10 @@ namespace piranha {
 		LiteralType m_literalData;
 	};
 
-	typedef DefaultLiteralNode<std::string> DefaultLiteralStringNode;
-	typedef DefaultLiteralNode<int> DefaultLiteralIntNode;
-	typedef DefaultLiteralNode<double> DefaultLiteralFloatNode;
-	typedef DefaultLiteralNode<bool> DefaultLiteralBoolNode;
+	typedef DefaultLiteralNode<piranha::native_string> DefaultLiteralStringNode;
+	typedef DefaultLiteralNode<piranha::native_int> DefaultLiteralIntNode;
+	typedef DefaultLiteralNode<piranha::native_float> DefaultLiteralFloatNode;
+	typedef DefaultLiteralNode<piranha::native_bool> DefaultLiteralBoolNode;
 
 } /* namespace piranha */
 
