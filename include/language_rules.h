@@ -1,10 +1,10 @@
-#ifndef PIRANHA_GENERATOR_H
-#define PIRANHA_GENERATOR_H
+#ifndef PIRANHA_LANGUAGE_RULES_H
+#define PIRANHA_LANGUAGE_RULES_H
 
 #include "literal_node.h"
 #include "ir_binary_operator.h"
 #include "ir_value.h"
-#include "node_builder.h"
+#include "rule.h"
 #include "operation_node.h"
 
 #include <string>
@@ -37,15 +37,17 @@ namespace piranha {
 			bool typesMatch = (leftType == ref.leftType && rightType == ref.rightType) ||
 				(leftType == ref.rightType && rightType == ref.leftType);
 
-			return	typesMatch && (op == ref.op);
+			return typesMatch && (op == ref.op);
 		}
 	};
 
-	typedef NodeBuilder<std::string, Node> BuiltinBuilder;
-	typedef NodeBuilder<NodeTypeConversion, Node> ConversionBuilder;
-	typedef NodeBuilder<OperatorMapping, OperationNode> OperatorBuilder;
+	struct NullType {};
+
+	typedef Rule<std::string, NullType, Node> BuiltinBuilder;
+	typedef Rule<NodeTypeConversion, NullType, Node> ConversionBuilder;
+	typedef Rule<OperatorMapping, NullType, OperationNode> OperatorBuilder;
 	template <typename BaseType> using LiteralBuilder = 
-		NodeBuilder<int, LiteralNode<BaseType>>;
+		Rule<NullType, NullType, LiteralNode<BaseType>>;
 
 	class Generator {
 	public:
@@ -202,4 +204,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* PIRANHA_GENERATOR_H */
+#endif /* PIRANHA_LANGUAGE_RULES_H */
