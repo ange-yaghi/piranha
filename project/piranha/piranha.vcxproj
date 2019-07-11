@@ -176,7 +176,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\literal_node_output.h" />
     <ClInclude Include="..\..\include\memory_management.h" />
     <ClInclude Include="..\..\include\node.h" />
-    <ClInclude Include="..\..\include\node_builder.h" />
+    <ClInclude Include="..\..\include\rule.h" />
     <ClInclude Include="..\..\include\node_output.h" />
     <ClInclude Include="..\..\include\node_program.h" />
     <ClInclude Include="..\..\include\node_type.h" />
@@ -191,7 +191,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\compiler.h" />
     <ClInclude Include="..\..\include\ir_context_tree.h" />
     <ClInclude Include="..\..\include\error_list.h" />
-    <ClInclude Include="..\..\include\generator.h" />
+    <ClInclude Include="..\..\include\language_rules.h" />
     <ClInclude Include="..\..\include\ir_generic_value.h" />
     <ClInclude Include="..\..\include\ir_import_statement.h" />
     <ClInclude Include="..\..\include\ir_input_connection.h" />
@@ -233,7 +233,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\compiler.cpp" />
     <ClCompile Include="..\..\src\ir_context_tree.cpp" />
     <ClCompile Include="..\..\src\error_list.cpp" />
-    <ClCompile Include="..\..\src\generator.cpp" />
+    <ClCompile Include="..\..\src\language_rules.cpp" />
     <ClCompile Include="..\..\src\ir_generic_value.cpp" />
     <ClCompile Include="..\..\src\ir_import_statement.cpp" />
     <ClCompile Include="..\..\src\ir_input_connection.cpp" />

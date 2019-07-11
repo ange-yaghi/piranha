@@ -219,17 +219,11 @@
     <ClInclude Include="..\..\include\ir_compilation_unit.h">
       <Filter>Header Files\syntax\unit</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\generator.h">
-      <Filter>Header Files\syntax\generator</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\conf.h">
       <Filter>Header Files\configuration</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\ir_context_tree.h">
       <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\node_builder.h">
-      <Filter>Header Files\syntax\generator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\literal_node.h">
       <Filter>Header Files\nodes</Filter>
@@ -272,6 +266,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\operation_node.h">
       <Filter>Header Files\nodes\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\language_rules.h">
+      <Filter>Header Files\syntax\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\rule.h">
+      <Filter>Header Files\syntax\generator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -347,9 +347,6 @@
     <ClCompile Include="..\..\src\ir_value.cpp">
       <Filter>Source Files\syntax\values</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\generator.cpp">
-      <Filter>Source Files\syntax\generator</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\compiler.cpp">
       <Filter>Source Files\syntax\compiler</Filter>
     </ClCompile>
@@ -373,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\error_list.cpp">
       <Filter>Source Files\syntax\error-handling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\language_rules.cpp">
+      <Filter>Source Files\syntax\generator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
