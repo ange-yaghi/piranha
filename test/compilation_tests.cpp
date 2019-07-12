@@ -14,10 +14,10 @@
 #include "compilation_error.h"
 #include "error_list.h"
 #include "compiler.h"
-#include "generator.h"
+#include "language_rules.h"
 #include <node_program.h>
 
-#include "test_generator.h"
+#include "test_rules.h"
 #include "utilities.h"
 
 using namespace piranha;
@@ -33,9 +33,9 @@ IrCompilationUnit *compileFile(const std::string &filename) {
 TEST(IrConstructionTests, IrConstructionSanityCheck) {
 	IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr");
 
-	TestGenerator generator;
+	TestRules generator;
 	NodeProgram program;
-	program.setGenerator(&generator);
+	program.setRules(&generator);
 	unit->build(&program);
 
 	program.execute();
@@ -67,9 +67,9 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
 TEST(IrConstructionTests, IrConstructionNestedTest) {
 	IrCompilationUnit *unit = compileFile("construction-tests/nested_conversions.mr");
 
-	TestGenerator generator;
+	TestRules generator;
 	NodeProgram program;
-	program.setGenerator(&generator);
+	program.setRules(&generator);
 	unit->build(&program);
 
 	program.execute();

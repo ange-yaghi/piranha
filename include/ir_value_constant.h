@@ -10,9 +10,10 @@
 #include "ir_context_tree.h"
 #include "standard_allocator.h"
 #include "node_program.h"
-#include "generator.h"
+#include "language_rules.h"
 #include "node.h"
 #include "literal_node.h"
+#include "fundamental_types.h"
 
 namespace piranha {
 
@@ -23,32 +24,20 @@ namespace piranha {
 	protected:
 		typedef T_IrTokenInfo<T> _TokenInfo;
 
-		Node *generateNode(double value, IrContextTree *context, NodeProgram *program) {
-			FloatLiteralNode *newNode = program->getGenerator()->generateLiteral<double>();
-			newNode->setData(value);
-
-			return newNode;
+		Node *generateNode(const piranha::native_float &value, IrContextTree *context, NodeProgram *program) {
+			return program->getRules()->generateLiteral<piranha::native_float>(value);
 		}
 
-		Node *generateNode(const std::string &value, IrContextTree *context, NodeProgram *program) {
-			StringLiteralNode *newNode = program->getGenerator()->generateLiteral<std::string>();
-			newNode->setData(value);
-
-			return newNode;
+		Node *generateNode(const piranha::native_string &value, IrContextTree *context, NodeProgram *program) {
+			return program->getRules()->generateLiteral<piranha::native_string>(value);
 		}
 
-		Node *generateNode(bool value, IrContextTree *context, NodeProgram *program) {
-			BoolLiteralNode *newNode = program->getGenerator()->generateLiteral<bool>();
-			newNode->setData(value);
-
-			return newNode;
+		Node *generateNode(const piranha::native_bool &value, IrContextTree *context, NodeProgram *program) {
+			return program->getRules()->generateLiteral<piranha::native_bool>(value);
 		}
 
-		Node *generateNode(int value, IrContextTree *context, NodeProgram *program) {
-			IntLiteralNode *newNode = program->getGenerator()->generateLiteral<int>();
-			newNode->setData(value);
-
-			return newNode;
+		Node *generateNode(const piranha::native_int &value, IrContextTree *context, NodeProgram *program) {
+			return program->getRules()->generateLiteral<piranha::native_int>(value);
 		}
 
 	public:
@@ -62,7 +51,7 @@ namespace piranha {
 		T getValue() const { return m_value; }
 
 		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-			Node *cachedNode = program->getGenerator()->getCachedInstance(this, context);
+			Node *cachedNode = program->getRules()->getCachedInstance(this, context);
 			if (cachedNode != nullptr) return cachedNode;
 			else {
 				Node *newNode = generateNode(m_value, context, program);

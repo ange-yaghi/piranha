@@ -7,39 +7,40 @@ namespace piranha {
 
 	class Node;
 
-	template <typename KeyType, typename ValueType, typename NodeBase>
+	template <typename ValueType, typename NodeBase>
 	class Rule {
 	public:
-		Rule(const KeyType &key, const ValueType &value) {
-			m_key = key;
+		Rule(const ValueType &value) {
 			m_value = value;
 		}
+
+		Rule() {
+			/* void */
+		}
+
 		virtual ~Rule() {
 			/* void */
 		}
 
 		virtual NodeBase *buildNode() const = 0;
 
-		virtual bool checkKey(const KeyType &key) const {
-			return key == m_key;
-		}
-
-		virtual bool checkCompiler(const std::string &compiler) const {
-			return m_compiler.empty() || (compiler == m_compiler);
-		}
-
 	protected:
-		KeyType m_key;
 		ValueType m_value;
 	};
 
-	template <typename KeyType, typename ValueType, typename NodeType, typename NodeBase>
-	class SpecializedRule : public NodeBuilder<KeyType, NodeBase> {
+	template <typename ValueType, typename NodeType, typename NodeBase>
+	class SpecializedRule : public Rule<ValueType, NodeBase> {
 	public:
-		SpecializedRule(const KeyType &key, const ValueType &value)
-			: Rule(key, value) {
-			m_key = key;
-			m_compiler = compiler;
+		SpecializedRule(const ValueType &value) : Rule(value) {
+			/* void */
+		}
+
+		SpecializedRule() {
+			/* void */
+		}
+
+		virtual ~SpecializedRule() {
+			/* void */
 		}
 
 		virtual NodeBase *buildNode() const {

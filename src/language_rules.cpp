@@ -10,15 +10,15 @@
 
 #include <assert.h>
 
-piranha::Generator::Generator() {
+piranha::LanguageRules::LanguageRules() {
 	/* void */
 }
 
-piranha::Generator::~Generator() {
+piranha::LanguageRules::~LanguageRules() {
 	/* void */
 }
 
-piranha::Node *piranha::Generator::generateNode(IrNode *node, IrContextTree *context) {
+piranha::Node *piranha::LanguageRules::generateNode(IrNode *node, IrContextTree *context) {
 	Node *cachedNode = getCachedInstance(node, context);
 	if (cachedNode != nullptr) return cachedNode;
 	else {
@@ -38,7 +38,7 @@ piranha::Node *piranha::Generator::generateNode(IrNode *node, IrContextTree *con
 	}
 }
 
-piranha::Node *piranha::Generator::generateOperatorNode(IrBinaryOperator *binOp, IrContextTree *context) {
+piranha::Node *piranha::LanguageRules::generateOperatorNode(IrBinaryOperator *binOp, IrContextTree *context) {
 	IrValue *left = binOp->getLeft();
 	IrValue *right = binOp->getRight();
 
@@ -56,7 +56,7 @@ piranha::Node *piranha::Generator::generateOperatorNode(IrBinaryOperator *binOp,
 	return node;
 }
 
-piranha::Node *piranha::Generator::getCachedInstance(IrParserStructure *ir, IrContextTree *context) {
+piranha::Node *piranha::LanguageRules::getCachedInstance(IrParserStructure *ir, IrContextTree *context) {
 	// TODO: this lookup could be made faster by having the lookup table be a tree
 	// with the first level being a lookup by node and the second by context
 
@@ -72,61 +72,37 @@ piranha::Node *piranha::Generator::getCachedInstance(IrParserStructure *ir, IrCo
 	return nullptr;
 }
 
-piranha::Node *piranha::Generator::generateOperator(IrBinaryOperator::OPERATOR op, const NodeType *left, const NodeType *right) {
-	int operatorTypeCount = getOperatorTypeCount();
-	for (int i = 0; i < operatorTypeCount; i++) {
-		if (m_operatorBuilders[i]->checkKey({op, left, right})) {
-			Node *newNode = m_operatorBuilders[i]->buildNode();
-			m_nodes.push_back(newNode);
+piranha::Node *piranha::LanguageRules::generateOperator(IrBinaryOperator::OPERATOR op, const NodeType *left, const NodeType *right) {
+	OperatorRule *rule = m_operatorRules.lookup({ op, left, right });
+	if (rule == nullptr) return nullptr;
 
-			return newNode;
-		}
-	}
+	Node *newNode = rule->buildNode();
+	m_nodes.push_back(newNode);
 
-	return nullptr;
-}
-
-piranha::Node *piranha::Generator::generateBuiltinType(const std::string &typeName) {
-	int nodeTypeCount = getNodeTypeCount();
-	for (int i = 0; i < nodeTypeCount; i++) {
-		if (m_nodeBuilders[i]->checkKey(typeName)) {
-			Node *newNode = m_nodeBuilders[i]->buildNode();
-			m_nodes.push_back(newNode);
-
-			return newNode;
-		}
-	}
-
-	return nullptr;
-}
-
-piranha::Node *piranha::Generator::generateConversion(const NodeTypeConversion &conversion) {
-	int conversionTypeCount = getConversionTypeCount();
-	for (int i = 0; i < conversionTypeCount; i++) {
-		if (m_conversionBuilders[i]->checkKey(conversion)) {
-			Node *newNode = m_conversionBuilders[i]->buildNode();
-			m_nodes.push_back(newNode);
-
-			return newNode;
-		}
-	}
-
-	return nullptr;
-}
-
-piranha::Node *piranha::Generator::generateCustomType() {
-	Node *newNode = allocateNode<CustomNode>();
 	return newNode;
 }
 
-void piranha::Generator::registerNodeBuilder(BuiltinBuilder *builder) {
-	m_nodeBuilders.push_back(builder);
+piranha::Node *piranha::LanguageRules::generateBuiltinType(const std::string &typeName) {
+	BuiltinRule *rule = m_builtinRules.lookup(typeName);
+	if (rule == nullptr) return nullptr;
+
+	Node *newNode = rule->buildNode();
+	m_nodes.push_back(newNode);
+
+	return newNode;
 }
 
-void piranha::Generator::registerConversionBuilder(ConversionBuilder *builder) {
-	m_conversionBuilders.push_back(builder);
+piranha::Node *piranha::LanguageRules::generateConversion(const NodeTypeConversion &conversion) {
+	ConversionRule *rule = m_conversionRules.lookup(conversion);
+	if (rule == nullptr) return nullptr;
+
+	Node *newNode = rule->buildNode();
+	m_nodes.push_back(newNode);
+
+	return newNode;
 }
 
-void piranha::Generator::registerOperatorBuilder(OperatorBuilder *builder) {
-	m_operatorBuilders.push_back(builder);
+piranha::Node *piranha::LanguageRules::generateCustomType() {
+	Node *newNode = allocateNode<CustomNode>();
+	return newNode;
 }

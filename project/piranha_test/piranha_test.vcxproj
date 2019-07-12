@@ -57,7 +57,7 @@
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\test\test_generator.h" />
+    <ClInclude Include="..\..\test\test_rules.h" />
     <ClInclude Include="..\..\test\utilities.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
@@ -65,7 +65,7 @@
     <ClCompile Include="..\..\test\compilation_tests.cpp" />
     <ClCompile Include="..\..\test\sdl_stress_tests.cpp" />
     <ClCompile Include="..\..\test\sdl_tests.cpp" />
-    <ClCompile Include="..\..\test\test_generator.cpp" />
+    <ClCompile Include="..\..\test\test_rules.cpp" />
     <ClCompile Include="..\..\test\utilities.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -6,7 +6,7 @@
 #include "ir_attribute.h"
 #include "error_list.h"
 #include "node_program.h"
-#include "generator.h"
+#include "language_rules.h"
 
 #include <cctype>
 #include <fstream>
@@ -22,7 +22,7 @@ piranha::IrCompilationUnit::~IrCompilationUnit() {
 }
 
 void piranha::IrCompilationUnit::build(NodeProgram *program) {
-	program->getGenerator()->registerBuiltinNodeTypes();
+	program->getRules()->registerBuiltinNodeTypes();
 
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {

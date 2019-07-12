@@ -1,12 +1,12 @@
 #ifndef TEST_GENERATOR_H
 #define TEST_GENERATOR_H
 
-#include <generator.h>
+#include "../include/language_rules.h"
 
-class TestGenerator : public piranha::Generator {
+class TestRules : public piranha::LanguageRules {
 public:
-	TestGenerator();
-	~TestGenerator();
+	TestRules();
+	~TestRules();
 
 	virtual void registerBuiltinNodeTypes();
 };
