@@ -14,7 +14,7 @@
     <ClCompile Include="..\..\test\compilation_tests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test_generator.cpp">
+    <ClCompile Include="..\..\test\test_rules.cpp">
       <Filter>Infrastructure\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -23,7 +23,7 @@
     <ClInclude Include="..\..\test\utilities.h">
       <Filter>Utilities\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\test_generator.h">
+    <ClInclude Include="..\..\test\test_rules.h">
       <Filter>Infrastructure\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

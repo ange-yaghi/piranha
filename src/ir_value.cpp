@@ -1,7 +1,7 @@
 #include "ir_value.h"
 
 #include "node_program.h"
-#include "generator.h"
+#include "language_rules.h"
 
 #include <node.h>
 
@@ -18,7 +18,7 @@ bool piranha::IrValue::isGeneric() const {
 }
 
 piranha::NodeOutput *piranha::IrValue::generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-	Node *node = program->getGenerator()->getCachedInstance(this, context);
+	Node *node = program->getRules()->getCachedInstance(this, context);
 
 	if (node == nullptr) node = generateNode(context, program);
 	if (node != nullptr) return node->getPrimaryOutput();
@@ -26,7 +26,7 @@ piranha::NodeOutput *piranha::IrValue::generateNodeOutput(IrContextTree *context
 }
 
 piranha::Node *piranha::IrValue::generateNode(IrContextTree *context, NodeProgram *program) {
-	Node *node = program->getGenerator()->getCachedInstance(this, context);
+	Node *node = program->getRules()->getCachedInstance(this, context);
 
 	if (node == nullptr) return _generateNode(context, program);
 	else return node;

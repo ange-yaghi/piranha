@@ -94,9 +94,6 @@
     <Filter Include="Source Files\syntax\error-handling">
       <UniqueIdentifier>{c1378059-d589-4274-859f-b6045cacfa44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\syntax\generator">
-      <UniqueIdentifier>{f2ee25da-ec32-4bc7-b1fe-867cf7a23049}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\syntax\unit">
       <UniqueIdentifier>{521bbadf-3827-486d-90cd-2bc253a64eb7}</UniqueIdentifier>
     </Filter>
@@ -126,6 +123,12 @@
     </Filter>
     <Filter Include="Source Files\nodes\operations">
       <UniqueIdentifier>{4e662081-2139-47d8-aac3-a7737e60aedd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\utilities">
+      <UniqueIdentifier>{275f3498-7c7d-4096-9cd5-6d9d1d2f1aaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\syntax\language-rules">
+      <UniqueIdentifier>{f2ee25da-ec32-4bc7-b1fe-867cf7a23049}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +276,9 @@
     <ClInclude Include="..\..\include\rule.h">
       <Filter>Header Files\syntax\generator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\key_value_lookup.h">
+      <Filter>Header Files\utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
@@ -303,7 +309,7 @@
       <Filter>Source Files\syntax\autogen</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ir_context_tree.cpp">
-      <Filter>Source Files\syntax\generator</Filter>
+      <Filter>Source Files\syntax\language-rules</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ir_attribute.cpp">
       <Filter>Source Files\syntax\parser</Filter>
@@ -372,7 +378,7 @@
       <Filter>Source Files\syntax\error-handling</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\language_rules.cpp">
-      <Filter>Source Files\syntax\generator</Filter>
+      <Filter>Source Files\syntax\language-rules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

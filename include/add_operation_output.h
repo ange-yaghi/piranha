@@ -29,14 +29,14 @@ namespace piranha {
 			*target = left + right;
 		}
 
+		pNodeInput *getLeftConnection() { return &m_left; }
+		pNodeInput *getRightConnection() { return &m_right; }
+
 	protected:
 		virtual void registerInputs() {
 			this->registerInput(&m_left);
 			this->registerInput(&m_right);
 		}
-
-		pNodeInput *getLeftconnection() { return &m_left; }
-		pNodeInput *getRightConnection() { return &m_right; }
 
 	protected:
 		pNodeInput m_left;

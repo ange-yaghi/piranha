@@ -14,7 +14,7 @@
 #include "compilation_error.h"
 #include "error_list.h"
 #include "compiler.h"
-#include "generator.h"
+#include "language_rules.h"
 
 #include "utilities.h"
 

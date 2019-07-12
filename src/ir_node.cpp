@@ -9,7 +9,7 @@
 #include "ir_attribute_definition_list.h"
 #include "ir_value.h"
 #include "ir_context_tree.h"
-#include "generator.h"
+#include "language_rules.h"
 #include <node.h>
 #include <custom_node.h>
 #include <standard_allocator.h>
@@ -294,7 +294,7 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 
 	newContext = parentContext->newChild(this);
 
-	Node *generatedNode = program->getGenerator()->getCachedInstance(this, context);
+	Node *generatedNode = program->getRules()->getCachedInstance(this, context);
 	if (generatedNode != nullptr) return generatedNode;
 
 	IrNodeDefinition *definition = getDefinition();
@@ -371,7 +371,7 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 	int inputCount = (int)inputs.size();
 	int outputCount = (int)outputs.size();
 
-	Node *newNode = program->getGenerator()->generateNode(this, parentContext);
+	Node *newNode = program->getRules()->generateNode(this, parentContext);
 	if (!definition->isBuiltin() && newNode != nullptr) {
 		CustomNode *customNode = static_cast<CustomNode *>(newNode);
 
@@ -398,7 +398,7 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 			if (conversionType != nullptr) {
 				// A conversion is needed
 				const NodeType *originalType = input->getType();
-				Node *conversionNode = program->getGenerator()->generateConversion({ originalType, conversionType });
+				Node *conversionNode = program->getRules()->generateConversion({ originalType, conversionType });
 				conversionNode->setName("$autoconversion");
 				conversionNode->setIrStructure(nullptr);
 				conversionNode->setIrContext(nullptr);

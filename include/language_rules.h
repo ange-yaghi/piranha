@@ -6,6 +6,7 @@
 #include "ir_value.h"
 #include "rule.h"
 #include "operation_node.h"
+#include "key_value_lookup.h"
 
 #include <string>
 #include <vector>
@@ -43,29 +44,32 @@ namespace piranha {
 
 	struct NullType {};
 
-	typedef Rule<std::string, NullType, Node> BuiltinBuilder;
-	typedef Rule<NodeTypeConversion, NullType, Node> ConversionBuilder;
-	typedef Rule<OperatorMapping, NullType, OperationNode> OperatorBuilder;
-	template <typename BaseType> using LiteralBuilder = 
-		Rule<NullType, NullType, LiteralNode<BaseType>>;
+	typedef Rule<NullType, Node> BuiltinRule; // std::string
+	typedef Rule<NullType, Node> ConversionRule; // NodeTypeConversion
+	typedef Rule<NullType, OperationNode> OperatorRule; // OperatorMapping
+	template <typename BaseType> using LiteralRule = 
+		Rule<NullType, LiteralNode<BaseType>>;
 
-	class Generator {
+	class LanguageRules {
 	public:
-		Generator();
-		~Generator();
+		LanguageRules();
+		~LanguageRules();
 
 		Node *getCachedInstance(IrParserStructure *ir, IrContextTree *context);
 
 		template <typename BaseType>
-		LiteralNode<BaseType> *generateLiteral() { return nullptr; }
+		LiteralNode<BaseType> *generateLiteral(const BaseType &data) { 
+			LiteralNode<BaseType> *node = generateLiteralInternal<BaseType>();
+			node->setData(data);
+			
+			return node;
+		}
+
 		Node *generateNode(IrNode *node, IrContextTree *context);
 		Node *generateOperatorNode(IrBinaryOperator *binOp, IrContextTree *context);
 
 		virtual void registerBuiltinNodeTypes() = 0;
 
-		int getOperatorTypeCount() const { return (int)m_operatorBuilders.size(); }
-		int getNodeTypeCount() const { return (int)m_nodeBuilders.size(); }
-		int getConversionTypeCount() const { return (int)m_conversionBuilders.size(); }
 		int getNodeCount() const { return (int)m_nodes.size(); }
 
 		void setNodeProgram(NodeProgram *program) { m_nodeProgram = program; }
@@ -91,9 +95,7 @@ namespace piranha {
 
 		template <typename NodeType>
 		void registerBuiltinType(const std::string &builtinName) {
-			registerNodeBuilder(
-				new SpecializedNodeBuilder<NodeType, Node, std::string>(builtinName, "")
-			);
+			auto newRule = m_builtinRules.newValue<SpecializedRule<NullType, NodeType, Node>>(builtinName);
 		}
 
 		template <typename NodeType, typename LiteralType>
@@ -103,22 +105,13 @@ namespace piranha {
 
 		template <typename NodeType>
 		void registerConversion(const NodeTypeConversion &conversion) {
-			registerConversionBuilder(
-				new SpecializedNodeBuilder<NodeType, Node, NodeTypeConversion>(conversion, "")
-			);
+			auto newRule = m_conversionRules.newValue<SpecializedRule<NullType, NodeType, Node>>(conversion);
 		}
 
 		template <typename NodeType>
 		void registerOperator(const OperatorMapping &op) {
-			registerOperatorBuilder(
-				new SpecializedNodeBuilder<NodeType, OperationNode, OperatorMapping>(op, "")
-			);
+			auto newRule = m_operatorRules.newValue<SpecializedRule<NullType, NodeType, OperationNode>>(op);
 		}
-
-	private:
-		void registerNodeBuilder(BuiltinBuilder *builder);
-		void registerConversionBuilder(ConversionBuilder *builder);
-		void registerOperatorBuilder(OperatorBuilder *builder);
 
 	private:
 		template <typename NodeType, typename InvalidType>
@@ -128,76 +121,75 @@ namespace piranha {
 
 		template <typename NodeType>
 		void registerLiteralTypeInternal(const LiteralFloatType &) {
-			m_floatBuilder = new SpecializedNodeBuilder<
-				NodeType, 
-				FloatLiteralNode,
-				int>(0, "");
+			m_floatBuilder = new SpecializedRule<
+				NullType, 
+				NodeType,
+				FloatLiteralNode>();
 		}
 
 		template <typename NodeType>
 		void registerLiteralTypeInternal(const LiteralIntType &) {
-			m_intBuilder = new SpecializedNodeBuilder<
-				NodeType, 
-				IntLiteralNode,
-				int>(0, "");
+			m_intBuilder = new SpecializedRule <
+				NullType,
+				NodeType,
+				IntLiteralNode>();
 		}
 
 		template <typename NodeType>
 		void registerLiteralTypeInternal(const LiteralBoolType &) {
-			m_boolBuilder = new SpecializedNodeBuilder<
-				NodeType, 
-				BoolLiteralNode,
-				int>(0, "");
+			m_boolBuilder = new SpecializedRule<
+				NullType, 
+				NodeType,
+				BoolLiteralNode>();
 		}
 
 		template <typename NodeType>
 		void registerLiteralTypeInternal(const LiteralStringType &) {
-			m_stringBuilder = new SpecializedNodeBuilder<
-				NodeType, 
-				StringLiteralNode,
-				int>(0, "");
+			m_stringBuilder = new SpecializedRule<
+				NullType, 
+				NodeType,
+				StringLiteralNode>();
 		}
 
 	public:
+		template <typename BaseType>
+		LiteralNode<BaseType> *generateLiteralInternal() { return nullptr; }
+
 		template <>
-		IntLiteralNode *generateLiteral<piranha::native_int>() {
-			return (m_intBuilder != nullptr)
-				? m_intBuilder->buildNode()
-				: nullptr;
+		IntLiteralNode *generateLiteralInternal<piranha::native_int>() {
+			if (m_intBuilder == nullptr) return nullptr;
+			else return m_intBuilder->buildNode();
 		}
 
 		template <>
-		FloatLiteralNode *generateLiteral<piranha::native_float>() {
-			return (m_floatBuilder != nullptr)
-				? m_floatBuilder->buildNode()
-				: nullptr;
+		FloatLiteralNode *generateLiteralInternal<piranha::native_float>() {
+			if (m_floatBuilder == nullptr) return nullptr;
+			else return m_floatBuilder->buildNode();
 		}
 
 		template <>
-		StringLiteralNode *generateLiteral<piranha::native_string>() {
-			return (m_stringBuilder != nullptr)
-				? m_stringBuilder->buildNode()
-				: nullptr;
+		StringLiteralNode *generateLiteralInternal<piranha::native_string>() {
+			if (m_stringBuilder == nullptr) return nullptr;
+			else return m_stringBuilder->buildNode();
 		}
 
 		template <>
-		BoolLiteralNode *generateLiteral<piranha::native_bool>() {
-			return (m_boolBuilder != nullptr)
-				? m_boolBuilder->buildNode()
-				: nullptr;
+		BoolLiteralNode *generateLiteralInternal<piranha::native_bool>() {
+			if (m_boolBuilder == nullptr) return nullptr;
+			else return m_boolBuilder->buildNode();
 		}
 
 	private:
 		std::vector<Node *> m_nodes;
 
-		std::vector<BuiltinBuilder *> m_nodeBuilders;
-		std::vector<ConversionBuilder *> m_conversionBuilders;
-		std::vector<OperatorBuilder *> m_operatorBuilders;
+		KeyValueLookup<std::string, BuiltinRule> m_builtinRules;
+		KeyValueLookup<NodeTypeConversion, ConversionRule> m_conversionRules;
+		KeyValueLookup<OperatorMapping, OperatorRule> m_operatorRules;
 
-		LiteralBuilder<piranha::native_int> *m_intBuilder;
-		LiteralBuilder<piranha::native_float> *m_floatBuilder;
-		LiteralBuilder<piranha::native_bool> *m_boolBuilder;
-		LiteralBuilder<piranha::native_string> *m_stringBuilder;
+		LiteralRule<piranha::native_int> *m_intBuilder;
+		LiteralRule<piranha::native_float> *m_floatBuilder;
+		LiteralRule<piranha::native_bool> *m_boolBuilder;
+		LiteralRule<piranha::native_string> *m_stringBuilder;
 
 		NodeProgram *m_nodeProgram;
 	};

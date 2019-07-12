@@ -1,6 +1,6 @@
 #include <pch.h>
 
-#include "test_generator.h"
+#include "test_rules.h"
 
 #include "../include/float_cast_node.h"
 #include "../include/string_cast_node.h"
@@ -11,15 +11,15 @@
 #include "../include/default_literal_node.h"
 #include "../include/operation_node.h"
 
-TestGenerator::TestGenerator() {
+TestRules::TestRules() {
 	/* void */
 }
 
-TestGenerator::~TestGenerator() {
+TestRules::~TestRules() {
 	/* void */
 }
 
-void TestGenerator::registerBuiltinNodeTypes() {
+void TestRules::registerBuiltinNodeTypes() {
 	// Builtin Types
 	registerBuiltinType<piranha::FloatCastNode>("__piranha__float");
 	registerBuiltinType<piranha::StringCastNode>("__piranha__string");

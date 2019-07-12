@@ -6,7 +6,7 @@
 namespace piranha {
 
 	class Node;
-	class Generator;
+	class LanguageRules;
 
 	class NodeProgram {
 	public:
@@ -19,13 +19,13 @@ namespace piranha {
 		void addNode(Node *node);
 		Node *getNode(int index) const { return m_nodes[index]; }
 
-		void setGenerator(Generator *generator) { m_generator = generator; }
-		Generator *getGenerator() { return m_generator; }
+		void setRules(LanguageRules *rules) { m_rules = rules; }
+		LanguageRules *getRules() { return m_rules; }
 
 	protected:
 		std::vector<Node *> m_nodes;
 
-		Generator *m_generator;
+		LanguageRules *m_rules;
 	};
 
 } /* namespace piranha */

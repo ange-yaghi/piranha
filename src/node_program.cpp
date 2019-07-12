@@ -3,7 +3,7 @@
 #include <node.h>
 
 piranha::NodeProgram::NodeProgram() {
-	/* void */
+	m_rules = nullptr;
 }
 
 piranha::NodeProgram::~NodeProgram() {
