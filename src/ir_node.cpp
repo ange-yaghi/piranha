@@ -77,7 +77,7 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(const std::string &name, int
 	return result;
 }
 
-void piranha::IrNode::setParentScope(IrParserStructure *parentScope) {
+void piranha::IrNode::setScopeParent(IrParserStructure *parentScope) {
 	IrParserStructure::setScopeParent(parentScope);
 	if (m_attributes != nullptr) {
 		m_attributes->setScopeParent(parentScope);
