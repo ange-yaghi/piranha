@@ -38,7 +38,7 @@ namespace piranha {
 		IrAttributeList *getAttributes() const { return m_attributes; }
 		IrAttribute *getAttribute(const std::string &name, int *count = nullptr) const;
 
-		virtual void setParentScope(IrParserStructure *parentScope);
+		virtual void setScopeParent(IrParserStructure *parentScope);
 
 		virtual IrValue *getDefaultOutputValue();
 		virtual IrNode *getAsNode() { return this; }
