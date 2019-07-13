@@ -24,6 +24,9 @@ namespace piranha {
 
 		virtual NodeBase *buildNode() const = 0;
 
+		void setValue(const ValueType &value) { m_value = value; }
+		const ValueType &getValue() const { return m_value; }
+
 	protected:
 		ValueType m_value;
 	};

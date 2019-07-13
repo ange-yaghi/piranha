@@ -56,6 +56,15 @@ piranha::Node *piranha::LanguageRules::generateOperatorNode(IrBinaryOperator *bi
 	return node;
 }
 
+std::string piranha::LanguageRules::resolveOperatorBuiltinType(IrBinaryOperator::OPERATOR op, 
+											const NodeType *left, const NodeType *right) const {
+	OperatorRule *rule = m_operatorRules.lookup({ op, left, right });
+	if (rule == nullptr) return "$not_found";
+	else {
+		return rule->getValue().builtinName;
+	}
+}
+
 piranha::Node *piranha::LanguageRules::getCachedInstance(IrParserStructure *ir, IrContextTree *context) {
 	// TODO: this lookup could be made faster by having the lookup table be a tree
 	// with the first level being a lookup by node and the second by context
