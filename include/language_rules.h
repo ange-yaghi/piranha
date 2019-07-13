@@ -42,11 +42,19 @@ namespace piranha {
 		}
 	};
 
+	struct OperatorInfo {
+		std::string builtinName;
+	};
+
+	struct BuiltinTypeInfo {
+		const NodeType *nodeType;
+	};
+
 	struct NullType {};
 
-	typedef Rule<NullType, Node> BuiltinRule; // std::string
-	typedef Rule<NullType, Node> ConversionRule; // NodeTypeConversion
-	typedef Rule<NullType, OperationNode> OperatorRule; // OperatorMapping
+	typedef Rule<BuiltinTypeInfo, Node> BuiltinRule;
+	typedef Rule<NullType, Node> ConversionRule;
+	typedef Rule<OperatorInfo, OperationNode> OperatorRule;
 	template <typename BaseType> using LiteralRule = 
 		Rule<NullType, LiteralNode<BaseType>>;
 
@@ -67,6 +75,7 @@ namespace piranha {
 
 		Node *generateNode(IrNode *node, IrContextTree *context);
 		Node *generateOperatorNode(IrBinaryOperator *binOp, IrContextTree *context);
+		std::string resolveOperatorBuiltinType(IrBinaryOperator::OPERATOR op, const NodeType *left, const NodeType *right) const;
 
 		virtual void registerBuiltinNodeTypes() = 0;
 
@@ -94,8 +103,9 @@ namespace piranha {
 		}
 
 		template <typename NodeType>
-		void registerBuiltinType(const std::string &builtinName) {
-			auto newRule = m_builtinRules.newValue<SpecializedRule<NullType, NodeType, Node>>(builtinName);
+		void registerBuiltinType(const std::string &builtinName, const NodeType *nodeType = nullptr) {
+			auto newRule = m_builtinRules.newValue<SpecializedRule<BuiltinTypeInfo, NodeType, Node>>(builtinName);
+			newRule->nodeType = nodeType;
 		}
 
 		template <typename NodeType, typename LiteralType>
@@ -109,8 +119,9 @@ namespace piranha {
 		}
 
 		template <typename NodeType>
-		void registerOperator(const OperatorMapping &op) {
-			auto newRule = m_operatorRules.newValue<SpecializedRule<NullType, NodeType, OperationNode>>(op);
+		void registerOperator(const OperatorMapping &op, const OperatorInfo &info) {
+			auto newRule = m_operatorRules.newValue<SpecializedRule<OperatorInfo, NodeType, OperationNode>>(op);
+			newRule->setValue(info);
 		}
 
 	private:

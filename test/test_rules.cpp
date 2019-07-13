@@ -21,8 +21,10 @@ TestRules::~TestRules() {
 
 void TestRules::registerBuiltinNodeTypes() {
 	// Builtin Types
-	registerBuiltinType<piranha::FloatCastNode>("__piranha__float");
-	registerBuiltinType<piranha::StringCastNode>("__piranha__string");
+	registerBuiltinType<piranha::FloatCastNode>("__piranha__float", &piranha::FundamentalType::FloatType);
+	registerBuiltinType<piranha::StringCastNode>("__piranha__string", &piranha::FundamentalType::IntType);
+	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_int>>("__piranha__int_add");
+	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_float>>("__piranha__float_add");
 
 	// Literals
 	registerLiteralType<piranha::DefaultLiteralStringNode, piranha::LiteralStringType>();
@@ -32,7 +34,7 @@ void TestRules::registerBuiltinNodeTypes() {
 
 	// Conversions
 	registerConversion<piranha::StringToFloatConversionNode>(
-		{&piranha::FundamentalType::StringType, &piranha::FundamentalType::FloatType }
+		{ &piranha::FundamentalType::StringType, &piranha::FundamentalType::FloatType }
 	);
 	registerConversion<piranha::FloatToStringConversionNode>(
 		{ &piranha::FundamentalType::FloatType, &piranha::FundamentalType::StringType }
@@ -40,12 +42,15 @@ void TestRules::registerBuiltinNodeTypes() {
 
 	// Operations
 	registerOperator<piranha::OperationNodeSpecialized<piranha::native_int>>(
-		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType }
+		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+		{ "__piranha__int_add" }
 	);
 	registerOperator<piranha::OperationNodeSpecialized<piranha::native_float>>(
-		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType }
+		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
+		{ "__piranha__float_add" }
 	);
 	registerOperator<piranha::OperationNodeSpecialized<piranha::native_float>>(
-		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType }
+		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
+		{ "__piranha__float_add" }
 	);
 }
