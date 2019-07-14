@@ -10,12 +10,13 @@
 namespace piranha {
 
 	class IrCompilationUnit;
+	class LanguageRules;
 
 	typedef Path IrPath;
 
 	class Compiler {
 	public:
-		Compiler();
+		Compiler(const LanguageRules *rules = nullptr);
 		~Compiler();
 
 		IrCompilationUnit *compile(const IrPath &scriptPath);
@@ -42,6 +43,8 @@ namespace piranha {
 		void validate();
 
 	protected:
+		const LanguageRules *m_rules;
+
 		ErrorList m_errorList;
 		std::vector<IrCompilationUnit *> m_units;
 

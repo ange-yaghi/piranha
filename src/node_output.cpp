@@ -2,7 +2,7 @@
 
 #include <node.h>
 
-piranha::NodeOutput::NodeOutput(const NodeType *singleType) {
+piranha::NodeOutput::NodeOutput(const ChannelType *singleType) {
 	m_singleType = singleType; 
 	m_evaluated = false;
 	m_interface = nullptr;

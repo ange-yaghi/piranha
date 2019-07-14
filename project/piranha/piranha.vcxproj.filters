@@ -141,9 +141,6 @@
     <ClInclude Include="..\..\include\node.h">
       <Filter>Header Files\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\node_type.h">
-      <Filter>Header Files\nodes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\memory_management.h">
       <Filter>Header Files\memory</Filter>
     </ClInclude>
@@ -279,6 +276,12 @@
     <ClInclude Include="..\..\include\key_value_lookup.h">
       <Filter>Header Files\utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\channel_type.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pkey_value_lookup.h">
+      <Filter>Header Files\utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
@@ -289,9 +292,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\node_program.cpp">
       <Filter>Source Files\program</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\node_type.cpp">
-      <Filter>Source Files\nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\path.cpp">
       <Filter>Source Files\os</Filter>
@@ -379,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\language_rules.cpp">
       <Filter>Source Files\syntax\language-rules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\channel_type.cpp">
+      <Filter>Source Files\nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

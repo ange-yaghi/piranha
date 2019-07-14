@@ -50,6 +50,12 @@ namespace piranha {
 		virtual void setValue(const T &value) { m_value = value; }
 		T getValue() const { return m_value; }
 
+		virtual const ChannelType *getImmediateChannelType() { 
+			return m_rules->resolveChannelType(
+				m_rules->getLiteralBuiltinName<T>()
+			);
+		}
+
 		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
 			Node *cachedNode = program->getRules()->getCachedInstance(this, context);
 			if (cachedNode != nullptr) return cachedNode;

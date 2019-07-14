@@ -1,24 +1,24 @@
-#include <node_type.h>
+#include "../include/channel_type.h"
 
-piranha::NodeType::NodeType() {
+piranha::ChannelType::ChannelType() {
 	initialize("", nullptr);
 }
 
-piranha::NodeType::NodeType(const char *type, const NodeType *parent) {
+piranha::ChannelType::ChannelType(const char *type, const ChannelType *parent) {
 	initialize(type, parent);
 }
 
-piranha::NodeType::~NodeType() {
+piranha::ChannelType::~ChannelType() {
 	/* void */
 }
 
-void piranha::NodeType::initialize(const char *type, const NodeType *parent) { 
+void piranha::ChannelType::initialize(const char *type, const ChannelType *parent) {
 	m_typeString = type; 
 	m_hash = generateHash(type); 
 	m_parent = parent;
 }
 
-bool piranha::NodeType::isCompatibleWith(const NodeType &t) const {
+bool piranha::ChannelType::isCompatibleWith(const ChannelType &t) const {
 	if (operator==(t)) {
 		return true;
 	}
@@ -28,13 +28,13 @@ bool piranha::NodeType::isCompatibleWith(const NodeType &t) const {
 	}
 }
 
-bool piranha::NodeType::operator==(const NodeType &t) const {
+bool piranha::ChannelType::operator==(const ChannelType &t) const {
 	bool hashCheck = (m_hash == t.m_hash);
 	if (!hashCheck) return false;
 	else return (strcmp(t.m_typeString, m_typeString) == 0);
 }
 
-int piranha::NodeType::generateHash(const char *string) {
+int piranha::ChannelType::generateHash(const char *string) {
 	// Simple hash for now
 	int sum = 0, i = 0;
 	while (string[i] != '\0') {

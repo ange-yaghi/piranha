@@ -1,8 +1,9 @@
-#include "ir_generic_value.h"
+#include "../include/ir_generic_value.h"
 
-#include "ir_compilation_unit.h"
-#include "compilation_error.h"
-#include "ir_node_definition.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/compilation_error.h"
+#include "../include/ir_node_definition.h"
+#include "../include/language_rules.h"
 
 piranha::IrGenericValue::IrGenericValue(const IrTokenInfoSet<std::string, 2> &type) 
 														: IrValue(IrValue::GENERIC) {
@@ -12,6 +13,17 @@ piranha::IrGenericValue::IrGenericValue(const IrTokenInfoSet<std::string, 2> &ty
 
 piranha::IrGenericValue::~IrGenericValue() {
 	/* void */
+}
+
+const piranha::ChannelType *piranha::IrGenericValue::getImmediateChannelType() {
+	if (m_typeDefinition != nullptr) {
+		if (!m_typeDefinition->isBuiltin()) return nullptr;
+		std::string builtinType = m_typeDefinition->getBuiltinName();
+
+		const ChannelType *wholeType = m_rules->resolveChannelType(builtinType);
+		return wholeType;
+	}
+	else return nullptr;
 }
 
 piranha::IrParserStructure *piranha::IrGenericValue::resolveLocalName(const std::string &name) const {

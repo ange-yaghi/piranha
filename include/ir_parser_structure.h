@@ -3,6 +3,7 @@
 
 #include "ir_token_info.h"
 #include "ir_visibility.h"
+#include "pkey_value_lookup.h"
 
 #include <vector>
 #include <fstream>
@@ -21,8 +22,11 @@ namespace piranha {
 	class IrCompilationUnit;
 	class CompilationError;
 	class IrNode;
+	class IrNodeDefinition;
 	class IrContextTree;
 	class Node;
+	class ChannelType;
+	class LanguageRules;
 
 	class IrParserStructure {
 	public:
@@ -53,6 +57,8 @@ namespace piranha {
 	public:
 		IrParserStructure();
 		virtual ~IrParserStructure();
+		
+		void setRules(const LanguageRules *rules);
 
 		const IrTokenInfo *getSummaryToken() const { return &m_summaryToken; }
 		void registerToken(const IrTokenInfo *tokenInfo);
@@ -67,6 +73,7 @@ namespace piranha {
 
 		bool getDefinitionsResolved() const { return m_definitionsResolved; }
 		bool isValidated() const { return m_validated; }
+		virtual const ChannelType *getImmediateChannelType() { return nullptr; }
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
 		IrParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
 
@@ -94,14 +101,16 @@ namespace piranha {
 	public:
 		// Compilation stages
 		void resolveDefinitions();
+		void expand(IrContextTree *context);
 		virtual void checkReferences(IrContextTree *inputContext = nullptr);
 		void checkInstantiation();
 		void validate();
 
 	protected:
 		virtual void _resolveDefinitions();
-		virtual void _validate();
+		virtual void _expand(IrContextTree *context);
 		virtual void _checkInstantiation();
+		virtual void _validate();
 
 	protected:
 		IrCompilationUnit *m_parentUnit;
@@ -109,9 +118,13 @@ namespace piranha {
 		IrParserStructure *m_logicalParent;
 		IrTokenInfo m_summaryToken;
 
+		PKeyValueLookup<IrContextTree, IrNodeDefinition *> m_expansions;
+
 		std::vector<IrParserStructure *> m_components;
 
 	protected:
+		const LanguageRules *m_rules;
+
 		// Visibility
 		IrVisibility m_defaultVisibility;
 		IrVisibility m_visibility;

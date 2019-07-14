@@ -605,8 +605,9 @@ TEST(IrTests, IrFullErrorTest3) {
 	EXPECT_TRUE(findError(errors, ErrorCode::InputNotConnected, 14));
 	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 15));
 	EXPECT_TRUE(findError(errors, ErrorCode::UnexpectedToken, 16));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 36));
 
-	EXPECT_EQ(errors->getErrorCount(), 7);
+	EXPECT_EQ(errors->getErrorCount(), 8);
 }
 
 TEST(IrTests, IrInputConnectionTest) {

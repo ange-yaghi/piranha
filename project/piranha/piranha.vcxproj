@@ -177,10 +177,11 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\literal_node_output.h" />
     <ClInclude Include="..\..\include\memory_management.h" />
     <ClInclude Include="..\..\include\node.h" />
+    <ClInclude Include="..\..\include\pkey_value_lookup.h" />
     <ClInclude Include="..\..\include\rule.h" />
     <ClInclude Include="..\..\include\node_output.h" />
     <ClInclude Include="..\..\include\node_program.h" />
-    <ClInclude Include="..\..\include\node_type.h" />
+    <ClInclude Include="..\..\include\channel_type.h" />
     <ClInclude Include="..\..\include\path.h" />
     <ClInclude Include="..\..\include\ir_attribute.h" />
     <ClInclude Include="..\..\include\ir_attribute_definition.h" />
@@ -222,7 +223,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\node.cpp" />
     <ClCompile Include="..\..\src\node_output.cpp" />
     <ClCompile Include="..\..\src\node_program.cpp" />
-    <ClCompile Include="..\..\src\node_type.cpp" />
+    <ClCompile Include="..\..\src\channel_type.cpp" />
     <ClCompile Include="..\..\src\path.cpp" />
     <ClCompile Include="..\..\src\ir_attribute.cpp" />
     <ClCompile Include="..\..\src\ir_attribute_definition.cpp" />

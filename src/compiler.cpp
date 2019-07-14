@@ -4,8 +4,8 @@
 #include "ir_import_statement.h"
 #include "compilation_error.h"
 
-piranha::Compiler::Compiler() {
-	/* void */
+piranha::Compiler::Compiler(const LanguageRules *rules) {
+	m_rules = rules;
 }
 
 piranha::Compiler::~Compiler() {
@@ -27,6 +27,7 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
 			return nullptr;
 		}
 
+		newUnit->setRules(m_rules);
 		m_units.push_back(newUnit);
 
 		int importCount = newUnit->getImportStatementCount();
@@ -139,6 +140,7 @@ void piranha::Compiler::resolve() {
 	for (int i = 0; i < unitCount; i++) {
 		IrCompilationUnit *unit = m_units[i];
 		unit->resolveDefinitions();
+		unit->expand(nullptr);
 		unit->checkInstantiation();
 	}
 }

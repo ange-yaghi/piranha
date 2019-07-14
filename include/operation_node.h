@@ -51,7 +51,7 @@ namespace piranha {
 		}
 
 		virtual void registerInputs() {
-			const NodeType *type = NativeTypeLookup<FundamentalType>::get();
+			const ChannelType *type = NativeTypeLookup<FundamentalType>();
 
 			registerInput(
 				m_output.getLeftConnection(), "$left", type);
