@@ -1,7 +1,7 @@
 #ifndef PIRANHA_NODE_OUTPUT_H
 #define PIRANHA_NODE_OUTPUT_H
 
-#include "node_type.h"
+#include "channel_type.h"
 
 #include <string>
 #include <vector>
@@ -13,7 +13,7 @@ namespace piranha {
 
 	class NodeOutput {
 	public:
-		NodeOutput(const NodeType *singleType);
+		NodeOutput(const ChannelType *singleType);
 		virtual ~NodeOutput();
 
 		virtual void fullCompute(void *target) const { /* void */ }
@@ -23,8 +23,8 @@ namespace piranha {
 		NodeOutput **getInputConnection(int index) { return m_inputs[index]; }
 
 	public:
-		bool isType(const NodeType &type) const { return m_singleType == &type; }
-		const NodeType *getType() const { return m_singleType; }
+		bool isType(const ChannelType &type) const { return m_singleType == &type; }
+		const ChannelType *getType() const { return m_singleType; }
 
 		void initialize();
 		void evaluate();
@@ -38,12 +38,12 @@ namespace piranha {
 		Node *getInterface() const { return m_interface; }
 
 	protected:
-		void overrideType(const NodeType *type) { m_singleType = type; }
+		void overrideType(const ChannelType *type) { m_singleType = type; }
 
 		virtual Node *generateInterface() { return nullptr; }
 
 	private:
-		const NodeType *m_singleType;
+		const ChannelType *m_singleType;
 
 		std::string m_name;
 

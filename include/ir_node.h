@@ -34,6 +34,8 @@ namespace piranha {
 		const std::string &getType() const { return m_type.data; }
 		const std::string &getName() const { return m_name.data; }
 
+		virtual const ChannelType *getImmediateChannelType();
+
 		void setAttributes(IrAttributeList *list);
 		IrAttributeList *getAttributes() const { return m_attributes; }
 		IrAttribute *getAttribute(const std::string &name, int *count = nullptr) const;
@@ -67,6 +69,7 @@ namespace piranha {
 		virtual void _resolveDefinitions();
 		virtual void _validate();
 		virtual void _checkInstantiation();
+		virtual void _expand(IrContextTree *context);
 
 		void resolveNodeDefinition();
 		void resolveAttributeDefinitions();

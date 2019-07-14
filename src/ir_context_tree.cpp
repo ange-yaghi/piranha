@@ -64,6 +64,8 @@ bool piranha::IrContextTree::isEqual(const IrContextTree *ref) const {
 
 		currentRefNode = currentRefNode->getParent();
 		currentNode = currentNode->getParent();
+
+		if (currentNode == nullptr || currentRefNode == nullptr) return currentNode == currentRefNode;
 	}
 
 	return (currentNode->getContext() == currentRefNode->getContext());

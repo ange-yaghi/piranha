@@ -1,7 +1,9 @@
-#include "ir_binary_operator.h"
+#include "../include/ir_binary_operator.h"
 
-#include "ir_value_constant.h"
-#include <node.h>
+#include "../include/ir_node_definition.h"
+#include "../include/ir_value_constant.h"
+#include "../include/ir_attribute_definition_list.h"
+#include "../include/node.h"
 
 piranha::IrBinaryOperator::IrBinaryOperator(OPERATOR op, IrValue *left, IrValue *right) :
 							IrValue(IrValue::BINARY_OPERATION) {
@@ -145,8 +147,53 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 
 		return publicAttribute;
 	}
+	else {
+		IrNodeDefinition **pDefinition = m_expansions.lookup(query.inputContext);
 
-	return nullptr;
+		if (pDefinition == nullptr) {
+			IR_DEAD_END();
+			return nullptr;
+		}
+		else if (*pDefinition == nullptr) {
+			IR_FAIL();
+			return nullptr;
+		}
+		else {
+			return (*pDefinition)
+				->getAttributeDefinitionList()
+				->getDefaultOutput();
+		}
+	}
+}
+
+void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
+	IrContextTree *parentContext = (context != nullptr) ? context : new IrContextTree(nullptr, true);
+	if (m_leftOperand == nullptr || m_rightOperand == nullptr) return;
+
+	if (m_operator != DOT && m_operator != POINTER) {
+		if (m_rules == nullptr) return;
+
+		IrReferenceInfo leftInfo;
+		IrReferenceQuery leftQuery;
+		leftQuery.inputContext = parentContext;
+		leftQuery.recordErrors = false;
+		IrParserStructure *leftReference = m_leftOperand->getReference(leftQuery, &leftInfo);
+
+		IrReferenceInfo rightInfo;
+		IrReferenceQuery rightQuery;
+		rightQuery.inputContext = parentContext;
+		rightQuery.recordErrors = false;
+		IrParserStructure *rightReference = m_rightOperand->getReference(rightQuery, &rightInfo);
+
+		const ChannelType *leftType = leftReference->getImmediateChannelType();
+		const ChannelType *rightType = rightReference->getImmediateChannelType();
+
+		std::string builtinType = m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
+
+		int count = 0;
+		IrNodeDefinition *nodeDefinition = getParentUnit()->resolveBuiltinNodeDefinition(builtinType, &count);
+		*m_expansions.newValue(parentContext) = nodeDefinition;
+	}
 }
 
 piranha::NodeOutput *piranha::IrBinaryOperator::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {

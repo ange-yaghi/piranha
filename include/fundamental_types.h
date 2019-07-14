@@ -1,17 +1,17 @@
 #ifndef PIRANHA_FUNDAMENTAL_TYPES_H
 #define PIRANHA_FUNDAMENTAL_TYPES_H
 
-#include "node_type.h"
+#include "channel_type.h"
 
 #include <string>
 
 namespace piranha {
 
 	struct FundamentalType {
-		static const NodeType FloatType;
-		static const NodeType IntType;
-		static const NodeType StringType;
-		static const NodeType BoolType;
+		static const ChannelType FloatType;
+		static const ChannelType IntType;
+		static const ChannelType StringType;
+		static const ChannelType BoolType;
 	};
 
 	// Native types
@@ -20,21 +20,29 @@ namespace piranha {
 	typedef std::string		native_string;
 	typedef int				native_int;
 
-	template <typename BaseType>
-	class LiteralType {};
-
-	class LiteralFloatType :	public LiteralType<piranha::native_float> {};
-	class LiteralBoolType :		public LiteralType<piranha::native_bool> {};
-	class LiteralStringType :	public LiteralType<piranha::native_string> {};
-	class LiteralIntType :		public LiteralType<piranha::native_int> {};
+	enum LiteralType {
+		LITERAL_FLOAT,
+		LITERAL_BOOL,
+		LITERAL_STRING,
+		LITERAL_INT,
+		LITERAL_UNDEFINED
+	};
 
 	template <typename NativeType>
-	struct NativeTypeLookup { };// static_assert(false, "Looking up a type that does not exist");};
+	inline LiteralType LiteralTypeLookup() { static_assert(false, "Looking up a type that does not exist"); return LITERAL_UNDEFINED; };
 
-	template <> struct NativeTypeLookup<native_float> { static const NodeType *get() { return &FundamentalType::FloatType; } };
-	template <> struct NativeTypeLookup<native_bool> { static const NodeType *get() { return &FundamentalType::BoolType; } };
-	template <> struct NativeTypeLookup<native_int> { static const NodeType *get() { return &FundamentalType::IntType; } };
-	template <> struct NativeTypeLookup<native_string> { static const NodeType *get() { return &FundamentalType::StringType; } };
+	template <> inline LiteralType LiteralTypeLookup<native_float>() { return LITERAL_FLOAT; }
+	template <> inline LiteralType LiteralTypeLookup<native_bool>() { return LITERAL_BOOL; }
+	template <> inline LiteralType LiteralTypeLookup<native_int>() { return LITERAL_INT; }
+	template <> inline LiteralType LiteralTypeLookup<native_string>() { return LITERAL_STRING; }
+
+	template <typename NativeType>
+	inline const ChannelType *NativeTypeLookup() { static_assert(false, "Looking up a type that does not exist"); return nullptr; }
+
+	template <> inline const ChannelType *NativeTypeLookup<native_float>() { return &FundamentalType::FloatType; }
+	template <> inline const ChannelType *NativeTypeLookup<native_bool>() { return &FundamentalType::BoolType; }
+	template <> inline const ChannelType *NativeTypeLookup<native_int>() { return &FundamentalType::IntType; }
+	template <> inline const ChannelType *NativeTypeLookup<native_string>() { return &FundamentalType::StringType; }
 
 } /* namespace piranha */
 

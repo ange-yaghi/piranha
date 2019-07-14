@@ -48,6 +48,16 @@ namespace piranha {
 			return kvp.value;
 		}
 
+		ValueType *newValue(const KeyType &key) {
+			KeyValuePair kvp;
+			kvp.key = key;
+			kvp.value = new ValueType();
+
+			m_lookupTable.push_back(kvp);
+
+			return kvp.value;
+		}
+
 	protected:
 		std::vector<KeyValuePair> m_lookupTable;
 	};

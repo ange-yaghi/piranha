@@ -51,6 +51,14 @@ piranha::IrNode::~IrNode() {
 	/* void */
 }
 
+const piranha::ChannelType *piranha::IrNode::getImmediateChannelType() {
+	if (m_definition == nullptr) return nullptr;
+	if (!m_definition->isBuiltin()) return nullptr;
+	
+	std::string builtinType = m_definition->getBuiltinName();
+	return m_rules->resolveChannelType(builtinType);
+}
+
 void piranha::IrNode::setAttributes(IrAttributeList *list) {
 	m_attributes = list;
 	registerComponent(list);
@@ -194,6 +202,23 @@ void piranha::IrNode::_checkInstantiation() {
 	}
 }
 
+void piranha::IrNode::_expand(IrContextTree *context) {
+	IrContextTree *parentContext = (context == nullptr) ? new IrContextTree(nullptr) : context;
+
+	IrAttributeList *attributes = getAttributes();
+	if (attributes != nullptr) {
+		int attributeCount = attributes->getAttributeCount();
+		for (int i = 0; i < attributeCount; i++) {
+			attributes->getAttribute(i)->expand(parentContext);
+		}
+	}
+
+	IrContextTree *mainContext = parentContext->newChild(this, true);
+	if (m_definition != nullptr) {
+		m_definition->expand(mainContext);
+	}
+}
+
 void piranha::IrNode::resolveNodeDefinition() {
 	int definitionCount = 0;
 	IrNodeDefinition *definition = nullptr;
@@ -208,9 +233,7 @@ void piranha::IrNode::resolveNodeDefinition() {
 			definition = unit->resolveLocalNodeDefinition(getType(), &definitionCount);
 		}
 	}
-	else {
-		definition = unit->resolveNodeDefinition(getType(), &definitionCount, "");
-	}
+	else definition = unit->resolveNodeDefinition(getType(), &definitionCount, "");
 
 	if (definitionCount > 0) {
 		// TODO: log a warning when a node type is ambiguous
@@ -220,10 +243,7 @@ void piranha::IrNode::resolveNodeDefinition() {
 		unit->addCompilationError(new CompilationError(getTypeToken(), 
 			ErrorCode::UndefinedNodeType));
 	}
-
-	else {
-		setDefinition(definition);
-	}
+	else setDefinition(definition);
 }
 
 void piranha::IrNode::resolveAttributeDefinitions() {
@@ -393,11 +413,11 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 			pNodeInput input = inputs[i].output;
 			std::string name = inputs[i].name;
 
-			const NodeType *conversionType = newNode->getConversion(input, name);
+			const ChannelType *conversionType = newNode->getConversion(input, name);
 			
 			if (conversionType != nullptr) {
 				// A conversion is needed
-				const NodeType *originalType = input->getType();
+				const ChannelType *originalType = input->getType();
 				Node *conversionNode = program->getRules()->generateConversion({ originalType, conversionType });
 				conversionNode->setName("$autoconversion");
 				conversionNode->setIrStructure(nullptr);

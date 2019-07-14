@@ -1,7 +1,7 @@
 #ifndef PIRANHA_NODE_H
 #define PIRANHA_NODE_H
 
-#include "node_type.h"
+#include "channel_type.h"
 #include "node_output.h"
 
 #include <string>
@@ -26,7 +26,7 @@ namespace piranha {
 			pNodeInput *input;
 			std::string name;
 
-			const NodeType *requiredType;
+			const ChannelType *requiredType;
 		};
 
 		struct NodeOutputPort {
@@ -53,7 +53,7 @@ namespace piranha {
 		void setName(const std::string &name) { m_name = name; }
 		std::string getName() const { return m_name; }
 
-		const NodeType *getConversion(pNodeInput input, const std::string &name);
+		const ChannelType *getConversion(pNodeInput input, const std::string &name);
 		void connectInput(pNodeInput input, const std::string &name);
 		void connectDefaultInput(pNodeInput input);
 		int getInputCount() const { return (int)m_inputs.size(); }
@@ -97,7 +97,7 @@ namespace piranha {
 
 	protected:
 		std::vector<NodeInputPort> m_inputs;
-		void registerInput(pNodeInput *node, const std::string &name, const NodeType *requiredType = nullptr);
+		void registerInput(pNodeInput *node, const std::string &name, const ChannelType *requiredType = nullptr);
 
 		std::vector<NodeOutputPort> m_outputs;
 		void registerOutput(NodeOutput *node, const std::string &name);

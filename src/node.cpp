@@ -71,12 +71,12 @@ void piranha::Node::destroy() {
 	_destroy();
 }
 
-const piranha::NodeType *piranha::Node::getConversion(pNodeInput input, const std::string &name) {
+const piranha::ChannelType *piranha::Node::getConversion(pNodeInput input, const std::string &name) {
 	int inputCount = getInputCount();
 
 	for (int i = 0; i < inputCount; i++) {
 		if (name == m_inputs[i].name) {
-			const NodeType *requiredType = m_inputs[i].requiredType;
+			const ChannelType *requiredType = m_inputs[i].requiredType;
 
 			// Check if the input doesn't care about input type
 			if (requiredType == nullptr) continue;
@@ -153,7 +153,7 @@ void piranha::Node::registerInputs() {
 	/* void */
 }
 
-void piranha::Node::registerInput(pNodeInput *node, const std::string &name, const NodeType *requiredNodeType) {
+void piranha::Node::registerInput(pNodeInput *node, const std::string &name, const ChannelType *requiredNodeType) {
 	m_inputs.push_back({ node, name, requiredNodeType });
 }
 

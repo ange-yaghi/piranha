@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\compilation_tests.cpp" />
+    <ClCompile Include="..\..\test\operator_tests.cpp" />
     <ClCompile Include="..\..\test\sdl_stress_tests.cpp" />
     <ClCompile Include="..\..\test\sdl_tests.cpp" />
     <ClCompile Include="..\..\test\test_rules.cpp" />

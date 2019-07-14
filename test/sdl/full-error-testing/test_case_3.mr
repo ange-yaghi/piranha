@@ -29,3 +29,9 @@ AddMulNode brokenNodeInstance(
     p2: 15,
     p3: 16
 )
+
+private node UnusedNode {
+    input a;
+    input b;
+    default output out: a + z; // UnresolvedReference
+}

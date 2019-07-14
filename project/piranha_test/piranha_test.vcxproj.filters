@@ -17,6 +17,9 @@
     <ClCompile Include="..\..\test\test_rules.cpp">
       <Filter>Infrastructure\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\operator_tests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

@@ -1,0 +1,9 @@
+private import "operators.mr" as operators
+
+node test {
+    output test1: float(5.0) + 5.0;
+    output test2: 5 + 5.0;
+    output test3: 5.0 + 5;
+}
+
+test()

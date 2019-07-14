@@ -1,0 +1,10 @@
+private import "operators.mr" as operators
+
+node test {
+    input input1: 5;
+    output test1: input1 + 5;
+}
+
+test test1(10.0 + 5)
+test test2(10 + 5)
+test test3(10.0 + 5.0)

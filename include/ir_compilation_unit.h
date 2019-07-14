@@ -89,6 +89,8 @@ namespace piranha {
 		IrNodeDefinition *resolveLocalNodeDefinition(const std::string &name, int *count, bool external = false);
 		IrNodeDefinition *resolveNodeDefinition(const std::string &name, int *count,
 			const std::string &libraryName, bool external = false);
+		IrNodeDefinition *resolveLocalBuiltinNodeDefinition(const std::string &builtinName, int *count, bool external = false);
+		IrNodeDefinition *resolveBuiltinNodeDefinition(const std::string &builtinName, int *count, bool external = false);
 
 		// Validation stage
 	protected:
