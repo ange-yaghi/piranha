@@ -1,9 +1,9 @@
-#include "ir_unary_operator.h"
+#include "../include/ir_unary_operator.h"
 
-#include "compilation_error.h"
-#include "ir_node.h"
-#include <node.h>
-#include "ir_context_tree.h"
+#include "../include/compilation_error.h"
+#include "../include/ir_node.h"
+#include "../include/node.h"
+#include "../include/ir_context_tree.h"
 
 piranha::IrUnaryOperator::IrUnaryOperator(OPERATOR op, IrValue *operand) : IrValue(IrValue::UNARY_OPERATION) {
 	m_operand = operand;

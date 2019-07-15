@@ -70,22 +70,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\..\..\dependencies\libraries\flex\include;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\..\..\dependencies\libraries\flex\include;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\..\..\dependencies\libraries\flex\include;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)\../..\autogen;$(ProjectDir)\../..\dependencies\libraries\flex\include;$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\../../include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\../..\dependencies\libraries\boost-filesystem\include;$(ProjectDir)\..\..\dependencies\libraries\flex\include;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>

@@ -1,6 +1,6 @@
-#include <node_output.h>
+#include "../include/node_output.h"
 
-#include <node.h>
+#include "../include/node.h"
 
 piranha::NodeOutput::NodeOutput(const ChannelType *singleType) {
 	m_singleType = singleType; 

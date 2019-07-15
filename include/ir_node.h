@@ -77,7 +77,7 @@ namespace piranha {
 		IrNodeDefinition *m_definition;
 
 	public:
-		Node *generateNode(IrContextTree *context, NodeProgram *program);
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace piranha */

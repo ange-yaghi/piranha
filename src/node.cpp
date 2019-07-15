@@ -1,7 +1,7 @@
-#include <node.h>
+#include "../include/node.h"
 
-#include <node_output.h>
-#include <node_program.h>
+#include "../include/node_output.h"
+#include "../include/node_program.h"
 
 #include <assert.h>
 
@@ -104,6 +104,10 @@ void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
 			// inputs with the same name referencing different endpoints
 		}
 	}
+}
+
+void piranha::Node::connectInput(pNodeInput input, int index) {
+	*m_inputs[index].input = input;
 }
 
 void piranha::Node::connectDefaultInput(pNodeInput input) {

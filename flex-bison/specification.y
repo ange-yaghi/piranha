@@ -11,23 +11,23 @@
 		class Scanner;
 	}
 
-	#include "ir_compilation_unit.h"
-	#include "ir_node.h"
-	#include "ir_attribute_list.h"
-	#include "ir_attribute.h"
-	#include "ir_value.h"
-	#include "ir_value_constant.h"
-	#include "ir_binary_operator.h"
-	#include "ir_import_statement.h"
-	#include "ir_token_info.h"
-	#include "ir_node_definition.h"
-	#include "ir_attribute_definition.h"
-	#include "ir_attribute_definition_list.h"
-	#include "compilation_error.h"
-	#include "ir_structure_list.h"
-	#include "ir_visibility.h"
-	#include "ir_unary_operator.h"
-	#include "ir_generic_value.h"
+	#include "../include/ir_compilation_unit.h"
+	#include "../include/ir_node.h"
+	#include "../include/ir_attribute_list.h"
+	#include "../include/ir_attribute.h"
+	#include "../include/ir_value.h"
+	#include "../include/ir_value_constant.h"
+	#include "../include/ir_binary_operator.h"
+	#include "../include/ir_import_statement.h"
+	#include "../include/ir_token_info.h"
+	#include "../include/ir_node_definition.h"
+	#include "../include/ir_attribute_definition.h"
+	#include "../include/ir_attribute_definition_list.h"
+	#include "../include/compilation_error.h"
+	#include "../include/ir_structure_list.h"
+	#include "../include/ir_visibility.h"
+	#include "../include/ir_unary_operator.h"
+	#include "../include/ir_generic_value.h"
 
 	#include <string>
 
@@ -65,8 +65,8 @@
   #include <cstdlib>
   #include <fstream>
 
-  #include "ir_compilation_unit.h"
-  #include <scanner.h>
+  #include "../include/ir_compilation_unit.h"
+  #include "../include/scanner.h"
 
 #undef yylex
 #define yylex scanner.yylex

@@ -55,6 +55,7 @@ namespace piranha {
 
 		const ChannelType *getConversion(pNodeInput input, const std::string &name);
 		void connectInput(pNodeInput input, const std::string &name);
+		void connectInput(pNodeInput input, int index);
 		void connectDefaultInput(pNodeInput input);
 		int getInputCount() const { return (int)m_inputs.size(); }
 

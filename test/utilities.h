@@ -3,8 +3,8 @@
 
 #include <pch.h>
 
-#include "error_list.h"
-#include "compilation_error.h"
+#include "../include/error_list.h"
+#include "../include/compilation_error.h"
 
 #include <string>
 

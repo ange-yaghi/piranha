@@ -28,6 +28,9 @@ namespace piranha {
 		// [P] - Parsing errors
 		extern const ErrorCode_struct UnexpectedToken;
 
+		// [E] - Expansion errors
+		extern const ErrorCode_struct InvalidOperandTypes;
+
 		// [R] - Resolution Errors
 		extern const ErrorCode_struct UndefinedNodeType;
 		extern const ErrorCode_struct ArgumentPositionOutOfBounds;

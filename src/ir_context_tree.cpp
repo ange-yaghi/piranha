@@ -1,9 +1,9 @@
-#include "ir_context_tree.h"
+#include "../include/ir_context_tree.h"
 
-#include "ir_node.h"
-#include "ir_attribute_definition.h"
-#include "ir_attribute_list.h"
-#include "ir_attribute.h"
+#include "../include/ir_node.h"
+#include "../include/ir_attribute_definition.h"
+#include "../include/ir_attribute_list.h"
+#include "../include/ir_attribute.h"
 
 piranha::IrContextTree::IrContextTree() {
 	m_context = nullptr;

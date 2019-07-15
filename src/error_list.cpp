@@ -1,6 +1,6 @@
-#include "error_list.h"
+#include "../include/error_list.h"
 
-#include "compilation_error.h"
+#include "../include/compilation_error.h"
 
 piranha::ErrorList::ErrorList() {
 	/* void */

@@ -22,17 +22,15 @@
 
 using namespace piranha;
 
-IrCompilationUnit *compileToUnit(const std::string &filename) {
+IrCompilationUnit *compileToUnit(const std::string &filename, const ErrorList **errList = nullptr, LanguageRules **outputRules = nullptr) {
 	TestRules *rules = new TestRules();
 	rules->registerBuiltinNodeTypes();
 	Compiler *compiler = new Compiler(rules);
 	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
 	EXPECT_NE(unit, nullptr);
 
-	IrNode *node = unit->getNode(0);
-	std::ofstream f(TMP_PATH + std::string("trace.txt"));
-	node->writeTraceToFile(f);
-	f.close();
+	if (errList != nullptr) *errList = compiler->getErrorList();
+	if (outputRules != nullptr) *outputRules = rules;
 
 	return unit;
 }
@@ -233,4 +231,46 @@ TEST(IrOperatorTests, IrOperatorTest5) {
 		->getReference(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
+}
+
+TEST(IrOperatorTests, IrOperatorTest6) {
+	const ErrorList *errList;
+	IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_6.mr", &errList);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 9, nullptr, false));
+	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 5, nullptr, true));
+
+	EXPECT_EQ(errList->getErrorCount(), 2);
+}
+
+TEST(IrOperatorTests, IrOperatorTest7) {
+	const ErrorList *errList;
+	IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_7.mr", &errList);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 9, nullptr, false));
+	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 5, nullptr, true));
+
+	EXPECT_EQ(errList->getErrorCount(), 2);
+}
+
+TEST(IrOperatorTests, IrOperatorTest8) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_8.mr", &errList, &rules);
+
+	EXPECT_EQ(errList->getErrorCount(), 0);
+
+	NodeProgram program;
+	program.setRules(rules);
+	rules->setNodeProgram(&program);
+	unit->build(&program);
+
+	program.execute();
+
+	std::string result;
+	program.getNode(0)->getPrimaryOutput()->fullCompute((void *)&result);
+	EXPECT_EQ(result, "Hello world!");
+
+	program.getNode(1)->getPrimaryOutput()->fullCompute((void *)&result);
+	EXPECT_EQ(result, "Goodbye world!");
 }

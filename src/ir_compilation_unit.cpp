@@ -1,12 +1,12 @@
-#include "ir_compilation_unit.h"
+#include "../include/ir_compilation_unit.h"
 
-#include "scanner.h"
-#include "ir_node.h"
-#include "ir_attribute_list.h"
-#include "ir_attribute.h"
-#include "error_list.h"
-#include "node_program.h"
-#include "language_rules.h"
+#include "../include/scanner.h"
+#include "../include/ir_node.h"
+#include "../include/ir_attribute_list.h"
+#include "../include/ir_attribute.h"
+#include "../include/error_list.h"
+#include "../include/node_program.h"
+#include "../include/language_rules.h"
 
 #include <cctype>
 #include <fstream>

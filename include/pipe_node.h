@@ -1,5 +1,5 @@
-#ifndef PIRANHA_SINGLE_OUTPUT_NODE_H
-#define PIRANHA_SINGLE_OUTPUT_NODE_H
+#ifndef PIRANHA_PIPE_NODE_H
+#define PIRANHA_PIPE_NODE_H
 
 #include "node.h"
 
@@ -54,4 +54,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* PIRANHA_SINGLE_OUTPUT_NODE_H */
+#endif /* PIRANHA_PIPE_NODE_H */

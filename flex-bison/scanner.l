@@ -5,7 +5,7 @@
 #include <iostream>
 
 /* Implementation of yyFlexScanner */ 
-#include <scanner.h>
+#include "../include/scanner.h"
 #undef  YY_DECL
 #define YY_DECL int piranha::Scanner::yylex( piranha::Parser::semantic_type *const lval, piranha::Parser::location_type *location)
 

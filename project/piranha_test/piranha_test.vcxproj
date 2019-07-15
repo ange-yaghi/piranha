@@ -33,25 +33,25 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)/../../include;$(ProjectDir)/../piranha_test;$(ProjectDir)/../../test;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)/../../include;$(ProjectDir)/../piranha_test;$(ProjectDir)/../../test;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)/../../include;$(ProjectDir)/../piranha_test;$(ProjectDir)/../../test;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)/../../include;$(ProjectDir)/../piranha_test;$(ProjectDir)/../../test;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>

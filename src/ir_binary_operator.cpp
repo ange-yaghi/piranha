@@ -167,7 +167,6 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 }
 
 void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
-	IrContextTree *parentContext = (context != nullptr) ? context : new IrContextTree(nullptr, true);
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) return;
 
 	if (m_operator != DOT && m_operator != POINTER) {
@@ -175,24 +174,37 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 
 		IrReferenceInfo leftInfo;
 		IrReferenceQuery leftQuery;
-		leftQuery.inputContext = parentContext;
+		leftQuery.inputContext = context;
 		leftQuery.recordErrors = false;
 		IrParserStructure *leftReference = m_leftOperand->getReference(leftQuery, &leftInfo);
 
+		if (leftInfo.failed) return;
+		if (leftInfo.reachedDeadEnd) return;
+
 		IrReferenceInfo rightInfo;
 		IrReferenceQuery rightQuery;
-		rightQuery.inputContext = parentContext;
+		rightQuery.inputContext = context;
 		rightQuery.recordErrors = false;
 		IrParserStructure *rightReference = m_rightOperand->getReference(rightQuery, &rightInfo);
+
+		if (rightInfo.failed) return;
+		if (rightInfo.reachedDeadEnd) return;
 
 		const ChannelType *leftType = leftReference->getImmediateChannelType();
 		const ChannelType *rightType = rightReference->getImmediateChannelType();
 
 		std::string builtinType = m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
 
+		if (builtinType.empty()) {
+			getParentUnit()->addCompilationError(
+				new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context)
+			);
+			return;
+		}
+
 		int count = 0;
 		IrNodeDefinition *nodeDefinition = getParentUnit()->resolveBuiltinNodeDefinition(builtinType, &count);
-		*m_expansions.newValue(parentContext) = nodeDefinition;
+		*m_expansions.newValue(context) = nodeDefinition;
 	}
 }
 
@@ -261,13 +273,9 @@ piranha::Node *piranha::IrBinaryOperator::_generateNode(IrContextTree *context, 
 		query.recordErrors = false;
 
 		IrParserStructure *reference = getReference(query, &info);
-		IrNode *asNode = reference->getAsNode();
-
-		if (asNode != nullptr) {
-			return asNode->generateNode(info.newContext, program);
-		}
+		return reference->generateNode(info.newContext, program);
 	}
-
-	// TODO: add other operators
-	return nullptr;
+	else {
+		return program->getRules()->generateOperatorNode(this, context);
+	}
 }

@@ -1,9 +1,9 @@
 #include <pch.h>
 
-#include <utilities.h>
+#include "utilities.h"
 
-#include "compilation_error.h"
-#include "error_list.h"
+#include "../include/compilation_error.h"
+#include "../include/error_list.h"
 
 bool findError(const ErrorList *errorList, const ErrorCode_struct &errorCode, int line, 
 										const IrCompilationUnit *unit, bool instantiationError) {
