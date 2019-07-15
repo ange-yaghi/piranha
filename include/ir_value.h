@@ -30,37 +30,16 @@ namespace piranha {
 		};
 
 	public:
-		struct GenerationTableEntry {
-			NodeOutput *nodeGeneratedOutput;
-			Node *nodeReference;
-			IrContextTree *context;
-		};
-
-	public:
 		IrValue(VALUE_TYPE type);
 		virtual ~IrValue();
 
 		VALUE_TYPE getType() const { return m_type; }
+		bool isGeneric() const;
 
 		virtual IrValue *getAsValue() { return this; }
 
-		virtual bool isGeneric() const { return false; }
-
 	private:
 		VALUE_TYPE m_type;
-
-	public:
-		NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program);
-		Node *generateNode(IrContextTree *context, NodeProgram *program);
-
-	protected:
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
-
-		GenerationTableEntry *getEntry(IrContextTree *context);
-		GenerationTableEntry *newEntry(IrContextTree *context);
-
-		std::vector<GenerationTableEntry> m_generationTable;
 	};
 
 } /* namespace piranha */

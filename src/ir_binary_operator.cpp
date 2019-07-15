@@ -1,7 +1,9 @@
-#include "ir_binary_operator.h"
+#include "../include/ir_binary_operator.h"
 
-#include "ir_value_constant.h"
-#include <node.h>
+#include "../include/ir_node_definition.h"
+#include "../include/ir_value_constant.h"
+#include "../include/ir_attribute_definition_list.h"
+#include "../include/node.h"
 
 piranha::IrBinaryOperator::IrBinaryOperator(OPERATOR op, IrValue *left, IrValue *right) :
 							IrValue(IrValue::BINARY_OPERATION) {
@@ -75,8 +77,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 
 				bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
 				if (query.recordErrors && isValidError) {
-					IR_ERR_OUT(new IrCompilationError(*m_leftOperand->getSummaryToken(),
-						IrErrorCode::CannotFindDefaultValue, query.inputContext));
+					IR_ERR_OUT(new CompilationError(*m_leftOperand->getSummaryToken(),
+						ErrorCode::CannotFindDefaultValue, query.inputContext));
 				}
 
 				return nullptr;
@@ -119,8 +121,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
 			if (query.recordErrors && isValidError) {
 				// Left hand does not have this member
-				IR_ERR_OUT(new IrCompilationError(*m_rightOperand->getSummaryToken(),
-					IrErrorCode::UndefinedMember, query.inputContext));
+				IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),
+					ErrorCode::UndefinedMember, query.inputContext));
 			}
 
 			return nullptr;
@@ -132,8 +134,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 
 			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
 			if (query.recordErrors && isValidError) {
-				IR_ERR_OUT(new IrCompilationError(*m_rightOperand->getSummaryToken(),
-					IrErrorCode::AccessingInternalMember, query.inputContext));
+				IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),
+					ErrorCode::AccessingInternalMember, query.inputContext));
 			}
 
 			return nullptr;
@@ -145,8 +147,65 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 
 		return publicAttribute;
 	}
+	else {
+		IrNodeDefinition **pDefinition = m_expansions.lookup(query.inputContext);
 
-	return nullptr;
+		if (pDefinition == nullptr) {
+			IR_DEAD_END();
+			return nullptr;
+		}
+		else if (*pDefinition == nullptr) {
+			IR_FAIL();
+			return nullptr;
+		}
+		else {
+			return (*pDefinition)
+				->getAttributeDefinitionList()
+				->getDefaultOutput();
+		}
+	}
+}
+
+void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
+	if (m_leftOperand == nullptr || m_rightOperand == nullptr) return;
+
+	if (m_operator != DOT && m_operator != POINTER) {
+		if (m_rules == nullptr) return;
+
+		IrReferenceInfo leftInfo;
+		IrReferenceQuery leftQuery;
+		leftQuery.inputContext = context;
+		leftQuery.recordErrors = false;
+		IrParserStructure *leftReference = m_leftOperand->getReference(leftQuery, &leftInfo);
+
+		if (leftInfo.failed) return;
+		if (leftInfo.reachedDeadEnd) return;
+
+		IrReferenceInfo rightInfo;
+		IrReferenceQuery rightQuery;
+		rightQuery.inputContext = context;
+		rightQuery.recordErrors = false;
+		IrParserStructure *rightReference = m_rightOperand->getReference(rightQuery, &rightInfo);
+
+		if (rightInfo.failed) return;
+		if (rightInfo.reachedDeadEnd) return;
+
+		const ChannelType *leftType = leftReference->getImmediateChannelType();
+		const ChannelType *rightType = rightReference->getImmediateChannelType();
+
+		std::string builtinType = m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
+
+		if (builtinType.empty()) {
+			getParentUnit()->addCompilationError(
+				new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context)
+			);
+			return;
+		}
+
+		int count = 0;
+		IrNodeDefinition *nodeDefinition = getParentUnit()->resolveBuiltinNodeDefinition(builtinType, &count);
+		*m_expansions.newValue(context) = nodeDefinition;
+	}
 }
 
 piranha::NodeOutput *piranha::IrBinaryOperator::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
@@ -214,13 +273,9 @@ piranha::Node *piranha::IrBinaryOperator::_generateNode(IrContextTree *context, 
 		query.recordErrors = false;
 
 		IrParserStructure *reference = getReference(query, &info);
-		IrNode *asNode = reference->getAsNode();
-
-		if (asNode != nullptr) {
-			return asNode->generateNode(info.newContext, program);
-		}
+		return reference->generateNode(info.newContext, program);
 	}
-
-	// TODO: add other operators
-	return nullptr;
+	else {
+		return program->getRules()->generateOperatorNode(this, context);
+	}
 }

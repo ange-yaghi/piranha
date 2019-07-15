@@ -3,11 +3,12 @@
 
 #include "ir_token_info.h"
 #include "ir_visibility.h"
+#include "pkey_value_lookup.h"
 
 #include <vector>
 #include <fstream>
 
-#define IR_RESET(query)			if (output != nullptr) { output->reset(); output->newContext = (query).inputContext; }
+#define IR_RESET(query)				if (output != nullptr) { output->reset(); output->newContext = (query).inputContext; }
 #define IR_INFO_OUT(param, data)	if (output != nullptr) { output->param = (data); }
 #define IR_ERR_OUT(data)			IR_INFO_OUT(err, (data)); 
 #define IR_FAIL()					IR_INFO_OUT(failed, true);
@@ -19,10 +20,15 @@ namespace piranha {
 
 	class IrValue;
 	class IrCompilationUnit;
-	class IrCompilationError;
+	class CompilationError;
 	class IrNode;
+	class IrNodeDefinition;
 	class IrContextTree;
 	class Node;
+	class NodeOutput;
+	class NodeProgram;
+	class ChannelType;
+	class LanguageRules;
 
 	class IrParserStructure {
 	public:
@@ -43,7 +49,7 @@ namespace piranha {
 
 			// Ouputs
 			IrContextTree *newContext;
-			IrCompilationError *err;
+			CompilationError *err;
 
 			bool failed;
 			bool reachedDeadEnd;
@@ -53,6 +59,9 @@ namespace piranha {
 	public:
 		IrParserStructure();
 		virtual ~IrParserStructure();
+		
+		void setRules(const LanguageRules *rules);
+		const LanguageRules *getRules() const { return m_rules; }
 
 		const IrTokenInfo *getSummaryToken() const { return &m_summaryToken; }
 		void registerToken(const IrTokenInfo *tokenInfo);
@@ -60,18 +69,16 @@ namespace piranha {
 		void registerComponent(IrParserStructure *child);
 		int getComponentCount() const { return (int)m_components.size(); }
 
-		virtual void setParentScope(IrParserStructure *parentScope) { m_parentScope = parentScope; }
+		virtual void setScopeParent(IrParserStructure *parent) { m_scopeParent = parent; }
 		virtual void setLogicalParent(IrParserStructure *parent) { m_logicalParent = parent; }
 		virtual IrParserStructure *resolveName(const std::string &name) const;
 		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
 
 		bool getDefinitionsResolved() const { return m_definitionsResolved; }
-		bool isExpanded() const { return m_isExpanded; }
 		bool isValidated() const { return m_validated; }
+		virtual const ChannelType *getImmediateChannelType() { return nullptr; }
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
 		IrParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
-
-		IrParserStructure *getExpansion() const { return m_expansion; }
 
 		virtual IrValue *getAsValue() { return nullptr; }
 
@@ -96,36 +103,36 @@ namespace piranha {
 
 	public:
 		// Compilation stages
-		void expand();
 		void resolveDefinitions();
+		void expand(IrContextTree *context);
 		virtual void checkReferences(IrContextTree *inputContext = nullptr);
 		void checkInstantiation();
 		void validate();
 
 	protected:
-		virtual void _expand();
 		virtual void _resolveDefinitions();
-		virtual void _validate();
+		virtual void _expand(IrContextTree *context);
 		virtual void _checkInstantiation();
+		virtual void _validate();
 
 	protected:
-		IrParserStructure *m_parentScope;
+		IrCompilationUnit *m_parentUnit;
+		IrParserStructure *m_scopeParent;
 		IrParserStructure *m_logicalParent;
 		IrTokenInfo m_summaryToken;
 
-		IrParserStructure *m_expansion;
+		PKeyValueLookup<IrContextTree, IrNodeDefinition *> m_expansions;
 
 		std::vector<IrParserStructure *> m_components;
 
-		IrCompilationUnit *m_parentUnit;
-
 	protected:
+		const LanguageRules *m_rules;
+
 		// Visibility
 		IrVisibility m_defaultVisibility;
 		IrVisibility m_visibility;
 
 		// Compilation flags
-		bool m_isExpanded;
 		bool m_definitionsResolved;
 		bool m_validated;
 
@@ -134,6 +141,15 @@ namespace piranha {
 	public:
 		// Debugging
 		void writeReferencesToFile(std::ofstream &file, IrContextTree *context, int tabLevel = 0);
+
+		// Building
+	public:
+		NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program);
+		Node *generateNode(IrContextTree *context, NodeProgram *program);
+
+	protected:
+		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace piranha */

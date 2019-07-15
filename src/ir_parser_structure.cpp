@@ -1,7 +1,10 @@
-#include "ir_parser_structure.h"
+#include "../include/ir_parser_structure.h"
 
-#include "ir_compilation_unit.h"
-#include "ir_context_tree.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/ir_context_tree.h"
+#include "../include/node_program.h"
+#include "../include/node.h"
+#include "../include/language_rules.h"
 
 piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
 	newContext = nullptr;
@@ -34,9 +37,8 @@ piranha::IrParserStructure::IrReferenceQuery::~IrReferenceQuery() {
 	/* void */
 }
 
-
 piranha::IrParserStructure::IrParserStructure() {
-	m_parentScope = nullptr;
+	m_scopeParent = nullptr;
 	m_logicalParent = nullptr;
 	m_checkReferences = true;
 
@@ -45,10 +47,22 @@ piranha::IrParserStructure::IrParserStructure() {
 
 	m_visibility = IrVisibility::DEFAULT;
 	m_defaultVisibility = IrVisibility::PRIVATE;
+
+	m_rules = nullptr;
 }
 
 piranha::IrParserStructure::~IrParserStructure() {
 	/* void */
+}
+
+void piranha::IrParserStructure::setRules(const LanguageRules *rules) {
+	// Set component rules
+	int componentCount = getComponentCount();
+	for (int i = 0; i < componentCount; i++) {
+		m_components[i]->setRules(rules);
+	}
+
+	m_rules = rules;
 }
 
 void piranha::IrParserStructure::registerToken(const IrTokenInfo *tokenInfo) {
@@ -58,7 +72,7 @@ void piranha::IrParserStructure::registerToken(const IrTokenInfo *tokenInfo) {
 void piranha::IrParserStructure::registerComponent(IrParserStructure *child) {
 	if (child != nullptr) {
 		m_summaryToken.combine(child->getSummaryToken());
-		child->setParentScope(this);
+		child->setScopeParent(this);
 		child->setLogicalParent(this);
 
 		m_components.push_back(child);
@@ -69,8 +83,8 @@ piranha::IrParserStructure *piranha::IrParserStructure::resolveName(const std::s
 	IrParserStructure *local = resolveLocalName(name);
 	if (local != nullptr) return local;
 	
-	if (m_parentScope != nullptr) {
-		return m_parentScope->resolveName(name);
+	if (m_scopeParent != nullptr) {
+		return m_scopeParent->resolveName(name);
 	}
 
 	return nullptr;
@@ -124,9 +138,7 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(const IrRef
 		IR_INFO_OUT(touchedMainContext, nestedInfo.touchedMainContext || immediateInfo.touchedMainContext);
 		return fullReference;
 	}
-	else {
-		return this;
-	}
+	else return this;
 }
 
 void piranha::IrParserStructure::resolveDefinitions() {
@@ -141,6 +153,33 @@ void piranha::IrParserStructure::resolveDefinitions() {
 	_resolveDefinitions();
 
 	m_definitionsResolved = true;
+}
+
+void piranha::IrParserStructure::expand(IrContextTree *_context) {
+	IrContextTree *context = (_context != nullptr) ? _context : new IrContextTree(nullptr, true);
+	if (m_expansions.lookup(context) != nullptr) return;
+	*m_expansions.newValue(context) = nullptr;
+
+	// Expand components
+	int componentCount = getComponentCount();
+	for (int i = 0; i < componentCount; i++) {
+		if (m_components[i]->getCheckReferences()) {
+			m_components[i]->expand(context);
+		}
+	}
+
+	// Expand reference
+	IrReferenceInfo info;
+	IrReferenceQuery query;
+	query.inputContext = context;
+	query.recordErrors = false;
+	IrParserStructure *immediateReference = getImmediateReference(query, &info);
+
+	if (immediateReference != nullptr) {
+		immediateReference->expand(info.newContext);
+	}
+
+	_expand(context);
 }
 
 void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {
@@ -186,29 +225,6 @@ void piranha::IrParserStructure::validate() {
 	_validate();
 
 	m_validated = true;
-}
-
-void piranha::IrParserStructure::expand() {
-	if (m_isExpanded) return;
-
-	// Expand components
-	int componentCount = getComponentCount();
-	for (int i = 0; i < componentCount; i++) {
-		m_components[i]->expand();
-	}
-
-	_expand();
-
-	if (m_expansion != nullptr) {
-		// If this structure is found to result in an expanded form,
-		// then it will also be assumed that it references that expansion
-		//m_reference = m_expansion;
-		//m_referencesResolved = true;
-
-		registerComponent(m_expansion);
-	}
-
-	m_isExpanded = true;
 }
 
 void piranha::IrParserStructure::_validate() {
@@ -260,8 +276,8 @@ void piranha::IrParserStructure::_resolveDefinitions() {
 	/* void */
 }
 
-void piranha::IrParserStructure::_expand() {
-	m_expansion = nullptr;
+void piranha::IrParserStructure::_expand(IrContextTree *inputContext) {
+	/* void */
 }
 
 piranha::IrParserStructure *piranha::IrParserStructure::resolveLocalName(const std::string &name) const {
@@ -276,4 +292,27 @@ bool piranha::IrParserStructure::allowsExternalAccess() const {
 piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
 	if (m_parentUnit == nullptr) return m_logicalParent->getParentUnit();
 	else return m_parentUnit;
+}
+
+piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+	Node *node = program->getRules()->getCachedInstance(this, context);
+
+	if (node == nullptr) node = generateNode(context, program);
+	if (node != nullptr) return node->getPrimaryOutput();
+	else return nullptr;
+}
+
+piranha::Node *piranha::IrParserStructure::generateNode(IrContextTree *context, NodeProgram *program) {
+	Node *node = program->getRules()->getCachedInstance(this, context);
+
+	if (node == nullptr) return _generateNode(context, program);
+	else return node;
+}
+
+piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+	return nullptr;
+}
+
+piranha::Node *piranha::IrParserStructure::_generateNode(IrContextTree *context, NodeProgram *program) {
+	return nullptr;
 }

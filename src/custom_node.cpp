@@ -1,4 +1,4 @@
-#include <custom_node.h>
+#include "../include/custom_node.h"
 
 piranha::CustomNode::CustomNode() {
 	/* void */

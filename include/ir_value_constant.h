@@ -4,14 +4,16 @@
 #include "ir_value.h"
 
 #include "ir_token_info.h"
-#include "ir_compilation_error.h"
+#include "compilation_error.h"
 #include "ir_compilation_unit.h"
 #include "ir_node.h"
 #include "ir_context_tree.h"
-#include "single_float_node_output.h"
-#include "single_string_node_output.h"
 #include "standard_allocator.h"
+#include "node_program.h"
+#include "language_rules.h"
 #include "node.h"
+#include "literal_node.h"
+#include "fundamental_types.h"
 
 namespace piranha {
 
@@ -22,28 +24,20 @@ namespace piranha {
 	protected:
 		typedef T_IrTokenInfo<T> _TokenInfo;
 
-		static NodeOutput *generateNodeOutput(double value, IrContextTree *context) {
-			SingleFloatNodeOutput *newNode = StandardAllocator::Global()->allocate<SingleFloatNodeOutput>();
-			newNode->setValue(value);
-
-			return newNode;
+		Node *generateNode(const piranha::native_float &value, IrContextTree *context, NodeProgram *program) {
+			return program->getRules()->generateLiteral<piranha::native_float>(value);
 		}
 
-		static NodeOutput *generateNodeOutput(const std::string &value, IrContextTree *context) {
-			SingleStringNodeOutput *newNode = StandardAllocator::Global()->allocate<SingleStringNodeOutput>();
-			newNode->setValue(value);
-
-			return newNode;
+		Node *generateNode(const piranha::native_string &value, IrContextTree *context, NodeProgram *program) {
+			return program->getRules()->generateLiteral<piranha::native_string>(value);
 		}
 
-		static NodeOutput *generateNodeOutput(bool value, IrContextTree *context) {
-			// TODO
-			return nullptr;
+		Node *generateNode(const piranha::native_bool &value, IrContextTree *context, NodeProgram *program) {
+			return program->getRules()->generateLiteral<piranha::native_bool>(value);
 		}
 
-		static NodeOutput *generateNodeOutput(int value, IrContextTree *context) {
-			// TODO
-			return nullptr;
+		Node *generateNode(const piranha::native_int &value, IrContextTree *context, NodeProgram *program) {
+			return program->getRules()->generateLiteral<piranha::native_int>(value);
 		}
 
 	public:
@@ -56,8 +50,23 @@ namespace piranha {
 		virtual void setValue(const T &value) { m_value = value; }
 		T getValue() const { return m_value; }
 
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-			return generateNodeOutput(m_value, context);
+		virtual const ChannelType *getImmediateChannelType() { 
+			return m_rules->resolveChannelType(
+				m_rules->getLiteralBuiltinName<T>()
+			);
+		}
+
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
+			Node *cachedNode = program->getRules()->getCachedInstance(this, context);
+			if (cachedNode != nullptr) return cachedNode;
+			else {
+				Node *newNode = generateNode(m_value, context, program);
+				newNode->initialize();
+				newNode->setIrContext(context);
+				newNode->setIrStructure(this);
+
+				return newNode;
+			}
 		}
 
 	protected:
@@ -81,8 +90,8 @@ namespace piranha {
 				IR_FAIL();
 
 				if (query.recordErrors && IR_EMPTY_CONTEXT()) {
-					IR_ERR_OUT(new IrCompilationError(m_summaryToken,
-						IrErrorCode::UnresolvedReference, query.inputContext));
+					IR_ERR_OUT(new CompilationError(m_summaryToken,
+						ErrorCode::UnresolvedReference, query.inputContext));
 				}
 
 				return nullptr;
@@ -97,13 +106,9 @@ namespace piranha {
 			query.inputContext = context;
 			query.recordErrors = false;
 			IrParserStructure *reference = getReference(query, &info);
-			if (reference == nullptr) return nullptr;
 
-			IrNode *asNode = reference->getAsNode();
-			if (asNode != nullptr) {
-				return asNode->generateNode(info.newContext, program);
-			}
-			else return nullptr;
+			if (reference == nullptr) return nullptr;
+			else return reference->generateNode(info.newContext, program);
 		}
 
 		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
@@ -112,17 +117,9 @@ namespace piranha {
 			query.inputContext = context;
 			query.recordErrors = false;
 			IrParserStructure *reference = getReference(query, &info);
+
 			if (reference == nullptr) return nullptr;
-
-			IrNode *asNode = reference->getAsNode();
-			if (asNode != nullptr) {
-				Node *generatedNode = asNode->generateNode(info.newContext, program);
-				if (generatedNode != nullptr) {
-					return generatedNode->getPrimaryOutput();
-				}
-			}
-
-			return reference->getAsValue()->generateNodeOutput(info.newContext, program);
+			else return reference->generateNodeOutput(info.newContext, program);
 		}
 	};
 

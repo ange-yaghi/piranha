@@ -1,18 +1,18 @@
 #include <pch.h>
 
-#include "ir_compilation_unit.h"
-#include "ir_node.h"
-#include "ir_attribute_list.h"
-#include "ir_attribute.h"
-#include "ir_value_constant.h"
-#include "ir_binary_operator.h"
-#include "ir_import_statement.h"
-#include "ir_node_definition.h"
-#include "ir_attribute_definition.h"
-#include "ir_attribute_definition_list.h"
-#include "ir_compilation_error.h"
-#include "ir_error_list.h"
-#include "compiler.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/ir_node.h"
+#include "../include/ir_attribute_list.h"
+#include "../include/ir_attribute.h"
+#include "../include/ir_value_constant.h"
+#include "../include/ir_binary_operator.h"
+#include "../include/ir_import_statement.h"
+#include "../include/ir_node_definition.h"
+#include "../include/ir_attribute_definition.h"
+#include "../include/ir_attribute_definition_list.h"
+#include "../include/compilation_error.h"
+#include "../include/error_list.h"
+#include "../include/compiler.h"
 
 #include "utilities.h"
 
@@ -336,7 +336,7 @@ TEST(IrTests, IrBoolTest) {
 }
 
 TEST(IrTests, IrSyntaxErrorTest) {
-	IrErrorList errorList;
+	ErrorList errorList;
 	IrCompilationUnit parser;
 	parser.setErrorList(&errorList);
 	parser.parseFile(IR_TEST_FILES "syntax_error.mr");
@@ -344,17 +344,17 @@ TEST(IrTests, IrSyntaxErrorTest) {
 	int errorCount = errorList.getErrorCount();
 	EXPECT_EQ(errorCount, 3);
 
-	IrCompilationError *err1 = errorList.getCompilationError(0);
-	IrCompilationError *err2 = errorList.getCompilationError(1);
-	IrCompilationError *err3 = errorList.getCompilationError(2);
+	CompilationError *err1 = errorList.getCompilationError(0);
+	CompilationError *err2 = errorList.getCompilationError(1);
+	CompilationError *err3 = errorList.getCompilationError(2);
 
-	EXPECT_ERROR_CODE(err1, IrErrorCode::UnidentifiedToken);
-	EXPECT_ERROR_CODE(err2, IrErrorCode::UnidentifiedToken);
-	EXPECT_ERROR_CODE(err3, IrErrorCode::UnexpectedToken);
+	EXPECT_ERROR_CODE(err1, ErrorCode::UnidentifiedToken);
+	EXPECT_ERROR_CODE(err2, ErrorCode::UnidentifiedToken);
+	EXPECT_ERROR_CODE(err3, ErrorCode::UnexpectedToken);
 }
 
 TEST(IrTests, IrCompilerTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "dependency_test.mr");
 
 	int dependencyCount = unit->getDependencyCount();
@@ -366,11 +366,11 @@ TEST(IrTests, IrCompilerTest) {
 }
 
 TEST(IrTests, IrDependencyTreeTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "dependency_tree.mr");
 
 	EXPECT_NE(unit, nullptr);
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 	EXPECT_EQ(errors->getErrorCount(), 0);
 
 	int dependencyCount = unit->getDependencyCount();
@@ -398,14 +398,14 @@ TEST(IrTests, IrDependencyTreeTest) {
 }
 
 TEST(IrTests, IrMissingNodeDefinitionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "single_empty_node.mr");
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 	int errorCount = errors->getErrorCount();
 
-	IrCompilationError *err = errors->getCompilationError(0);
-	EXPECT_ERROR_CODE(err, IrErrorCode::UndefinedNodeType);
+	CompilationError *err = errors->getCompilationError(0);
+	EXPECT_ERROR_CODE(err, ErrorCode::UndefinedNodeType);
 
 	// Check that the location matches
 	EXPECT_EQ(err->getErrorLocation()->lineStart, 1);
@@ -413,18 +413,18 @@ TEST(IrTests, IrMissingNodeDefinitionTest) {
 }
 
 TEST(IrTests, IrAttributeDefinitionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "attribute_definition_test.mr");
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 	int errorCount = errors->getErrorCount();
 
 	EXPECT_EQ(errorCount, 2);
 
-	IrCompilationError *err0 = errors->getCompilationError(0);
-	IrCompilationError *err1 = errors->getCompilationError(1);
-	EXPECT_ERROR_CODE(err0, IrErrorCode::UsingOutputPortAsInput);
-	EXPECT_ERROR_CODE(err1, IrErrorCode::PortNotFound);
+	CompilationError *err0 = errors->getCompilationError(0);
+	CompilationError *err1 = errors->getCompilationError(1);
+	EXPECT_ERROR_CODE(err0, ErrorCode::UsingOutputPortAsInput);
+	EXPECT_ERROR_CODE(err1, ErrorCode::PortNotFound);
 
 	IrNodeDefinition *definition = unit->getNodeDefinition(0);
 	IrNode *nodeInstance = unit->getNode(0);
@@ -437,17 +437,17 @@ TEST(IrTests, IrAttributeDefinitionTest) {
 }
 
 TEST(IrTests, IrPositionAttributeTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "position_attribute_test.mr");
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 	int errorCount = errors->getErrorCount();
 
 	// 2 are from the dependency
 	EXPECT_EQ(errorCount, 3);
 
-	IrCompilationError *err0 = errors->getCompilationError(0);
-	EXPECT_ERROR_CODE(err0, IrErrorCode::ArgumentPositionOutOfBounds);
+	CompilationError *err0 = errors->getCompilationError(0);
+	EXPECT_ERROR_CODE(err0, ErrorCode::ArgumentPositionOutOfBounds);
 
 	IrNode *nodeInstance = unit->getNode(0);
 
@@ -457,10 +457,10 @@ TEST(IrTests, IrPositionAttributeTest) {
 }
 
 TEST(IrTests, IrNodeBodyTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "node_body.mr");
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 	int errorCount = errors->getErrorCount();
 
 	// No errors expected
@@ -479,24 +479,24 @@ TEST(IrTests, IrNodeBodyTest) {
 }
 
 TEST(IrTests, IrMissingDependencyTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "missing_dependency.mr");
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 	int errorCount = errors->getErrorCount();
 
 	// Expect an import error
 	EXPECT_EQ(errorCount, 1);
 
-	IrCompilationError *err0 = errors->getCompilationError(0);
-	EXPECT_ERROR_CODE(err0, IrErrorCode::FileOpenFailed);
+	CompilationError *err0 = errors->getCompilationError(0);
+	EXPECT_ERROR_CODE(err0, ErrorCode::FileOpenFailed);
 }
 
 TEST(IrTests, IrReferenceResolutionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "reference_resolution.mr");
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 	int errorCount = errors->getErrorCount();
 
 	// Expect no errors
@@ -517,117 +517,118 @@ TEST(IrTests, IrReferenceResolutionTest) {
 }
 
 TEST(IrTests, IrReferenceResolutionError1Test) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "resolution-tests/resolution_errors_1.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnresolvedReference, 18));
-	EXPECT_TRUE(findError(errors, IrErrorCode::AccessingInternalMember, 21));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnresolvedReference, 22));
-	EXPECT_TRUE(findError(errors, IrErrorCode::AccessingInternalMember, 23));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedMember, 24));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 18));
+	EXPECT_TRUE(findError(errors, ErrorCode::AccessingInternalMember, 21));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 22));
+	EXPECT_TRUE(findError(errors, ErrorCode::AccessingInternalMember, 23));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 24));
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::InputSpecifiedMultipleTimes, 32));
-	EXPECT_TRUE(findError(errors, IrErrorCode::InputSpecifiedMultipleTimes, 33));
+	EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimes, 32));
+	EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimes, 33));
 
 	EXPECT_EQ(errors->getErrorCount(), 7);
 }
 
 TEST(IrTests, IrReferenceResolutionError2Test) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "resolution-tests/resolution_errors_2.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 5));
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 7));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedNodeType, 7));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 5));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 7));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedNodeType, 7));
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 12));
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 13));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 12));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 13));
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnresolvedReference, 25));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 25));
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::InputNotConnected, 28));
-	EXPECT_TRUE(findError(errors, IrErrorCode::OutputWithNoDefinition, 31));
+	EXPECT_TRUE(findError(errors, ErrorCode::InputNotConnected, 28));
+	EXPECT_TRUE(findError(errors, ErrorCode::OutputWithNoDefinition, 31));
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::BuiltinOutputWithDefinition, 43));
+	EXPECT_TRUE(findError(errors, ErrorCode::BuiltinOutputWithDefinition, 43));
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::InputSpecifiedMultipleTimesPositional, 47));
-	EXPECT_TRUE(findError(errors, IrErrorCode::InputSpecifiedMultipleTimes, 48));
+	EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimesPositional, 47));
+	EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimes, 48));
 
 	EXPECT_EQ(errors->getErrorCount(), 11);
 }
 
 TEST(IrTests, IrFullErrorTest1) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "full-error-testing/test_case_1.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnidentifiedToken, 14));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedNodeType, 22));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 14));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedNodeType, 22));
 
 	EXPECT_EQ(errors->getErrorCount(), 2);
 }
 
 TEST(IrTests, IrFullErrorTest2) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "full-error-testing/test_case_2.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 	
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnidentifiedToken, 16));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnresolvedReference, 18));
-	EXPECT_TRUE(findError(errors, IrErrorCode::PortNotFound, 24));
-	EXPECT_TRUE(findError(errors, IrErrorCode::PortNotFound, 25));
-	EXPECT_TRUE(findError(errors, IrErrorCode::PortNotFound, 29));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 16));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 18));
+	EXPECT_TRUE(findError(errors, ErrorCode::PortNotFound, 24));
+	EXPECT_TRUE(findError(errors, ErrorCode::PortNotFound, 25));
+	EXPECT_TRUE(findError(errors, ErrorCode::PortNotFound, 29));
 
 	EXPECT_EQ(errors->getErrorCount(), 5);
 }
 
 TEST(IrTests, IrFullErrorTest3) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "full-error-testing/test_case_3.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnidentifiedToken, 5));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnidentifiedToken, 13));
-	EXPECT_TRUE(findError(errors, IrErrorCode::InputNotConnected, 13));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnidentifiedToken, 14));
-	EXPECT_TRUE(findError(errors, IrErrorCode::InputNotConnected, 14));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedMember, 15));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UnexpectedToken, 16));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 5));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 13));
+	EXPECT_TRUE(findError(errors, ErrorCode::InputNotConnected, 13));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 14));
+	EXPECT_TRUE(findError(errors, ErrorCode::InputNotConnected, 14));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 15));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnexpectedToken, 16));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 36));
 
-	EXPECT_EQ(errors->getErrorCount(), 7);
+	EXPECT_EQ(errors->getErrorCount(), 8);
 }
 
 TEST(IrTests, IrInputConnectionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "input_connection_test.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedMember, 23, nullptr, true));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedMember, 25, nullptr, true));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 23, nullptr, true));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 25, nullptr, true));
 
 	EXPECT_EQ(errors->getErrorCount(), 2);
 }
 
 TEST(IrTests, IrOperationDefinitionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "operation_definition.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 
 	IrNode *node = unit->getNode(0);
 	EXPECT_EQ(node->getType(), "operator+");
@@ -640,53 +641,53 @@ TEST(IrTests, IrOperationDefinitionTest) {
 }
 
 TEST(IrTests, IrVisibilityTest1) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "/visibility-tests/visibility_test_1.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedNodeType, 3));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedNodeType, 4));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedNodeType, 5));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedNodeType, 3));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedNodeType, 4));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedNodeType, 5));
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedNodeType, 8));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedNodeType, 8));
 
 	EXPECT_EQ(errors->getErrorCount(), 4);
 }
 
 TEST(IrTests, IrVisibilityTest2) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "/visibility-tests/visibility_test_2.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedMember, 12));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedNodeType, 14));
-	EXPECT_TRUE(findError(errors, IrErrorCode::UndefinedMember, 16));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 12));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedNodeType, 14));
+	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 16));
 
 	EXPECT_EQ(errors->getErrorCount(), 3);
 }
 
 TEST(IrTests, IrDuplicateNodeDefinitionTest) {
-	IrCompiler compiler;
+	Compiler compiler;
 	IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "duplicate_node_definition.mr");
 	EXPECT_NE(unit, nullptr);
 
-	const IrErrorList *errors = compiler.getErrorList();
+	const ErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, IrErrorCode::DuplicateNodeDefinition, 1));
-	EXPECT_TRUE(findError(errors, IrErrorCode::DuplicateNodeDefinition, 6));
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 7));
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 8));
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 9));
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 10));
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 11));
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 12));
-	EXPECT_TRUE(findError(errors, IrErrorCode::OutputWithNoDefinition, 11));
-	EXPECT_TRUE(findError(errors, IrErrorCode::OutputWithNoDefinition, 12));
-	EXPECT_TRUE(findError(errors, IrErrorCode::SymbolUsedMultipleTimes, 14));
+	EXPECT_TRUE(findError(errors, ErrorCode::DuplicateNodeDefinition, 1));
+	EXPECT_TRUE(findError(errors, ErrorCode::DuplicateNodeDefinition, 6));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 7));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 8));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 9));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 10));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 11));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 12));
+	EXPECT_TRUE(findError(errors, ErrorCode::OutputWithNoDefinition, 11));
+	EXPECT_TRUE(findError(errors, ErrorCode::OutputWithNoDefinition, 12));
+	EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 14));
 
 	EXPECT_EQ(errors->getErrorCount(), 11);
 }

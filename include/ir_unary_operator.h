@@ -5,7 +5,7 @@
 
 namespace piranha {
 
-	class IrCompilationError;
+	class CompilationError;
 
 	class IrUnaryOperator : public IrValue {
 	public:

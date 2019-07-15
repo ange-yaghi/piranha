@@ -1,0 +1,7 @@
+private import "operators.mr" as operators
+
+node test {
+    default output __out: 5.0 + 5.0;
+}
+
+test()

@@ -1,12 +1,12 @@
-#include "ir_node_definition.h"
+#include "../include/ir_node_definition.h"
 
-#include "ir_attribute_definition_list.h"
-#include "ir_attribute_definition.h"
-#include "ir_compilation_unit.h"
-#include "ir_node.h"
-#include "ir_compilation_error.h"
-#include "ir_value.h"
-#include "ir_context_tree.h"
+#include "../include/ir_attribute_definition_list.h"
+#include "../include/ir_attribute_definition.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/ir_node.h"
+#include "../include/compilation_error.h"
+#include "../include/ir_value.h"
+#include "../include/ir_context_tree.h"
 
 piranha::IrNodeDefinition::IrNodeDefinition(const IrTokenInfo_string &name) {
 	m_name = name;
@@ -119,8 +119,8 @@ void piranha::IrNodeDefinition::_validate() {
 			IrAttributeDefinition *definition = m_attributes->getDefinition(i);
 			int incidence = countSymbolIncidence(definition->getName());
 			if (incidence > 1) {
-				unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
-					IrErrorCode::SymbolUsedMultipleTimes));
+				unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+					ErrorCode::SymbolUsedMultipleTimes));
 			}
 		}
 	}
@@ -131,8 +131,8 @@ void piranha::IrNodeDefinition::_validate() {
 			IrNode *node = m_body->getItem(i);
 			int incidence = countSymbolIncidence(node->getName());
 			if (incidence > 1) {
-				unit->addCompilationError(new IrCompilationError(node->getNameToken(),
-					IrErrorCode::SymbolUsedMultipleTimes));
+				unit->addCompilationError(new CompilationError(node->getNameToken(),
+					ErrorCode::SymbolUsedMultipleTimes));
 			}
 		}
 	}
@@ -146,17 +146,17 @@ void piranha::IrNodeDefinition::_validate() {
 				IrValue *value = definition->getDefaultValue();
 				if (value != nullptr) {
 					if (value->isGeneric() && !isBuiltin()) {
-						unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
-							IrErrorCode::StandardOutputWithType));
+						unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+							ErrorCode::StandardOutputWithType));
 					}
 					else if (!value->isGeneric() && isBuiltin()) {
-						unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
-							IrErrorCode::BuiltinOutputWithDefinition));
+						unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+							ErrorCode::BuiltinOutputWithDefinition));
 					}
 				}
 				else {
-					unit->addCompilationError(new IrCompilationError(*definition->getNameToken(),
-						IrErrorCode::OutputWithNoDefinition));
+					unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+						ErrorCode::OutputWithNoDefinition));
 				}
 			}
 		}
