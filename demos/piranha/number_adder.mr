@@ -1,0 +1,13 @@
+private import "standard-library/standard_library.mr" as std
+
+std::console_out("---------------------------------------\n")
+std::console_out(" Piranha Number Adder\n")
+std::console_out(" Ange Yaghi (c) 2019\n")
+std::console_out("---------------------------------------\n")
+
+std::console_in num1("Enter a number: ")
+std::console_in num2("Enter another number: ")
+
+string formatted(float(num1.raw_input) + float(num2.raw_input))
+std::console_out("---------------------------------------\n")
+std::console_out(num1.raw_input + " + " + num2.raw_input + " = " + formatted + "\n")

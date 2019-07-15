@@ -294,12 +294,33 @@ piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
 	else return m_parentUnit;
 }
 
+piranha::IrParserStructure *piranha::IrParserStructure::resolveToSingleChannel(const IrReferenceQuery &query, IrReferenceInfo *output) {
+	IrReferenceInfo info;
+	IrParserStructure *reference = getReference(query, &info);
+
+	if (reference == nullptr) {
+		if (output != nullptr) *output = info;
+		return nullptr;
+	}
+
+	IrParserStructure *defaultPort = reference->getDefaultPort();
+	if (defaultPort == nullptr) {
+		if (output != nullptr) *output = info;
+		return reference;
+	}
+	
+	IrReferenceQuery portQuery;
+	portQuery.inputContext = info.newContext;
+	portQuery.recordErrors = false;
+	return defaultPort->getReference(portQuery, output);
+}
+
 piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(IrContextTree *context, NodeProgram *program) {
 	Node *node = program->getRules()->getCachedInstance(this, context);
 
 	if (node == nullptr) node = generateNode(context, program);
 	if (node != nullptr) return node->getPrimaryOutput();
-	else return nullptr;
+	else return _generateNodeOutput(context, program);
 }
 
 piranha::Node *piranha::IrParserStructure::generateNode(IrContextTree *context, NodeProgram *program) {

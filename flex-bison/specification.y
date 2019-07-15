@@ -125,7 +125,6 @@
 %type <piranha::IrAttributeList *> connection_block;
 %type <piranha::IrAttribute *> attribute;
 %type <piranha::IrValue *> value;
-%type <piranha::IrValue *> port_value;
 %type <piranha::IrValue *> atomic_value;
 %type <piranha::IrValue *> label_value;
 %type <piranha::IrNode *> inline_node;
@@ -147,6 +146,7 @@
 %type <piranha::IrNodeDefinition *> node_port_definitions;
 %type <piranha::IrNodeDefinition *> specific_node_definition;
 
+%type <piranha::IrAttributeDefinition *> port_value;
 %type <piranha::IrAttributeDefinition *> port_declaration;
 %type <piranha::IrAttributeDefinition *> port_status;
 %type <piranha::IrAttributeDefinition *> port_connection;
@@ -338,13 +338,13 @@ port_status
   ;
 
 port_value
-  : '[' type_name_namespace ']'			{ $$ = new IrGenericValue($2); }
-  | value								{ $$ = $1; }
+  : port_status '[' type_name_namespace ']'		{ $$ = $1; $$->setTypeInfo($3); }
+  | port_status									{ $$ = $1; }
   ;
 
 port_connection
-  : port_status ':' port_value			{ $$ = $1; $$->setDefaultValue($3); }
-  | port_status							{ $$ = $1; $$->setDefaultValue(nullptr); }
+  : port_value ':' value				{ $$ = $1; $$->setDefaultValue($3); }
+  | port_value							{ $$ = $1; $$->setDefaultValue(nullptr); }
   ;
 
 documented_port_definition

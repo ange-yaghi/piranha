@@ -337,7 +337,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 				IrReferenceQuery query;
 				query.inputContext = parentContext;
 				query.recordErrors = false;
-				IrValue *asValue = attribute->getImmediateReference(query, nullptr)->getAsValue();
+				IrParserStructure *asValue = attribute->getImmediateReference(query, nullptr);
 
 				Mapping inputPort;
 				inputPort.output = asValue->generateNodeOutput(parentContext, program);
@@ -349,7 +349,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 				IrReferenceQuery query;
 				query.inputContext = parentContext;
 				query.recordErrors = false;
-				IrValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
+				IrParserStructure *asValue = attributeDefinition->getImmediateReference(query, nullptr);
 
 				Mapping inputPort;
 				inputPort.output = asValue->generateNodeOutput(parentContext, program);
@@ -359,15 +359,16 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 		}
 		else if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT &&
 																	!definition->isBuiltin()) {
+			IrReferenceInfo info;
 			IrReferenceQuery query;
-			query.inputContext = parentContext;
+			query.inputContext = newContext;
 			query.recordErrors = false;
-			IrValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
+			IrParserStructure *reference = attributeDefinition->getImmediateReference(query, &info);
 
 			Mapping outputPort;
-			outputPort.output = asValue->generateNodeOutput(newContext, program);
+			outputPort.output = reference->generateNodeOutput(newContext, program);
 			outputPort.name = attributeDefinition->getName();
-			outputPort.primary = (asValue == getDefaultOutputValue());
+			outputPort.primary = (reference == getDefaultOutputValue());
 
 			outputs.push_back(outputPort);
 		}
@@ -436,6 +437,22 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 	program->addNode(newNode);
 
 	return newNode;
+}
+
+piranha::IrParserStructure *piranha::IrNode::getDefaultPort() {
+	auto definition = m_definition;
+	if (definition == nullptr) return nullptr;
+
+	auto definitionList = definition->getAttributeDefinitionList();
+	if (definitionList == nullptr) return nullptr;
+
+	auto outputDefinition = definitionList->getDefaultOutput();
+	if (outputDefinition == nullptr) return this;
+
+	auto defaultValue = outputDefinition->getDefaultValue();
+	if (defaultValue == nullptr) return outputDefinition;
+
+	return defaultValue;
 }
 
 piranha::IrValue *piranha::IrNode::getDefaultOutputValue() {

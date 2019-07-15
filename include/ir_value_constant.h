@@ -70,6 +70,38 @@ namespace piranha {
 		}
 
 	protected:
+		virtual void _validate() {
+			m_value = validateData(m_value);
+		}
+
+		template <typename _T>
+		const _T validateData(const _T &data) { return data; }
+
+		template <>
+		const piranha::native_string validateData<piranha::native_string>(const piranha::native_string &data) {
+			piranha::native_string res;
+			piranha::native_string::const_iterator it = data.begin();
+			while (it != data.end()) {
+				char c = *it++;
+				if (c == '\\' && it != data.end()) {
+					switch (*it++) {
+					case '\\': 
+						c = '\\'; break;
+					case 'n': 
+						c = '\n'; break;
+					case 't': c = '\t'; break;
+					default:
+						// Invalid escape sequence
+						continue;
+					}
+				}
+				res += c;
+			}
+
+			return res;
+		}
+
+	protected:
 		T m_value;
 		_TokenInfo m_token;
 	};
@@ -116,7 +148,7 @@ namespace piranha {
 			IrReferenceQuery query;
 			query.inputContext = context;
 			query.recordErrors = false;
-			IrParserStructure *reference = getReference(query, &info);
+			IrParserStructure *reference = getImmediateReference(query, &info);
 
 			if (reference == nullptr) return nullptr;
 			else return reference->generateNodeOutput(info.newContext, program);

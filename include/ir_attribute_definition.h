@@ -48,9 +48,11 @@ namespace piranha {
 
 		virtual bool isInputPoint() const { return m_direction == INPUT; }
 
-		void setTypeName(const IrTokenInfoSet<std::string, 2> &typeInfo) { m_typeInfo = typeInfo; }
+		void setTypeInfo(const IrTokenInfoSet<std::string, 2> &typeInfo) { m_typeInfo = typeInfo; }
+		bool typeInfoSpecified() const { return m_typeInfo.data[0].specified; }
 
 		IrNodeDefinition *getTypeDefinition() const { return m_typeDefinition; }
+		virtual const ChannelType *getImmediateChannelType();
 
 	protected:
 		IrTokenInfo_string m_directionToken;
@@ -67,7 +69,32 @@ namespace piranha {
 
 		// Resolution stage
 	protected:
+		virtual void _resolveDefinitions();
+
 		IrNodeDefinition *m_typeDefinition;
+
+	protected:
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
+			IrReferenceInfo info;
+			IrReferenceQuery query;
+			query.inputContext = context;
+			query.recordErrors = false;
+			IrParserStructure *reference = getImmediateReference(query, &info);
+
+			if (reference == nullptr) return nullptr;
+			else return reference->generateNode(info.newContext, program);
+		}
+
+		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+			IrReferenceInfo info;
+			IrReferenceQuery query;
+			query.inputContext = context;
+			query.recordErrors = false;
+			IrParserStructure *reference = getImmediateReference(query, &info);
+
+			if (reference == nullptr) return nullptr;
+			else return reference->generateNodeOutput(info.newContext, program);
+		}
 	};
 
 } /* namespace piranha */

@@ -42,6 +42,10 @@ namespace piranha {
 			return nullptr;
 		}
 
+		ValueType *get(int index) const {
+			return m_lookupTable[index].value;
+		}
+
 		template <typename T>
 		ValueType *newValue(const KeyType *key) {
 			ValueType *current = lookup(key);
