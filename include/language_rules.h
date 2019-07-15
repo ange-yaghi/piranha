@@ -46,10 +46,6 @@ namespace piranha {
 		}
 	};
 
-	struct OperatorInfo {
-		std::string builtinName;
-	};
-
 	struct BuiltinTypeInfo {
 		const ChannelType *nodeType;
 	};
@@ -58,9 +54,6 @@ namespace piranha {
 
 	typedef Rule<BuiltinTypeInfo, Node> BuiltinRule;
 	typedef Rule<NullType, Node> ConversionRule;
-	typedef Rule<OperatorInfo, OperationNode> OperatorRule;
-	template <typename BaseType> using LiteralRule = 
-		Rule<NullType, LiteralNode<BaseType>>;
 
 	class LanguageRules {
 	public:

@@ -25,6 +25,8 @@ namespace piranha {
 	class IrNodeDefinition;
 	class IrContextTree;
 	class Node;
+	class NodeOutput;
+	class NodeProgram;
 	class ChannelType;
 	class LanguageRules;
 
@@ -59,6 +61,7 @@ namespace piranha {
 		virtual ~IrParserStructure();
 		
 		void setRules(const LanguageRules *rules);
+		const LanguageRules *getRules() const { return m_rules; }
 
 		const IrTokenInfo *getSummaryToken() const { return &m_summaryToken; }
 		void registerToken(const IrTokenInfo *tokenInfo);
@@ -138,6 +141,15 @@ namespace piranha {
 	public:
 		// Debugging
 		void writeReferencesToFile(std::ofstream &file, IrContextTree *context, int tabLevel = 0);
+
+		// Building
+	public:
+		NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program);
+		Node *generateNode(IrContextTree *context, NodeProgram *program);
+
+	protected:
+		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace piranha */

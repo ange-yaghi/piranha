@@ -1,8 +1,8 @@
-#include "compiler.h"
+#include "../include/compiler.h"
 
-#include "ir_compilation_unit.h"
-#include "ir_import_statement.h"
-#include "compilation_error.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/ir_import_statement.h"
+#include "../include/compilation_error.h"
 
 piranha::Compiler::Compiler(const LanguageRules *rules) {
 	m_rules = rules;

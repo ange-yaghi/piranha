@@ -1,7 +1,7 @@
-#include "compilation_error.h"
+#include "../include/compilation_error.h"
 
-#include "ir_context_tree.h"
-#include "ir_parser_structure.h"
+#include "../include/ir_context_tree.h"
+#include "../include/ir_parser_structure.h"
 
 piranha::CompilationError::CompilationError(const IrTokenInfo &location, 
 			const ErrorCode_struct &code, IrContextTree *instantiation) {
@@ -31,6 +31,9 @@ ERR(UnidentifiedToken) =		{ "S", "0010", "Unidentified token" };
 
 // [P] - Parsing errors
 ERR(UnexpectedToken) =			{ "P", "0010", "Unexpected token" };
+
+// [E] - Expansion errors
+ERR(InvalidOperandTypes) =		{ "E", "0010", "Invalid operand types" };
 
 // [R] - Resolution errors
 ERR(UndefinedNodeType) =		{ "R", "0010", "Undefined node type" };

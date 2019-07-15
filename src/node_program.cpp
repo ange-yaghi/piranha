@@ -1,6 +1,6 @@
-#include <node_program.h>
+#include "../include/node_program.h"
 
-#include <node.h>
+#include "../include/node.h"
 
 piranha::NodeProgram::NodeProgram() {
 	m_rules = nullptr;

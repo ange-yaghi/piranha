@@ -27,6 +27,7 @@ void TestRules::registerBuiltinNodeTypes() {
 
 	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_int>>("__piranha__int_add");
 	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_float>>("__piranha__float_add");
+	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_string>>("__piranha__string_add");
 
 	registerBuiltinType<piranha::DefaultLiteralStringNode>("__piranha__literal_string", &piranha::FundamentalType::StringType);
 	registerBuiltinType<piranha::DefaultLiteralIntNode>("__piranha__literal_int", &piranha::FundamentalType::IntType);
@@ -59,5 +60,9 @@ void TestRules::registerBuiltinNodeTypes() {
 	registerOperator(
 		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
 		"__piranha__float_add"
+	);
+	registerOperator(
+		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
+		"__piranha__string_add"
 	);
 }

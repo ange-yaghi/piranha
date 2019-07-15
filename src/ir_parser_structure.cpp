@@ -2,6 +2,9 @@
 
 #include "../include/ir_compilation_unit.h"
 #include "../include/ir_context_tree.h"
+#include "../include/node_program.h"
+#include "../include/node.h"
+#include "../include/language_rules.h"
 
 piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
 	newContext = nullptr;
@@ -152,7 +155,8 @@ void piranha::IrParserStructure::resolveDefinitions() {
 	m_definitionsResolved = true;
 }
 
-void piranha::IrParserStructure::expand(IrContextTree *context) {
+void piranha::IrParserStructure::expand(IrContextTree *_context) {
+	IrContextTree *context = (_context != nullptr) ? _context : new IrContextTree(nullptr, true);
 	if (m_expansions.lookup(context) != nullptr) return;
 	*m_expansions.newValue(context) = nullptr;
 
@@ -288,4 +292,27 @@ bool piranha::IrParserStructure::allowsExternalAccess() const {
 piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
 	if (m_parentUnit == nullptr) return m_logicalParent->getParentUnit();
 	else return m_parentUnit;
+}
+
+piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+	Node *node = program->getRules()->getCachedInstance(this, context);
+
+	if (node == nullptr) node = generateNode(context, program);
+	if (node != nullptr) return node->getPrimaryOutput();
+	else return nullptr;
+}
+
+piranha::Node *piranha::IrParserStructure::generateNode(IrContextTree *context, NodeProgram *program) {
+	Node *node = program->getRules()->getCachedInstance(this, context);
+
+	if (node == nullptr) return _generateNode(context, program);
+	else return node;
+}
+
+piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+	return nullptr;
+}
+
+piranha::Node *piranha::IrParserStructure::_generateNode(IrContextTree *context, NodeProgram *program) {
+	return nullptr;
 }

@@ -106,13 +106,9 @@ namespace piranha {
 			query.inputContext = context;
 			query.recordErrors = false;
 			IrParserStructure *reference = getReference(query, &info);
-			if (reference == nullptr) return nullptr;
 
-			IrNode *asNode = reference->getAsNode();
-			if (asNode != nullptr) {
-				return asNode->generateNode(info.newContext, program);
-			}
-			else return nullptr;
+			if (reference == nullptr) return nullptr;
+			else return reference->generateNode(info.newContext, program);
 		}
 
 		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
@@ -121,17 +117,9 @@ namespace piranha {
 			query.inputContext = context;
 			query.recordErrors = false;
 			IrParserStructure *reference = getReference(query, &info);
+
 			if (reference == nullptr) return nullptr;
-
-			IrNode *asNode = reference->getAsNode();
-			if (asNode != nullptr) {
-				Node *generatedNode = asNode->generateNode(info.newContext, program);
-				if (generatedNode != nullptr) {
-					return generatedNode->getPrimaryOutput();
-				}
-			}
-
-			return reference->getAsValue()->generateNodeOutput(info.newContext, program);
+			else return reference->generateNodeOutput(info.newContext, program);
 		}
 	};
 

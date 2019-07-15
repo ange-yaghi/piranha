@@ -22,6 +22,12 @@ public node float_add => __piranha__float_add {
     default output __out: [float];
 }
 
+public node string_add => __piranha__string_add {
+    input __in0;
+    input __in1;
+    default output __out: [string];
+}
+
 public node literal_string => __piranha__literal_string {}
 public node literal_int => __piranha__literal_int {}
 public node literal_float => __piranha__literal_float {}

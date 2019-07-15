@@ -1,12 +1,12 @@
-#include "ir_node_definition.h"
+#include "../include/ir_node_definition.h"
 
-#include "ir_attribute_definition_list.h"
-#include "ir_attribute_definition.h"
-#include "ir_compilation_unit.h"
-#include "ir_node.h"
-#include "compilation_error.h"
-#include "ir_value.h"
-#include "ir_context_tree.h"
+#include "../include/ir_attribute_definition_list.h"
+#include "../include/ir_attribute_definition.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/ir_node.h"
+#include "../include/compilation_error.h"
+#include "../include/ir_value.h"
+#include "../include/ir_context_tree.h"
 
 piranha::IrNodeDefinition::IrNodeDefinition(const IrTokenInfo_string &name) {
 	m_name = name;

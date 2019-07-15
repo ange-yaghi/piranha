@@ -1,10 +1,10 @@
-#include "ir_attribute_definition.h"
+#include "../include/ir_attribute_definition.h"
 
-#include "ir_value.h"
-#include "ir_input_connection.h"
-#include "ir_compilation_unit.h"
-#include "compilation_error.h"
-#include "ir_context_tree.h"
+#include "../include/ir_value.h"
+#include "../include/ir_input_connection.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/compilation_error.h"
+#include "../include/ir_context_tree.h"
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &directionToken,
 								const IrTokenInfo_string &name, DIRECTION dir) {

@@ -1,12 +1,12 @@
-#include "language_rules.h"
+#include "../include/language_rules.h"
 
-#include "rule.h"
-#include "node.h"
-#include "custom_node.h"
-#include "ir_node.h"
-#include "ir_context_tree.h"
-#include "ir_node_definition.h"
-#include "ir_value_constant.h"
+#include "../include/rule.h"
+#include "../include/node.h"
+#include "../include/custom_node.h"
+#include "../include/ir_node.h"
+#include "../include/ir_context_tree.h"
+#include "../include/ir_node_definition.h"
+#include "../include/ir_value_constant.h"
 
 #include <assert.h>
 
@@ -45,11 +45,18 @@ piranha::Node *piranha::LanguageRules::generateOperatorNode(IrBinaryOperator *bi
 	
 	Node *node = generateOperator(binOp->getOperator(), leftNodeOutput->getType(), rightNodeOutput->getType());
 
+	if (node != nullptr) {
+		node->initialize();
+
+		node->connectInput(leftNodeOutput, 0);
+		node->connectInput(rightNodeOutput, 1);
+
+		node->setIrContext(context);
+		node->setIrStructure(binOp);
+	}
+
 	// Make sure the user actually registered the node
 	assert(node == nullptr || getCachedInstance(binOp, context) != nullptr);
-
-	node->setIrContext(context);
-	node->setIrStructure(binOp);
 
 	return node;
 }
@@ -57,7 +64,7 @@ piranha::Node *piranha::LanguageRules::generateOperatorNode(IrBinaryOperator *bi
 std::string piranha::LanguageRules::resolveOperatorBuiltinType(IrBinaryOperator::OPERATOR op, 
 											const ChannelType *left, const ChannelType *right) const {
 	std::string *rule = m_operatorRules.lookup({ op, left, right });
-	if (rule == nullptr) return "$not_found";
+	if (rule == nullptr) return "";
 	else return *rule;
 }
 
@@ -88,7 +95,10 @@ piranha::Node *piranha::LanguageRules::generateOperator(IrBinaryOperator::OPERAT
 	std::string *builtinType = m_operatorRules.lookup({ op, left, right });
 	if (builtinType == nullptr) return nullptr;
 
-	return generateBuiltinType(*builtinType);
+	Node *node = generateBuiltinType(*builtinType);
+	assert(node != nullptr);
+
+	return node;
 }
 
 piranha::Node *piranha::LanguageRules::generateBuiltinType(const std::string &typeName) {

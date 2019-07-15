@@ -40,14 +40,6 @@ namespace piranha {
 
 	private:
 		VALUE_TYPE m_type;
-
-	public:
-		NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program);
-		Node *generateNode(IrContextTree *context, NodeProgram *program);
-
-	protected:
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace piranha */

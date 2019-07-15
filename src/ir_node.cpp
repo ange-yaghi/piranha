@@ -1,20 +1,20 @@
-#include "ir_node.h"
+#include "../include/ir_node.h"
 
-#include "ir_attribute.h"
-#include "ir_attribute_list.h"
-#include "ir_compilation_unit.h"
-#include "ir_node_definition.h"
-#include "ir_attribute_definition.h"
-#include "compilation_error.h"
-#include "ir_attribute_definition_list.h"
-#include "ir_value.h"
-#include "ir_context_tree.h"
-#include "language_rules.h"
-#include <node.h>
-#include <custom_node.h>
-#include <standard_allocator.h>
+#include "../include/ir_attribute.h"
+#include "../include/ir_attribute_list.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/ir_node_definition.h"
+#include "../include/ir_attribute_definition.h"
+#include "../include/compilation_error.h"
+#include "../include/ir_attribute_definition_list.h"
+#include "../include/ir_value.h"
+#include "../include/ir_context_tree.h"
+#include "../include/language_rules.h"
+#include "../include/node.h"
+#include "../include/custom_node.h"
+#include "../include/standard_allocator.h"
 
-#include <node_program.h>
+#include "../include/node_program.h"
 
 piranha::IrNode::IrNode() {
 	/* void */
@@ -203,17 +203,15 @@ void piranha::IrNode::_checkInstantiation() {
 }
 
 void piranha::IrNode::_expand(IrContextTree *context) {
-	IrContextTree *parentContext = (context == nullptr) ? new IrContextTree(nullptr) : context;
-
 	IrAttributeList *attributes = getAttributes();
 	if (attributes != nullptr) {
 		int attributeCount = attributes->getAttributeCount();
 		for (int i = 0; i < attributeCount; i++) {
-			attributes->getAttribute(i)->expand(parentContext);
+			attributes->getAttribute(i)->expand(context);
 		}
 	}
 
-	IrContextTree *mainContext = parentContext->newChild(this, true);
+	IrContextTree *mainContext = context->newChild(this, true);
 	if (m_definition != nullptr) {
 		m_definition->expand(mainContext);
 	}
@@ -305,7 +303,7 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 	}
 }
 
-piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgram *program) {
 	IrContextTree *newContext;
 	IrContextTree *parentContext = context;
 	if (parentContext == nullptr) {
@@ -313,9 +311,6 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 	}
 
 	newContext = parentContext->newChild(this);
-
-	Node *generatedNode = program->getRules()->getCachedInstance(this, context);
-	if (generatedNode != nullptr) return generatedNode;
 
 	IrNodeDefinition *definition = getDefinition();
 	const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
