@@ -99,6 +99,8 @@ namespace piranha {
 		void setParentUnit(IrCompilationUnit *unit) { m_parentUnit = unit; }
 		IrCompilationUnit *getParentUnit() const;
 
+		IrParserStructure *resolveToSingleChannel(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
+		virtual IrParserStructure *getDefaultPort() { return nullptr; }
 		virtual IrNode *getAsNode() { return nullptr; }
 
 	public:
@@ -121,7 +123,7 @@ namespace piranha {
 		IrParserStructure *m_logicalParent;
 		IrTokenInfo m_summaryToken;
 
-		PKeyValueLookup<IrContextTree, IrNodeDefinition *> m_expansions;
+		PKeyValueLookup<IrContextTree, IrNode *> m_expansions;
 
 		std::vector<IrParserStructure *> m_components;
 

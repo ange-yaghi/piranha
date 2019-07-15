@@ -130,6 +130,9 @@
     <Filter Include="Source Files\syntax\language-rules">
       <UniqueIdentifier>{f2ee25da-ec32-4bc7-b1fe-867cf7a23049}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\standard">
+      <UniqueIdentifier>{710108e2-5ee1-4991-87bd-501ab2d9ecac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\node_output.h">
@@ -281,6 +284,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pkey_value_lookup.h">
       <Filter>Header Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\console_output_node.h">
+      <Filter>Header Files\nodes\standard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\console_input_node.h">
+      <Filter>Header Files\nodes\standard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

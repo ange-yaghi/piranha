@@ -8,12 +8,12 @@ public node int => __int {
 
 public node float_conversion => __float_conv {
     input __in;
-    output __out: [float];
+    output __out [float];
 }
 
 public node int_conversion => __int_conv {
     input __in;
-    output __out: [int];
+    output __out [int];
 }
 
 // Internally the '+' operator will map to both a C++ type and this builtin name
@@ -21,13 +21,13 @@ public node int_conversion => __int_conv {
 public node float_add => __float_add {
     input a;
     input b;
-    default output c: [float]; 
+    default output c [float]; 
 }
 
 public node int_add => __int_add {
     input a;
     input b;
-    default output c: [int];
+    default output c [int];
 }
 
 // Things I need

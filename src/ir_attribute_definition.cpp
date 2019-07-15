@@ -5,6 +5,8 @@
 #include "../include/ir_compilation_unit.h"
 #include "../include/compilation_error.h"
 #include "../include/ir_context_tree.h"
+#include "../include/language_rules.h"
+#include "../include/ir_node_definition.h"
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &directionToken,
 								const IrTokenInfo_string &name, DIRECTION dir) {
@@ -70,7 +72,7 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 	}
 
 	// An attribute definition will by default point to its definition (ie default value)
-	if (m_defaultValue == nullptr) {
+	if (m_defaultValue == nullptr && m_direction == INPUT) {
 		if (IR_EMPTY_CONTEXT()) {
 			IR_DEAD_END();
 			return nullptr;
@@ -83,4 +85,62 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 	}
 
 	return m_defaultValue;
+}
+
+const piranha::ChannelType *piranha::IrAttributeDefinition::getImmediateChannelType() {
+	if (m_typeDefinition != nullptr) {
+		if (!m_typeDefinition->isBuiltin()) return nullptr;
+		std::string builtinType = m_typeDefinition->getBuiltinName();
+
+		const ChannelType *wholeType = m_rules->resolveChannelType(builtinType);
+		return wholeType;
+	}
+	else return nullptr;
+}
+
+void piranha::IrAttributeDefinition::_resolveDefinitions() {
+	int definitionCount = 0;
+	IrNodeDefinition *definition = nullptr;
+	IrCompilationUnit *unit = getParentUnit();
+
+	const IrTokenInfo_string &libraryToken = m_typeInfo.data[0];
+	const IrTokenInfo_string &typeToken = m_typeInfo.data[1];
+
+	// No action is needed if a type wasn't specified
+	if (!typeToken.specified) return;
+
+	const std::string &library = libraryToken.data;
+	const std::string &type = typeToken.data;
+
+	if (libraryToken.specified) {
+		if (!library.empty()) {
+			definition = unit->resolveNodeDefinition(type, &definitionCount, library);
+		}
+		else {
+			// Adding an empty library name means that the local scope must strictly be used
+			definition = unit->resolveLocalNodeDefinition(type, &definitionCount);
+		}
+	}
+	else {
+		if (typeToken.specified) {
+			definition = unit->resolveNodeDefinition(type, &definitionCount, "");
+		}
+		else {
+			// Type information was not given so skip the rest of the function
+			m_typeDefinition = nullptr;
+			return;
+		}
+	}
+
+	if (definitionCount > 0) {
+		// TODO: log a warning when a node type is ambiguous
+	}
+
+	if (definition == nullptr) {
+		unit->addCompilationError(new CompilationError(typeToken,
+			ErrorCode::UndefinedNodeType));
+		m_typeDefinition = nullptr;
+	}
+
+	else m_typeDefinition = definition;
 }

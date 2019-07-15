@@ -6,5 +6,5 @@ public node sRGB => __builtin__srgb {
     input b: 0.0;
     input a: 0.0;
 
-    default output color: [types::vector];
+    default output color [types::vector];
 }

@@ -28,8 +28,8 @@ namespace piranha {
 		}
 
 		virtual void registerOutputs() {
-			setPrimaryOutput(&m_output);
-			registerOutput(&m_output, "$primary");
+			Node::setPrimaryOutput(&m_output);
+			Node::registerOutput(&m_output, "$primary");
 		}
 
 	protected:
