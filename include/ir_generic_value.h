@@ -14,7 +14,7 @@ namespace piranha {
 
 		IrNodeDefinition *getTypeDefinition() const { return m_typeDefinition; }
 
-		virtual bool isGeneric() const { return true; }
+		virtual const ChannelType *getImmediateChannelType();
 
 	protected:
 		IrTokenInfoSet<std::string, 2> m_typeInfo;

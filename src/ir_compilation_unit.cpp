@@ -1,10 +1,12 @@
-#include "ir_compilation_unit.h"
+#include "../include/ir_compilation_unit.h"
 
-#include "scanner.h"
-#include "ir_node.h"
-#include "ir_attribute_list.h"
-#include "ir_attribute.h"
-#include "ir_error_list.h"
+#include "../include/scanner.h"
+#include "../include/ir_node.h"
+#include "../include/ir_attribute_list.h"
+#include "../include/ir_attribute.h"
+#include "../include/error_list.h"
+#include "../include/node_program.h"
+#include "../include/language_rules.h"
 
 #include <cctype>
 #include <fstream>
@@ -20,6 +22,8 @@ piranha::IrCompilationUnit::~IrCompilationUnit() {
 }
 
 void piranha::IrCompilationUnit::build(NodeProgram *program) {
+	program->getRules()->registerBuiltinNodeTypes();
+
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		m_nodes[i]->generateNode(nullptr, program);
@@ -57,7 +61,7 @@ piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parseHelper(
 							std::istream &stream, IrCompilationUnit *topLevel) {
 	delete m_scanner;
 	try {
-		m_scanner = new piranha::IrScanner(&stream);
+		m_scanner = new piranha::Scanner(&stream);
 	}
 	catch (std::bad_alloc) {
 		return FAIL;
@@ -65,7 +69,7 @@ piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parseHelper(
 
 	delete m_parser;
 	try {
-		m_parser = new piranha::IrParser(*m_scanner, *this);
+		m_parser = new piranha::Parser(*m_scanner, *this);
 	}
 	catch (std::bad_alloc) {
 		return FAIL;
@@ -119,11 +123,73 @@ piranha::IrNodeDefinition *piranha::IrCompilationUnit::resolveNodeDefinition(con
 
 			// The external access flag must be set to true since the libraries are being accessed
 			// externally                                                                                         ----
-			IrNodeDefinition *def = importStatement->getUnit()->resolveNodeDefinition(name, &secondaryCount, "", true);
+			IrNodeDefinition *def = importStatement->getUnit()->resolveNodeDefinition(typeName, &secondaryCount, "", true);
 			if (def != nullptr) {
 				(*count) += secondaryCount;
 				if (definition == nullptr) definition = def;
 			}
+		}
+	}
+
+	return definition;
+}
+
+piranha::IrNodeDefinition *piranha::IrCompilationUnit::resolveLocalBuiltinNodeDefinition(const std::string &builtinName, int *count, bool external) {
+	*count = 0;
+	piranha::IrNodeDefinition *definition = nullptr;
+	std::string typeName = builtinName;
+
+	int localNodeDefinitions = (int)m_nodeDefinitions.size();
+	for (int i = 0; i < localNodeDefinitions; i++) {
+		IrNodeDefinition *def = m_nodeDefinitions[i];
+		if (external && !def->allowsExternalAccess() || !def->isBuiltin()) continue;
+
+		std::string defName = m_nodeDefinitions[i]->getBuiltinName();
+		if (defName == typeName) {
+			(*count)++;
+			if (definition == nullptr) definition = m_nodeDefinitions[i];
+		}
+	}
+
+	return definition;
+}
+
+piranha::IrNodeDefinition *piranha::IrCompilationUnit::resolveBuiltinNodeDefinition(const std::string &builtinName, int *count, bool external) {
+	*count = 0;
+	piranha::IrNodeDefinition *definition = nullptr;
+	std::string typeName = builtinName;
+
+	// First search local node definitions if a library is not specified
+	int localCount = 0;
+	IrNodeDefinition *localDefinition = resolveLocalBuiltinNodeDefinition(typeName, &localCount, external);
+	(*count) += localCount;
+
+	if (localDefinition != nullptr) return localDefinition;
+
+	// Search dependencies
+	int dependencyCount = getImportStatementCount();
+	for (int i = 0; i < dependencyCount; i++) {
+		int secondaryCount = 0;
+		IrImportStatement *importStatement = getImportStatement(i);
+
+		if (importStatement->getUnit() == nullptr) {
+			// This import statement already failed, skip it
+			continue;
+		}
+
+		if (external) {
+			// Check if the import statement is private or public
+			if (!importStatement->allowsExternalAccess()) {
+				continue;
+			}
+		}
+
+		// The external access flag must be set to true since the libraries are being accessed
+		// externally                                                                                           ----
+		IrNodeDefinition *def = importStatement->getUnit()->resolveBuiltinNodeDefinition(typeName, &secondaryCount, true);
+		if (def != nullptr) {
+			(*count) += secondaryCount;
+			if (definition == nullptr) definition = def;
 		}
 	}
 
@@ -141,7 +207,6 @@ piranha::IrNodeDefinition *piranha::IrCompilationUnit::resolveLocalNodeDefinitio
 		if (external && !def->allowsExternalAccess()) continue;
 
 		std::string defName = m_nodeDefinitions[i]->getName();
-
 		if (defName == typeName) {
 			(*count)++;
 			if (definition == nullptr) definition = m_nodeDefinitions[i];
@@ -158,8 +223,8 @@ void piranha::IrCompilationUnit::_validate() {
 		int count = countSymbolIncidence(node->getName());
 
 		if (count > 1) {
-			this->addCompilationError(new IrCompilationError(node->getNameToken(),
-				IrErrorCode::SymbolUsedMultipleTimes));
+			this->addCompilationError(new CompilationError(node->getNameToken(),
+				ErrorCode::SymbolUsedMultipleTimes));
 		}
 	}
 
@@ -170,8 +235,8 @@ void piranha::IrCompilationUnit::_validate() {
 		resolveLocalNodeDefinition(def->getName(), &count);
 
 		if (count > 1) {
-			this->addCompilationError(new IrCompilationError(*def->getNameToken(),
-				IrErrorCode::DuplicateNodeDefinition));
+			this->addCompilationError(new CompilationError(*def->getNameToken(),
+				ErrorCode::DuplicateNodeDefinition));
 		}
 	}
 }
@@ -244,14 +309,12 @@ int piranha::IrCompilationUnit::countSymbolIncidence(const std::string &name) co
 	return count;
 }
 
-void piranha::IrCompilationUnit::addCompilationError(IrCompilationError *err) {
+void piranha::IrCompilationUnit::addCompilationError(CompilationError *err) {
 	if (m_errorList != nullptr) {
 		err->setCompilationUnit(this);
 		m_errorList->addCompilationError(err);
 	}
-	else {
-		delete err;
-	}
+	else delete err;
 }
 
 std::ostream& piranha::IrCompilationUnit::print(std::ostream &stream) {

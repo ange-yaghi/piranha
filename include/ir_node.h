@@ -34,14 +34,15 @@ namespace piranha {
 		const std::string &getType() const { return m_type.data; }
 		const std::string &getName() const { return m_name.data; }
 
+		virtual const ChannelType *getImmediateChannelType();
+
 		void setAttributes(IrAttributeList *list);
 		IrAttributeList *getAttributes() const { return m_attributes; }
 		IrAttribute *getAttribute(const std::string &name, int *count = nullptr) const;
 
-		virtual void setParentScope(IrParserStructure *parentScope);
+		virtual void setScopeParent(IrParserStructure *parentScope);
 
 		virtual IrValue *getDefaultOutputValue();
-
 		virtual IrNode *getAsNode() { return this; }
 
 		void writeTraceToFile(std::ofstream &file);
@@ -68,6 +69,7 @@ namespace piranha {
 		virtual void _resolveDefinitions();
 		virtual void _validate();
 		virtual void _checkInstantiation();
+		virtual void _expand(IrContextTree *context);
 
 		void resolveNodeDefinition();
 		void resolveAttributeDefinitions();
@@ -75,18 +77,7 @@ namespace piranha {
 		IrNodeDefinition *m_definition;
 
 	public:
-		Node *generateNode(IrContextTree *context, NodeProgram *program);
-
-	protected:
-		struct NodeTableEntry {
-			Node *generatedNode;
-			IrContextTree *context;
-		};
-
-		NodeTableEntry *getTableEntry(IrContextTree *context);
-		NodeTableEntry *newTableEntry(IrContextTree *context);
-
-		std::vector<NodeTableEntry *> m_nodeTable;
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace piranha */

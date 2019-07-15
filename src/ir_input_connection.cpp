@@ -1,4 +1,4 @@
-#include "ir_input_connection.h"
+#include "../include/ir_input_connection.h"
 
 piranha::IrInputConnection::IrInputConnection() {
 	m_member = "";

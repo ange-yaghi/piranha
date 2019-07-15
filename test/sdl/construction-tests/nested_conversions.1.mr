@@ -1,0 +1,14 @@
+public literal float => __builtin__float
+public literal int => __builtin__int
+
+public float >> int => __builtin__float_to_int
+public int >> float => __builtin__int_to_float
+public float >> vector => __builtin__float_to_vector
+
+public node vector => __builtin__float {
+    input x [float]: 0.0;
+    input y [float]: 0.0;
+
+    output x [float];
+    output y [float];
+}

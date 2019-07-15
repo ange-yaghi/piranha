@@ -9,7 +9,7 @@ namespace piranha {
 
 	class IrValue;
 	class IrInputConnection;
-	class IrCompilationError;
+	class CompilationError;
 	class IrNodeDefinition;
 
 	class IrAttributeDefinition : public IrParserStructure {

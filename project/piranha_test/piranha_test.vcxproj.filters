@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="pch.cpp" />
     <ClCompile Include="..\..\test\sdl_stress_tests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
@@ -11,12 +10,25 @@
     <ClCompile Include="..\..\test\utilities.cpp">
       <Filter>Utilities\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\compilation_tests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test_rules.cpp">
+      <Filter>Infrastructure\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\operator_tests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
     <ClInclude Include="..\..\test\utilities.h">
       <Filter>Utilities\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\test\test_rules.h">
+      <Filter>Infrastructure\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Tests">
@@ -30,6 +42,15 @@
     </Filter>
     <Filter Include="Utilities\Source">
       <UniqueIdentifier>{4151d972-8e57-4aa3-80ab-1400bfe3d6df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infrastructure">
+      <UniqueIdentifier>{3076b7b2-924a-4f4f-90d9-301a97fc1be8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infrastructure\Header Files">
+      <UniqueIdentifier>{f4dd85b4-f432-4f9a-9f58-8e7927531ba4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infrastructure\Source Files">
+      <UniqueIdentifier>{4526532f-0983-474a-8755-6954f60e6096}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

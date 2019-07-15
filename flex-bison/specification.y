@@ -3,31 +3,31 @@
 %debug
 %defines
 %define api.namespace {piranha}
-%define api.parser.class {IrParser}
+%define api.parser.class {Parser}
 
 %code requires {
 	namespace piranha {
 		class IrCompilationUnit;
-		class IrScanner;
+		class Scanner;
 	}
 
-	#include "ir_compilation_unit.h"
-	#include "ir_node.h"
-	#include "ir_attribute_list.h"
-	#include "ir_attribute.h"
-	#include "ir_value.h"
-	#include "ir_value_constant.h"
-	#include "ir_binary_operator.h"
-	#include "ir_import_statement.h"
-	#include "ir_token_info.h"
-	#include "ir_node_definition.h"
-	#include "ir_attribute_definition.h"
-	#include "ir_attribute_definition_list.h"
-	#include "ir_compilation_error.h"
-	#include "ir_structure_list.h"
-	#include "ir_visibility.h"
-	#include "ir_unary_operator.h"
-	#include "ir_generic_value.h"
+	#include "../include/ir_compilation_unit.h"
+	#include "../include/ir_node.h"
+	#include "../include/ir_attribute_list.h"
+	#include "../include/ir_attribute.h"
+	#include "../include/ir_value.h"
+	#include "../include/ir_value_constant.h"
+	#include "../include/ir_binary_operator.h"
+	#include "../include/ir_import_statement.h"
+	#include "../include/ir_token_info.h"
+	#include "../include/ir_node_definition.h"
+	#include "../include/ir_attribute_definition.h"
+	#include "../include/ir_attribute_definition_list.h"
+	#include "../include/compilation_error.h"
+	#include "../include/ir_structure_list.h"
+	#include "../include/ir_visibility.h"
+	#include "../include/ir_unary_operator.h"
+	#include "../include/ir_generic_value.h"
 
 	#include <string>
 
@@ -57,7 +57,7 @@
     #endif
 }
 
-%parse-param {IrScanner &scanner}
+%parse-param {Scanner &scanner}
 %parse-param {IrCompilationUnit &driver}
 
 %code {
@@ -65,8 +65,8 @@
   #include <cstdlib>
   #include <fstream>
 
-  #include "ir_compilation_unit.h"
-  #include <scanner.h>
+  #include "../include/ir_compilation_unit.h"
+  #include "../include/scanner.h"
 
 #undef yylex
 #define yylex scanner.yylex
@@ -470,14 +470,14 @@ add_exp
   ;
 %%
 
-void piranha::IrParser::error(const IrTokenInfo &l, const std::string &err_message) {
-	IrCompilationError *err;
+void piranha::Parser::error(const IrTokenInfo &l, const std::string &err_message) {
+	CompilationError *err;
 	
 	if (l.valid) {
-		err = new IrCompilationError(l, IrErrorCode::UnexpectedToken);
+		err = new CompilationError(l, ErrorCode::UnexpectedToken);
 	}
 	else {
-		err = new IrCompilationError(l, IrErrorCode::UnidentifiedToken);
+		err = new CompilationError(l, ErrorCode::UnidentifiedToken);
 	}
 
 	driver.addCompilationError(err);

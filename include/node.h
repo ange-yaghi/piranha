@@ -1,7 +1,7 @@
 #ifndef PIRANHA_NODE_H
 #define PIRANHA_NODE_H
 
-#include "node_type.h"
+#include "channel_type.h"
 #include "node_output.h"
 
 #include <string>
@@ -11,7 +11,8 @@ namespace piranha {
 
 	struct IntersectionPoint;
 	class StackAllocator;
-	class IrNode;
+	class IrContextTree;
+	class IrParserStructure;
 	class NodeProgram;
 
 	class Node {
@@ -24,6 +25,8 @@ namespace piranha {
 		struct NodeInputPort {
 			pNodeInput *input;
 			std::string name;
+
+			const ChannelType *requiredType;
 		};
 
 		struct NodeOutputPort {
@@ -50,7 +53,10 @@ namespace piranha {
 		void setName(const std::string &name) { m_name = name; }
 		std::string getName() const { return m_name; }
 
+		const ChannelType *getConversion(pNodeInput input, const std::string &name);
 		void connectInput(pNodeInput input, const std::string &name);
+		void connectInput(pNodeInput input, int index);
+		void connectDefaultInput(pNodeInput input);
 		int getInputCount() const { return (int)m_inputs.size(); }
 
 		NodeOutput *getPrimaryOutput() const;
@@ -62,8 +68,11 @@ namespace piranha {
 		bool isInitialized() const { return m_initialized; }
 		bool isEvaluated() const { return m_evaluated; }
 
-		void setIrNode(IrNode *node) { m_sdlNode = node; }
-		IrNode *getIrNode() const { return m_sdlNode; }
+		void setIrStructure(IrParserStructure *irStructure) { m_irStructure = irStructure; }
+		IrParserStructure *getIrStructure() const { return m_irStructure; }
+
+		void setIrContext(IrContextTree *context) { m_context = context; }
+		IrContextTree *getContext() const { return m_context; }
 
 		void setProgram(NodeProgram *program) { m_program = program; }
 		NodeProgram *getProgram() const { return m_program; }
@@ -84,11 +93,12 @@ namespace piranha {
 		int m_id;
 		std::string m_name;
 
-		IrNode *m_sdlNode;
+		IrContextTree *m_context;
+		IrParserStructure *m_irStructure;
 
 	protected:
 		std::vector<NodeInputPort> m_inputs;
-		void registerInput(pNodeInput *node, const std::string &name);
+		void registerInput(pNodeInput *node, const std::string &name, const ChannelType *requiredType = nullptr);
 
 		std::vector<NodeOutputPort> m_outputs;
 		void registerOutput(NodeOutput *node, const std::string &name);
@@ -97,9 +107,11 @@ namespace piranha {
 		void registerOutputReference(NodeOutput *const *node, const std::string &name);
 
 		void setPrimaryOutput(NodeOutput *node);
+		void setPrimaryOutputReference(NodeOutput **node);
 
 	protected:
 		NodeOutput *m_primaryOutput;
+		NodeOutput **m_primaryReference;
 
 	private:
 		// State variables

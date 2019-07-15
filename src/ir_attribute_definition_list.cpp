@@ -1,6 +1,6 @@
-#include "ir_attribute_definition_list.h"
+#include "../include/ir_attribute_definition_list.h"
 
-#include "ir_attribute_definition.h"
+#include "../include/ir_attribute_definition.h"
 
 piranha::IrAttributeDefinitionList::IrAttributeDefinitionList() {
 	/* void */

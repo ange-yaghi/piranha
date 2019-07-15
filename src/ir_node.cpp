@@ -1,21 +1,20 @@
-#include "ir_node.h"
+#include "../include/ir_node.h"
 
-#include "ir_attribute.h"
-#include "ir_attribute_list.h"
-#include "ir_compilation_unit.h"
-#include "ir_node_definition.h"
-#include "ir_attribute_definition.h"
-#include "ir_compilation_error.h"
-#include "ir_attribute_definition_list.h"
-#include "ir_value.h"
-#include <node.h>
-#include <custom_node.h>
-#include <standard_allocator.h>
-#include "ir_context_tree.h"
+#include "../include/ir_attribute.h"
+#include "../include/ir_attribute_list.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/ir_node_definition.h"
+#include "../include/ir_attribute_definition.h"
+#include "../include/compilation_error.h"
+#include "../include/ir_attribute_definition_list.h"
+#include "../include/ir_value.h"
+#include "../include/ir_context_tree.h"
+#include "../include/language_rules.h"
+#include "../include/node.h"
+#include "../include/custom_node.h"
+#include "../include/standard_allocator.h"
 
-#include <constructed_float_node.h>
-#include <constructed_string_node.h>
-#include <node_program.h>
+#include "../include/node_program.h"
 
 piranha::IrNode::IrNode() {
 	/* void */
@@ -52,6 +51,14 @@ piranha::IrNode::~IrNode() {
 	/* void */
 }
 
+const piranha::ChannelType *piranha::IrNode::getImmediateChannelType() {
+	if (m_definition == nullptr) return nullptr;
+	if (!m_definition->isBuiltin()) return nullptr;
+	
+	std::string builtinType = m_definition->getBuiltinName();
+	return m_rules->resolveChannelType(builtinType);
+}
+
 void piranha::IrNode::setAttributes(IrAttributeList *list) {
 	m_attributes = list;
 	registerComponent(list);
@@ -78,10 +85,10 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(const std::string &name, int
 	return result;
 }
 
-void piranha::IrNode::setParentScope(IrParserStructure *parentScope) {
-	IrParserStructure::setParentScope(parentScope);
+void piranha::IrNode::setScopeParent(IrParserStructure *parentScope) {
+	IrParserStructure::setScopeParent(parentScope);
 	if (m_attributes != nullptr) {
-		m_attributes->setParentScope(parentScope);
+		m_attributes->setScopeParent(parentScope);
 	}
 }
 
@@ -144,12 +151,12 @@ void piranha::IrNode::_validate() {
 
 			if (positional) {
 				// Log a more specific message for clarify if the attribute is positional
-				unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(),
-					IrErrorCode::InputSpecifiedMultipleTimesPositional));
+				unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(),
+					ErrorCode::InputSpecifiedMultipleTimesPositional));
 			}
 			else {
-				unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(),
-					IrErrorCode::InputSpecifiedMultipleTimes));
+				unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(),
+					ErrorCode::InputSpecifiedMultipleTimes));
 			}
 		}
 	}
@@ -168,8 +175,8 @@ void piranha::IrNode::_validate() {
 
 				if (attribute == nullptr && input->getDefaultValue() == nullptr) {
 					// This input port is not conencted and has no default value
-					unit->addCompilationError(new IrCompilationError(*getSummaryToken(),
-						IrErrorCode::InputNotConnected));
+					unit->addCompilationError(new CompilationError(*getSummaryToken(),
+						ErrorCode::InputNotConnected));
 				}
 			}
 		}
@@ -195,6 +202,21 @@ void piranha::IrNode::_checkInstantiation() {
 	}
 }
 
+void piranha::IrNode::_expand(IrContextTree *context) {
+	IrAttributeList *attributes = getAttributes();
+	if (attributes != nullptr) {
+		int attributeCount = attributes->getAttributeCount();
+		for (int i = 0; i < attributeCount; i++) {
+			attributes->getAttribute(i)->expand(context);
+		}
+	}
+
+	IrContextTree *mainContext = context->newChild(this, true);
+	if (m_definition != nullptr) {
+		m_definition->expand(mainContext);
+	}
+}
+
 void piranha::IrNode::resolveNodeDefinition() {
 	int definitionCount = 0;
 	IrNodeDefinition *definition = nullptr;
@@ -209,22 +231,17 @@ void piranha::IrNode::resolveNodeDefinition() {
 			definition = unit->resolveLocalNodeDefinition(getType(), &definitionCount);
 		}
 	}
-	else {
-		definition = unit->resolveNodeDefinition(getType(), &definitionCount, "");
-	}
+	else definition = unit->resolveNodeDefinition(getType(), &definitionCount, "");
 
 	if (definitionCount > 0) {
 		// TODO: log a warning when a node type is ambiguous
 	}
 
 	if (definition == nullptr) {
-		unit->addCompilationError(new IrCompilationError(getTypeToken(), 
-			IrErrorCode::UndefinedNodeType));
+		unit->addCompilationError(new CompilationError(getTypeToken(), 
+			ErrorCode::UndefinedNodeType));
 	}
-
-	else {
-		setDefinition(definition);
-	}
+	else setDefinition(definition);
 }
 
 void piranha::IrNode::resolveAttributeDefinitions() {
@@ -252,8 +269,8 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 
 			// Check position is not out of bounds
 			if (position >= list->getInputCount()) {
-				unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(), 
-					IrErrorCode::ArgumentPositionOutOfBounds));
+				unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(), 
+					ErrorCode::ArgumentPositionOutOfBounds));
 				attribute->setAttributeDefinition(nullptr);
 				return;
 			}
@@ -269,14 +286,14 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 
 		if (definition == nullptr) {
 			// Port not found
-			unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(), 
-				IrErrorCode::PortNotFound));
+			unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(), 
+				ErrorCode::PortNotFound));
 			attribute->setAttributeDefinition(nullptr);
 		}
 		else if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
 			// Can't assign an output port
-			unit->addCompilationError(new IrCompilationError(*attribute->getSummaryToken(), 
-				IrErrorCode::UsingOutputPortAsInput));
+			unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(), 
+				ErrorCode::UsingOutputPortAsInput));
 			attribute->setAttributeDefinition(nullptr);
 		}
 		else {
@@ -286,7 +303,7 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 	}
 }
 
-piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgram *program) {
 	IrContextTree *newContext;
 	IrContextTree *parentContext = context;
 	if (parentContext == nullptr) {
@@ -294,11 +311,6 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 	}
 
 	newContext = parentContext->newChild(this);
-
-	NodeTableEntry *entry = getTableEntry(parentContext);
-	if (entry != nullptr) return entry->generatedNode;
-
-	entry = newTableEntry(parentContext);
 
 	IrNodeDefinition *definition = getDefinition();
 	const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
@@ -374,65 +386,56 @@ piranha::Node *piranha::IrNode::generateNode(IrContextTree *context, NodeProgram
 	int inputCount = (int)inputs.size();
 	int outputCount = (int)outputs.size();
 
-	Node *newNode = nullptr;
-	if (definition->isBuiltin()) {
-		if (definition->getBuiltinName() == "__piranha__string") {
-			newNode = StandardAllocator::Global()->allocate<ConstructedStringNode>();
-		}
-		else if (definition->getBuiltinName() == "__piranha__float") {
-			newNode = StandardAllocator::Global()->allocate<ConstructedFloatNode>();
-		}
-	}
-	else {
-		CustomNode *newCustomNode = StandardAllocator::Global()->allocate<CustomNode>();
+	Node *newNode = program->getRules()->generateNode(this, parentContext);
+	if (!definition->isBuiltin() && newNode != nullptr) {
+		CustomNode *customNode = static_cast<CustomNode *>(newNode);
 
 		for (int i = 0; i < inputCount; i++) {
-			newCustomNode->addCustomInput(inputs[i].name);
+			customNode->addCustomInput(inputs[i].name);
 		}
 
 		for (int i = 0; i < outputCount; i++) {
-			newCustomNode->addCustomOutput(outputs[i].output, outputs[i].name, outputs[i].primary);
+			customNode->addCustomOutput(outputs[i].output, outputs[i].name, outputs[i].primary);
 		}
-
-		newNode = newCustomNode;
 	}
 
 	if (newNode != nullptr) {
 		newNode->setName(getName());
-		newNode->setIrNode(this);
+		newNode->setIrStructure(this);
 		newNode->initialize();
 
 		for (int i = 0; i < inputCount; i++) {
-			newNode->connectInput(inputs[i].output, inputs[i].name.c_str());
+			pNodeInput input = inputs[i].output;
+			std::string name = inputs[i].name;
+
+			const ChannelType *conversionType = newNode->getConversion(input, name);
+			
+			if (conversionType != nullptr) {
+				// A conversion is needed
+				const ChannelType *originalType = input->getType();
+				Node *conversionNode = program->getRules()->generateConversion({ originalType, conversionType });
+				conversionNode->setName("$autoconversion");
+				conversionNode->setIrStructure(nullptr);
+				conversionNode->setIrContext(nullptr);
+				conversionNode->initialize();
+
+				if (conversionNode == nullptr) {
+					// TODO: Error for no valid conversion being found
+				}
+				else {
+					conversionNode->connectDefaultInput(input);
+					input = conversionNode->getPrimaryOutput();
+				}
+			}
+
+			newNode->connectInput(input, name.c_str());
 		}
 	}
 
 	// Add the new node to the program
 	program->addNode(newNode);
 
-	entry->generatedNode = newNode;
 	return newNode;
-}
-
-piranha::IrNode::NodeTableEntry *piranha::IrNode::getTableEntry(IrContextTree *context) {
-	int entryCount = (int)m_nodeTable.size();
-	for (int i = 0; i < entryCount; i++) {
-		if (m_nodeTable[i]->context->isEqual(context)) {
-			return m_nodeTable[i];
-		}
-	}
-
-	return nullptr;
-}
-
-piranha::IrNode::NodeTableEntry *piranha::IrNode::newTableEntry(IrContextTree *context) {
-	NodeTableEntry *newEntry = new NodeTableEntry();
-	newEntry->context = context;
-	newEntry->generatedNode = nullptr;
-
-	m_nodeTable.push_back(newEntry);
-
-	return newEntry;
 }
 
 piranha::IrValue *piranha::IrNode::getDefaultOutputValue() {

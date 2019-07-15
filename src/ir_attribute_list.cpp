@@ -1,6 +1,6 @@
-#include "ir_attribute_list.h"
+#include "../include/ir_attribute_list.h"
 
-#include "ir_attribute.h"
+#include "../include/ir_attribute.h"
 
 piranha::IrAttributeList::IrAttributeList() {
 	/* void */

@@ -3,9 +3,12 @@
 
 #include "ir_value.h"
 
+#include "pkey_value_lookup.h" 
+
 namespace piranha {
 
-	class IrCompilationError;
+	class CompilationError;
+	class IrNodeDefinition;
 
 	class IrBinaryOperator : public IrValue {
 	public:
@@ -29,6 +32,7 @@ namespace piranha {
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
 	protected:
+		void _expand(IrContextTree *tree);
 		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
 		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
 

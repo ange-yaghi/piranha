@@ -31,6 +31,7 @@ namespace piranha {
 
 		bool isMainContext() const { return m_mainContext; }
 
+		bool operator==(const IrContextTree &ref) const { return isEqual(&ref); }
 		bool isEqual(const IrContextTree *ref) const;
 
 	protected:

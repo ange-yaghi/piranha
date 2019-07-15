@@ -1,7 +1,7 @@
 #ifndef PIRANHA_NODE_OUTPUT_H
 #define PIRANHA_NODE_OUTPUT_H
 
-#include "node_type.h"
+#include "channel_type.h"
 
 #include <string>
 #include <vector>
@@ -13,21 +13,21 @@ namespace piranha {
 
 	class NodeOutput {
 	public:
-		NodeOutput(const NodeType *singleType);
+		NodeOutput(const ChannelType *singleType);
 		virtual ~NodeOutput();
 
-		bool isType(const NodeType &type) const { return m_singleType == &type; }
-		const NodeType *getType() const { return m_singleType; }
+		virtual void fullCompute(void *target) const { /* void */ }
+		virtual void registerInputs() {}
+
+		int getInputCount() const { return (int)m_inputs.size(); }
+		NodeOutput **getInputConnection(int index) { return m_inputs[index]; }
+
+	public:
+		bool isType(const ChannelType &type) const { return m_singleType == &type; }
+		const ChannelType *getType() const { return m_singleType; }
 
 		void initialize();
-
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const { /* void */ }
-		virtual void discreteSample2D(int x, int y, void *target) const { /* void */ }
-		virtual void fullCompute(void *target) const { /* void */ }
-		virtual void getDataReference(const void **target) const { *target = nullptr; }
-
 		void evaluate();
-		virtual void registerInputs() {}
 
 		void setName(const std::string &name) { m_name = name; }
 		const std::string &getName() const { return m_name; }
@@ -38,12 +38,12 @@ namespace piranha {
 		Node *getInterface() const { return m_interface; }
 
 	protected:
-		void overrideType(const NodeType *type) { m_singleType = type; }
+		void overrideType(const ChannelType *type) { m_singleType = type; }
 
 		virtual Node *generateInterface() { return nullptr; }
 
 	private:
-		const NodeType *m_singleType;
+		const ChannelType *m_singleType;
 
 		std::string m_name;
 
@@ -54,7 +54,6 @@ namespace piranha {
 
 	protected:
 		virtual void registerInput(NodeOutput **nodeInput) { m_inputs.push_back(nodeInput); }
-		int getInputCount() const { return (int)m_inputs.size(); }
 
 		std::vector<NodeOutput **> m_inputs;
 	};

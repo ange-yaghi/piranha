@@ -1,8 +1,8 @@
-#ifndef PIRANHA_IR_COMPILER_H
-#define PIRANHA_IR_COMPILER_H
+#ifndef PIRANHA_COMPILER_H
+#define PIRANHA_COMPILER_H
 
 #include "path.h"
-#include "ir_error_list.h"
+#include "error_list.h"
 
 #include <vector>
 #include <string>
@@ -10,20 +10,21 @@
 namespace piranha {
 
 	class IrCompilationUnit;
+	class LanguageRules;
 
 	typedef Path IrPath;
 
-	class IrCompiler {
+	class Compiler {
 	public:
-		IrCompiler();
-		~IrCompiler();
+		Compiler(const LanguageRules *rules = nullptr);
+		~Compiler();
 
 		IrCompilationUnit *compile(const IrPath &scriptPath);
 		IrCompilationUnit *getUnit(const IrPath &scriptPath) const;
 
 		int getUnitCount() const { return (int)m_units.size(); }
 
-		const IrErrorList *getErrorList() const { return &m_errorList; }
+		const ErrorList *getErrorList() const { return &m_errorList; }
 
 		void addSearchPath(const IrPath &path);
 		int getSearchPathCount() const { return (int)m_searchPaths.size(); }
@@ -38,12 +39,13 @@ namespace piranha {
 
 	protected:
 		// Build steps
-		void expand();
 		void resolve();
 		void validate();
 
 	protected:
-		IrErrorList m_errorList;
+		const LanguageRules *m_rules;
+
+		ErrorList m_errorList;
 		std::vector<IrCompilationUnit *> m_units;
 
 		std::vector<IrPath> m_searchPaths;
@@ -51,4 +53,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* PIRANHA_IR_COMPILER_H */
+#endif /* PIRANHA_COMPILER_H */

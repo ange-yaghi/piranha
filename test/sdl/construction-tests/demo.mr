@@ -1,0 +1,41 @@
+public node VideoLoader => __video_loader {
+    input filename: "";
+    output video;
+}
+
+public node VideoAdder => __video_adder {
+    input video1;
+    input video2;
+    output added_video;
+}
+
+public node FrameAdder => __frame_adder {
+    input frame;
+    input frame2;
+    output added_frames;
+}
+
+public node ConvertBW => __convert_bw {
+    input frame;
+    output bw_frame;
+}
+
+public node StreamingVideo => ___ {
+    output frame;
+}
+
+public node VideoOutput => ___ {
+    input frame;
+    input filename;
+}
+
+StreamingVideo s1()
+StreamingVideo s2()
+
+VideoOutput vo(
+    filename: "whatever.mov",
+    frame: FrameAdder fa(
+        s1,
+        ConvertBW(s2)
+    )
+)
