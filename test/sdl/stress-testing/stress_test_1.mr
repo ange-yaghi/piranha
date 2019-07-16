@@ -21,8 +21,8 @@ private node vector2d => some_builtin_vector_class {
     input __in_x: 0.0;
     input __in_y: 0.0;
 
-    output x: [float];
-    output y: [::float];
+    output x [float];
+    output y [::float];
 }
 
 private node dual_vector {

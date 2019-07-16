@@ -13,19 +13,19 @@ public node string => __piranha__string {
 public node int_add => __piranha__int_add {
     input __in0;
     input __in1;
-    default output __out: [int];
+    default output __out [int];
 }
 
 public node float_add => __piranha__float_add {
     input __in0;
     input __in1;
-    default output __out: [float];
+    default output __out [float];
 }
 
 public node string_add => __piranha__string_add {
     input __in0;
     input __in1;
-    default output __out: [string];
+    default output __out [string];
 }
 
 public node literal_string => __piranha__literal_string {}

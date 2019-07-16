@@ -63,7 +63,7 @@ TEST(IrOperatorTests, IrOperatorTest1) {
 		->getDefinition()
 		->getAttributeDefinitionList()
 		->getDefaultOutput()
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
@@ -83,19 +83,19 @@ TEST(IrOperatorTests, IrOperatorTest2) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
 	channelType = list
 		->getOutputDefinition("test2")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
 	channelType = list
 		->getOutputDefinition("test3")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);	
 
@@ -104,19 +104,19 @@ TEST(IrOperatorTests, IrOperatorTest2) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
 	channelType = list
 		->getOutputDefinition("test2")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
 	channelType = list
 		->getOutputDefinition("test3")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
 }
@@ -141,7 +141,7 @@ TEST(IrOperatorTests, IrOperatorTest3) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::IntType);
 
@@ -149,7 +149,7 @@ TEST(IrOperatorTests, IrOperatorTest3) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::IntType);
 
@@ -157,7 +157,7 @@ TEST(IrOperatorTests, IrOperatorTest3) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::IntType);
 
@@ -165,7 +165,7 @@ TEST(IrOperatorTests, IrOperatorTest3) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
 }
@@ -189,7 +189,7 @@ TEST(IrOperatorTests, IrOperatorTest4) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
@@ -197,7 +197,7 @@ TEST(IrOperatorTests, IrOperatorTest4) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::IntType);
 
@@ -205,7 +205,7 @@ TEST(IrOperatorTests, IrOperatorTest4) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
 }
@@ -228,7 +228,7 @@ TEST(IrOperatorTests, IrOperatorTest5) {
 	query.recordErrors = false;
 	channelType = list
 		->getOutputDefinition("test1")
-		->getReference(query)
+		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 	EXPECT_EQ(channelType, &FundamentalType::FloatType);
 }

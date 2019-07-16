@@ -1,20 +1,17 @@
-![Alt text](docs/public/mantaray_banner_v3.png?raw=true)
+![Alt text](docs/public/banner_v1.png?raw=true)
 
 
-**MantaRay** is an open-source renderer currently under development. It uses modern rendering techniques to generate photorealistic images of complex scenes. 
+**Piranha** is an open-source scripting framework currently under development. It is a reusable framework which allows developers to quickly write scripting interfaces to native C++ libraries.
  
 ### Setup Instructions For Developers
 
 Only a few steps are required to begin developing on MantaRay:
 1. Install Python 3
-2. Clone the MantaRay repository
-3. Open ```project/mantaray.sln``` in Microsoft Visual Studio
-4. Right click on **mantaray_demos** and select 'Set as StartUp Project'
-5. Right click on **mantaray_demos** then click 'Properties'
-6. For configuration 'All Configurations' and platform 'x64', navigate to 'Debugging' under 'Configuration Properties' and set **Environment** to: ```PATH=$(SolutionDir)\..\dependencies\runtime\x64;%PATH%;```
--- **Note:** For x86 change this to ```runtime\x86``` (running in 64-bit mode, however, is recommended)
-7. Run the application
+2. Clone the Piranha repository
+3. Open ```project/piranha.sln``` in Microsoft Visual Studio
+4. Right click on **piranha_reference_compiler** and select 'Set as StartUp Project'
+5. Run the application
 
-All output from the demos is by default directed to: ```workspace/render/bitmap```
+You should then see a console window open and a sample Piranha program run.
 
 #### You are now ready to begin development!

@@ -145,18 +145,21 @@ void piranha::IrNodeDefinition::_validate() {
 			if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
 				IrValue *value = definition->getDefaultValue();
 				if (value != nullptr) {
-					if (value->isGeneric() && !isBuiltin()) {
-						unit->addCompilationError(new CompilationError(*definition->getNameToken(),
-							ErrorCode::StandardOutputWithType));
-					}
-					else if (!value->isGeneric() && isBuiltin()) {
+					if (isBuiltin()) {
 						unit->addCompilationError(new CompilationError(*definition->getNameToken(),
 							ErrorCode::BuiltinOutputWithDefinition));
 					}
 				}
 				else {
+					if (!isBuiltin()) {
+						unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+							ErrorCode::OutputWithNoDefinition));
+					}
+				}
+
+				if (definition->typeInfoSpecified() && !isBuiltin()) {
 					unit->addCompilationError(new CompilationError(*definition->getNameToken(),
-						ErrorCode::OutputWithNoDefinition));
+						ErrorCode::StandardOutputWithType));
 				}
 			}
 		}

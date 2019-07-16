@@ -1,12 +1,14 @@
 #include "../include/ir_binary_operator.h"
 
 #include "../include/ir_node_definition.h"
+#include "../include/ir_attribute_list.h"
+#include "../include/ir_attribute.h"
 #include "../include/ir_value_constant.h"
 #include "../include/ir_attribute_definition_list.h"
 #include "../include/node.h"
 
 piranha::IrBinaryOperator::IrBinaryOperator(OPERATOR op, IrValue *left, IrValue *right) :
-							IrValue(IrValue::BINARY_OPERATION) {
+														IrValue(IrValue::BINARY_OPERATION) {
 	m_operator = op;
 	m_leftOperand = left;
 	m_rightOperand = right;
@@ -26,6 +28,10 @@ piranha::IrBinaryOperator::IrBinaryOperator(OPERATOR op, IrValue *left, IrValue 
 
 piranha::IrBinaryOperator::~IrBinaryOperator() {
 	/* void */
+}
+
+piranha::IrParserStructure *piranha::IrBinaryOperator::resolveLocalName(const std::string &name) const {
+	return nullptr;
 }
 
 piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
@@ -70,7 +76,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 			IrValue *asValue = resolvedLeft->getAsValue();
 
 			if (asValue != nullptr) resolvedLeft = asValue;
-			else if (asNode != nullptr) resolvedLeft = asNode->getDefaultOutputValue();
+			else if (asNode != nullptr) resolvedLeft = asNode->getDefaultPort();
 
 			if (resolvedLeft == nullptr) {
 				IR_FAIL();
@@ -148,20 +154,18 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 		return publicAttribute;
 	}
 	else {
-		IrNodeDefinition **pDefinition = m_expansions.lookup(query.inputContext);
+		IrNode **pNode = m_expansions.lookup(query.inputContext);
 
-		if (pDefinition == nullptr) {
+		if (pNode == nullptr) {
 			IR_DEAD_END();
 			return nullptr;
 		}
-		else if (*pDefinition == nullptr) {
+		else if (*pNode == nullptr) {
 			IR_FAIL();
 			return nullptr;
 		}
 		else {
-			return (*pDefinition)
-				->getAttributeDefinitionList()
-				->getDefaultOutput();
+			return *pNode;
 		}
 	}
 }
@@ -176,7 +180,7 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		IrReferenceQuery leftQuery;
 		leftQuery.inputContext = context;
 		leftQuery.recordErrors = false;
-		IrParserStructure *leftReference = m_leftOperand->getReference(leftQuery, &leftInfo);
+		IrParserStructure *leftReference = m_leftOperand->resolveToSingleChannel(leftQuery, &leftInfo);
 
 		if (leftInfo.failed) return;
 		if (leftInfo.reachedDeadEnd) return;
@@ -185,7 +189,7 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		IrReferenceQuery rightQuery;
 		rightQuery.inputContext = context;
 		rightQuery.recordErrors = false;
-		IrParserStructure *rightReference = m_rightOperand->getReference(rightQuery, &rightInfo);
+		IrParserStructure *rightReference = m_rightOperand->resolveToSingleChannel(rightQuery, &rightInfo);
 
 		if (rightInfo.failed) return;
 		if (rightInfo.reachedDeadEnd) return;
@@ -204,7 +208,14 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 
 		int count = 0;
 		IrNodeDefinition *nodeDefinition = getParentUnit()->resolveBuiltinNodeDefinition(builtinType, &count);
-		*m_expansions.newValue(context) = nodeDefinition;
+
+		IrNode *expansion = new IrNode();
+		expansion->setLogicalParent(this);
+		expansion->setScopeParent(this);
+		expansion->setDefinition(nodeDefinition);
+		expansion->setRules(m_rules);
+
+		*m_expansions.newValue(context) = expansion;
 	}
 }
 

@@ -1,0 +1,11 @@
+public node int => __piranha__int {
+    input __in;
+}
+
+public node float => __piranha__float {
+    input __in;
+}
+
+public node string => __piranha__string {
+    input __in;
+}

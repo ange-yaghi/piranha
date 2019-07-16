@@ -2,7 +2,7 @@ private import "operators.mr" as operators
 
 node test {
     input input1;
-    output test1: input1 + " world!";
+    output test1: (input1 + " world!").__out;
 }
 
 test test1("Hello")
