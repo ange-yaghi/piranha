@@ -1,4 +1,4 @@
-![Alt text](docs/public/banner_v1.png?raw=true)
+![Alt text](docs/public/banner_v2.png?raw=true)
 
 
 **Piranha** is an open-source scripting framework currently under development. It is a reusable framework which allows developers to quickly write scripting interfaces to native C++ libraries.
