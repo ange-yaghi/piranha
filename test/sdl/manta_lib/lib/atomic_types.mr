@@ -12,15 +12,15 @@ public node vector => __builtin__vector {
     input in_z: 0.0;
     input in_w: 0.0;
 
-    output x: [float];
-    output y: [float];
-    output z: [float];
-    output w: [float];
+    output x [float];
+    output y [float];
+    output z [float];
+    output w [float];
 
-    output r: [float];
-    output g: [float];
-    output b: [float];
-    output a: [float];
+    output r [float];
+    output g [float];
+    output b [float];
+    output a [float];
 }
 
 public node s_vector {

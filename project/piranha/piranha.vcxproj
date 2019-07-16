@@ -164,6 +164,8 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
   <ItemGroup>
     <ClInclude Include="..\..\autogen\parser.auto.h" />
     <ClInclude Include="..\..\autogen\stack.hh" />
+    <ClInclude Include="..\..\include\console_input_node.h" />
+    <ClInclude Include="..\..\include\console_output_node.h" />
     <ClInclude Include="..\..\include\key_value_lookup.h" />
     <ClInclude Include="..\..\include\operation_node.h" />
     <ClInclude Include="..\..\include\add_operation_output.h" />

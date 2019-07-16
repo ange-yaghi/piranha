@@ -42,6 +42,7 @@ namespace piranha {
 
 		virtual void setScopeParent(IrParserStructure *parentScope);
 
+		virtual IrParserStructure *getDefaultPort();
 		virtual IrValue *getDefaultOutputValue();
 		virtual IrNode *getAsNode() { return this; }
 

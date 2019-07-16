@@ -46,6 +46,29 @@ namespace piranha {
 
 	protected:
 		IrAttributeDefinition *m_definition;
+
+	protected:
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
+			IrReferenceInfo info;
+			IrReferenceQuery query;
+			query.inputContext = context;
+			query.recordErrors = false;
+			IrParserStructure *reference = getImmediateReference(query, &info);
+
+			if (reference == nullptr) return nullptr;
+			else return reference->generateNode(info.newContext, program);
+		}
+
+		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+			IrReferenceInfo info;
+			IrReferenceQuery query;
+			query.inputContext = context;
+			query.recordErrors = false;
+			IrParserStructure *reference = getImmediateReference(query, &info);
+
+			if (reference == nullptr) return nullptr;
+			else return reference->generateNodeOutput(info.newContext, program);
+		}
 	};
 
 } /* namespace piranha */

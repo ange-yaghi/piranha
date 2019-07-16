@@ -29,6 +29,7 @@ namespace piranha {
 		IrValue *getLeft() const { return m_leftOperand; }
 		IrValue *getRight() const { return m_rightOperand; }
 
+		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
 	protected:
