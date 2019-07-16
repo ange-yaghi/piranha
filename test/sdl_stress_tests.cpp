@@ -20,23 +20,9 @@
 
 using namespace piranha;
 
-const ErrorList *compileFile(const std::string &filename) {
-	Compiler *compiler = new Compiler();
-	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
-	EXPECT_NE(unit, nullptr);
-
-	const ErrorList *errors = compiler->getErrorList();
-
-	IrNode *node = unit->getNode(0);
-	std::ofstream f(TMP_PATH + std::string("trace.txt"));
-	node->writeTraceToFile(f);
-	f.close();
-
-	return errors;
-}
-
 TEST(IrSyntaxStressTests, IrSyntaxStressTest1) {
-	const ErrorList *errors = compileFile("stress-testing/stress_test_1.mr");
+	const ErrorList *errors;
+	compileFile("stress-testing/stress_test_1.mr", &errors);
 
 	EXPECT_EQ(errors->getErrorCount(), 13);
 
@@ -59,7 +45,8 @@ TEST(IrSyntaxStressTests, IrSyntaxStressTest1) {
 }
 
 TEST(IrSyntaxStressTests, IrSyntaxNodeArgumentStressTest1) {
-	const ErrorList *errors = compileFile("stress-testing/node_argument_stress_test_1.mr");
+	const ErrorList *errors;
+	compileFile("stress-testing/node_argument_stress_test_1.mr", &errors);
 
 	EXPECT_EQ(errors->getErrorCount(), 5);
 
@@ -68,7 +55,8 @@ TEST(IrSyntaxStressTests, IrSyntaxNodeArgumentStressTest1) {
 }
 
 TEST(IrSyntaxStressTests, IrSyntaxDeepErrorIsolated) {
-	const ErrorList *errors = compileFile("stress-testing/deep_error_isolated.mr");
+	const ErrorList *errors;
+	compileFile("stress-testing/deep_error_isolated.mr", &errors);
 
 	EXPECT_EQ(errors->getErrorCount(), 1);
 
@@ -76,7 +64,8 @@ TEST(IrSyntaxStressTests, IrSyntaxDeepErrorIsolated) {
 }
 
 TEST(IrSyntaxStressTests, IrSyntaxDeepError) {
-	const ErrorList *errors = compileFile("stress-testing/deep_error.mr");
+	const ErrorList *errors;
+	compileFile("stress-testing/deep_error.mr", &errors);
 
 	EXPECT_EQ(errors->getErrorCount(), 3);
 

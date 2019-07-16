@@ -1,4 +1,4 @@
-private import "standard-library/standard_library.mr" as std
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
 
 private node print_header {
     std::console_out("---------------------------------------\n")

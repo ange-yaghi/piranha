@@ -22,14 +22,6 @@
 
 using namespace piranha;
 
-IrCompilationUnit *compileFile(const std::string &filename) {
-	Compiler *compiler = new Compiler();
-	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
-	EXPECT_NE(unit, nullptr);
-
-	return unit;
-}
-
 TEST(IrConstructionTests, IrConstructionSanityCheck) {
 	IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr");
 

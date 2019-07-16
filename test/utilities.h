@@ -33,4 +33,7 @@ using namespace piranha;
 bool findError(const ErrorList *errorList, const ErrorCode_struct &errorCode,
 	int line = -1, const IrCompilationUnit *unit = nullptr, bool instantiationError = false);
 
+IrCompilationUnit *compileFile(const std::string &filename, const ErrorList **errList = nullptr);
+IrCompilationUnit *compileToUnit(const std::string &filename, const ErrorList **errList = nullptr, LanguageRules **outputRules = nullptr);
+
 #endif /* TEST_UTILITIES_H */

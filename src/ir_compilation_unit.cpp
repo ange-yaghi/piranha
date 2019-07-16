@@ -57,6 +57,26 @@ piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parse(std::i
 	return parseHelper(stream);
 }
 
+void piranha::IrCompilationUnit::_checkInstantiation() {
+	// Check all references relating to the connection of inputs from this
+	// node to the actual definition.
+	IrContextTree *mainContext = new IrContextTree(nullptr, true);
+
+	/*
+	IrAttributeList *attributes = getAttributes();
+	if (attributes != nullptr) {
+		int attributeCount = attributes->getAttributeCount();
+		for (int i = 0; i < attributeCount; i++) {
+			attributes->getAttribute(i)->checkReferences(parentContext);
+		}
+	}*/
+
+	int componentCount = getComponentCount();
+	for (int i = 0; i < componentCount; i++) {
+		m_components[i]->checkReferences(mainContext);
+	}
+}
+
 piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parseHelper(
 							std::istream &stream, IrCompilationUnit *topLevel) {
 	delete m_scanner;
