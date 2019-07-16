@@ -1,4 +1,5 @@
 #include "reference_language_rules.h"
+#include "utilities.h"
 
 #include "../include/compiler.h"
 #include "../include/node_program.h"
@@ -15,9 +16,13 @@ int main() {
 
 	piranha::Compiler compiler;
 	piranha::IrCompilationUnit *unit = compiler.compile("../../demos/piranha/number_adder.mr");
-	unit->build(&nodeProgram);
 
-	nodeProgram.execute();
+	piranha_demo::printErrorTrace(compiler.getErrorList());
+
+	if (compiler.getErrorList()->getErrorCount() == 0) {
+		unit->build(&nodeProgram);
+		nodeProgram.execute();
+	}
 
 	std::string pause;
 	std::cin >> pause;

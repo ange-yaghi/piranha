@@ -169,9 +169,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\demos\main.cpp" />
     <ClCompile Include="..\..\demos\reference_language_rules.cpp" />
+    <ClCompile Include="..\..\demos\utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\demos\reference_language_rules.h" />
+    <ClInclude Include="..\..\demos\utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

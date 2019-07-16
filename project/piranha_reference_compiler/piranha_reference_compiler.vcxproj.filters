@@ -21,9 +21,15 @@
     <ClCompile Include="..\..\demos\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\demos\utilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\demos\reference_language_rules.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\demos\utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
