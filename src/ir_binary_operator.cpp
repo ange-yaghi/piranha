@@ -76,7 +76,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 			IrValue *asValue = resolvedLeft->getAsValue();
 
 			if (asValue != nullptr) resolvedLeft = asValue;
-			else if (asNode != nullptr) resolvedLeft = asNode->getDefaultOutputValue();
+			else if (asNode != nullptr) resolvedLeft = asNode->getDefaultPort();
 
 			if (resolvedLeft == nullptr) {
 				IR_FAIL();

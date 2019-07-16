@@ -1,13 +1,27 @@
 private import "standard-library/standard_library.mr" as std
 
-std::console_out("---------------------------------------\n")
-std::console_out(" Piranha Number Adder\n")
-std::console_out(" Ange Yaghi (c) 2019\n")
-std::console_out("---------------------------------------\n")
+private node print_header {
+    std::console_out("---------------------------------------\n")
+    std::console_out(" Piranha Number Adder\n")
+    std::console_out(" Ange Yaghi (c) 2019\n")
+    std::console_out("---------------------------------------\n")
+}
 
-std::console_in num1("Enter a number: ")
-std::console_in num2("Enter another number: ")
+private node get_input {
+    output number1: std::console_in("Enter a number: ");
+    output number2: std::console_in("Enter another number: ");
+}
 
-string formatted(float(num1.raw_input) + float(num2.raw_input))
-std::console_out("---------------------------------------\n")
-std::console_out(num1.raw_input + " + " + num2.raw_input + " = " + formatted + "\n")
+private node add_and_print {
+    input inputs;
+
+    string formatted(float(inputs.number1) + float(inputs.number2))
+    std::console_out("---------------------------------------\n")
+    std::console_out(inputs.number1 + " + " + inputs.number2 + " = " + formatted + "\n")
+}
+
+// Execute
+print_header()
+add_and_print(
+    get_input()
+)
