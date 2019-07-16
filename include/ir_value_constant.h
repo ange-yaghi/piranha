@@ -121,7 +121,7 @@ namespace piranha {
 			if (reference == nullptr) {
 				IR_FAIL();
 
-				if (query.recordErrors && IR_EMPTY_CONTEXT() && query.inputContext->isMainContext()) {
+				if (query.recordErrors && IR_EMPTY_CONTEXT()) {
 					IR_ERR_OUT(new CompilationError(m_summaryToken,
 						ErrorCode::UnresolvedReference, query.inputContext));
 				}
