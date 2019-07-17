@@ -22,8 +22,6 @@ piranha::IrCompilationUnit::~IrCompilationUnit() {
 }
 
 void piranha::IrCompilationUnit::build(NodeProgram *program) {
-	program->getRules()->registerBuiltinNodeTypes();
-
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		m_nodes[i]->generateNode(nullptr, program);

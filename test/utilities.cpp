@@ -41,6 +41,7 @@ IrCompilationUnit *compileToUnit(const std::string &filename, const ErrorList **
 	TestRules *rules = new TestRules();
 	rules->registerBuiltinNodeTypes();
 	Compiler *compiler = new Compiler(rules);
+
 	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
 	EXPECT_NE(unit, nullptr);
 

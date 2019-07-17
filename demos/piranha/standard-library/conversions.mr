@@ -9,3 +9,15 @@ public node float => __piranha__float {
 public node string => __piranha__string {
     input __in;
 }
+
+public node vector => __piranha__vector {
+    input __in0;
+    input __in1;
+    input __in2;
+    input __in3;
+
+    output x [float];
+    output y [float];
+    output z [float];
+    output w [float];
+}

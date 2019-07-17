@@ -65,6 +65,10 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 		IrParserStructure *reference = query.inputContext->resolveDefinition(this);
 		if (reference != nullptr) {
 			IR_INFO_OUT(newContext, query.inputContext->getParent());
+
+			// This flag must be set to notify that this chain of resolutions actually
+			// touched the important main context (the only context for which errors
+			// are being logged)
 			IR_INFO_OUT(touchedMainContext, query.inputContext->isMainContext());
 
 			return reference;

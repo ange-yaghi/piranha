@@ -291,6 +291,18 @@
     <ClInclude Include="..\..\include\console_input_node.h">
       <Filter>Header Files\nodes\standard</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\vector_constructor.h">
+      <Filter>Header Files\nodes\conversions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_split.h">
+      <Filter>Header Files\nodes\conversions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_split_node.h">
+      <Filter>Header Files\nodes\conversions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_output.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
@@ -391,6 +403,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\channel_type.cpp">
       <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_constructor.cpp">
+      <Filter>Source Files\nodes\conversions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
