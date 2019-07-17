@@ -1,9 +1,11 @@
 #include <pch.h>
 
+#include "test_rules.h"
 #include "utilities.h"
 
 #include "../include/compilation_error.h"
 #include "../include/error_list.h"
+#include "../include/compiler.h"
 
 bool findError(const ErrorList *errorList, const ErrorCode_struct &errorCode, int line, 
 										const IrCompilationUnit *unit, bool instantiationError) {
@@ -23,4 +25,28 @@ bool findError(const ErrorList *errorList, const ErrorCode_struct &errorCode, in
 	}
 
 	return false;
+}
+
+IrCompilationUnit *compileFile(const std::string &filename, const ErrorList **errList) {
+	piranha::Compiler *compiler = new Compiler();
+	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
+	EXPECT_NE(unit, nullptr);
+
+	if (errList != nullptr) *errList = compiler->getErrorList();
+
+	return unit;
+}
+
+IrCompilationUnit *compileToUnit(const std::string &filename, const ErrorList **errList, LanguageRules **outputRules) {
+	TestRules *rules = new TestRules();
+	rules->registerBuiltinNodeTypes();
+	Compiler *compiler = new Compiler(rules);
+
+	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
+	EXPECT_NE(unit, nullptr);
+
+	if (errList != nullptr) *errList = compiler->getErrorList();
+	if (outputRules != nullptr) *outputRules = rules;
+
+	return unit;
 }

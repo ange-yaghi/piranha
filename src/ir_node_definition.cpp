@@ -165,8 +165,3 @@ void piranha::IrNodeDefinition::_validate() {
 		}
 	}
 }
-
-void piranha::IrNodeDefinition::_checkInstantiation() {
-	IrContextTree *mainContext = new IrContextTree(nullptr, true);
-	checkReferences(mainContext);
-}

@@ -12,6 +12,18 @@ namespace piranha {
 		static const ChannelType IntType;
 		static const ChannelType StringType;
 		static const ChannelType BoolType;
+		static const ChannelType VectorType;
+	};
+
+	struct vector {
+		double x;
+		double y;
+		double z;
+		double w;
+
+		vector operator+(const vector &v) const {
+			return { x + v.x, y + v.y, z + v.z, w + v.w };
+		}
 	};
 
 	// Native types
@@ -19,6 +31,7 @@ namespace piranha {
 	typedef bool			native_bool;
 	typedef std::string		native_string;
 	typedef int				native_int;
+	typedef vector			native_vector;
 
 	enum LiteralType {
 		LITERAL_FLOAT,
@@ -43,6 +56,7 @@ namespace piranha {
 	template <> inline const ChannelType *NativeTypeLookup<native_bool>() { return &FundamentalType::BoolType; }
 	template <> inline const ChannelType *NativeTypeLookup<native_int>() { return &FundamentalType::IntType; }
 	template <> inline const ChannelType *NativeTypeLookup<native_string>() { return &FundamentalType::StringType; }
+	template <> inline const ChannelType *NativeTypeLookup<native_vector>() { return &FundamentalType::VectorType; }
 
 } /* namespace piranha */
 

@@ -58,7 +58,6 @@ namespace piranha {
 
 	protected:
 		virtual void _validate();
-		virtual void _checkInstantiation();
 	};
 
 } /* namespace piranha */

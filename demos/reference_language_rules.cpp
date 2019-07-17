@@ -5,6 +5,7 @@
 
 #include "../include/float_cast_node.h"
 #include "../include/string_cast_node.h"
+#include "../include/vector_constructor.h"
 #include "../include/literal_node.h"
 #include "../include/float_conversions.h"
 #include "../include/string_conversions.h"
@@ -25,10 +26,12 @@ void piranha_demo::ReferenceLanguageRules::registerBuiltinNodeTypes() {
 	registerBuiltinType<piranha::FloatCastNode>("__piranha__int", &piranha::FundamentalType::IntType);
 	registerBuiltinType<piranha::FloatCastNode>("__piranha__float", &piranha::FundamentalType::FloatType);
 	registerBuiltinType<piranha::StringCastNode>("__piranha__string", &piranha::FundamentalType::StringType);
+	registerBuiltinType<piranha::VectorConstructorNode>("__piranha__vector", &piranha::FundamentalType::VectorType);
 
 	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_int>>("__piranha__int_add");
 	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_float>>("__piranha__float_add");
 	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_string>>("__piranha__string_add");
+	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_vector>>("__piranha__vector_add");
 
 	registerBuiltinType<piranha::DefaultLiteralStringNode>("__piranha__literal_string", &piranha::FundamentalType::StringType);
 	registerBuiltinType<piranha::DefaultLiteralIntNode>("__piranha__literal_int", &piranha::FundamentalType::IntType);
@@ -68,6 +71,10 @@ void piranha_demo::ReferenceLanguageRules::registerBuiltinNodeTypes() {
 	registerOperator(
 		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
 		"__piranha__string_add"
+	);
+	registerOperator(
+		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
+		"__piranha__vector_add"
 	);
 }
 

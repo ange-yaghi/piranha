@@ -22,18 +22,11 @@
 
 using namespace piranha;
 
-IrCompilationUnit *compileFile(const std::string &filename) {
-	Compiler *compiler = new Compiler();
-	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
-	EXPECT_NE(unit, nullptr);
-
-	return unit;
-}
-
 TEST(IrConstructionTests, IrConstructionSanityCheck) {
 	IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr");
 
 	TestRules generator;
+	generator.registerBuiltinNodeTypes();
 	NodeProgram program;
 	program.setRules(&generator);
 	unit->build(&program);
@@ -68,6 +61,7 @@ TEST(IrConstructionTests, IrConstructionNestedTest) {
 	IrCompilationUnit *unit = compileFile("construction-tests/nested_conversions.mr");
 
 	TestRules generator;
+	generator.registerBuiltinNodeTypes();
 	NodeProgram program;
 	program.setRules(&generator);
 	unit->build(&program);

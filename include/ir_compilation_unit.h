@@ -69,6 +69,8 @@ namespace piranha {
 		void setErrorList(ErrorList *list) { m_errorList = list; }
 		ErrorList *getErrorList() const { return m_errorList; }
 
+		void _checkInstantiation();
+
 	private:
 		ParseResult parseHelper(std::istream &stream, IrCompilationUnit *topLevel = nullptr);
 

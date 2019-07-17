@@ -1,4 +1,4 @@
-private import "standard-library/standard_library.mr" as std
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
 
 private node print_header {
     std::console_out("---------------------------------------\n")
@@ -7,15 +7,20 @@ private node print_header {
     std::console_out("---------------------------------------\n")
 }
 
+private node nested_console {
+    output a: std::console_in("Stuff");
+    default output fake: std::console_in("fake");
+}
+
 private node get_input {
     output number1: std::console_in("Enter a number: ");
-    output number2: std::console_in("Enter another number: ");
+    output number2: nested_console()^.raw_input;
 }
 
 private node add_and_print {
     input inputs;
 
-    string formatted(float(inputs.number1) + float(inputs.number2) + fake)
+    string formatted(float(inputs.number1) + float(inputs.number2))
     std::console_out("---------------------------------------\n")
     std::console_out(inputs.number1 + " + " + inputs.number2 + " = " + formatted + "\n")
 }
