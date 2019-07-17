@@ -1,25 +1,6 @@
 private import "../../../demos/piranha/standard-library/standard_library.mr" as std
 
-private node nested_console {
-    output a: std::console_in("Stuff");
-    default output fake: std::console_in("fake");
-}
+std::vector v1(1.0, 2.0, 3.0, 4.0)
+std::vector v2(4.0, 3.0, 2.0, 1.0)
 
-private node get_input {
-    output number1: std::console_in("Enter a number: ");
-    output number2: nested_console()^.raw_input;
-}
-
-private node add_and_print {
-    input inputs;
-
-    string formatted(float(inputs.number1) + float(inputs.number2))
-    std::console_out("---------------------------------------\n")
-    std::console_out(inputs.number1 + " + " + inputs.number2 + " = " + formatted + "\n")
-}
-
-// Execute
-print_header()
-add_and_print(
-    get_input()
-)
+std::console_out((v1 + v2)->x)
