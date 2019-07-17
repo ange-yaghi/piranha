@@ -189,14 +189,6 @@ void piranha::IrNode::_checkInstantiation() {
 	IrContextTree *parentContext = new IrContextTree(nullptr);
 	IrContextTree *mainContext = parentContext->newChild(this, true);
 
-	IrAttributeList *attributes = getAttributes();
-	if (attributes != nullptr) {
-		int attributeCount = attributes->getAttributeCount();
-		for (int i = 0; i < attributeCount; i++) {
-			attributes->getAttribute(i)->checkReferences(parentContext);
-		}
-	}
-
 	if (m_definition != nullptr) {
 		m_definition->checkReferences(mainContext);
 	}

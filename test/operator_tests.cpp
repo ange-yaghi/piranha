@@ -22,19 +22,6 @@
 
 using namespace piranha;
 
-IrCompilationUnit *compileToUnit(const std::string &filename, const ErrorList **errList = nullptr, LanguageRules **outputRules = nullptr) {
-	TestRules *rules = new TestRules();
-	rules->registerBuiltinNodeTypes();
-	Compiler *compiler = new Compiler(rules);
-	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
-	EXPECT_NE(unit, nullptr);
-
-	if (errList != nullptr) *errList = compiler->getErrorList();
-	if (outputRules != nullptr) *outputRules = rules;
-
-	return unit;
-}
-
 TEST(IrOperatorTests, IrOperatorSanityCheck) {
 	IrCompilationUnit *unit = compileToUnit("operator-tests/operator_sanity_check.mr");
 	IrNode *node = unit->getNode(0);

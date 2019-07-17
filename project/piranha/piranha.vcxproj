@@ -214,6 +214,10 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\standard_allocator.h" />
     <ClInclude Include="..\..\include\string_cast_node.h" />
     <ClInclude Include="..\..\include\string_conversions.h" />
+    <ClInclude Include="..\..\include\vector_constructor.h" />
+    <ClInclude Include="..\..\include\vector_output.h" />
+    <ClInclude Include="..\..\include\vector_split.h" />
+    <ClInclude Include="..\..\include\vector_split_node.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\autogen\parser.auto.cpp" />
@@ -249,6 +253,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\standard_allocator.cpp" />
     <ClCompile Include="..\..\src\string_cast_node.cpp" />
     <ClCompile Include="..\..\src\string_conversions.cpp" />
+    <ClCompile Include="..\..\src\vector_constructor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\flex-bison\scanner.l" />

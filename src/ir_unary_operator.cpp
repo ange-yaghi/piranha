@@ -69,33 +69,36 @@ piranha::IrParserStructure *piranha::IrUnaryOperator::getImmediateReference(cons
 	return nullptr;
 }
 
-piranha::NodeOutput *piranha::IrUnaryOperator::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-	IrValue *resolvedOperand = m_operand;
-
-	if (resolvedOperand == nullptr) return nullptr;
-
-	Node *node = generateNode(context, program);
-	IrNode *asNode = resolvedOperand->getAsNode();
-	IrValue *value = resolvedOperand->getAsValue();
-	
+piranha::NodeOutput *piranha::IrUnaryOperator::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {	
 	if (m_operator == DEFAULT) {
-		return value->generateNode(context, program)->getPrimaryOutput();
+		IrReferenceInfo info;
+		IrReferenceQuery query;
+		query.inputContext = context;
+		query.recordErrors = false;
+
+		IrParserStructure *reference = getReference(query, &info);
+		if (reference != nullptr) {
+			return reference->generateNodeOutput(info.newContext, program);
+		}
+		else return nullptr;
 	}
 
 	return nullptr;
 }
 
 piranha::Node *piranha::IrUnaryOperator::_generateNode(IrContextTree *context, NodeProgram *program) {
-	IrValue *resolvedOperand = m_operand;
-
-	if (resolvedOperand == nullptr) return nullptr;
-
-	IrValue *value = resolvedOperand->getAsValue();
-	Node *node = value->generateNode(context, program);
-
 	if (m_operator == DEFAULT) {
-		return nullptr;
-	}
+		IrReferenceInfo info;
+		IrReferenceQuery query;
+		query.inputContext = context;
+		query.recordErrors = false;
 
-	return nullptr;
+		IrParserStructure *reference = getReference(query, &info);
+
+		if (reference != nullptr) {
+			return reference->generateNode(info.newContext, program);
+		}
+		else return nullptr;
+	}
+	else return nullptr;
 }
