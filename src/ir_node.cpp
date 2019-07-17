@@ -431,20 +431,21 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 	return newNode;
 }
 
-piranha::IrParserStructure *piranha::IrNode::getDefaultPort() {
+piranha::IrParserStructure *piranha::IrNode::getDefaultPort(bool *failed) {
 	auto definition = m_definition;
-	if (definition == nullptr) return nullptr;
+	if (definition == nullptr) {
+		*failed = true;
+		return nullptr;
+	}
 
 	auto definitionList = definition->getAttributeDefinitionList();
-	if (definitionList == nullptr) return nullptr;
+	if (definitionList == nullptr) {
+		*failed = true;
+		return nullptr;
+	}
 
-	auto outputDefinition = definitionList->getDefaultOutput();
-	if (outputDefinition == nullptr) return this;
-
-	auto defaultValue = outputDefinition->getDefaultValue();
-	if (defaultValue == nullptr) return outputDefinition;
-
-	return defaultValue;
+	*failed = false;
+	return definitionList->getAliasOutput();
 }
 
 piranha::IrValue *piranha::IrNode::getDefaultOutputValue() {
@@ -454,7 +455,7 @@ piranha::IrValue *piranha::IrNode::getDefaultOutputValue() {
 	auto definitionList = definition->getAttributeDefinitionList();
 	if (definitionList == nullptr) return nullptr;
 
-	auto outputDefinition = definitionList->getDefaultOutput();
+	auto outputDefinition = definitionList->getAliasOutput();
 	if (outputDefinition == nullptr) return nullptr;
 
 	auto defaultValue = outputDefinition->getDefaultValue();
@@ -474,6 +475,27 @@ void piranha::IrNode::writeTraceToFile(std::ofstream &file) {
 			->getDefinition(i)
 			->writeReferencesToFile(file, thisContext);
 	}
+}
+
+piranha::IrParserStructure *piranha::IrNode::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+	IR_RESET(query);
+
+	bool failed = false;
+	IrParserStructure *aliasPort = getDefaultPort(&failed);
+
+	if (failed) {
+		IR_FAIL();
+		return nullptr;
+	}
+
+	if (aliasPort != nullptr) {
+		IrContextTree *newContext = query.inputContext->newChild(this, false);
+		IR_INFO_OUT(newContext, newContext);
+
+		return aliasPort;
+	}
+
+	return nullptr;
 }
 
 void piranha::IrNode::checkReferences(IrContextTree *inputContext) {

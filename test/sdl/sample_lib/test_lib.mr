@@ -8,7 +8,7 @@ module {
 public node Add {
     input A;
     input B;
-    default output C: A + B;
+    alias output C: A + B;
 }
 
 @author = "Ange Yaghi"
@@ -16,7 +16,7 @@ public node Add {
 public node SampleNode {
     input A;
     input B;
-    default output C: add_mod; // This should take the default output 'C'
+    alias output C: add_mod; // This should take the default output 'C'
     
     Add add_mod(A, B)
 }

@@ -24,7 +24,7 @@ TEST(IrSyntaxStressTests, IrSyntaxStressTest1) {
 	const ErrorList *errors;
 	compileFile("stress-testing/stress_test_1.mr", &errors);
 
-	EXPECT_EQ(errors->getErrorCount(), 10);
+	EXPECT_EQ(errors->getErrorCount(), 9);
 
 	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 50));
 	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 51));
@@ -37,7 +37,6 @@ TEST(IrSyntaxStressTests, IrSyntaxStressTest1) {
 	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 60));
 
 	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 62));
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 63));
 	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 67));
 }
 

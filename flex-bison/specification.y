@@ -81,7 +81,7 @@
 %token <piranha::IrTokenInfo_string> IMPORT
 %token <piranha::IrTokenInfo_string> AS
 %token <piranha::IrTokenInfo_string> NODE
-%token <piranha::IrTokenInfo_string> DEFAULT
+%token <piranha::IrTokenInfo_string> ALIAS
 %token <piranha::IrTokenInfo_string> INPUT
 %token <piranha::IrTokenInfo_string> OUTPUT
 %token <piranha::IrTokenInfo_string> LABEL
@@ -93,7 +93,6 @@
 %token <piranha::IrTokenInfo_string> PUBLIC
 %token <piranha::IrTokenInfo_string> PRIVATE
 %token <piranha::IrTokenInfo_string> BUILTIN_POINTER
-%token <piranha::IrTokenInfo_string> POINTER
 %token <piranha::IrTokenInfo_string> NAMESPACE_POINTER
 %token <piranha::IrTokenInfo_string> UNRECOGNIZED
 %token <piranha::IrTokenInfo_string> OPERATOR
@@ -334,8 +333,8 @@ port_declaration
   ;
 
 port_status
-  : DEFAULT port_declaration			{ $$ = $2; $$->setDefault(true); $$->setDefaultToken($1); }
-  | port_declaration					{ $$ = $1; $$->setDefault(false); }
+  : ALIAS port_declaration				{ $$ = $2; $$->setAlias(true); $$->setAliasToken($1); }
+  | port_declaration					{ $$ = $1; $$->setAlias(false); }
   ;
 
 port_value
@@ -434,10 +433,6 @@ data_access
   | data_access '.' label_value		{ 
 										$$ = static_cast<IrValue *>(
 											new IrBinaryOperator(IrBinaryOperator::DOT, $1, $3));
-									}
-  | data_access POINTER label_value { 
-										$$ = static_cast<IrValue *>(
-											new IrBinaryOperator(IrBinaryOperator::POINTER, $1, $3));
 									}
   ;
 

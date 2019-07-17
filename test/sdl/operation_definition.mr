@@ -1,7 +1,7 @@
 private node operator+ => __builtin_add {
-    default input __in0;
-    default input __in1;
-    default output __out0 [Placeholder];
+    input __in0;
+    input __in1;
+    alias output __out0 [Placeholder];
 }
 
 operator+ test_node (

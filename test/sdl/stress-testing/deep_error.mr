@@ -14,7 +14,7 @@ private node half_good {
 
 private node even_harder {
     input v;
-    default output _v: v;
+    output _v: v;
 }
 
 private node straight_through {
@@ -34,7 +34,7 @@ private node confusion {
 private node top_confusion {
     input some_input;
     input other;
-    default output __out: 
+    output __out: 
         confusion(
             straight_through(some_input)
         );

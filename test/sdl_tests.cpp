@@ -257,23 +257,23 @@ TEST(IrTests, IrNodeBuiltinTest) {
 
 	EXPECT_EQ(definitions->getDefinitionCount(), 4);
 
-	EXPECT_EQ(definitions->getDefinition(0)->isDefault(), true);
+	EXPECT_EQ(definitions->getDefinition(0)->isAlias(), true);
 	EXPECT_EQ(definitions->getDefinition(0)->getDirection(),
 		IrAttributeDefinition::INPUT);
 	EXPECT_EQ(definitions->getDefinition(0)->getName(), "A");
-	CHECK_IR_POS(definitions->getDefinition(0), 5, 20, 19, 19);
+	CHECK_IR_POS(definitions->getDefinition(0), 5, 18, 19, 19);
 
-	EXPECT_EQ(definitions->getDefinition(1)->isDefault(), false);
+	EXPECT_EQ(definitions->getDefinition(1)->isAlias(), false);
 	EXPECT_EQ(definitions->getDefinition(1)->getDirection(),
 		IrAttributeDefinition::INPUT);
 	EXPECT_EQ(definitions->getDefinition(1)->getName(), "B");
 
-	EXPECT_EQ(definitions->getDefinition(2)->isDefault(), true);
+	EXPECT_EQ(definitions->getDefinition(2)->isAlias(), true);
 	EXPECT_EQ(definitions->getDefinition(2)->getDirection(),
 		IrAttributeDefinition::OUTPUT);
 	EXPECT_EQ(definitions->getDefinition(2)->getName(), "A_out");
 
-	EXPECT_EQ(definitions->getDefinition(3)->isDefault(), false);
+	EXPECT_EQ(definitions->getDefinition(3)->isAlias(), false);
 	EXPECT_EQ(definitions->getDefinition(3)->getDirection(),
 		IrAttributeDefinition::OUTPUT);
 	EXPECT_EQ(definitions->getDefinition(3)->getName(), "B_out");

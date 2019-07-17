@@ -14,7 +14,6 @@ namespace piranha {
 	public:
 		enum OPERATOR {
 			DOT,
-			POINTER,
 			ADD,
 			SUB,
 			MUL,

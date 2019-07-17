@@ -31,10 +31,10 @@ namespace piranha {
 		void setDefaultValue(IrValue *value);
 		IrValue *getDefaultValue() const { return m_defaultValue; }
 
-		void setDefaultToken(const IrTokenInfo_string &name);
-		const IrTokenInfo *getDefaultToken() const { return (m_isDefault) ? &m_defaultToken : nullptr; }
-		void setDefault(bool isDefault) { m_isDefault = isDefault; }
-		bool isDefault() const { return m_isDefault; }
+		void setAliasToken(const IrTokenInfo_string &name);
+		const IrTokenInfo *getAliasToken() const { return (m_isAlias) ? &m_aliasToken : nullptr; }
+		void setAlias(bool isAlias) { m_isAlias = isAlias; }
+		bool isAlias() const { return m_isAlias; }
 
 		const IrTokenInfo *getDirectionToken() const { return &m_directionToken; }
 		void setDirection(DIRECTION direction) { m_direction = direction; }
@@ -56,14 +56,14 @@ namespace piranha {
 
 	protected:
 		IrTokenInfo_string m_directionToken;
-		IrTokenInfo_string m_defaultToken;
+		IrTokenInfo_string m_aliasToken;
 		IrTokenInfo_string m_name;
 		IrTokenInfoSet<std::string, 2> m_typeInfo;
 
 		IrValue *m_defaultValue;
 
 		DIRECTION m_direction;
-		bool m_isDefault;
+		bool m_isAlias;
 
 		std::vector<IrInputConnection *> m_impliedMembers;
 

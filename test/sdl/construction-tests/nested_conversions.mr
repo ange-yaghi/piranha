@@ -1,9 +1,9 @@
 public node float => __piranha__float {
-    default input __in: 10.0;
+    input __in: 10.0;
 }
 
 public node string => __piranha__string {
-    default input __in: "DEFAULT";
+    input __in: "DEFAULT";
 }
 
 float top_level(
