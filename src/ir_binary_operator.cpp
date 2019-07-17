@@ -19,7 +19,7 @@ piranha::IrBinaryOperator::IrBinaryOperator(OPERATOR op, IrValue *left, IrValue 
 	// The data access operators are special in the sense that the right-hand operand
 	// will *always* be a standard label that doesn't reference anything itself.
 	// Therefore it wouldn't be wise to resolve the reference of that label
-	if (op == DOT || op == POINTER) {
+	if (op == DOT) {
 		if (m_rightOperand != nullptr) {
 			m_rightOperand->setCheckReferences(false);
 		}
@@ -45,7 +45,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 	}
 
 	// The dot is the reference operator
-	if (m_operator == DOT || m_operator == POINTER) {
+	if (m_operator == DOT) {
 		IrReferenceQuery basicQuery;
 		basicQuery.inputContext = query.inputContext;
 		basicQuery.recordErrors = false;
@@ -69,55 +69,6 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 		}
 
 		IrContextTree *currentContext = basicInfo.newContext;
-
-		// Perform code specific to the pointer operator
-		if (m_operator == POINTER) {
-			IrNode *asNode = resolvedLeft->getAsNode();
-			IrValue *asValue = resolvedLeft->getAsValue();
-
-			if (asValue != nullptr) resolvedLeft = asValue;
-			else if (asNode != nullptr) resolvedLeft = asNode->getDefaultPort();
-
-			if (resolvedLeft == nullptr) {
-				IR_FAIL();
-
-				bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
-				if (query.recordErrors && isValidError) {
-					IR_ERR_OUT(new CompilationError(*m_leftOperand->getSummaryToken(),
-						ErrorCode::CannotFindDefaultValue, query.inputContext));
-				}
-
-				return nullptr;
-			}
-
-			if (currentContext != nullptr) {
-				currentContext = currentContext->newChild(asNode);
-			}
-
-			IrReferenceInfo refInfo;
-			IrReferenceQuery refQuery;
-			refQuery.inputContext = currentContext;
-			refQuery.recordErrors = false;
-			resolvedLeft = resolvedLeft->getReference(refQuery, &refInfo);
-
-			if (IR_FAILED(&refInfo)) {
-				IR_FAIL();
-				return nullptr;
-			}
-
-			if (refInfo.reachedDeadEnd) {
-				IR_DEAD_END();
-				return nullptr;
-			}
-
-			if (refInfo.touchedMainContext) {
-				IR_INFO_OUT(touchedMainContext, true);
-				touchedMainContext = true;
-			}
-
-			currentContext = refInfo.newContext;
-		}
-
 		IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
 		IrParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
 
@@ -173,7 +124,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) return;
 
-	if (m_operator != DOT && m_operator != POINTER) {
+	if (m_operator != DOT) {
 		if (m_rules == nullptr) return;
 
 		IrReferenceInfo leftInfo;
@@ -226,7 +177,7 @@ piranha::NodeOutput *piranha::IrBinaryOperator::_generateNodeOutput(IrContextTre
 	}
 
 	// The dot is the reference operator
-	if (m_operator == DOT || m_operator == POINTER) {
+	if (m_operator == DOT) {
 		IrValue *value = m_leftOperand;
 
 		IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
@@ -236,33 +187,13 @@ piranha::NodeOutput *piranha::IrBinaryOperator::_generateNodeOutput(IrContextTre
 
 		if (leftOutput == nullptr && leftNode == nullptr) return nullptr;
 		if (leftNode != nullptr) {
-			if (m_operator == DOT) {
-				return leftNode->getOutput(labelConstant->getValue().c_str());
-			}
-			else if (m_operator == POINTER) {
-				NodeOutput *primaryOutput = leftNode->getPrimaryOutput();
-				Node *outputInterface = primaryOutput->getInterface();
-				NodeOutput *output = outputInterface->getOutput(labelConstant->getValue().c_str());
-				return leftNode
-					->getPrimaryOutput()
-					->getInterface()
-					->getOutput(labelConstant->getValue().c_str());
-			}
+			return leftNode->getOutput(labelConstant->getValue().c_str());
 		}
 
 		if (leftOutput != nullptr) {
-			if (m_operator == DOT) {
-				return leftOutput
-					->getInterface()
-					->getOutput(labelConstant->getValue().c_str());
-			}
-			else if (m_operator == POINTER) {
-				return leftOutput
-					->getInterface()
-					->getPrimaryOutput()
-					->getInterface()
-					->getOutput(labelConstant->getValue().c_str());
-			}
+			return leftOutput
+				->getInterface()
+				->getOutput(labelConstant->getValue().c_str());
 		}
 	}
 
@@ -272,7 +203,7 @@ piranha::NodeOutput *piranha::IrBinaryOperator::_generateNodeOutput(IrContextTre
 
 piranha::Node *piranha::IrBinaryOperator::_generateNode(IrContextTree *context, NodeProgram *program) {
 	// The dot is the reference operator
-	if (m_operator == DOT || m_operator == POINTER) {
+	if (m_operator == DOT) {
 		IrReferenceInfo info;
 		IrReferenceQuery query;
 		query.inputContext = context;

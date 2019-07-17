@@ -50,7 +50,7 @@ H				[a-fA-F0-9]
 "as"			{ DEFAULT_BUILD(location); return (token::AS); }
 "input"			{ DEFAULT_BUILD(location); return (token::INPUT); }
 "output"		{ DEFAULT_BUILD(location); return (token::OUTPUT); }
-"default"		{ DEFAULT_BUILD(location); return (token::DEFAULT); }
+"alias"			{ DEFAULT_BUILD(location); return (token::ALIAS); }
 "node"			{ DEFAULT_BUILD(location); return (token::NODE); }
 "public"		{ DEFAULT_BUILD(location); return (token::PUBLIC); }
 "private"		{ DEFAULT_BUILD(location); return (token::PRIVATE); }
@@ -124,7 +124,6 @@ H				[a-fA-F0-9]
 "-"				{ DEFAULT_BUILD(location); return ('-'); }
 
 "=>"			{ DEFAULT_BUILD(location); return (token::BUILTIN_POINTER); }
-"->"			{ DEFAULT_BUILD(location); return (token::POINTER); }
 "::"			{ DEFAULT_BUILD(location); return (token::NAMESPACE_POINTER); }
 "="				{ DEFAULT_BUILD(location); return ('='); }
 

@@ -45,7 +45,7 @@ piranha::IrParserStructure *piranha::IrUnaryOperator::getImmediateReference(cons
 		}
 
 		IrNode *asNode = resolvedOperand->getAsNode();
-		if (asNode != nullptr) result = asNode->getDefaultPort();
+		//if (asNode != nullptr) result = asNode->getDefaultPort();
 
 		if (result == nullptr) {
 			IR_FAIL();

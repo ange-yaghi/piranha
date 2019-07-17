@@ -4,7 +4,7 @@ private import color
 @doc = "Define a new version of this same node name"
 private node Gray {
     input s: 0.5;
-    default output gray: color::Color(s, s, s) ; 
+    output gray: color::Color(s, s, s) ; 
 }
 
 private node Test {

@@ -40,9 +40,9 @@ void piranha::IrAttributeDefinition::setDefaultValue(IrValue *value) {
 	registerComponent(m_defaultValue);
 }
 
-void piranha::IrAttributeDefinition::setDefaultToken(const IrTokenInfo_string &defaultToken) {
-	m_defaultToken = defaultToken;
-	registerToken(&m_defaultToken);
+void piranha::IrAttributeDefinition::setAliasToken(const IrTokenInfo_string &aliasToken) {
+	m_aliasToken = aliasToken;
+	registerToken(&m_aliasToken);
 }
 
 piranha::IrInputConnection *piranha::IrAttributeDefinition::getImpliedMember(const std::string &name) const {
