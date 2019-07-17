@@ -1,6 +1,6 @@
 private node ExplicitDefault {
     input object;
-    default output object_default: object^.hello_world; 
+    default output object_default: object->hello_world; 
     default output object_default_pointer: object->hello_world;
     output object_reference: object;
 }
@@ -58,16 +58,9 @@ private node test {
     output test7: internal_container.output1.output1.x;     // Okay
     output test8: internal_container.output1->x;            // Okay
     output test9: internal_container.output1->z;            // UndefinedMember
-    output test10: internal_container^^.x;                  // Okay
-    output test11: internal_container^^.z;                  // UndefinedMember
-    output test12: ((internal_container^)^).x;              // Okay
-    output test13: ((internal_container^)^).z;              // UndefinedMember
-    output test14: internal_container^->x;                  // Okay
-    output test15: internal_container^->z;                  // UndefinedMember
 
     output test16: hello_world_default->hello_world;                    // UndefinedMember
     output test17: hello_world_default.object_default.hello_world;      // UndefinedMember
-    output test18: hello_world_default^;                                // Okay
     output test19: hello_world_default.object_reference.hello_world;    // Okay
     output test20: hello_world_default.object_reference->hello_world;   // Okay
     output test21: hello_world_default.object_reference->hello_world;   // Okay

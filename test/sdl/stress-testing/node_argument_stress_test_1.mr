@@ -36,7 +36,7 @@ confusion good(
 confusion good_but_hard(
     even_harder(
         test(5, 5)
-    )^    
+    )._v    
 )
 
 // Shouldn't work

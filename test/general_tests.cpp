@@ -61,13 +61,8 @@ TEST(GeneralTests, GeneralSyntaxTest_4) {
 	EXPECT_EQ(errList->getErrorCount(), 4);
 }
 
-TEST(GeneralTests, GeneralSyntaxTest_5) {
-	const ErrorList *errList;
-	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_5.mr", &errList);
-
-	EXPECT_TRUE(findError(errList, ErrorCode::UndefinedMember, 11));
-
-	EXPECT_EQ(errList->getErrorCount(), 1);
+TEST(GeneralTests, GeneralSyntaxTest_5_retired) {
+	/* void */
 }
 
 TEST(GeneralTests, GeneralSyntaxTest_6) {
