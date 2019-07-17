@@ -14,7 +14,7 @@ private node nested_console {
 
 private node get_input {
     output number1: std::console_in("Enter a number: ");
-    output number2: nested_console()^.raw_input;
+    output number2: nested_console().fake.raw_input;
 }
 
 private node add_and_print {

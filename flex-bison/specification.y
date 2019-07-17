@@ -130,7 +130,6 @@
 %type <piranha::IrNode *> inline_node;
 %type <piranha::IrValue *> constant;
 %type <piranha::IrValue *> data_access;
-%type <piranha::IrValue *> default_operator;
 %type <piranha::IrValue *> mul_exp;
 %type <piranha::IrValue *> add_exp;
 %type <piranha::IrValue *> primary_exp;
@@ -430,13 +429,8 @@ primary_exp
   | '(' error ')'					{ $$ = nullptr; yyerrok; }
   ;
 
-default_operator
-  : primary_exp						{ $$ = $1; }
-  | data_access '^'					{ $$ = new IrUnaryOperator(IrUnaryOperator::DEFAULT, $1); }
-  ;
-
 data_access
-  : default_operator				{ $$ = $1; }
+  : primary_exp						{ $$ = $1; }
   | data_access '.' label_value		{ 
 										$$ = static_cast<IrValue *>(
 											new IrBinaryOperator(IrBinaryOperator::DOT, $1, $3));
