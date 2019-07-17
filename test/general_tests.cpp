@@ -30,3 +30,55 @@ TEST(GeneralTests, GeneralSyntaxTest_1) {
 
 	EXPECT_EQ(errList->getErrorCount(), 1);
 }
+
+TEST(GeneralTests, GeneralSyntaxTest_2) {
+	const ErrorList *errList;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_2.mr", &errList);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 26));
+
+	EXPECT_EQ(errList->getErrorCount(), 1);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_3) {
+	const ErrorList *errList;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_3.mr", &errList);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 24));
+	EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 26));
+
+	EXPECT_EQ(errList->getErrorCount(), 2);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_4) {
+	const ErrorList *errList;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_4.mr", &errList);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 16));
+	EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 18));
+	EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 19));
+
+	EXPECT_EQ(errList->getErrorCount(), 4);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_5) {
+	const ErrorList *errList;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_5.mr", &errList);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::UndefinedMember, 11));
+
+	EXPECT_EQ(errList->getErrorCount(), 1);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_6) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_6.mr", &errList, &rules);
+
+	EXPECT_EQ(errList->getErrorCount(), 0);
+
+	NodeProgram program;
+	program.setRules(rules);
+	rules->setNodeProgram(&program);
+	unit->build(&program);
+}

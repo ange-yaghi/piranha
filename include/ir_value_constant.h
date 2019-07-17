@@ -172,7 +172,7 @@ namespace piranha {
 			return m_value;
 		}
 
-		virtual IrNode *asNode() {
+		virtual IrNode *getAsNode() {
 			return m_value;
 		}
 

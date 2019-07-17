@@ -182,6 +182,7 @@ statement
 statement_list 
   : statement						{ }
   | statement_list statement		{ }
+  | statement_list error			{ }
   ;
 
 import_statement
@@ -247,14 +248,15 @@ node
   ;
 
 node_list
-  : node											{
+  : node												{
 															$$ = new IrNodeList();
 															$$->add($1);
 														}
-  | node_list node									{ 
+  | node_list node										{ 
 															$$ = $1;
 															$1->add($2);  
 														}
+  | node_list error										{ $$ = $1; }
   ;
 
 standard_operator
@@ -430,7 +432,7 @@ primary_exp
 
 default_operator
   : primary_exp						{ $$ = $1; }
-  | default_operator '^'			{ $$ = new IrUnaryOperator(IrUnaryOperator::DEFAULT, $1); }
+  | data_access '^'					{ $$ = new IrUnaryOperator(IrUnaryOperator::DEFAULT, $1); }
   ;
 
 data_access

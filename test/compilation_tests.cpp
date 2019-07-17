@@ -26,6 +26,7 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
 	IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr");
 
 	TestRules generator;
+	generator.registerBuiltinNodeTypes();
 	NodeProgram program;
 	program.setRules(&generator);
 	unit->build(&program);
@@ -60,6 +61,7 @@ TEST(IrConstructionTests, IrConstructionNestedTest) {
 	IrCompilationUnit *unit = compileFile("construction-tests/nested_conversions.mr");
 
 	TestRules generator;
+	generator.registerBuiltinNodeTypes();
 	NodeProgram program;
 	program.setRules(&generator);
 	unit->build(&program);

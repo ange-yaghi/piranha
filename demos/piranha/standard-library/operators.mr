@@ -17,3 +17,9 @@ public node string_add => __piranha__string_add {
     input __in1;
     default output __out [string];
 }
+
+public node vector_add => __piranha__vector_add {
+    input __in0;
+    input __in1;
+    default output __out [vector];
+}

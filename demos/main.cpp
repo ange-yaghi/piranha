@@ -7,25 +7,31 @@
 #include "../include/compilation_error.h"
 
 #include <iostream>
+#include <string>
 
 int main() {
-	piranha::NodeProgram nodeProgram;
-	piranha_demo::ReferenceLanguageRules languageRules;
-	languageRules.setNodeProgram(&nodeProgram);
-	nodeProgram.setRules(&languageRules);
+	std::string filename;
+	std::cin >> filename;
 
-	piranha::Compiler compiler;
-	piranha::IrCompilationUnit *unit = compiler.compile("../../demos/piranha/number_adder.mr");
+	while (true) {
+		piranha::NodeProgram nodeProgram;
+		piranha_demo::ReferenceLanguageRules languageRules;
+		languageRules.setNodeProgram(&nodeProgram);
+		languageRules.registerBuiltinNodeTypes();
+		nodeProgram.setRules(&languageRules);
 
-	piranha_demo::printErrorTrace(compiler.getErrorList());
+		piranha::Compiler compiler(&languageRules);
+		piranha::IrCompilationUnit *unit = compiler.compile(filename);
 
-	if (compiler.getErrorList()->getErrorCount() == 0) {
-		unit->build(&nodeProgram);
-		nodeProgram.execute();
+		piranha_demo::printErrorTrace(compiler.getErrorList());
+
+		if (compiler.getErrorList()->getErrorCount() == 0) {
+			unit->build(&nodeProgram);
+			nodeProgram.execute();
+		}
+
+		std::cin.get();
 	}
-
-	std::string pause;
-	std::cin >> pause;
 
 	return 0;
 }

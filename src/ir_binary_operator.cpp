@@ -271,11 +271,6 @@ piranha::NodeOutput *piranha::IrBinaryOperator::_generateNodeOutput(IrContextTre
 }
 
 piranha::Node *piranha::IrBinaryOperator::_generateNode(IrContextTree *context, NodeProgram *program) {
-	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
-		// There was a syntax error so this step can be skipped
-		return nullptr;
-	}
-
 	// The dot is the reference operator
 	if (m_operator == DOT || m_operator == POINTER) {
 		IrReferenceInfo info;
@@ -284,9 +279,11 @@ piranha::Node *piranha::IrBinaryOperator::_generateNode(IrContextTree *context, 
 		query.recordErrors = false;
 
 		IrParserStructure *reference = getReference(query, &info);
-		return reference->generateNode(info.newContext, program);
+
+		if (reference != nullptr) {
+			return reference->generateNode(info.newContext, program);
+		}
+		else return nullptr;
 	}
-	else {
-		return program->getRules()->generateOperatorNode(this, context);
-	}
+	else return program->getRules()->generateOperatorNode(this, context);
 }

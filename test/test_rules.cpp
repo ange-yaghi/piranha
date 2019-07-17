@@ -2,6 +2,8 @@
 
 #include "test_rules.h"
 
+#include "../include/console_input_node.h"
+#include "../include/console_output_node.h"
 #include "../include/float_cast_node.h"
 #include "../include/string_cast_node.h"
 #include "../include/literal_node.h"
@@ -33,6 +35,9 @@ void TestRules::registerBuiltinNodeTypes() {
 	registerBuiltinType<piranha::DefaultLiteralIntNode>("__piranha__literal_int", &piranha::FundamentalType::IntType);
 	registerBuiltinType<piranha::DefaultLiteralFloatNode>("__piranha__literal_float", &piranha::FundamentalType::FloatType);
 	registerBuiltinType<piranha::DefaultLiteralBoolNode>("__piranha__literal_bool", &piranha::FundamentalType::BoolType);
+
+	registerBuiltinType<piranha::ConsoleOutputNode>("__piranha__console_out");
+	registerBuiltinType<piranha::ConsoleInputNode>("__piranha__console_in");
 
 	// Literals
 	registerLiteralType(piranha::LITERAL_STRING, "__piranha__literal_string");

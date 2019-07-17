@@ -15,13 +15,13 @@ private node get_input {
 private node add_and_print {
     input inputs;
 
-    string formatted(float(inputs.number1) + float(inputs.number2) + fake)
+    string formatted(float(inputs.number1) + float(inputs.number2))
     std::console_out("---------------------------------------\n")
     std::console_out(inputs.number1 + " + " + inputs.number2 + " = " + formatted + "\n")
 }
 
 // Execute
-print_header()
+print_header(),
 add_and_print(
-    get_input()
+    get_input() + 0test
 )
