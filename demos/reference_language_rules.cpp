@@ -54,6 +54,9 @@ void piranha_demo::ReferenceLanguageRules::registerBuiltinNodeTypes() {
 	registerConversion<piranha::FloatToStringConversionNode>(
 		{ &piranha::FundamentalType::FloatType, &piranha::FundamentalType::StringType }
 	);
+	registerConversion<piranha::IntToFloatConversionNode>(
+		{ &piranha::FundamentalType::IntType, &piranha::FundamentalType::FloatType }
+	);
 
 	// Operations
 	registerOperator(
