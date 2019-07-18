@@ -110,16 +110,22 @@ namespace piranha {
 	public:
 		// Compilation stages
 		void resolveDefinitions();
+
 		void expand(IrContextTree *context);
 		virtual void checkReferences(IrContextTree *inputContext = nullptr);
+
+		void expand();
 		void checkInstantiation();
+
 		void validate();
 
 	protected:
 		virtual void _resolveDefinitions();
-		virtual void _expand(IrContextTree *context);
+		virtual void _expand();
 		virtual void _checkInstantiation();
 		virtual void _validate();
+
+		virtual void _expand(IrContextTree *context);
 
 	protected:
 		IrCompilationUnit *m_parentUnit;
