@@ -37,9 +37,6 @@
     <Filter Include="Header Files\syntax\error-handling">
       <UniqueIdentifier>{9e9bbd21-4fd5-4747-bcf1-f0f896c0d3cf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\syntax\generator">
-      <UniqueIdentifier>{2a870fcd-d9da-4b6b-8268-3239e8db3c6b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\syntax\parser">
       <UniqueIdentifier>{e7782533-cc06-40fb-94e3-57ab729622d9}</UniqueIdentifier>
     </Filter>
@@ -132,6 +129,15 @@
     </Filter>
     <Filter Include="Header Files\nodes\standard">
       <UniqueIdentifier>{710108e2-5ee1-4991-87bd-501ab2d9ecac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\exceptions">
+      <UniqueIdentifier>{3dd3dcf8-9fc0-46fd-8e4e-87c842d22641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\exceptions">
+      <UniqueIdentifier>{769123c9-0f96-4218-ac95-1afeb63593a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\syntax\language-rules">
+      <UniqueIdentifier>{2a870fcd-d9da-4b6b-8268-3239e8db3c6b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -270,11 +276,8 @@
     <ClInclude Include="..\..\include\operation_node.h">
       <Filter>Header Files\nodes\operations</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\language_rules.h">
-      <Filter>Header Files\syntax\generator</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\rule.h">
-      <Filter>Header Files\syntax\generator</Filter>
+      <Filter>Header Files\syntax\language-rules</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\key_value_lookup.h">
       <Filter>Header Files\utilities</Filter>
@@ -303,6 +306,12 @@
     <ClInclude Include="..\..\include\vector_output.h">
       <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\exceptions.h">
+      <Filter>Header Files\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\language_rules.h">
+      <Filter>Header Files\syntax\language-rules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
@@ -328,9 +337,6 @@
     </ClCompile>
     <ClCompile Include="..\..\autogen\scanner.auto.cpp">
       <Filter>Source Files\syntax\autogen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ir_context_tree.cpp">
-      <Filter>Source Files\syntax\language-rules</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ir_attribute.cpp">
       <Filter>Source Files\syntax\parser</Filter>
@@ -406,6 +412,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\vector_constructor.cpp">
       <Filter>Source Files\nodes\conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ir_context_tree.cpp">
+      <Filter>Source Files\syntax\parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

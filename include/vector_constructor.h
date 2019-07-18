@@ -67,7 +67,7 @@ namespace piranha {
 				else ss << "__in";
 
 				// Register all inputs of the one node output
-				registerInput(m_output.NodeOutput::getInputConnection(i), ss.str());
+				registerInput(m_output.NodeOutput::getInputConnection(i), ss.str(), &FundamentalType::FloatType);
 			}
 		}
 

@@ -14,6 +14,7 @@ int main() {
 	std::cin >> filename;
 
 	while (true) {
+		std::cout << " -- Compiling and running --------------" << std::endl;
 		piranha::NodeProgram nodeProgram;
 		piranha_demo::ReferenceLanguageRules languageRules;
 		languageRules.setNodeProgram(&nodeProgram);
@@ -30,6 +31,7 @@ int main() {
 			nodeProgram.execute();
 		}
 
+		std::cout << std::endl << std::endl;
 		std::cin.get();
 	}
 

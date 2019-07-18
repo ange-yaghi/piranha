@@ -37,6 +37,14 @@ namespace piranha {
 			return nullptr;
 		}
 
+		const KeyType &getKey(int index) const {
+			return m_lookupTable[index].key;
+		}
+
+		ValueType *get(int index) const {
+			return m_lookupTable[index].value;
+		}
+
 		template <typename T>
 		ValueType *newValue(const KeyType &key) {
 			KeyValuePair kvp;

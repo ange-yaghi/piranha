@@ -13,6 +13,7 @@
 #include "../include/node.h"
 #include "../include/custom_node.h"
 #include "../include/standard_allocator.h"
+#include "../include/exceptions.h"
 
 #include "../include/node_program.h"
 
@@ -407,6 +408,9 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 				// A conversion is needed
 				const ChannelType *originalType = input->getType();
 				Node *conversionNode = program->getRules()->generateConversion({ originalType, conversionType });
+
+				if (conversionNode == nullptr) throw MissingConversion();
+
 				conversionNode->setName("$autoconversion");
 				conversionNode->setIrStructure(nullptr);
 				conversionNode->setIrContext(nullptr);

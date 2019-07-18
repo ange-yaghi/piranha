@@ -22,7 +22,7 @@
 
 using namespace piranha;
 
-TEST(GeneralTests, GeneralSyntaxTest_1) {
+TEST(GeneralTests, GeneralSyntaxTest_01) {
 	const ErrorList *errList;
 	IrCompilationUnit *unit = compileFile("general-tests/general_syntax_test_1.mr", &errList);
 
@@ -31,7 +31,7 @@ TEST(GeneralTests, GeneralSyntaxTest_1) {
 	EXPECT_EQ(errList->getErrorCount(), 1);
 }
 
-TEST(GeneralTests, GeneralSyntaxTest_2) {
+TEST(GeneralTests, GeneralSyntaxTest_02) {
 	const ErrorList *errList;
 	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_2.mr", &errList);
 
@@ -40,7 +40,7 @@ TEST(GeneralTests, GeneralSyntaxTest_2) {
 	EXPECT_EQ(errList->getErrorCount(), 1);
 }
 
-TEST(GeneralTests, GeneralSyntaxTest_3) {
+TEST(GeneralTests, GeneralSyntaxTest_03) {
 	const ErrorList *errList;
 	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_3.mr", &errList);
 
@@ -50,7 +50,7 @@ TEST(GeneralTests, GeneralSyntaxTest_3) {
 	EXPECT_EQ(errList->getErrorCount(), 2);
 }
 
-TEST(GeneralTests, GeneralSyntaxTest_4) {
+TEST(GeneralTests, GeneralSyntaxTest_04) {
 	const ErrorList *errList;
 	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_4.mr", &errList);
 
@@ -61,11 +61,11 @@ TEST(GeneralTests, GeneralSyntaxTest_4) {
 	EXPECT_EQ(errList->getErrorCount(), 4);
 }
 
-TEST(GeneralTests, GeneralSyntaxTest_5_retired) {
+TEST(GeneralTests, GeneralSyntaxTest_05_retired) {
 	/* void */
 }
 
-TEST(GeneralTests, GeneralSyntaxTest_6) {
+TEST(GeneralTests, GeneralSyntaxTest_06) {
 	const ErrorList *errList;
 	LanguageRules *rules;
 	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_6.mr", &errList, &rules);
@@ -78,7 +78,7 @@ TEST(GeneralTests, GeneralSyntaxTest_6) {
 	unit->build(&program);
 }
 
-TEST(GeneralTests, GeneralSyntaxTest_7) {
+TEST(GeneralTests, GeneralSyntaxTest_07) {
 	const ErrorList *errList;
 	LanguageRules *rules;
 	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_7.mr", &errList, &rules);
@@ -89,4 +89,55 @@ TEST(GeneralTests, GeneralSyntaxTest_7) {
 	program.setRules(rules);
 	rules->setNodeProgram(&program);
 	unit->build(&program);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_08) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_8.mr", &errList, &rules);
+
+	EXPECT_EQ(errList->getErrorCount(), 0);
+
+	NodeProgram program;
+	program.setRules(rules);
+	rules->setNodeProgram(&program);
+	unit->build(&program);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_09) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_9.mr", &errList, &rules);
+
+	EXPECT_EQ(errList->getErrorCount(), 0);
+
+	NodeProgram program;
+	program.setRules(rules);
+	rules->setNodeProgram(&program);
+	unit->build(&program);
+
+	program.execute();
+
+	piranha::vector v;
+	program.getNode(3)->getPrimaryOutput()->fullCompute(&v);
+
+	EXPECT_EQ(v.x, 0.0);
+	EXPECT_EQ(v.y, 0.0);
+	EXPECT_EQ(v.z, 0.0);
+	EXPECT_EQ(v.w, 10.0);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_10) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_10.mr", &errList, &rules);
+
+	//EXPECT_EQ(errList->getErrorCount(), 1);
+
+	//EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 5, nullptr, true));
+
+	//NodeProgram program;
+	//program.setRules(rules);
+	//rules->setNodeProgram(&program);
+	//unit->build(&program);
 }

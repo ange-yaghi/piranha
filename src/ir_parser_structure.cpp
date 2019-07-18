@@ -157,6 +157,7 @@ void piranha::IrParserStructure::resolveDefinitions() {
 
 void piranha::IrParserStructure::expand(IrContextTree *_context) {
 	IrContextTree *context = (_context != nullptr) ? _context : new IrContextTree(nullptr, true);
+
 	if (m_expansions.lookup(context) != nullptr) return;
 	*m_expansions.newValue(context) = nullptr;
 
