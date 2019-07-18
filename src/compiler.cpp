@@ -140,7 +140,7 @@ void piranha::Compiler::resolve() {
 	for (int i = 0; i < unitCount; i++) {
 		IrCompilationUnit *unit = m_units[i];
 		unit->resolveDefinitions();
-		unit->expand(nullptr);
+		unit->expand();
 		unit->checkInstantiation();
 	}
 }

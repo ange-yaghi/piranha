@@ -151,9 +151,11 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		std::string builtinType = m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
 
 		if (builtinType.empty()) {
-			getParentUnit()->addCompilationError(
-				new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context)
-			);
+			if (leftInfo.touchedMainContext || rightInfo.touchedMainContext) {
+				getParentUnit()->addCompilationError(
+					new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context)
+				);
+			}
 			return;
 		}
 

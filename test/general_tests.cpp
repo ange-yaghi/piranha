@@ -132,12 +132,12 @@ TEST(GeneralTests, GeneralSyntaxTest_10) {
 	LanguageRules *rules;
 	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_10.mr", &errList, &rules);
 
-	//EXPECT_EQ(errList->getErrorCount(), 1);
+	EXPECT_EQ(errList->getErrorCount(), 1);
 
-	//EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 5, nullptr, true));
+	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 5, nullptr, true));
 
-	//NodeProgram program;
-	//program.setRules(rules);
-	//rules->setNodeProgram(&program);
-	//unit->build(&program);
+	NodeProgram program;
+	program.setRules(rules);
+	rules->setNodeProgram(&program);
+	unit->build(&program);
 }

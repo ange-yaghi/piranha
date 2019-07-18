@@ -155,9 +155,17 @@ void piranha::IrParserStructure::resolveDefinitions() {
 	m_definitionsResolved = true;
 }
 
-void piranha::IrParserStructure::expand(IrContextTree *_context) {
-	IrContextTree *context = (_context != nullptr) ? _context : new IrContextTree(nullptr, true);
+void piranha::IrParserStructure::expand() {
+	// Check components
+	int componentCount = getComponentCount();
+	for (int i = 0; i < componentCount; i++) {
+		m_components[i]->expand();
+	}
 
+	_expand();
+}
+
+void piranha::IrParserStructure::expand(IrContextTree *context) {
 	if (m_expansions.lookup(context) != nullptr) return;
 	*m_expansions.newValue(context) = nullptr;
 
@@ -180,6 +188,7 @@ void piranha::IrParserStructure::expand(IrContextTree *_context) {
 		immediateReference->expand(info.newContext);
 	}
 
+	// Perform the actual expansion
 	_expand(context);
 }
 
@@ -274,6 +283,10 @@ void piranha::IrParserStructure::writeReferencesToFile(std::ofstream &file, IrCo
 }
 
 void piranha::IrParserStructure::_resolveDefinitions() {
+	/* void */
+}
+
+void piranha::IrParserStructure::_expand() {
 	/* void */
 }
 

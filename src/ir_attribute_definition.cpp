@@ -94,6 +94,7 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 			return nullptr;
 		}
 		else {
+			IrNode **node = m_expansions.lookup(query.inputContext);
 			return *m_expansions.lookup(query.inputContext);
 		}
 	}

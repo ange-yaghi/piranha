@@ -201,16 +201,24 @@ void piranha::IrNode::_checkInstantiation() {
 	}
 }
 
-void piranha::IrNode::_expand(IrContextTree *context) {
+void piranha::IrNode::_expand() {
+	/*
 	IrAttributeList *attributes = getAttributes();
 	if (attributes != nullptr) {
 		int attributeCount = attributes->getAttributeCount();
 		for (int i = 0; i < attributeCount; i++) {
 			attributes->getAttribute(i)->expand(context);
 		}
+	}*/
+	IrContextTree *parentContext = new IrContextTree(nullptr);
+	IrContextTree *mainContext = parentContext->newChild(this, true);
+	if (m_definition != nullptr) {
+		m_definition->expand(mainContext);
 	}
+}
 
-	IrContextTree *mainContext = context->newChild(this, true);
+void piranha::IrNode::_expand(IrContextTree *context) {
+	IrContextTree *mainContext = context->newChild(this, false);
 	if (m_definition != nullptr) {
 		m_definition->expand(mainContext);
 	}
