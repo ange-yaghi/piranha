@@ -26,6 +26,7 @@ namespace piranha {
 			UNARY_OPERATION,
 
 			NODE_REF,
+			INTERNAL_REFERENCE,
 			GENERIC
 		};
 
