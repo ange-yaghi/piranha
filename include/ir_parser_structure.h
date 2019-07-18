@@ -70,7 +70,11 @@ namespace piranha {
 		int getComponentCount() const { return (int)m_components.size(); }
 
 		virtual void setScopeParent(IrParserStructure *parent) { m_scopeParent = parent; }
+		IrParserStructure *getScopeParent() const { return m_scopeParent; }
+
 		virtual void setLogicalParent(IrParserStructure *parent) { m_logicalParent = parent; }
+		IrParserStructure *getLogicalParent() const { return m_logicalParent; }
+
 		virtual IrParserStructure *resolveName(const std::string &name) const;
 		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
 

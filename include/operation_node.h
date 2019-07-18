@@ -54,9 +54,9 @@ namespace piranha {
 			const ChannelType *type = NativeTypeLookup<FundamentalType>();
 
 			registerInput(
-				m_output.getLeftConnection(), "$left", type);
+				m_output.getLeftConnection(), "__in0", type);
 			registerInput(
-				m_output.getRightConnection(), "$right", type);
+				m_output.getRightConnection(), "__in1", type);
 		}
 
 	protected:

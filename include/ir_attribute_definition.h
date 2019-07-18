@@ -54,6 +54,8 @@ namespace piranha {
 		IrNodeDefinition *getTypeDefinition() const { return m_typeDefinition; }
 		virtual const ChannelType *getImmediateChannelType();
 
+		void _expand(IrContextTree *context);
+
 	protected:
 		IrTokenInfo_string m_directionToken;
 		IrTokenInfo_string m_aliasToken;
@@ -74,27 +76,8 @@ namespace piranha {
 		IrNodeDefinition *m_typeDefinition;
 
 	protected:
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = context;
-			query.recordErrors = false;
-			IrParserStructure *reference = getImmediateReference(query, &info);
-
-			if (reference == nullptr) return nullptr;
-			else return reference->generateNode(info.newContext, program);
-		}
-
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = context;
-			query.recordErrors = false;
-			IrParserStructure *reference = getImmediateReference(query, &info);
-
-			if (reference == nullptr) return nullptr;
-			else return reference->generateNodeOutput(info.newContext, program);
-		}
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
+		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace piranha */

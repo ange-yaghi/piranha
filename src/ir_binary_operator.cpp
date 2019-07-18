@@ -160,11 +160,24 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		int count = 0;
 		IrNodeDefinition *nodeDefinition = getParentUnit()->resolveBuiltinNodeDefinition(builtinType, &count);
 
+		IrAttribute *leftAttribute = new IrAttribute();
+		leftAttribute->setValue(m_leftOperand);
+
+		IrAttribute *rightAttribute = new IrAttribute();
+		rightAttribute->setValue(m_rightOperand);
+
+		IrAttributeList *attributeList = new IrAttributeList();
+		attributeList->addAttribute(leftAttribute);
+		attributeList->addAttribute(rightAttribute);
+
 		IrNode *expansion = new IrNode();
+		expansion->setAttributes(attributeList);
 		expansion->setLogicalParent(this);
 		expansion->setScopeParent(this);
 		expansion->setDefinition(nodeDefinition);
 		expansion->setRules(m_rules);
+		expansion->expand(context);
+		expansion->resolveDefinitions();
 
 		*m_expansions.newValue(context) = expansion;
 	}

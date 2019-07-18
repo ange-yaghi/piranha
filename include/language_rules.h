@@ -104,7 +104,6 @@ namespace piranha {
 
 	protected:
 		Node *generateBuiltinType(const std::string &typeName);
-		Node *generateCustomType();
 
 		template <typename NodeType>
 		Node *allocateNode() {

@@ -51,6 +51,9 @@ namespace piranha {
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
 		virtual void checkReferences(IrContextTree *inputContext = nullptr);
 
+		void setInterface(bool isInterface) { m_isInterface = isInterface; }
+		bool isInterface() const { return m_isInterface; }
+
 	protected:
 		IrTokenInfo_string m_type;
 		IrTokenInfo_string m_name;
@@ -77,9 +80,11 @@ namespace piranha {
 		void resolveAttributeDefinitions();
 
 		IrNodeDefinition *m_definition;
+		bool m_isInterface;
 
 	public:
 		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
+		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace piranha */
