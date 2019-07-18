@@ -14,13 +14,13 @@ private node half_good {
 
 private node even_harder {
     input v;
-    default output _v: v;
+    alias output _v: v;
 }
 
 private node confusion {
     input some_input;
     output test: test(some_input.a, some_input.b);  // UndefinedMember x4
-    output internal_test: internal_node->a;         // UndefinedMember
+    output internal_test: internal_node.a;         // UndefinedMember
 
     even_harder internal_node(
         empty()
@@ -36,7 +36,7 @@ confusion good(
 confusion good_but_hard(
     even_harder(
         test(5, 5)
-    )^    
+    )   
 )
 
 // Shouldn't work
@@ -47,5 +47,5 @@ confusion half_good(half_good())
 
 // Should only cause one error
 confusion bad_and_hard(
-    even_harder(half_good())^
+    even_harder(half_good())
 )

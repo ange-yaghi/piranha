@@ -1,6 +1,6 @@
 private node CommonComponent {
-    default input in_message;
-    default output out_message: in_message;
+    input in_message;
+    output out_message: in_message;
 }
 
 private node SomeNode {

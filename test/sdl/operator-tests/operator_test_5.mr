@@ -2,7 +2,7 @@ private import "operators.mr" as operators
 
 node test {
     input input1: 5;
-    output test1: (input1 + 5).__out;
+    output test1: (input1 + 5);
 }
 
 test test1(test2.test1)

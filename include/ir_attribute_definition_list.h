@@ -24,7 +24,7 @@ namespace piranha {
 
 		IrAttributeDefinition *getOutputDefinition(int index) const;
 		IrAttributeDefinition *getOutputDefinition(const std::string &name) const;
-		IrAttributeDefinition *getDefaultOutput() const;
+		IrAttributeDefinition *getAliasOutput() const;
 
 		int getCount(IrAttributeDefinition::DIRECTION direction) const;
 		int getInputCount() const;

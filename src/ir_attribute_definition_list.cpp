@@ -76,22 +76,16 @@ piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getOutputDef
 	return nullptr;
 }
 
-piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getDefaultOutput() const {
-	IrAttributeDefinition *firstOutput = nullptr;
-
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getAliasOutput() const {
 	int totalCount = getDefinitionCount();
 	int inputs = 0;
 	for (int i = 0; i < totalCount; i++) {
 		IrAttributeDefinition *definition = m_definitions[i];
 		if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
-			firstOutput = definition;
-
-			if (definition->isDefault()) {
-				return definition;
-			}
+			if (definition->isAlias()) return definition;
 		}
 	}
 
-	// If not explicit default is found, return the first output
-	return firstOutput;
+	// If not explicit default is found, return null
+	return nullptr;
 }

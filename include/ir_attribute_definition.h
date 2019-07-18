@@ -31,10 +31,10 @@ namespace piranha {
 		void setDefaultValue(IrValue *value);
 		IrValue *getDefaultValue() const { return m_defaultValue; }
 
-		void setDefaultToken(const IrTokenInfo_string &name);
-		const IrTokenInfo *getDefaultToken() const { return (m_isDefault) ? &m_defaultToken : nullptr; }
-		void setDefault(bool isDefault) { m_isDefault = isDefault; }
-		bool isDefault() const { return m_isDefault; }
+		void setAliasToken(const IrTokenInfo_string &name);
+		const IrTokenInfo *getAliasToken() const { return (m_isAlias) ? &m_aliasToken : nullptr; }
+		void setAlias(bool isAlias) { m_isAlias = isAlias; }
+		bool isAlias() const { return m_isAlias; }
 
 		const IrTokenInfo *getDirectionToken() const { return &m_directionToken; }
 		void setDirection(DIRECTION direction) { m_direction = direction; }
@@ -54,16 +54,18 @@ namespace piranha {
 		IrNodeDefinition *getTypeDefinition() const { return m_typeDefinition; }
 		virtual const ChannelType *getImmediateChannelType();
 
+		void _expand(IrContextTree *context);
+
 	protected:
 		IrTokenInfo_string m_directionToken;
-		IrTokenInfo_string m_defaultToken;
+		IrTokenInfo_string m_aliasToken;
 		IrTokenInfo_string m_name;
 		IrTokenInfoSet<std::string, 2> m_typeInfo;
 
 		IrValue *m_defaultValue;
 
 		DIRECTION m_direction;
-		bool m_isDefault;
+		bool m_isAlias;
 
 		std::vector<IrInputConnection *> m_impliedMembers;
 
@@ -74,27 +76,8 @@ namespace piranha {
 		IrNodeDefinition *m_typeDefinition;
 
 	protected:
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = context;
-			query.recordErrors = false;
-			IrParserStructure *reference = getImmediateReference(query, &info);
-
-			if (reference == nullptr) return nullptr;
-			else return reference->generateNode(info.newContext, program);
-		}
-
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = context;
-			query.recordErrors = false;
-			IrParserStructure *reference = getImmediateReference(query, &info);
-
-			if (reference == nullptr) return nullptr;
-			else return reference->generateNodeOutput(info.newContext, program);
-		}
+		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
+		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace piranha */

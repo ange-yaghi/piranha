@@ -3,23 +3,23 @@ private import "conversions.mr"
 public node int_add => __piranha__int_add {
     input __in0;
     input __in1;
-    default output __out [int];
+    alias output __out [int];
 }
 
 public node float_add => __piranha__float_add {
     input __in0;
     input __in1;
-    default output __out [float];
+    alias output __out [float];
 }
 
 public node string_add => __piranha__string_add {
     input __in0;
     input __in1;
-    default output __out [string];
+    alias output __out [string];
 }
 
 public node vector_add => __piranha__vector_add {
     input __in0;
     input __in1;
-    default output __out [vector];
+    alias output __out [vector];
 }
