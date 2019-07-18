@@ -68,37 +68,3 @@ piranha::IrParserStructure *piranha::IrUnaryOperator::getImmediateReference(cons
 	IR_FAIL();
 	return nullptr;
 }
-
-piranha::NodeOutput *piranha::IrUnaryOperator::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {	
-	if (m_operator == DEFAULT) {
-		IrReferenceInfo info;
-		IrReferenceQuery query;
-		query.inputContext = context;
-		query.recordErrors = false;
-
-		IrParserStructure *reference = getReference(query, &info);
-		if (reference != nullptr) {
-			return reference->generateNodeOutput(info.newContext, program);
-		}
-		else return nullptr;
-	}
-
-	return nullptr;
-}
-
-piranha::Node *piranha::IrUnaryOperator::_generateNode(IrContextTree *context, NodeProgram *program) {
-	if (m_operator == DEFAULT) {
-		IrReferenceInfo info;
-		IrReferenceQuery query;
-		query.inputContext = context;
-		query.recordErrors = false;
-
-		IrParserStructure *reference = getReference(query, &info);
-
-		if (reference != nullptr) {
-			return reference->generateNode(info.newContext, program);
-		}
-		else return nullptr;
-	}
-	else return nullptr;
-}

@@ -33,8 +33,6 @@ namespace piranha {
 
 	protected:
 		void _expand(IrContextTree *tree);
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
 
 	protected:
 		OPERATOR m_operator;
