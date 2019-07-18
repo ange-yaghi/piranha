@@ -27,7 +27,7 @@ piranha::Node *piranha::LanguageRules::generateNode(IrNode *node, IrContextTree 
 
 		Node *newNode = nullptr;
 		if (definition->isBuiltin()) newNode = generateBuiltinType(definition->getBuiltinName());
-		else newNode = generateCustomType();
+		else return nullptr;
 
 		newNode->setIrContext(context);
 		newNode->setIrStructure(node);
@@ -118,11 +118,6 @@ piranha::Node *piranha::LanguageRules::generateConversion(const NodeTypeConversi
 	Node *newNode = rule->buildNode();
 	m_nodes.push_back(newNode);
 
-	return newNode;
-}
-
-piranha::Node *piranha::LanguageRules::generateCustomType() {
-	Node *newNode = allocateNode<CustomNode>();
 	return newNode;
 }
 

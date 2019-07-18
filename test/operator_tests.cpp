@@ -32,7 +32,7 @@ TEST(IrOperatorTests, IrOperatorSanityCheck) {
 	const piranha::ChannelType *channelType = node
 		->getDefinition()
 		->getAttributeDefinitionList()
-		->getDefaultOutput()
+		->getAliasOutput()
 		->getReference(query)
 		->getImmediateChannelType();
 
@@ -49,7 +49,7 @@ TEST(IrOperatorTests, IrOperatorTest1) {
 	const piranha::ChannelType *channelType = node
 		->getDefinition()
 		->getAttributeDefinitionList()
-		->getDefaultOutput()
+		->getAliasOutput()
 		->resolveToSingleChannel(query)
 		->getImmediateChannelType();
 

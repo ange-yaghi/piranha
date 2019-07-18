@@ -81,7 +81,7 @@
 %token <piranha::IrTokenInfo_string> IMPORT
 %token <piranha::IrTokenInfo_string> AS
 %token <piranha::IrTokenInfo_string> NODE
-%token <piranha::IrTokenInfo_string> DEFAULT
+%token <piranha::IrTokenInfo_string> ALIAS
 %token <piranha::IrTokenInfo_string> INPUT
 %token <piranha::IrTokenInfo_string> OUTPUT
 %token <piranha::IrTokenInfo_string> LABEL
@@ -93,7 +93,6 @@
 %token <piranha::IrTokenInfo_string> PUBLIC
 %token <piranha::IrTokenInfo_string> PRIVATE
 %token <piranha::IrTokenInfo_string> BUILTIN_POINTER
-%token <piranha::IrTokenInfo_string> POINTER
 %token <piranha::IrTokenInfo_string> NAMESPACE_POINTER
 %token <piranha::IrTokenInfo_string> UNRECOGNIZED
 %token <piranha::IrTokenInfo_string> OPERATOR
@@ -130,7 +129,6 @@
 %type <piranha::IrNode *> inline_node;
 %type <piranha::IrValue *> constant;
 %type <piranha::IrValue *> data_access;
-%type <piranha::IrValue *> default_operator;
 %type <piranha::IrValue *> mul_exp;
 %type <piranha::IrValue *> add_exp;
 %type <piranha::IrValue *> primary_exp;
@@ -335,8 +333,8 @@ port_declaration
   ;
 
 port_status
-  : DEFAULT port_declaration			{ $$ = $2; $$->setDefault(true); $$->setDefaultToken($1); }
-  | port_declaration					{ $$ = $1; $$->setDefault(false); }
+  : ALIAS port_declaration				{ $$ = $2; $$->setAlias(true); $$->setAliasToken($1); }
+  | port_declaration					{ $$ = $1; $$->setAlias(false); }
   ;
 
 port_value
@@ -430,20 +428,11 @@ primary_exp
   | '(' error ')'					{ $$ = nullptr; yyerrok; }
   ;
 
-default_operator
-  : primary_exp						{ $$ = $1; }
-  | data_access '^'					{ $$ = new IrUnaryOperator(IrUnaryOperator::DEFAULT, $1); }
-  ;
-
 data_access
-  : default_operator				{ $$ = $1; }
+  : primary_exp						{ $$ = $1; }
   | data_access '.' label_value		{ 
 										$$ = static_cast<IrValue *>(
 											new IrBinaryOperator(IrBinaryOperator::DOT, $1, $3));
-									}
-  | data_access POINTER label_value { 
-										$$ = static_cast<IrValue *>(
-											new IrBinaryOperator(IrBinaryOperator::POINTER, $1, $3));
 									}
   ;
 

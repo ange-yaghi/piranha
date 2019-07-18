@@ -7,6 +7,7 @@
 #include "../include/ir_context_tree.h"
 #include "../include/language_rules.h"
 #include "../include/ir_node_definition.h"
+#include "../include/ir_node.h"
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &directionToken,
 								const IrTokenInfo_string &name, DIRECTION dir) {
@@ -40,9 +41,9 @@ void piranha::IrAttributeDefinition::setDefaultValue(IrValue *value) {
 	registerComponent(m_defaultValue);
 }
 
-void piranha::IrAttributeDefinition::setDefaultToken(const IrTokenInfo_string &defaultToken) {
-	m_defaultToken = defaultToken;
-	registerToken(&m_defaultToken);
+void piranha::IrAttributeDefinition::setAliasToken(const IrTokenInfo_string &aliasToken) {
+	m_aliasToken = aliasToken;
+	registerToken(&m_aliasToken);
 }
 
 piranha::IrInputConnection *piranha::IrAttributeDefinition::getImpliedMember(const std::string &name) const {
@@ -87,6 +88,15 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 			return nullptr;
 		}
 	}
+	else if (m_defaultValue == nullptr && m_direction == OUTPUT) {
+		if (m_typeDefinition == nullptr) {
+			IR_FAIL();
+			return nullptr;
+		}
+		else {
+			return *m_expansions.lookup(query.inputContext);
+		}
+	}
 
 	return m_defaultValue;
 }
@@ -100,6 +110,20 @@ const piranha::ChannelType *piranha::IrAttributeDefinition::getImmediateChannelT
 		return wholeType;
 	}
 	else return nullptr;
+}
+
+void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
+	if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
+		IrNode *expansion = new IrNode();
+		expansion->setLogicalParent(this);
+		expansion->setScopeParent(this);
+		expansion->setInterface(true);
+		expansion->setDefinition(m_typeDefinition);
+		expansion->setRules(m_rules);
+		expansion->expand(context);
+
+		*m_expansions.newValue(context) = expansion;
+	}
 }
 
 void piranha::IrAttributeDefinition::_resolveDefinitions() {
@@ -147,4 +171,46 @@ void piranha::IrAttributeDefinition::_resolveDefinitions() {
 	}
 
 	else m_typeDefinition = definition;
+}
+
+piranha::Node *piranha::IrAttributeDefinition::_generateNode(IrContextTree *context, NodeProgram *program) {
+	/*
+	IrReferenceInfo info;
+	IrReferenceQuery query;
+	query.inputContext = context;
+	query.recordErrors = false;
+	IrParserStructure *reference = getImmediateReference(query, &info);
+
+	if (reference == nullptr) return nullptr;
+	else return reference->generateNode(info.newContext, program);*/
+	if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
+		// This must be an interface
+		Node *parentNode = context->getContext()->generateNode(context->getParent(), program);
+		NodeOutput *output = parentNode->getOutput(getName());
+
+		return output->getInterface();
+	}
+
+	return nullptr;
+}
+
+piranha::NodeOutput *piranha::IrAttributeDefinition::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+	/*
+	IrReferenceInfo info;
+	IrReferenceQuery query;
+	query.inputContext = context;
+	query.recordErrors = false;
+	IrParserStructure *reference = getImmediateReference(query, &info);
+
+	if (reference == nullptr) return nullptr;
+	else return reference->generateNodeOutput(info.newContext, program);*/
+	if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
+		// This must be an interface
+		Node *parentNode = context->getContext()->generateNode(context->getParent(), program);
+		NodeOutput *output = parentNode->getOutput(getName());
+
+		return output;
+	}
+
+	return nullptr;
 }

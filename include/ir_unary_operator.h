@@ -27,10 +27,6 @@ namespace piranha {
 	protected:
 		OPERATOR m_operator;
 		IrValue *m_operand;
-
-	protected:
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace piranha */

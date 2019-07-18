@@ -31,6 +31,7 @@ namespace piranha {
 		}
 
 		virtual void registerInputs() {
+			registerInput(&m_primaryInput, "__in", &FundamentalType::VectorType);
 			registerInput(m_outputX.getInputConnection(), "__in", &FundamentalType::VectorType);
 			registerInput(m_outputY.getInputConnection(), "__in", &FundamentalType::VectorType);
 			registerInput(m_outputZ.getInputConnection(), "__in", &FundamentalType::VectorType);
@@ -38,15 +39,18 @@ namespace piranha {
 		}
 
 		virtual void registerOutputs() {
-			setPrimaryOutput(nullptr);
+			setPrimaryOutputReference(&m_primaryInput);
 
+			registerOutputReference(&m_primaryInput, "$primary");
 			registerOutput(&m_outputX, "x");
 			registerOutput(&m_outputY, "y");
 			registerOutput(&m_outputZ, "z");
 			registerOutput(&m_outputW, "w");
 		}
 
-	protected:		
+	protected:
+		pNodeInput m_primaryInput;
+
 		VectorSplitOutput<0> m_outputX;
 		VectorSplitOutput<1> m_outputY;
 		VectorSplitOutput<2> m_outputZ;
