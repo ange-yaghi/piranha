@@ -7,7 +7,7 @@ node print_stuff {
 
 node top_level {
     print_stuff("Good")
-    print_stuff(2)          // Will cause InvalidOperands error
+    print_stuff(2)          // InvalidOperands
     print_stuff("Good")
 }
 

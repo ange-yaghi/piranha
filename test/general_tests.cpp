@@ -135,9 +135,4 @@ TEST(GeneralTests, GeneralSyntaxTest_10) {
 	EXPECT_EQ(errList->getErrorCount(), 1);
 
 	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 5, nullptr, true));
-
-	NodeProgram program;
-	program.setRules(rules);
-	rules->setNodeProgram(&program);
-	unit->build(&program);
 }
