@@ -111,6 +111,10 @@ piranha::Node *piranha::LanguageRules::generateBuiltinType(const std::string &ty
 	return newNode;
 }
 
+bool piranha::LanguageRules::checkConversion(const NodeTypeConversion &conversion) const {
+	return m_conversionRules.lookup(conversion) != nullptr;
+}
+
 piranha::Node *piranha::LanguageRules::generateConversion(const NodeTypeConversion &conversion) {
 	ConversionRule *rule = m_conversionRules.lookup(conversion);
 	if (rule == nullptr) return nullptr;

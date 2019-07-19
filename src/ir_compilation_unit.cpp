@@ -56,13 +56,20 @@ piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parse(std::i
 }
 
 void piranha::IrCompilationUnit::_checkInstantiation() {
-	// Check all references relating to the connection of inputs from this
-	// node to the actual definition.
 	IrContextTree *mainContext = new IrContextTree(nullptr, true);
 
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
 		m_components[i]->checkReferences(mainContext);
+	}
+}
+
+void piranha::IrCompilationUnit::_checkTypes() {
+	IrContextTree *mainContext = new IrContextTree(nullptr, true);
+
+	int componentCount = getComponentCount();
+	for (int i = 0; i < componentCount; i++) {
+		m_components[i]->checkTypes(mainContext);
 	}
 }
 

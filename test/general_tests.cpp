@@ -136,3 +136,29 @@ TEST(GeneralTests, GeneralSyntaxTest_10) {
 
 	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 5, nullptr, true));
 }
+
+TEST(GeneralTests, GeneralSyntaxTest_11) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_11.mr", &errList, &rules);
+
+	EXPECT_EQ(errList->getErrorCount(), 6);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 10, nullptr, false));
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 13, nullptr, false));
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 6, nullptr, false));
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleOutputDefinitionType, 7, nullptr, true));
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleOutputDefinitionType, 7, nullptr, false));
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_12) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_12.mr", &errList, &rules);
+
+	EXPECT_EQ(errList->getErrorCount(), 3);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 11, nullptr, false));
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 13, nullptr, false));
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 7, nullptr, false));
+}

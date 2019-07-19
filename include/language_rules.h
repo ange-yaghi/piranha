@@ -96,6 +96,7 @@ namespace piranha {
 		void setNodeProgram(NodeProgram *program) { m_nodeProgram = program; }
 		NodeProgram *getNodeProgram() const { return m_nodeProgram; }
 
+		bool checkConversion(const NodeTypeConversion &conversion) const;
 		Node *generateConversion(const NodeTypeConversion &conversion);
 
 	protected:
