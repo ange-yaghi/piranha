@@ -112,6 +112,7 @@ namespace piranha {
 		void resolveDefinitions();
 
 		void expand(IrContextTree *context);
+		void expandChain(IrContextTree *context);
 		virtual void checkReferences(IrContextTree *inputContext = nullptr);
 
 		void expand();

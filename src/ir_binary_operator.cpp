@@ -131,6 +131,7 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		IrReferenceQuery leftQuery;
 		leftQuery.inputContext = context;
 		leftQuery.recordErrors = false;
+		m_leftOperand->expandChain(context);
 		IrParserStructure *leftReference = m_leftOperand->resolveToSingleChannel(leftQuery, &leftInfo);
 
 		if (leftInfo.failed) return;
@@ -140,6 +141,7 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		IrReferenceQuery rightQuery;
 		rightQuery.inputContext = context;
 		rightQuery.recordErrors = false;
+		m_rightOperand->expandChain(context);
 		IrParserStructure *rightReference = m_rightOperand->resolveToSingleChannel(rightQuery, &rightInfo);
 
 		if (rightInfo.failed) return;
@@ -150,8 +152,11 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 
 		std::string builtinType = m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
 
+		bool touchedMainContext = (leftInfo.touchedMainContext || rightInfo.touchedMainContext);
+		bool emptyContext = (context->getContext() == nullptr);
+
 		if (builtinType.empty()) {
-			if (leftInfo.touchedMainContext || rightInfo.touchedMainContext) {
+			if (touchedMainContext || emptyContext) {
 				getParentUnit()->addCompilationError(
 					new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context)
 				);
