@@ -177,8 +177,6 @@ void piranha::IrParserStructure::expand(IrContextTree *context) {
 		}
 	}
 
-	//expandChain(context);
-
 	// Perform the actual expansion
 	_expand(context);
 }
@@ -218,6 +216,29 @@ void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {
 	}
 }
 
+void piranha::IrParserStructure::checkTypes(IrContextTree *inputContext) {
+	int componentCount = getComponentCount();
+	for (int i = 0; i < componentCount; i++) {
+		m_components[i]->checkTypes(inputContext);
+	}
+
+	IrReferenceInfo info;
+	IrReferenceQuery query;
+	query.inputContext = inputContext;
+	query.recordErrors = false;
+
+	IrParserStructure *reference = getReference(query, &info);
+
+	if (info.failed) return;
+	if (info.reachedDeadEnd) return;
+
+	if (info.touchedMainContext || inputContext->getContext() == nullptr) {
+		_checkType(reference, inputContext);
+	}
+
+	_checkTypes(inputContext);
+}
+
 void piranha::IrParserStructure::checkInstantiation() {
 	// Check components
 	int componentCount = getComponentCount();
@@ -226,6 +247,16 @@ void piranha::IrParserStructure::checkInstantiation() {
 	}
 
 	_checkInstantiation();
+}
+
+void piranha::IrParserStructure::checkTypes() {
+	// Check components
+	int componentCount = getComponentCount();
+	for (int i = 0; i < componentCount; i++) {
+		m_components[i]->checkTypes();
+	}
+
+	_checkTypes();
 }
 
 void piranha::IrParserStructure::validate() {
@@ -243,6 +274,18 @@ void piranha::IrParserStructure::validate() {
 }
 
 void piranha::IrParserStructure::_validate() {
+	/* void */
+}
+
+void piranha::IrParserStructure::_checkTypes() {
+	/* void */
+}
+
+void piranha::IrParserStructure::_checkType(IrParserStructure *finalReference, IrContextTree *context) {
+	/* void */
+}
+
+void piranha::IrParserStructure::_checkTypes(IrContextTree *context) {
 	/* void */
 }
 

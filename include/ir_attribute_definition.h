@@ -54,7 +54,8 @@ namespace piranha {
 		IrNodeDefinition *getTypeDefinition() const { return m_typeDefinition; }
 		virtual const ChannelType *getImmediateChannelType();
 
-		void _expand(IrContextTree *context);
+		virtual void _expand(IrContextTree *context);
+		virtual void _checkTypes(IrContextTree *context);
 
 	protected:
 		IrTokenInfo_string m_directionToken;

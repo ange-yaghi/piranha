@@ -76,6 +76,8 @@ namespace piranha {
 		virtual void _checkInstantiation();
 		virtual void _expand();
 		virtual void _expand(IrContextTree *context);
+		virtual void _checkTypes();
+		virtual void _checkTypes(IrContextTree *context);
 
 		void resolveNodeDefinition();
 		void resolveAttributeDefinitions();

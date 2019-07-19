@@ -3,4 +3,4 @@ private import "standard-library/standard_library.mr" as std
 std::vector v1(1.0, 2.0, 3.0, 4.0)
 std::vector v2(4.0, 3.0, 2.0, 1.0)
 
-std::console_out((v1 + v2)->x)
+std::console_out((v1 + v2).x)

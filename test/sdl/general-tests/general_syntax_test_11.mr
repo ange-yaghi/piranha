@@ -1,27 +1,13 @@
-private import "../../../demos/piranha/standard-library/standard_library.mr" as std
-
-node l1 {
-    input a;
-    alias output b: float(a + "0") + 1.0;
+node string => __piranha__string {
+    input __in [string];
 }
 
-node l2 {
-    input a;
-    alias output b: l1(a) + 2.0;
+node test {
+    input a [string]: 5;
+    output b [string]: a;
 }
 
-node l3 {
-    input a;
-    alias output b: l2(a) + 3.0;
-}
-
-node l4 {
-    input a: "5";
-    output o: l3(a);
-}
-
-l4 a("5")
-l4 b()
-l4 c("10")
-
-console_out(l4("5"))
+test(5)
+test("hello")
+test(5.0)
+test(10)

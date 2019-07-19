@@ -43,12 +43,14 @@ namespace piranha {
 		IrAttributeDefinition *getAttributeDefinition() const { return m_definition; }
 
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+		virtual void _checkType(IrParserStructure *finalReference, IrContextTree *context);
 
 	protected:
 		IrAttributeDefinition *m_definition;
 
 	protected:
 		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
+			// TODO: remove?
 			IrReferenceInfo info;
 			IrReferenceQuery query;
 			query.inputContext = context;
@@ -60,6 +62,7 @@ namespace piranha {
 		}
 
 		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+			// TODO: remove?
 			IrReferenceInfo info;
 			IrReferenceQuery query;
 			query.inputContext = context;

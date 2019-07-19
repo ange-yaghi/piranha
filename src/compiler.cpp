@@ -142,6 +142,7 @@ void piranha::Compiler::resolve() {
 		unit->resolveDefinitions();
 		unit->expand();
 		unit->checkInstantiation();
+		unit->checkTypes();
 	}
 }
 

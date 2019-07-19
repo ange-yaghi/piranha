@@ -59,3 +59,9 @@ ERR(StandardOutputWithType) =	{ "V", "0051", "Built-in output given a definition
 ERR(InputSpecifiedMultipleTimesPositional) =
 								{ "V", "0011", "Input specified multiple times by positional" };
 ERR(DuplicateNodeDefinition) =	{ "V", "0060", "Multiple definitions with the same name" };
+
+// [T] - Type errors
+ERR(IncompatibleType) =			{ "T", "0010", "Argument with incompatible type specified; valid conversion not found" };
+ERR(IncompatibleDefaultType) =	{ "T", "0011", "Default with incompatible type specified; valid conversion not found" };
+ERR(IncompatibleOutputDefinitionType) =	
+								{ "T", "0012", "Incompatible output definition type; valid conversion not found" };

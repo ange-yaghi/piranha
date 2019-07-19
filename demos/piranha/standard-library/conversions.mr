@@ -1,20 +1,20 @@
 public node int => __piranha__int {
-    input __in;
+    input __in [int];
 }
 
 public node float => __piranha__float {
-    input __in;
+    input __in [float];
 }
 
 public node string => __piranha__string {
-    input __in;
+    input __in [string];
 }
 
 public node vector => __piranha__vector {
-    input __in0;
-    input __in1;
-    input __in2;
-    input __in3;
+    input __in0 [float];
+    input __in1 [float];
+    input __in2 [float];
+    input __in3 [float];
 
     output x [float];
     output y [float];

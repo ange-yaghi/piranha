@@ -1,6 +1,12 @@
 #include "../include/ir_attribute.h"
 
 #include "../include/ir_value.h"
+#include "../include/ir_attribute_definition.h"
+#include "../include/ir_node_definition.h"
+#include "../include/ir_node.h"
+#include "../include/language_rules.h"
+#include "../include/compilation_error.h"
+#include "../include/ir_compilation_unit.h"
 
 piranha::IrAttribute::IrAttribute() {
 	/* void */
@@ -39,4 +45,39 @@ piranha::IrParserStructure *piranha::IrAttribute::getImmediateReference(const Ir
 	IR_INFO_OUT(failed, false);
 
 	return m_value;
+}
+
+void piranha::IrAttribute::_checkType(IrParserStructure *finalReference, IrContextTree *context) {
+	if (m_definition == nullptr) return;
+
+	IrNodeDefinition *typeDefinition = m_definition->getTypeDefinition();
+
+	if (typeDefinition != nullptr && m_definition->getDirection() == IrAttributeDefinition::INPUT) {
+		IrNode *refAsNode = finalReference->getAsNode();
+
+		bool incorrectNodeType = false;
+		if (refAsNode != nullptr) {
+			IrNodeDefinition *definition = refAsNode->getDefinition();
+			if (definition == nullptr) return;
+			if (definition == typeDefinition) return; // Type is confirmed to be correct
+
+			incorrectNodeType = true;
+		}
+
+		if (m_rules == nullptr) return;
+
+		const ChannelType *type = finalReference->getImmediateChannelType();
+		const ChannelType *expectedType = m_rules->resolveChannelType(typeDefinition->getBuiltinName());
+
+		if (type == expectedType) {
+			if (expectedType != nullptr) return; // No conversion necessary
+		}
+
+		bool validConversion = m_rules->checkConversion({ type, expectedType });
+		if (validConversion) return;
+
+		IrCompilationUnit *unit = getParentUnit();
+		unit->addCompilationError(new CompilationError(*getSummaryToken(),
+			ErrorCode::IncompatibleType, context));
+	}
 }

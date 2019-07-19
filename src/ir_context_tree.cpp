@@ -24,6 +24,24 @@ piranha::IrContextTree *piranha::IrContextTree::getRoot() {
 	else return this;
 }
 
+piranha::IrContextTree *piranha::IrContextTree::getMain() {
+	return getRoot()->_getMain();
+}
+
+piranha::IrContextTree *piranha::IrContextTree::_getMain() {
+	if (isMainContext()) return this;
+
+	int childCount = getChildCount();
+	for (int i = 0; i < childCount; i++) {
+		IrContextTree *mainRoot;
+		mainRoot = m_children[i]->_getMain();
+
+		if (mainRoot != nullptr) return mainRoot;
+	}
+
+	return nullptr;
+}
+
 piranha::IrContextTree *piranha::IrContextTree::search(const IrContextTree *reference) const {
 	return nullptr;
 }
