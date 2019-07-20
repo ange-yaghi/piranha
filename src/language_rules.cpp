@@ -9,6 +9,7 @@
 #include "../include/ir_value_constant.h"
 
 #include <assert.h>
+#include "..\include\language_rules.h"
 
 piranha::LanguageRules::LanguageRules() {
 	/* void */
@@ -116,17 +117,24 @@ bool piranha::LanguageRules::checkConversion(const NodeTypeConversion &conversio
 }
 
 piranha::Node *piranha::LanguageRules::generateConversion(const NodeTypeConversion &conversion) {
-	ConversionRule *rule = m_conversionRules.lookup(conversion);
-	if (rule == nullptr) return nullptr;
+	std::string rule = resolveConversionBuiltinType(conversion);
+	if (rule.empty()) return nullptr;
 
-	Node *newNode = rule->buildNode();
-	m_nodes.push_back(newNode);
+	return generateBuiltinType(rule);
+}
 
-	return newNode;
+std::string piranha::LanguageRules::resolveConversionBuiltinType(const NodeTypeConversion &conversion) const {
+	std::string *rule = m_conversionRules.lookup(conversion);
+	if (rule == nullptr) return "";
+	else return *rule;
 }
 
 void piranha::LanguageRules::registerLiteralType(LiteralType literalType, const std::string &builtinType) {
 	*m_literalRules.newValue<std::string>(literalType) = builtinType;
+}
+
+void piranha::LanguageRules::registerConversion(const NodeTypeConversion &conversion, const std::string &builtinType) {
+	*m_conversionRules.newValue(conversion) = builtinType;
 }
 
 void piranha::LanguageRules::registerOperator(const OperatorMapping &op, const std::string &builtinType) {

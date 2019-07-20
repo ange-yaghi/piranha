@@ -280,11 +280,8 @@ node_shadow
   ;
 
 node_port_definitions
-  : node_shadow '{' port_definitions					{ $$ = $1; $$->setAttributeDefinitionList($3); }
-  | node_shadow '{'										{ 
-															$$ = $1; 
-															$$->setAttributeDefinitionList(new IrAttributeDefinitionList()); 
-														}
+  : node_shadow port_definitions						{ $$ = $1; $$->setAttributeDefinitionList($2); }
+  | node_shadow error port_definitions					{ $$ = $1; $$->setAttributeDefinitionList($3); }
   ;
 
 node_definition
@@ -320,11 +317,12 @@ node_decorator
   ;
 
 port_definitions
-  : documented_port_definition							{ 
+  : '{'													{ 
 															$$ = new IrAttributeDefinitionList(); 
-															$$->addDefinition($1); 
 														}
-  | port_definitions documented_port_definition			{ $$ = $1; $$->addDefinition($2); }
+  | port_definitions documented_port_definition ';'		{ $$ = $1; $$->addDefinition($2); }
+  | port_definitions documented_port_definition error	{ $$ = $1; $$->addDefinition($2); }
+  | port_definitions error ';'							{ $$ = $1; }
   ;
 
 port_declaration
@@ -348,9 +346,8 @@ port_connection
   ;
 
 documented_port_definition
-  : decorator_list port_connection ';'	{ $$ = $2; }
-  | port_connection ';'					{ $$ = $1; }
-  | error ';'							{ $$ = nullptr; }
+  : decorator_list port_connection 		{ $$ = $2; }
+  | port_connection						{ $$ = $1; }
   ;
 
 inline_node

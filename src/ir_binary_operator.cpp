@@ -165,7 +165,13 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		}
 
 		int count = 0;
-		IrNodeDefinition *nodeDefinition = getParentUnit()->resolveBuiltinNodeDefinition(builtinType, &count);
+		IrCompilationUnit *parentUnit = getParentUnit();
+		IrNodeDefinition *nodeDefinition = parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
+
+		if (nodeDefinition == nullptr) {
+			// No definition found for this builtin type
+			int a = 0;
+		}
 
 		IrAttribute *leftAttribute = new IrAttribute();
 		leftAttribute->setValue(m_leftOperand);

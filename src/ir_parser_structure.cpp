@@ -182,6 +182,8 @@ void piranha::IrParserStructure::expand(IrContextTree *context) {
 }
 
 void piranha::IrParserStructure::expandChain(IrContextTree *context) {
+	expand(context);
+
 	// Expand reference
 	IrReferenceInfo info;
 	IrReferenceQuery query;
@@ -192,7 +194,6 @@ void piranha::IrParserStructure::expandChain(IrContextTree *context) {
 	if (immediateReference != nullptr) {
 		immediateReference->expandChain(info.newContext);
 	}
-	else expand(context);
 }
 
 void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {

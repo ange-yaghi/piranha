@@ -98,6 +98,7 @@ namespace piranha {
 
 		bool checkConversion(const NodeTypeConversion &conversion) const;
 		Node *generateConversion(const NodeTypeConversion &conversion);
+		std::string resolveConversionBuiltinType(const NodeTypeConversion &conversion) const;
 
 	protected:
 		// Main operator hook
@@ -122,11 +123,7 @@ namespace piranha {
 
 		void registerLiteralType(LiteralType literalType, const std::string &builtinType);
 
-		template <typename NodeType>
-		void registerConversion(const NodeTypeConversion &conversion) {
-			m_conversionRules.newValue<SpecializedRule<NullType, NodeType, Node>>(conversion);
-		}
-
+		void registerConversion(const NodeTypeConversion &conversion, const std::string &builtinType);
 		void registerOperator(const OperatorMapping &op, const std::string &builtinType);
 
 	public:
@@ -137,7 +134,7 @@ namespace piranha {
 		std::vector<Node *> m_nodes;
 
 		KeyValueLookup<std::string, BuiltinRule> m_builtinRules;
-		KeyValueLookup<NodeTypeConversion, ConversionRule> m_conversionRules;
+		KeyValueLookup<NodeTypeConversion, std::string> m_conversionRules;
 		KeyValueLookup<OperatorMapping, std::string> m_operatorRules;
 		KeyValueLookup<LiteralType, std::string> m_literalRules;
 

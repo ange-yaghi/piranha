@@ -27,7 +27,7 @@ TEST(IrOperatorTests, IrOperatorSanityCheck) {
 	IrNode *node = unit->getNode(0);
 
 	IrParserStructure::IrReferenceQuery query;
-	query.inputContext = nullptr;
+	query.inputContext = new IrContextTree(nullptr);
 	query.recordErrors = false;
 	const piranha::ChannelType *channelType = node
 		->getDefinition()

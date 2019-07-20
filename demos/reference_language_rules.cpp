@@ -38,6 +38,10 @@ void piranha_demo::ReferenceLanguageRules::registerBuiltinNodeTypes() {
 	registerBuiltinType<piranha::DefaultLiteralFloatNode>("__piranha__literal_float", &piranha::FundamentalType::FloatType);
 	registerBuiltinType<piranha::DefaultLiteralBoolNode>("__piranha__literal_bool", &piranha::FundamentalType::BoolType);
 
+	registerBuiltinType<piranha::StringToFloatConversionNode>("__piranha__string_to_float");
+	registerBuiltinType<piranha::FloatToStringConversionNode>("__piranha__float_to_string");
+	registerBuiltinType<piranha::IntToFloatConversionNode>("__piranha__int_to_float");
+
 	registerBuiltinType<piranha::ConsoleOutputNode>("__piranha__console_out");
 	registerBuiltinType<piranha::ConsoleInputNode>("__piranha__console_in");
 
@@ -48,14 +52,17 @@ void piranha_demo::ReferenceLanguageRules::registerBuiltinNodeTypes() {
 	registerLiteralType(piranha::LITERAL_BOOL, "__piranha__literal_bool");
 
 	// Conversions
-	registerConversion<piranha::StringToFloatConversionNode>(
-		{ &piranha::FundamentalType::StringType, &piranha::FundamentalType::FloatType }
+	registerConversion(
+		{ &piranha::FundamentalType::StringType, &piranha::FundamentalType::FloatType },
+		"__piranha__string_to_float"
 	);
-	registerConversion<piranha::FloatToStringConversionNode>(
-		{ &piranha::FundamentalType::FloatType, &piranha::FundamentalType::StringType }
+	registerConversion(
+		{ &piranha::FundamentalType::FloatType, &piranha::FundamentalType::StringType },
+		"__piranha__float_to_string"
 	);
-	registerConversion<piranha::IntToFloatConversionNode>(
-		{ &piranha::FundamentalType::IntType, &piranha::FundamentalType::FloatType }
+	registerConversion(
+		{ &piranha::FundamentalType::IntType, &piranha::FundamentalType::FloatType },
+		"__piranha__int_to_float"
 	);
 
 	// Operations
