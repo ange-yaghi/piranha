@@ -507,11 +507,14 @@ TEST(IrTests, IrReferenceResolutionTest) {
 	EXPECT_TRUE(b->allowsExternalAccess());
 
 	IrParserStructure::IrReferenceInfo info;
-	IrParserStructure *definition = b->getReference(IrParserStructure::IrReferenceQuery(), &info);
+	IrParserStructure::IrReferenceQuery query;
+	query.inputContext = new IrContextTree(nullptr);
+
+	IrParserStructure *definition = b->getReference(query, &info);
 	EXPECT_EQ(definition, nullptr);
 	EXPECT_TRUE(info.reachedDeadEnd);
 
-	IrNode *childNode = (IrNode *)node->resolveLocalName("C")->getReference(IrParserStructure::IrReferenceQuery());
+	IrNode *childNode = (IrNode *)node->resolveLocalName("C")->getReference(query);
 	EXPECT_EQ(childNode->getType(), "ChildNode");
 	EXPECT_EQ(childNode->getName(), "childNode");
 }
@@ -570,9 +573,11 @@ TEST(IrTests, IrFullErrorTest1) {
 	const ErrorList *errors = compiler.getErrorList();
 
 	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 14));
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedNodeType, 22));
+	EXPECT_TRUE(findError(errors, ErrorCode::PortNotFound, 23));
+	EXPECT_TRUE(findError(errors, ErrorCode::PortNotFound, 24));
+	EXPECT_TRUE(findError(errors, ErrorCode::InputNotConnected, 22)); // x2
 
-	EXPECT_EQ(errors->getErrorCount(), 2);
+	EXPECT_EQ(errors->getErrorCount(), 5);
 }
 
 TEST(IrTests, IrFullErrorTest2) {
@@ -583,12 +588,10 @@ TEST(IrTests, IrFullErrorTest2) {
 	const ErrorList *errors = compiler.getErrorList();
 	
 	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 16));
-	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 18));
 	EXPECT_TRUE(findError(errors, ErrorCode::PortNotFound, 24));
 	EXPECT_TRUE(findError(errors, ErrorCode::PortNotFound, 25));
-	EXPECT_TRUE(findError(errors, ErrorCode::PortNotFound, 29));
 
-	EXPECT_EQ(errors->getErrorCount(), 5);
+	EXPECT_EQ(errors->getErrorCount(), 3);
 }
 
 TEST(IrTests, IrFullErrorTest3) {
@@ -599,11 +602,11 @@ TEST(IrTests, IrFullErrorTest3) {
 	const ErrorList *errors = compiler.getErrorList();
 
 	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 5));
+	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 5));
 	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 13));
 	EXPECT_TRUE(findError(errors, ErrorCode::InputNotConnected, 13));
 	EXPECT_TRUE(findError(errors, ErrorCode::UnidentifiedToken, 14));
 	EXPECT_TRUE(findError(errors, ErrorCode::InputNotConnected, 14));
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 15));
 	EXPECT_TRUE(findError(errors, ErrorCode::UnexpectedToken, 16));
 	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 36));
 

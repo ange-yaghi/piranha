@@ -4,7 +4,7 @@ node output_structure {
     input some_input [string];
     
     output raw: some_input;
-    output formatted: "The result was " + some_input
+    output formatted: "The result was " + some_input /* missing semicolon */
 }
 
 node test_node {

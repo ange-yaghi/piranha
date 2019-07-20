@@ -188,12 +188,11 @@ namespace piranha {
 	// Specialized type for internal structure references (during expansions)
 	class IrInternalReference : public IrValueConstant<IrParserStructure *, IrValue::INTERNAL_REFERENCE> {
 	public:
-		IrInternalReference(IrInternalReference *reference) : IrValueConstant(_TokenInfo()) { setValue(reference); }
+		IrInternalReference(IrParserStructure *reference) : IrValueConstant(_TokenInfo()) { setValue(reference); }
 		~IrInternalReference() { /* void */ }
 
 		virtual void setValue(IrParserStructure *const &value) {
 			m_value = value;
-			registerComponent(value);
 		}
 
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {

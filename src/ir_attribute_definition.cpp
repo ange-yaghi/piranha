@@ -9,6 +9,9 @@
 #include "../include/ir_node_definition.h"
 #include "../include/ir_node.h"
 #include "../include/node_output.h"
+#include "../include/ir_attribute.h"
+#include "../include/ir_attribute_list.h"
+#include "../include/ir_value_constant.h"
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &directionToken,
 								const IrTokenInfo_string &name, DIRECTION dir) {
@@ -66,6 +69,9 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 	if (!IR_EMPTY_CONTEXT()) {
 		IrParserStructure *reference = query.inputContext->resolveDefinition(this);
 		if (reference != nullptr) {
+			IrNode **expansion = m_expansions.lookup(query.inputContext);
+			if (*expansion != nullptr) return *expansion;
+
 			IR_INFO_OUT(newContext, query.inputContext->getParent());
 
 			// This flag must be set to notify that this chain of resolutions actually
@@ -80,11 +86,17 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 	// An attribute definition will by default point to its definition (ie default value)
 	if (m_defaultValue == nullptr && m_direction == INPUT) {
 		if (IR_EMPTY_CONTEXT()) {
-			IR_DEAD_END();
-			return nullptr;
+			IrNode **expansion = m_expansions.lookup(query.inputContext);
+
+			if (*expansion == nullptr) {
+				IR_DEAD_END();
+				return nullptr;
+			}
+
+			return *expansion;
 		}
 		else {
-			// This is the result of an unconnected input (that has no input)
+			// This is the result of an unconnected input (that has no default)
 			IR_FAIL();
 			return nullptr;
 		}
@@ -96,8 +108,19 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 		}
 		else {
 			IrNode **node = m_expansions.lookup(query.inputContext);
-			return *m_expansions.lookup(query.inputContext);
+			return *node;
 		}
+	}
+
+	// Look up the expansion for the default case and return it if it exists
+	IrNode **expansion = m_expansions.lookup(query.inputContext);
+	if (expansion == nullptr) {
+		IR_FAIL();
+		return nullptr;
+	}
+
+	if (*expansion != nullptr) {
+		return *expansion;
 	}
 
 	return m_defaultValue;
@@ -115,7 +138,9 @@ const piranha::ChannelType *piranha::IrAttributeDefinition::getImmediateChannelT
 }
 
 void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
-	if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
+	if (m_typeDefinition == nullptr) return;
+
+	if (m_direction == OUTPUT && m_defaultValue == nullptr) {
 		IrNode *expansion = new IrNode();
 		expansion->setLogicalParent(this);
 		expansion->setScopeParent(this);
@@ -125,6 +150,86 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 		expansion->expand(context);
 
 		*m_expansions.newValue(context) = expansion;
+	}
+	else {
+		IrReferenceInfo info;
+		IrReferenceQuery query;
+		query.inputContext = context;
+		query.recordErrors = false;
+		IrParserStructure *immediateReference = getImmediateReference(query, &info);
+
+		if (info.failed) return;
+
+		if (info.reachedDeadEnd) {
+			IrNode *expansion = new IrNode();
+			expansion->setLogicalParent(this);
+			expansion->setScopeParent(this);
+			expansion->setInterface(true);
+			expansion->setDefinition(m_typeDefinition);
+			expansion->setRules(m_rules);
+			expansion->expand(context);
+
+			*m_expansions.newValue(context) = expansion;
+
+			return;
+		}
+
+		immediateReference->expandChain(context);
+		IrParserStructure *reference = immediateReference->resolveToSingleChannel(query, &info);
+
+		if (info.failed) return;
+		if (info.reachedDeadEnd) return;
+
+		IrNode *asNode = reference->getAsNode();
+
+		bool nonMatchingTypes = false;
+		if (asNode != nullptr && asNode->getDefinition() != m_typeDefinition) nonMatchingTypes = true;
+
+		const ChannelType *referenceType = reference->getImmediateChannelType();
+		const ChannelType *expectedType = m_rules->resolveChannelType(m_typeDefinition->getBuiltinName());
+
+		if (referenceType == nullptr || expectedType == nullptr) {
+			if (nonMatchingTypes) {
+				// This error was already detected in an earlier step
+				return;
+			}
+		}
+
+		if (referenceType == expectedType) return; // No expansion/conversion needed
+
+		std::string builtinType = m_rules->resolveConversionBuiltinType({ referenceType, expectedType });
+		if (builtinType.empty()) return; // Incompatible types
+
+		int count = 0;
+		IrCompilationUnit *parentUnit = (context->getContext() == nullptr)
+			? getParentUnit()
+			: context->getContext()->getParentUnit();
+
+		IrNodeDefinition *nodeDefinition = parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
+
+		if (nodeDefinition == nullptr) {
+			// No definition found for this builtin type
+			int a = 0;
+		}
+
+		IrInternalReference *internalReference = new IrInternalReference(immediateReference);
+
+		IrAttribute *input = new IrAttribute();
+		input->setValue(internalReference);
+
+		IrAttributeList *attributeList = new IrAttributeList();
+		attributeList->addAttribute(input);
+
+		IrNode *expansion = new IrNode();
+		expansion->setAttributes(attributeList);
+		expansion->setLogicalParent(this);
+		expansion->setScopeParent(this);
+		expansion->setDefinition(nodeDefinition);
+		expansion->setRules(m_rules);
+		expansion->expand(info.newContext);
+		expansion->resolveDefinitions();
+
+		*m_expansions.newValue(info.newContext) = expansion;
 	}
 }
 

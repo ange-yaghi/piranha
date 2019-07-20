@@ -21,3 +21,18 @@ public node vector => __piranha__vector {
     output z [float];
     output w [float];
 }
+
+public node string_to_float => __piranha__string_to_float {
+    input __in [string];
+    alias output __out [float];
+}
+
+public node float_to_string => __piranha__float_to_string {
+    input __in [float];
+    alias output __out [string];
+}
+
+public node int_to_Float => __piranha__int_to_float {
+    input __in [int];
+    alias output __out [float];
+}
