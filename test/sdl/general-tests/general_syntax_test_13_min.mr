@@ -1,0 +1,17 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node output_structure {
+    input __in;
+    output out: __in + "end";
+}
+
+node test_node {
+    input __in;
+    alias output __out: output_structure(__in);
+}
+
+test_node test("The ")
+
+node dummy_node { input a; }
+
+dummy_node(test.out)
