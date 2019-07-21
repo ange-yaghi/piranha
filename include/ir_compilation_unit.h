@@ -47,11 +47,11 @@ namespace piranha {
 		int getNodeCount() const;
 
 		void addImportStatement(IrImportStatement *statement);
-		IrImportStatement *getImportStatement(int index) const { return m_importStatements[index]; }
+		IrImportStatement *getImportStatement(int index) const;
 		int getImportStatementCount() const;
 
 		void addNodeDefinition(IrNodeDefinition *definition);
-		IrNodeDefinition *getNodeDefinition(int index) const { return m_nodeDefinitions[index]; }
+		IrNodeDefinition *getNodeDefinition(int index) const;
 		int getNodeDefinitionCount() const;
 
 		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
@@ -61,7 +61,7 @@ namespace piranha {
 
 		std::ostream& print(std::ostream &stream);
 
-		void addDependency(IrCompilationUnit *unit) { m_dependencies.push_back(unit); registerComponent(unit); }
+		void addDependency(IrCompilationUnit *unit);
 		IrCompilationUnit *getDependency(int index) { return m_dependencies[index]; }
 		int getDependencyCount() const { return (int)m_dependencies.size(); }
 		const Path &getPath() const { return m_path; }
@@ -91,11 +91,15 @@ namespace piranha {
 
 		// Resolution stage
 	public:
-		IrNodeDefinition *resolveLocalNodeDefinition(const std::string &name, int *count, bool external = false);
-		IrNodeDefinition *resolveNodeDefinition(const std::string &name, int *count,
+		IrNodeDefinition *resolveLocalNodeDefinition(
+			const std::string &name, int *count, bool external = false);
+		IrNodeDefinition *resolveNodeDefinition(
+			const std::string &name, int *count, 
 			const std::string &libraryName, bool external = false);
-		IrNodeDefinition *resolveLocalBuiltinNodeDefinition(const std::string &builtinName, int *count, bool external = false);
-		IrNodeDefinition *resolveBuiltinNodeDefinition(const std::string &builtinName, int *count, bool external = false);
+		IrNodeDefinition *resolveLocalBuiltinNodeDefinition(
+			const std::string &builtinName, int *count, bool external = false);
+		IrNodeDefinition *resolveBuiltinNodeDefinition(
+			const std::string &builtinName, int *count, bool external = false);
 
 		// Validation stage
 	protected:

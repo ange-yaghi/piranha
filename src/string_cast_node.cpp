@@ -24,7 +24,7 @@ void piranha::StringCastNode::_destroy() {
 
 void piranha::StringCastNode::registerOutputs() {
 	setPrimaryOutputReference(&m_input);
-	registerOutputReference(&m_input, "$primary");
+	registerOutputReference(&m_input, "__out");
 }
 
 void piranha::StringCastNode::registerInputs() {

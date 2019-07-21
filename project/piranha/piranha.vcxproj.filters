@@ -159,9 +159,6 @@
     <ClInclude Include="..\..\include\path.h">
       <Filter>Header Files\os</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\custom_node.h">
-      <Filter>Header Files\nodes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\autogen\parser.auto.h">
       <Filter>Header Files\syntax\autogen</Filter>
     </ClInclude>
@@ -186,9 +183,6 @@
     <ClInclude Include="..\..\include\ir_import_statement.h">
       <Filter>Header Files\syntax\parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\ir_input_connection.h">
-      <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\ir_node.h">
       <Filter>Header Files\syntax\parser</Filter>
     </ClInclude>
@@ -203,9 +197,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\ir_unary_operator.h">
       <Filter>Header Files\syntax\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\ir_generic_value.h">
-      <Filter>Header Files\syntax\values</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\ir_value.h">
       <Filter>Header Files\syntax\values</Filter>
@@ -329,9 +320,6 @@
     <ClCompile Include="..\..\src\standard_allocator.cpp">
       <Filter>Source Files\memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\custom_node.cpp">
-      <Filter>Source Files\nodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\autogen\parser.auto.cpp">
       <Filter>Source Files\syntax\autogen</Filter>
     </ClCompile>
@@ -356,9 +344,6 @@
     <ClCompile Include="..\..\src\ir_import_statement.cpp">
       <Filter>Source Files\syntax\parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ir_input_connection.cpp">
-      <Filter>Source Files\syntax\parser</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\ir_node.cpp">
       <Filter>Source Files\syntax\parser</Filter>
     </ClCompile>
@@ -373,9 +358,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\ir_compilation_unit.cpp">
       <Filter>Source Files\syntax\unit</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ir_generic_value.cpp">
-      <Filter>Source Files\syntax\values</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ir_value.cpp">
       <Filter>Source Files\syntax\values</Filter>

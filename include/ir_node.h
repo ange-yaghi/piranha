@@ -42,13 +42,13 @@ namespace piranha {
 
 		virtual void setScopeParent(IrParserStructure *parentScope);
 
-		virtual IrParserStructure *getDefaultPort(bool *failed);
-		virtual IrValue *getDefaultOutputValue();
+		IrParserStructure *getDefaultPort(bool *failed);
 		virtual IrNode *getAsNode() { return this; }
 
 		void writeTraceToFile(std::ofstream &file);
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
+		virtual IrParserStructure *getImmediateReference(
+			const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
 		virtual void checkReferences(IrContextTree *inputContext = nullptr);
 
 		void setInterface(bool isInterface) { m_isInterface = isInterface; }

@@ -1,7 +1,6 @@
 #include "../include/ir_attribute_definition.h"
 
 #include "../include/ir_value.h"
-#include "../include/ir_input_connection.h"
 #include "../include/ir_compilation_unit.h"
 #include "../include/compilation_error.h"
 #include "../include/ir_context_tree.h"
@@ -13,8 +12,9 @@
 #include "../include/ir_attribute_list.h"
 #include "../include/ir_value_constant.h"
 
-piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &directionToken,
-								const IrTokenInfo_string &name, DIRECTION dir) {
+piranha::IrAttributeDefinition::IrAttributeDefinition(
+	const IrTokenInfo_string &directionToken, const IrTokenInfo_string &name, DIRECTION dir) 
+{
 	m_name = name;
 	registerToken(&m_name);
 
@@ -47,18 +47,6 @@ void piranha::IrAttributeDefinition::setDefaultValue(IrValue *value) {
 void piranha::IrAttributeDefinition::setAliasToken(const IrTokenInfo_string &aliasToken) {
 	m_aliasToken = aliasToken;
 	registerToken(&m_aliasToken);
-}
-
-piranha::IrInputConnection *piranha::IrAttributeDefinition::getImpliedMember(const std::string &name) const {
-	int count = getImpliedMemberCount();
-
-	for (int i = 0; i < count; i++) {
-		if (m_impliedMembers[i]->getMember() == name) {
-			return m_impliedMembers[i];
-		}
-	}
-
-	return nullptr;
 }
 
 piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReference(
@@ -129,10 +117,9 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 }
 
 piranha::IrNodeDefinition *piranha::IrAttributeDefinition::getTypeDefinition() const {
-	if (m_typeDefinition != nullptr) {
-		return m_typeDefinition->getAliasType();
-	}
-	else return nullptr;
+	return (m_typeDefinition != nullptr)
+		? m_typeDefinition->getAliasType()
+		: nullptr;
 }
 
 const piranha::ChannelType *piranha::IrAttributeDefinition::getImmediateChannelType() {
@@ -169,7 +156,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 			getImmediateReference(immediateQuery, &immediateInfo);
 
 		if (immediateInfo.failed) return;
-		if (immediateInfo.reachedDeadEnd) {
+		else if (immediateInfo.reachedDeadEnd) {
 			IrNode *expansion = new IrNode();
 			expansion->setLogicalParent(this);
 			expansion->setScopeParent(this);
@@ -191,7 +178,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 		referenceQuery.inputContext = immediateInfo.newContext;
 		referenceQuery.recordErrors = false;
 		IrParserStructure *reference = 
-			immediateReference->resolveToSingleChannel(referenceQuery, &referenceInfo);
+			immediateReference->getReference(referenceQuery, &referenceInfo);
 
 		if (referenceInfo.failed || referenceInfo.reachedDeadEnd) return;
 
@@ -224,7 +211,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 
 		if (builtinType.empty()) return; // Incompatible types
 
-		IrCompilationUnit *parentUnit = (context->getContext() == nullptr)
+		IrCompilationUnit *parentUnit = (context->isEmpty())
 			? getParentUnit()
 			: context->getContext()->getParentUnit();
 
@@ -256,6 +243,10 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 }
 
 void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
+	// Skips this step completely if language rules are not specified
+	// NOTE - This should only really be used in unit testing
+	if (m_rules == nullptr) return;
+
 	if (m_typeDefinition != nullptr && m_defaultValue != nullptr) {
 		IrReferenceInfo info;
 		IrReferenceQuery query;
@@ -266,23 +257,20 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 		if (info.failed) return;
 		if (info.reachedDeadEnd) return;
 
-		if (!info.touchedMainContext && (context->getContext() != nullptr || !context->isMainContext())) return;
+		if (!info.touchedMainContext) {
+			if (!context->isEmpty()) return;
+			if (!context->isMainContext()) return;
+		}
 
 		// If the incoming type is fixed, then only the null context would interest us
-		if (info.isFixedType() && context->getContext() != nullptr) return;
+		if (info.isFixedType() && !context->isEmpty()) return;
 
-		bool incorrectNodeType = false;
 		IrNode *refAsNode = defaultReference->getAsNode();
 		if (refAsNode != nullptr) {
 			IrNodeDefinition *definition = refAsNode->getDefinition();
-			if (definition == nullptr) return;
+			if (definition == nullptr) return; // A syntax error must have already occurred
 			if (definition == m_typeDefinition) return; // Type is confirmed to be correct
-
-			// Report an error
-			incorrectNodeType = true;
 		}
-
-		if (m_rules == nullptr) return;
 
 		const ChannelType *type = info.isFixedType() 
 			? info.fixedType->getChannelType() 
@@ -308,7 +296,6 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 }
 
 void piranha::IrAttributeDefinition::_resolveDefinitions() {
-	int definitionCount = 0;
 	IrNodeDefinition *definition = nullptr;
 	IrCompilationUnit *unit = getParentUnit();
 
@@ -318,10 +305,12 @@ void piranha::IrAttributeDefinition::_resolveDefinitions() {
 	// No action is needed if a type wasn't specified
 	if (!typeToken.specified) return;
 
-	const std::string &library = libraryToken.data;
 	const std::string &type = typeToken.data;
 
+	int definitionCount = 0;
 	if (libraryToken.specified) {
+		const std::string &library = libraryToken.data;
+
 		if (!library.empty()) {
 			definition = unit->resolveNodeDefinition(type, &definitionCount, library);
 		}
@@ -330,16 +319,7 @@ void piranha::IrAttributeDefinition::_resolveDefinitions() {
 			definition = unit->resolveLocalNodeDefinition(type, &definitionCount);
 		}
 	}
-	else {
-		if (typeToken.specified) {
-			definition = unit->resolveNodeDefinition(type, &definitionCount, "");
-		}
-		else {
-			// Type information was not given so skip the rest of the function
-			m_typeDefinition = nullptr;
-			return;
-		}
-	}
+	else definition = unit->resolveNodeDefinition(type, &definitionCount, "");
 
 	if (definitionCount > 0) {
 		// TODO: log a warning when a node type is ambiguous
@@ -354,25 +334,30 @@ void piranha::IrAttributeDefinition::_resolveDefinitions() {
 	else m_typeDefinition = definition;
 }
 
-piranha::Node *piranha::IrAttributeDefinition::_generateNode(IrContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::IrAttributeDefinition::_generateNode(
+	IrContextTree *context, NodeProgram *program) 
+{
 	if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
 		// This must be an interface
-		Node *parentNode = context->getContext()->generateNode(context->getParent(), program);
-		NodeOutput *output = parentNode->getOutput(getName());
-
-		return output->getInterface();
+		return context
+			->getContext()
+			->generateNode(context->getParent(), program)
+			->getOutput(getName())
+			->getInterface();
 	}
 
 	return nullptr;
 }
 
-piranha::NodeOutput *piranha::IrAttributeDefinition::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::IrAttributeDefinition::_generateNodeOutput(
+	IrContextTree *context, NodeProgram *program) 
+{
 	if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
 		// This must be an interface
-		Node *parentNode = context->getContext()->generateNode(context->getParent(), program);
-		NodeOutput *output = parentNode->getOutput(getName());
-
-		return output;
+		return context
+			->getContext()
+			->generateNode(context->getParent(), program)
+			->getOutput(getName());
 	}
 
 	return nullptr;

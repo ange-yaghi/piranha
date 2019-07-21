@@ -40,15 +40,9 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
 			}
 
 			Path importPath(libName);
-			Path fullImportPath;
-
-			if (importPath.isAbsolute()) {
-				// TODO: Warn about use of absolute path
-				fullImportPath = importPath;
-			}
-			else {
-				fullImportPath = rootDir.append(importPath);
-			}
+			Path fullImportPath = importPath.isAbsolute() 
+				? importPath // TODO: Warn about use of absolute path
+				: rootDir.append(importPath);
 
 			if (!fullImportPath.exists()) {
 				Path resolvedPath;
@@ -130,7 +124,13 @@ bool piranha::Compiler::isPathEquivalent(const IrPath &a, const IrPath &b) const
 
 bool piranha::Compiler::hasEnding(std::string const &fullString, std::string const &ending) {
 	if (fullString.length() >= ending.length()) {
-		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+		int result = 
+			fullString.compare(
+				fullString.length() - ending.length(),
+				ending.length(),
+				ending);
+
+		return result == 0;
 	}
 	else return false;
 }

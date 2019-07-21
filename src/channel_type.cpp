@@ -19,27 +19,24 @@ void piranha::ChannelType::initialize(const char *type, const ChannelType *paren
 }
 
 bool piranha::ChannelType::isCompatibleWith(const ChannelType &t) const {
-	if (operator==(t)) {
-		return true;
-	}
+	if (this->operator==(t)) return true;
 	else {
-		if (m_parent == nullptr) return false;
-		else return m_parent->isCompatibleWith(t);
+		return (m_parent == nullptr) 
+			? false
+			: m_parent->isCompatibleWith(t);
 	}
 }
 
 bool piranha::ChannelType::operator==(const ChannelType &t) const {
-	bool hashCheck = (m_hash == t.m_hash);
-	if (!hashCheck) return false;
-	else return (strcmp(t.m_typeString, m_typeString) == 0);
+	return (m_hash == t.m_hash) 
+		? strcmp(t.m_typeString, m_typeString) == 0
+		: false;
 }
 
 int piranha::ChannelType::generateHash(const char *string) {
-	// Simple hash for now
+	// Very simple hash for now
 	int sum = 0, i = 0;
-	while (string[i] != '\0') {
-		sum += (int)string[i++];
-	}
+	while (string[i] != '\0') sum += (int)string[i++];
 
 	return sum;
 }

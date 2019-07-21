@@ -21,8 +21,8 @@ namespace piranha {
 
 		using FlexLexer::yylex;
 
-		virtual int yylex(piranha::Parser::semantic_type *lval,
-			piranha::Parser::location_type *location);
+		virtual int yylex(
+			piranha::Parser::semantic_type *lval, piranha::Parser::location_type *location);
 
 	private:
 		void comment();
@@ -31,7 +31,7 @@ namespace piranha {
 		void step();
 
 		template <typename T>
-		void buildValue(const T &data, piranha::Parser::location_type *location, bool valid=true) {
+		void buildValue(const T &data, piranha::Parser::location_type *location, bool valid = true) {
 			typedef T_IrTokenInfo<T> _TokenInfo;
 
 			_TokenInfo info(data, m_loc->lineStart, m_loc->lineEnd, 

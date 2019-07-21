@@ -27,7 +27,6 @@
 	#include "../include/ir_structure_list.h"
 	#include "../include/ir_visibility.h"
 	#include "../include/ir_unary_operator.h"
-	#include "../include/ir_generic_value.h"
 
 	#include <string>
 

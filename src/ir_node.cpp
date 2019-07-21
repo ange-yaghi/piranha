@@ -11,10 +11,8 @@
 #include "../include/ir_context_tree.h"
 #include "../include/language_rules.h"
 #include "../include/node.h"
-#include "../include/custom_node.h"
 #include "../include/standard_allocator.h"
 #include "../include/exceptions.h"
-
 #include "../include/node_program.h"
 
 piranha::IrNode::IrNode() {
@@ -23,8 +21,10 @@ piranha::IrNode::IrNode() {
 	m_definition = nullptr;
 }
 
-piranha::IrNode::IrNode(const IrTokenInfo_string &type, const IrTokenInfo_string &name, 
-			IrAttributeList *attributes, const IrTokenInfo_string &library) {
+piranha::IrNode::IrNode(
+	const IrTokenInfo_string &type, const IrTokenInfo_string &name, 
+	IrAttributeList *attributes, const IrTokenInfo_string &library) 
+{
 	m_type = type;
 	m_name = name;
 	m_attributes = attributes;
@@ -39,8 +39,10 @@ piranha::IrNode::IrNode(const IrTokenInfo_string &type, const IrTokenInfo_string
 	m_isInterface = false;
 }
 
-piranha::IrNode::IrNode(const IrTokenInfo_string &type, IrAttributeList *attributes,
-			const IrTokenInfo_string &library) {
+piranha::IrNode::IrNode(
+	const IrTokenInfo_string &type, IrAttributeList *attributes, 
+	const IrTokenInfo_string &library) 
+{
 	m_type = type;
 	m_name = IrTokenInfo_string("");
 	m_attributes = attributes;
@@ -74,7 +76,7 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(const std::string &name, int
 
 	if (count != nullptr) *count = 0;
 
-	IrAttribute *result = nullptr;
+	IrAttribute *firstResult = nullptr;
 	int attributeCount = m_attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
 		IrAttribute *attribute = m_attributes->getAttribute(i);
@@ -82,12 +84,12 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(const std::string &name, int
 			? attribute->getAttributeDefinition()->getName() == name
 			: false;
 		if (definitionMatches || attribute->getName() == name) {
-			if (result == nullptr) result = attribute;
+			if (firstResult == nullptr) firstResult = attribute;
 			if (count != nullptr) (*count)++;
 		}
 	}
 
-	return result;
+	return firstResult;
 }
 
 void piranha::IrNode::setScopeParent(IrParserStructure *parentScope) {
@@ -97,25 +99,28 @@ void piranha::IrNode::setScopeParent(IrParserStructure *parentScope) {
 	}
 }
 
-piranha::IrAttribute *piranha::IrNode::getAttribute(IrAttributeDefinition *definition, int *count) const {
+piranha::IrAttribute *piranha::IrNode::getAttribute(
+	IrAttributeDefinition *definition, int *count) const 
+{
 	if (m_attributes == nullptr) return nullptr;
-
 	if (count != nullptr) *count = 0;
 
-	IrAttribute *result = nullptr;
+	IrAttribute *firstResult = nullptr;
 	int attributeCount = m_attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
 		IrAttribute *attribute = m_attributes->getAttribute(i);
 		if (attribute->getAttributeDefinition() == definition) {
-			if (result == nullptr) result = attribute;
+			if (firstResult == nullptr) firstResult = attribute;
 			if (count != nullptr) (*count)++;
 		}
 	}
 
-	return result;
+	return firstResult;
 }
 
-piranha::IrParserStructure *piranha::IrNode::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrNode::
+	resolveLocalName(const std::string &name) const 
+{
 	IrParserStructure *attribute = getAttribute(name);
 	if (attribute != nullptr) return attribute;
 	
@@ -322,8 +327,9 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 
 piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgram *program) {
 	if (isInterface()) {
-		NodeOutput *parentNodeOutput = getScopeParent()->generateNodeOutput(context, program);
-		return parentNodeOutput->getInterface();
+		return getScopeParent()
+			->generateNodeOutput(context, program)
+			->getInterface();
 	}
 
 	IrContextTree *newContext;
@@ -339,44 +345,28 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 	struct Mapping {
 		std::string name;
 		NodeOutput *output;
-		bool primary;
 	};
 
 	std::vector<Mapping> inputs;
-	std::vector<Mapping> outputs;
 
 	int attributeCount = allAttributes->getDefinitionCount();
 	for (int i = 0; i < attributeCount; i++) {
 		IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
 
+		IrReferenceInfo info;
+		IrReferenceQuery query;
+		query.inputContext = newContext;
+		query.recordErrors = false;
+		IrParserStructure *reference = attributeDefinition->getReference(query, &info);
+
+		// Skip if this is a builtin output as wouldn't even be generated yet
+		if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT &&
+			m_definition->isBuiltin()) continue;
+
+		NodeOutput *output = reference->generateNodeOutput(info.newContext, program);
+
 		if (attributeDefinition->getDirection() == IrAttributeDefinition::INPUT) {
-			// Input was specified
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = newContext;
-			query.recordErrors = false;
-			IrParserStructure *asValue = attributeDefinition->getReference(query, &info);
-
-			Mapping inputPort;
-			inputPort.output = asValue->generateNodeOutput(info.newContext, program);
-			inputPort.name = attributeDefinition->getName();
-			inputs.push_back(inputPort);
-		}
-		else if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT && 
-			!definition->isBuiltin()) 
-		{
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = newContext;
-			query.recordErrors = false;
-			IrParserStructure *reference = attributeDefinition->getReference(query, &info);
-
-			Mapping outputPort;
-			outputPort.output = reference->generateNodeOutput(info.newContext, program);
-			outputPort.name = attributeDefinition->getName();
-			outputPort.primary = (reference == getDefaultOutputValue());
-
-			outputs.push_back(outputPort);
+			inputs.push_back({ attributeDefinition->getName(), output });
 		}
 	}
 
@@ -390,19 +380,15 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 		}
 	}
 
-	int inputCount = (int)inputs.size();
-	int outputCount = (int)outputs.size();
-
 	Node *newNode = program->getRules()->generateNode(this, parentContext);
 	if (newNode != nullptr) {
 		newNode->setName(getName());
 		newNode->setIrStructure(this);
 		newNode->initialize();
 
+		int inputCount = (int)inputs.size();
 		for (int i = 0; i < inputCount; i++) {
-			newNode->connectInput(
-				inputs[i].output, 
-				inputs[i].name.c_str());
+			newNode->connectInput(inputs[i].output, inputs[i].name.c_str());
 		}
 
 		// Add the new node to the program
@@ -412,9 +398,12 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 	return newNode;
 }
 
-piranha::NodeOutput *piranha::IrNode::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-	if (isInterface()) return getScopeParent()->generateNodeOutput(context, program);
-	else return nullptr;
+piranha::NodeOutput *piranha::IrNode::_generateNodeOutput(
+	IrContextTree *context, NodeProgram *program) 
+{
+	return isInterface()
+		? getScopeParent()->generateNodeOutput(context, program)
+		: nullptr;
 }
 
 piranha::IrParserStructure *piranha::IrNode::getDefaultPort(bool *failed) {
@@ -434,22 +423,6 @@ piranha::IrParserStructure *piranha::IrNode::getDefaultPort(bool *failed) {
 	return definitionList->getAliasOutput();
 }
 
-piranha::IrValue *piranha::IrNode::getDefaultOutputValue() {
-	auto definition = m_definition;
-	if (definition == nullptr) return nullptr;
-
-	auto definitionList = definition->getAttributeDefinitionList();
-	if (definitionList == nullptr) return nullptr;
-
-	auto outputDefinition = definitionList->getAliasOutput();
-	if (outputDefinition == nullptr) return nullptr;
-
-	auto defaultValue = outputDefinition->getDefaultValue();
-	if (defaultValue == nullptr) return nullptr;
-
-	return defaultValue->getAsValue();
-}
-
 void piranha::IrNode::writeTraceToFile(std::ofstream &file) {
 	IrContextTree *parentContext = new IrContextTree(nullptr);
 	IrContextTree *thisContext = parentContext->newChild(this);
@@ -463,7 +436,9 @@ void piranha::IrNode::writeTraceToFile(std::ofstream &file) {
 	}
 }
 
-piranha::IrParserStructure *piranha::IrNode::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrNode::getImmediateReference(
+	const IrReferenceQuery &query, IrReferenceInfo *output) 
+{
 	IR_RESET(query);
 
 	bool failed = false;
@@ -477,11 +452,9 @@ piranha::IrParserStructure *piranha::IrNode::getImmediateReference(const IrRefer
 	if (aliasPort != nullptr) {
 		IrContextTree *newContext = query.inputContext->newChild(this, false);
 		IR_INFO_OUT(newContext, newContext);
-
-		return aliasPort;
 	}
 
-	return nullptr;
+	return aliasPort;
 }
 
 void piranha::IrNode::checkReferences(IrContextTree *inputContext) {

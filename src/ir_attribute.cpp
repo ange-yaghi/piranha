@@ -40,7 +40,9 @@ void piranha::IrAttribute::setValue(IrValue *value) {
 	registerComponent(value);
 }
 
-piranha::IrParserStructure *piranha::IrAttribute::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrAttribute::getImmediateReference(
+	const IrReferenceQuery &query, IrReferenceInfo *output) 
+{
 	IR_INFO_OUT(err, nullptr);
 	IR_INFO_OUT(newContext, query.inputContext);
 	IR_INFO_OUT(failed, false);
@@ -60,18 +62,16 @@ void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
 	if (info.failed) return;
 	if (info.reachedDeadEnd) return;
 
-	if (!info.touchedMainContext && context->getContext() != nullptr) return;
-	if (info.isFixedType() && context->getContext() != nullptr) return;
+	if (!info.touchedMainContext && !context->isEmpty()) return;
+	if (info.isFixedType() && !context->isEmpty()) return;
 
 	IrNodeDefinition *typeDefinition = m_definition->getTypeDefinition();
 
 	if (typeDefinition != nullptr && m_definition->getDirection() == IrAttributeDefinition::INPUT) {
 		IrNode *refAsNode = finalReference->getAsNode();
-		IrNodeDefinition *definition = nullptr;
 
 		if (info.isFixedType()) {
-			definition = info.fixedType;
-			if (definition == typeDefinition) return;
+			if (info.fixedType == typeDefinition) return;
 		}
 
 		if (refAsNode != nullptr) {
@@ -82,12 +82,12 @@ void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
 
 		if (m_rules == nullptr) return;
 
-		const ChannelType *type = info.isFixedType() ? info.fixedType->getChannelType() : finalReference->getImmediateChannelType();
+		const ChannelType *type = info.isFixedType() 
+			? info.fixedType->getChannelType() 
+			: finalReference->getImmediateChannelType();
 		const ChannelType *expectedType = typeDefinition->getChannelType();
 
-		if (type == expectedType) {
-			if (expectedType != nullptr) return; // No conversion necessary
-		}
+		if (type == expectedType && expectedType != nullptr) return; // No conversion necessary
 
 		bool validConversion = m_rules->checkConversion({ type, expectedType });
 		if (validConversion) return;

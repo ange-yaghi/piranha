@@ -40,10 +40,6 @@ namespace piranha {
 		void setDirection(DIRECTION direction) { m_direction = direction; }
 		DIRECTION getDirection() const { return m_direction; }
 
-		IrInputConnection *getImpliedMember(int i) const { return m_impliedMembers[i]; }
-		int getImpliedMemberCount() const { return (int)m_impliedMembers.size(); }
-		IrInputConnection *getImpliedMember(const std::string &name) const;
-
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
 		virtual bool isInputPoint() const { return m_direction == INPUT; }

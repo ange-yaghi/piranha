@@ -24,7 +24,7 @@ void piranha::FloatCastNode::_destroy() {
 
 void piranha::FloatCastNode::registerOutputs() {
 	setPrimaryOutputReference(&m_input);
-	registerOutputReference(&m_input, "$primary");
+	registerOutputReference(&m_input, "__out");
 }
 
 void piranha::FloatCastNode::registerInputs() {
