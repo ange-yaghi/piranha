@@ -119,7 +119,7 @@ TEST(GeneralTests, GeneralSyntaxTest_09) {
 	program.execute();
 
 	piranha::vector v;
-	program.getNode(3)->getPrimaryOutput()->fullCompute(&v);
+	program.getNode(7)->getPrimaryOutput()->fullCompute(&v);
 
 	EXPECT_EQ(v.x, 0.0);
 	EXPECT_EQ(v.y, 0.0);

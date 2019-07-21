@@ -84,9 +84,6 @@ const piranha::ChannelType *piranha::Node::getConversion(pNodeInput input, const
 			if (!input->getType()->isCompatibleWith(*requiredType)) {
 				return requiredType;
 			}
-
-			// Warning: do not break here! There could potentially be multiple
-			// inputs with the same name referencing different endpoints
 		}
 	}
 

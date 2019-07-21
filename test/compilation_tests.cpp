@@ -32,12 +32,6 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
 	unit->build(&program);
 
 	program.execute();
-
-	Node *node1 = program.getNode(0);
-	EXPECT_EQ(node1->getName(), "");
-
-	Node *node2 = program.getNode(2);
-	EXPECT_EQ(node2->getName(), "string_to_float");
 	
 	double value;
 	program.getNode(0)->getPrimaryOutput()->fullCompute((void *)&value);
@@ -54,7 +48,7 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
 	EXPECT_EQ(stringValue, "5");
 
 	program.getNode(4)->getPrimaryOutput()->fullCompute((void *)&stringValue);
-	EXPECT_EQ(stringValue, "DEFAULT");
+	EXPECT_EQ(stringValue, "123");
 }
 
 TEST(IrConstructionTests, IrConstructionNestedTest) {
@@ -68,8 +62,8 @@ TEST(IrConstructionTests, IrConstructionNestedTest) {
 
 	program.execute();
 
-	Node *topLevel = program.getNode(8);
-	EXPECT_EQ(topLevel->getName(), "top_level");
+	Node *topLevel = program.getNode(4);
+	EXPECT_EQ(topLevel->getContext()->getContext()->getName(), "top_level");
 
 	double value;
 	topLevel->getPrimaryOutput()->fullCompute((void *)&value);
