@@ -62,7 +62,9 @@ piranha::IrInputConnection *piranha::IrAttributeDefinition::getImpliedMember(con
 	return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReference(
+	const IrReferenceQuery &query, IrReferenceInfo *output) 
+{
 	IR_RESET(query);
 
 	// If a type definition is present, then this chain of references must have a fixed type
@@ -111,11 +113,6 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 		}
 		else {
 			IrNode **node = m_expansions.lookup(query.inputContext);
-
-			if (node == nullptr) {
-				int a = 0;
-			}
-
 			return *node;
 		}
 	}
@@ -165,24 +162,15 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 		*m_expansions.newValue(context) = expansion;
 	}
 	else {
-		if (getName() == "some_input") {
-			int a = 0;
-		}
+		IrReferenceInfo immediateInfo;
+		IrReferenceQuery immediateQuery;
+		immediateQuery.inputContext = context;
+		immediateQuery.recordErrors = false;
+		IrParserStructure *immediateReference = 
+			getImmediateReference(immediateQuery, &immediateInfo);
 
-		if (getName() == "b") {
-			int a = 0;
-		}
-
-		IrReferenceInfo info;
-		IrReferenceQuery query;
-		query.inputContext = context;
-		query.recordErrors = false;
-		IrParserStructure *immediateReference = getImmediateReference(query, &info);
-
-		if (info.failed)
-			return;
-
-		if (info.reachedDeadEnd) {
+		if (immediateInfo.failed) return;
+		if (immediateInfo.reachedDeadEnd) {
 			IrNode *expansion = new IrNode();
 			expansion->setLogicalParent(this);
 			expansion->setScopeParent(this);
@@ -196,50 +184,58 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 			return;
 		}
 
-		if (immediateReference == nullptr) return;
+		// Make sure the entire reference chain is expanded
+		immediateReference->expandChain(immediateInfo.newContext);
 
-		immediateReference->expandChain(info.newContext);
+		IrReferenceInfo referenceInfo;
+		IrReferenceQuery referenceQuery;
+		referenceQuery.inputContext = immediateInfo.newContext;
+		referenceQuery.recordErrors = false;
+		IrParserStructure *reference = 
+			immediateReference->resolveToSingleChannel(referenceQuery, &referenceInfo);
 
-		query.inputContext = info.newContext;
-		query.recordErrors = false;
-		IrParserStructure *reference = immediateReference->resolveToSingleChannel(query, &info);
+		if (referenceInfo.failed || referenceInfo.reachedDeadEnd) return;
 
-		if (info.failed || info.reachedDeadEnd) 
-			return;
+		IrNodeDefinition *fixedTypeDefinition = nullptr;
+		if (referenceInfo.isFixedType()) fixedTypeDefinition = referenceInfo.fixedType;
+		// IMPORTANT: fixed type information from the immediate reference cannot be 
+		// used because it will always get forced to the type of this attribute definition
+		// thereby preventing automatic conversion from taking place.
 
-		IrNode *asNode = reference->getAsNode();
-
-		bool nonMatchingTypes = false;
-		if (asNode != nullptr && asNode->getDefinition() != m_typeDefinition) nonMatchingTypes = true;
-
-		const ChannelType *referenceType = reference->getImmediateChannelType();
+		const ChannelType *referenceType = (fixedTypeDefinition != nullptr)
+			? fixedTypeDefinition->getChannelType()
+			: reference->getImmediateChannelType();
 		const ChannelType *expectedType = getTypeDefinition()->getChannelType();
 
 		if (referenceType == nullptr || expectedType == nullptr) {
-			if (nonMatchingTypes) {
+			IrNode *asNode = reference->getAsNode();
+			IrNodeDefinition *typeDefinition = (asNode != nullptr)
+				? asNode->getDefinition()
+				: fixedTypeDefinition;
+
+			if (typeDefinition != nullptr && typeDefinition != getTypeDefinition()) {
 				// This error was already detected in an earlier step
 				return;
 			}
 		}
+		else if (referenceType == expectedType) return; // No expansion/conversion needed
 
-		if (referenceType == expectedType) return; // No expansion/conversion needed
+		std::string builtinType = 
+			m_rules->resolveConversionBuiltinType({ referenceType, expectedType });
 
-		std::string builtinType = m_rules->resolveConversionBuiltinType({ referenceType, expectedType });
 		if (builtinType.empty()) return; // Incompatible types
 
-		int count = 0;
 		IrCompilationUnit *parentUnit = (context->getContext() == nullptr)
 			? getParentUnit()
 			: context->getContext()->getParentUnit();
 
-		IrNodeDefinition *nodeDefinition = parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
+		int count = 0;
+		IrNodeDefinition *nodeDefinition = 
+			parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
 
-		if (nodeDefinition == nullptr) {
-			// No definition found for this builtin type
-			int a = 0;
-		}
-
-		IrInternalReference *internalReference = new IrInternalReference(reference, info.newContext);
+		// Create expanion structure
+		IrInternalReference *internalReference = 
+			new IrInternalReference(reference, referenceInfo.newContext);
 
 		IrAttribute *input = new IrAttribute();
 		input->setValue(internalReference);
