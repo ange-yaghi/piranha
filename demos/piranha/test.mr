@@ -1,0 +1,6 @@
+private import "standard-library/standard_library.mr" as std
+
+std::console_out("Hello world!\n")
+
+std::vector vec(1.0, 2.0, 3.0, 4.0)
+std::console_out(string(vec.x) + "\n")

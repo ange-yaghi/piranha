@@ -59,11 +59,9 @@ piranha::IrNode::~IrNode() {
 }
 
 const piranha::ChannelType *piranha::IrNode::getImmediateChannelType() {
-	if (m_definition == nullptr) return nullptr;
-	if (!m_definition->isBuiltin()) return nullptr;
-	
-	std::string builtinType = m_definition->getBuiltinName();
-	return m_rules->resolveChannelType(builtinType);
+	return (m_definition != nullptr)
+		? m_definition->getChannelType()
+		: nullptr;
 }
 
 void piranha::IrNode::setAttributes(IrAttributeList *list) {
@@ -321,6 +319,11 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgram *program) {
 	if (isInterface()) {
 		NodeOutput *parentNodeOutput = getScopeParent()->generateNodeOutput(context, program);
+
+		if (parentNodeOutput == nullptr) {
+			int a = 0;
+		}
+
 		return parentNodeOutput->getInterface();
 	}
 

@@ -50,12 +50,7 @@ namespace piranha {
 
 		virtual void registerOutputs() {
 			setPrimaryOutput(&m_output);
-			registerOutput(&m_output, "$primary");
-
-			registerOutputReference(m_output.getXInputConnection(), "x");
-			registerOutputReference(m_output.getYInputConnection(), "y");
-			registerOutputReference(m_output.getZInputConnection(), "z");
-			registerOutputReference(m_output.getWInputConnection(), "w");
+			registerOutput(&m_output, "__out");
 		}
 
 		virtual void registerInputs() {

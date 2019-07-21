@@ -75,7 +75,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 		if (publicAttribute == nullptr) {
 			IR_FAIL();
 
-			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
+			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
+				(basicInfo.isFixedType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
 			if (query.recordErrors && isValidError) {
 				// Left hand does not have this member
 				IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),
@@ -89,7 +90,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 		if (!publicAttribute->allowsExternalAccess()) {
 			IR_FAIL();
 
-			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext);
+			bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
+				(basicInfo.isFixedType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
 			if (query.recordErrors && isValidError) {
 				IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),
 					ErrorCode::AccessingInternalMember, query.inputContext));
@@ -124,8 +126,13 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
 void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) return;
 
+	if (m_operator == DOT) {
+		m_leftOperand->expandChain(context);
+	}
+
 	if (m_operator != DOT) {
 		if (m_rules == nullptr) return;
+		bool emptyContext = (context->getContext() == nullptr);
 
 		IrReferenceInfo leftInfo;
 		IrReferenceQuery leftQuery;
@@ -152,9 +159,8 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 
 		std::string builtinType = m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
 
-		bool touchedMainContext = (leftInfo.touchedMainContext || rightInfo.touchedMainContext);
-		bool emptyContext = (context->getContext() == nullptr);
-
+		bool touchedMainContext = ((leftInfo.touchedMainContext && !leftInfo.isFixedType()) ||
+			(rightInfo.touchedMainContext && !rightInfo.isFixedType()));
 		if (builtinType.empty()) {
 			if (touchedMainContext || emptyContext) {
 				getParentUnit()->addCompilationError(

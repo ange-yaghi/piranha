@@ -1,0 +1,17 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node some_type {
+    input a;
+    output b: a + "hello";
+}
+
+node output_structure {
+    input some_input [some_type];
+    output raw: some_input.fake + "Hello";
+}
+
+console_out(
+    output_structure(
+        some_type("Preface: ")
+    ).raw
+)

@@ -43,7 +43,7 @@ namespace piranha {
 		IrAttributeDefinition *getAttributeDefinition() const { return m_definition; }
 
 		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
-		virtual void _checkType(IrParserStructure *finalReference, IrContextTree *context);
+		virtual void _checkTypes(IrContextTree *context);
 
 	protected:
 		IrAttributeDefinition *m_definition;

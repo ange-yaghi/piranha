@@ -7,6 +7,7 @@
 #include "../include/compilation_error.h"
 #include "../include/ir_value.h"
 #include "../include/ir_context_tree.h"
+#include "../include/language_rules.h"
 
 piranha::IrNodeDefinition::IrNodeDefinition(const IrTokenInfo_string &name) {
 	m_name = name;
@@ -54,6 +55,33 @@ piranha::IrAttributeDefinition *piranha::IrNodeDefinition::getAttributeDefinitio
 piranha::IrParserStructure *piranha::IrNodeDefinition::resolveName(const std::string &name) const {
 	// Node definitions are not able to see variables outside of themselves for now
 	return resolveLocalName(name);
+}
+
+const piranha::ChannelType *piranha::IrNodeDefinition::getChannelType() {
+	if (m_rules == nullptr) return nullptr;
+
+	if (isBuiltin()) {
+		const ChannelType *immediateChannelType = m_rules->resolveChannelType(getBuiltinName());
+		if (immediateChannelType != nullptr) return immediateChannelType;
+	}
+
+	IrNodeDefinition *aliasType = getAliasType();
+	
+	return (aliasType != this)
+		? aliasType->getChannelType()
+		: nullptr;
+}
+
+piranha::IrNodeDefinition *piranha::IrNodeDefinition::getAliasType() {
+	if (m_attributes == nullptr) return this;
+
+	IrAttributeDefinition *alias = m_attributes->getAliasOutput();
+	if (alias == nullptr) return this;
+
+	IrNodeDefinition *typeDefinition = alias->getTypeDefinition();
+	if (typeDefinition == nullptr) return this;
+
+	return typeDefinition->getAliasType();
 }
 
 int piranha::IrNodeDefinition::countSymbolIncidence(const std::string &name) const {

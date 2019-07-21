@@ -142,13 +142,11 @@ TEST(GeneralTests, GeneralSyntaxTest_11) {
 	LanguageRules *rules;
 	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_11.mr", &errList, &rules);
 
-	EXPECT_EQ(errList->getErrorCount(), 6);
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 24, nullptr, false));
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 27, nullptr, false));
+	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 20, nullptr, false));
 
-	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 19, nullptr, false));
-	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 22, nullptr, false));
-	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 15, nullptr, false));
-	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleOutputDefinitionType, 16, nullptr, true));
-	EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleOutputDefinitionType, 16, nullptr, false));
+	EXPECT_EQ(errList->getErrorCount(), 3);
 }
 
 TEST(GeneralTests, GeneralSyntaxTest_12) {
@@ -181,4 +179,39 @@ TEST(GeneralTests, GeneralSyntaxTest_14) {
 	EXPECT_EQ(errList->getErrorCount(), 1);
 
 	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 6, nullptr, false));
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_15) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_15.mr", &errList, &rules);
+
+	EXPECT_EQ(errList->getErrorCount(), 1);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::UndefinedMember, 10, nullptr, false));
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_16) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_16.mr", &errList, &rules);
+
+	EXPECT_EQ(errList->getErrorCount(), 1);
+
+	EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 13, nullptr, false));
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_17) {
+	const ErrorList *errList;
+	LanguageRules *rules;
+	IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_17.mr", &errList, &rules);
+
+	EXPECT_EQ(errList->getErrorCount(), 0);
+
+	NodeProgram program;
+	program.setRules(rules);
+	rules->setNodeProgram(&program);
+	unit->build(&program);
+
+	program.execute();
 }

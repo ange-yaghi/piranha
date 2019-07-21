@@ -13,6 +13,7 @@ piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
 	failed = false;
 	reachedDeadEnd = false;
 	touchedMainContext = false;
+	fixedType = nullptr;
 }
 
 piranha::IrParserStructure::IrReferenceInfo::~IrReferenceInfo() {
@@ -26,6 +27,7 @@ void piranha::IrParserStructure::IrReferenceInfo::reset() {
 	failed = false;
 	reachedDeadEnd = false;
 	touchedMainContext = false;
+	fixedType = nullptr;
 }
 
 piranha::IrParserStructure::IrReferenceQuery::IrReferenceQuery() {
@@ -136,6 +138,11 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(const IrRef
 
 		IR_INFO_OUT(newContext, nestedInfo.newContext);
 		IR_INFO_OUT(touchedMainContext, nestedInfo.touchedMainContext || immediateInfo.touchedMainContext);
+		
+		// Immediate takes precedence
+		if (nestedInfo.isFixedType()) IR_INFO_OUT(fixedType, nestedInfo.fixedType)
+		if (immediateInfo.isFixedType()) IR_INFO_OUT(fixedType, immediateInfo.fixedType)
+
 		return fullReference;
 	}
 	else return this;

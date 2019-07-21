@@ -65,6 +65,9 @@ piranha::IrInputConnection *piranha::IrAttributeDefinition::getImpliedMember(con
 piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
 	IR_RESET(query);
 
+	// If a type definition is present, then this chain of references must have a fixed type
+	if (m_typeDefinition != nullptr) IR_INFO_OUT(fixedType, getTypeDefinition());
+
 	// First check the input context for the reference
 	if (!IR_EMPTY_CONTEXT()) {
 		IrParserStructure *reference = query.inputContext->resolveDefinition(this);
@@ -85,7 +88,7 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 
 	// An attribute definition will by default point to its definition (ie default value)
 	if (m_defaultValue == nullptr && m_direction == INPUT) {
-		if (IR_EMPTY_CONTEXT()) {
+		if (IR_EMPTY_CONTEXT() || query.inputContext->getContext()->isInterface()) {
 			IrNode **expansion = m_expansions.lookup(query.inputContext);
 
 			if (*expansion == nullptr) {
@@ -108,6 +111,11 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 		}
 		else {
 			IrNode **node = m_expansions.lookup(query.inputContext);
+
+			if (node == nullptr) {
+				int a = 0;
+			}
+
 			return *node;
 		}
 	}
@@ -119,11 +127,16 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
 		return nullptr;
 	}
 
-	if (*expansion != nullptr) {
-		return *expansion;
-	}
+	if (*expansion != nullptr) return *expansion;
 
 	return m_defaultValue;
+}
+
+piranha::IrNodeDefinition *piranha::IrAttributeDefinition::getTypeDefinition() const {
+	if (m_typeDefinition != nullptr) {
+		return m_typeDefinition->getAliasType();
+	}
+	else return nullptr;
 }
 
 const piranha::ChannelType *piranha::IrAttributeDefinition::getImmediateChannelType() {
@@ -145,27 +158,36 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 		expansion->setLogicalParent(this);
 		expansion->setScopeParent(this);
 		expansion->setInterface(true);
-		expansion->setDefinition(m_typeDefinition);
+		expansion->setDefinition(getTypeDefinition());
 		expansion->setRules(m_rules);
 		expansion->expand(context);
 
 		*m_expansions.newValue(context) = expansion;
 	}
 	else {
+		if (getName() == "some_input") {
+			int a = 0;
+		}
+
+		if (getName() == "b") {
+			int a = 0;
+		}
+
 		IrReferenceInfo info;
 		IrReferenceQuery query;
 		query.inputContext = context;
 		query.recordErrors = false;
 		IrParserStructure *immediateReference = getImmediateReference(query, &info);
 
-		if (info.failed) return;
+		if (info.failed)
+			return;
 
 		if (info.reachedDeadEnd) {
 			IrNode *expansion = new IrNode();
 			expansion->setLogicalParent(this);
 			expansion->setScopeParent(this);
 			expansion->setInterface(true);
-			expansion->setDefinition(m_typeDefinition);
+			expansion->setDefinition(getTypeDefinition());
 			expansion->setRules(m_rules);
 			expansion->expand(context);
 
@@ -174,11 +196,16 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 			return;
 		}
 
-		immediateReference->expandChain(context);
+		if (immediateReference == nullptr) return;
+
+		immediateReference->expandChain(info.newContext);
+
+		query.inputContext = info.newContext;
+		query.recordErrors = false;
 		IrParserStructure *reference = immediateReference->resolveToSingleChannel(query, &info);
 
-		if (info.failed) return;
-		if (info.reachedDeadEnd) return;
+		if (info.failed || info.reachedDeadEnd) 
+			return;
 
 		IrNode *asNode = reference->getAsNode();
 
@@ -186,7 +213,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 		if (asNode != nullptr && asNode->getDefinition() != m_typeDefinition) nonMatchingTypes = true;
 
 		const ChannelType *referenceType = reference->getImmediateChannelType();
-		const ChannelType *expectedType = m_rules->resolveChannelType(m_typeDefinition->getBuiltinName());
+		const ChannelType *expectedType = getTypeDefinition()->getChannelType();
 
 		if (referenceType == nullptr || expectedType == nullptr) {
 			if (nonMatchingTypes) {
@@ -212,7 +239,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 			int a = 0;
 		}
 
-		IrInternalReference *internalReference = new IrInternalReference(immediateReference);
+		IrInternalReference *internalReference = new IrInternalReference(reference, info.newContext);
 
 		IrAttribute *input = new IrAttribute();
 		input->setValue(internalReference);
@@ -226,10 +253,10 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 		expansion->setScopeParent(this);
 		expansion->setDefinition(nodeDefinition);
 		expansion->setRules(m_rules);
-		expansion->expand(info.newContext);
+		expansion->expand(context);
 		expansion->resolveDefinitions();
 
-		*m_expansions.newValue(info.newContext) = expansion;
+		*m_expansions.newValue(context) = expansion;
 	}
 }
 
@@ -246,6 +273,9 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 
 		if (!info.touchedMainContext && (context->getContext() != nullptr || !context->isMainContext())) return;
 
+		// If the incoming type is fixed, then only the null context would interest us
+		if (info.isFixedType() && context->getContext() != nullptr) return;
+
 		bool incorrectNodeType = false;
 		IrNode *refAsNode = defaultReference->getAsNode();
 		if (refAsNode != nullptr) {
@@ -259,8 +289,10 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 
 		if (m_rules == nullptr) return;
 
-		const ChannelType *type = defaultReference->getImmediateChannelType();
-		const ChannelType *expectedType = m_rules->resolveChannelType(m_typeDefinition->getBuiltinName());
+		const ChannelType *type = info.isFixedType() 
+			? info.fixedType->getChannelType() 
+			: defaultReference->getImmediateChannelType();
+		const ChannelType *expectedType = getTypeDefinition()->getChannelType();
 
 		if (type == expectedType) {
 			if (expectedType != nullptr) return; // No conversion necessary

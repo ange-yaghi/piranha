@@ -1,0 +1,20 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node some_type {
+    input a;
+    input b [float];
+    output c: a + "hello from [" + string(b) + "]";
+    output d: b;
+}
+
+node output_structure {
+    input some_input [some_type];
+    output raw: some_input.c + "Hello";
+    output kaboom: some_input.d + "kaboom";
+}
+
+console_out(
+    output_structure(
+        some_type("Preface: ", "loc")
+    ).raw
+)

@@ -7,6 +7,7 @@
 #include "../include/language_rules.h"
 #include "../include/compilation_error.h"
 #include "../include/ir_compilation_unit.h"
+#include "../include/ir_context_tree.h"
 
 piranha::IrAttribute::IrAttribute() {
 	/* void */
@@ -47,27 +48,42 @@ piranha::IrParserStructure *piranha::IrAttribute::getImmediateReference(const Ir
 	return m_value;
 }
 
-void piranha::IrAttribute::_checkType(IrParserStructure *finalReference, IrContextTree *context) {
+void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
 	if (m_definition == nullptr) return;
+
+	IrReferenceInfo info;
+	IrReferenceQuery query;
+	query.inputContext = context;
+	query.recordErrors = false;
+	IrParserStructure *finalReference = getReference(query, &info);
+
+	if (info.failed) return;
+	if (info.reachedDeadEnd) return;
+
+	if (!info.touchedMainContext && context->getContext() != nullptr) return;
+	if (info.isFixedType() && context->getContext() != nullptr) return;
 
 	IrNodeDefinition *typeDefinition = m_definition->getTypeDefinition();
 
 	if (typeDefinition != nullptr && m_definition->getDirection() == IrAttributeDefinition::INPUT) {
 		IrNode *refAsNode = finalReference->getAsNode();
+		IrNodeDefinition *definition = nullptr;
 
-		bool incorrectNodeType = false;
+		if (info.isFixedType()) {
+			definition = info.fixedType;
+			if (definition == typeDefinition) return;
+		}
+
 		if (refAsNode != nullptr) {
 			IrNodeDefinition *definition = refAsNode->getDefinition();
 			if (definition == nullptr) return;
 			if (definition == typeDefinition) return; // Type is confirmed to be correct
-
-			incorrectNodeType = true;
 		}
 
 		if (m_rules == nullptr) return;
 
-		const ChannelType *type = finalReference->getImmediateChannelType();
-		const ChannelType *expectedType = m_rules->resolveChannelType(typeDefinition->getBuiltinName());
+		const ChannelType *type = info.isFixedType() ? info.fixedType->getChannelType() : finalReference->getImmediateChannelType();
+		const ChannelType *expectedType = typeDefinition->getChannelType();
 
 		if (type == expectedType) {
 			if (expectedType != nullptr) return; // No conversion necessary
