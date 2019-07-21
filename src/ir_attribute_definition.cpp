@@ -23,9 +23,8 @@ piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &
 
 	m_direction = dir;
 
-	if (m_direction == OUTPUT) {
-		setVisibility(IrVisibility::PUBLIC);
-	}
+	if (m_direction == OUTPUT) setVisibility(IrVisibility::PUBLIC);
+	else setVisibility(IrVisibility::PRIVATE);
 }
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &name) {
@@ -290,13 +289,10 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 			: defaultReference->getImmediateChannelType();
 		const ChannelType *expectedType = getTypeDefinition()->getChannelType();
 
-		if (type == expectedType) {
-			if (expectedType != nullptr) return; // No conversion necessary
-		}
+		if (type == expectedType && expectedType != nullptr) return; // No conversion necessary
+		if (m_rules->checkConversion({ type, expectedType })) return; // Conversion is valid
 
-		bool validConversion = m_rules->checkConversion({ type, expectedType });
-		if (validConversion) return;
-
+		// Conversion is invalid
 		IrCompilationUnit *unit = getParentUnit();
 
 		// Errors for inputs/outputs differ only in code but are fundamentally the same

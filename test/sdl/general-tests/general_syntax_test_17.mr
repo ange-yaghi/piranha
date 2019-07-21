@@ -22,7 +22,7 @@ node float_to_string => __piranha__float_to_string {
 }
 
 node console_out => __piranha__console_out {
-    input data: "";
+    input data [string]: "";
 }
 
 node some_thing {
@@ -30,7 +30,7 @@ node some_thing {
     output out: in;
 }
 
-console_out(
+console_out this_thing(
     float("5.0")
 )
 

@@ -200,7 +200,8 @@ void piranha::IrNode::_checkInstantiation() {
 }
 
 void piranha::IrNode::_expand() {
-	IrContextTree *parentContext = new IrContextTree(nullptr);
+	// Expand with this node as the focus                      ____
+	IrContextTree *parentContext = new IrContextTree(nullptr); ////
 	IrContextTree *mainContext = parentContext->newChild(this, true);
 	if (m_definition != nullptr) {
 		m_definition->expand(mainContext);
@@ -208,6 +209,7 @@ void piranha::IrNode::_expand() {
 }
 
 void piranha::IrNode::_expand(IrContextTree *context) {
+	// Standard expand with a different focus            _____
 	IrContextTree *mainContext = context->newChild(this, false);
 	if (m_definition != nullptr) {
 		m_definition->expand(mainContext);
@@ -215,7 +217,8 @@ void piranha::IrNode::_expand(IrContextTree *context) {
 }
 
 void piranha::IrNode::_checkTypes() {
-	IrContextTree *parentContext = new IrContextTree(nullptr);
+	// Check types with this node as the focus				   ____
+	IrContextTree *parentContext = new IrContextTree(nullptr); ////
 	IrContextTree *mainContext = parentContext->newChild(this, true);
 	if (m_definition != nullptr) {
 		m_definition->checkTypes(mainContext);
@@ -223,6 +226,7 @@ void piranha::IrNode::_checkTypes() {
 }
 
 void piranha::IrNode::_checkTypes(IrContextTree *context) {
+	// Standard type check with a different focus        _____
 	IrContextTree *mainContext = context->newChild(this, false);
 	if (m_definition != nullptr) {
 		m_definition->checkTypes(mainContext);
@@ -319,25 +323,19 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgram *program) {
 	if (isInterface()) {
 		NodeOutput *parentNodeOutput = getScopeParent()->generateNodeOutput(context, program);
-
-		if (parentNodeOutput == nullptr) {
-			int a = 0;
-		}
-
 		return parentNodeOutput->getInterface();
 	}
 
 	IrContextTree *newContext;
-	IrContextTree *parentContext = context;
-	if (parentContext == nullptr) parentContext = new IrContextTree(nullptr);
-
+	IrContextTree *parentContext = (context != nullptr)
+		? context
+		: new IrContextTree(nullptr);
 	newContext = parentContext->newChild(this);
 
 	IrNodeDefinition *definition = getDefinition();
 	const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
 	const IrAttributeList *specifiedAttributes = getAttributes();
-	int attributeCount = allAttributes->getDefinitionCount();
-
+	
 	struct Mapping {
 		std::string name;
 		NodeOutput *output;
@@ -347,41 +345,26 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 	std::vector<Mapping> inputs;
 	std::vector<Mapping> outputs;
 
+	int attributeCount = allAttributes->getDefinitionCount();
 	for (int i = 0; i < attributeCount; i++) {
 		IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
 
 		if (attributeDefinition->getDirection() == IrAttributeDefinition::INPUT) {
-			IrAttribute *attribute = specifiedAttributes->getAttribute(attributeDefinition);
+			// Input was specified
+			IrReferenceInfo info;
+			IrReferenceQuery query;
+			query.inputContext = newContext;
+			query.recordErrors = false;
+			IrParserStructure *asValue = attributeDefinition->getReference(query, &info);
 
-			if (attribute != nullptr) {
-				// Input was specified
-				IrReferenceInfo info;
-				IrReferenceQuery query;
-				query.inputContext = parentContext;
-				query.recordErrors = false;
-				IrParserStructure *asValue = attribute->getReference(query, &info);
-
-				Mapping inputPort;
-				inputPort.output = asValue->generateNodeOutput(info.newContext, program);
-				inputPort.name = attributeDefinition->getName();
-				inputs.push_back(inputPort);
-			}
-			else {
-				// Use the default value in the definition
-				IrReferenceInfo info;
-				IrReferenceQuery query;
-				query.inputContext = parentContext;
-				query.recordErrors = false;
-				IrParserStructure *asValue = attributeDefinition->getReference(query, &info);
-
-				Mapping inputPort;
-				inputPort.output = asValue->generateNodeOutput(info.newContext, program);
-				inputPort.name = attributeDefinition->getName();
-				inputs.push_back(inputPort);
-			}
+			Mapping inputPort;
+			inputPort.output = asValue->generateNodeOutput(info.newContext, program);
+			inputPort.name = attributeDefinition->getName();
+			inputs.push_back(inputPort);
 		}
-		else if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT &&
-																	!definition->isBuiltin()) {
+		else if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT && 
+			!definition->isBuiltin()) 
+		{
 			IrReferenceInfo info;
 			IrReferenceQuery query;
 			query.inputContext = newContext;
@@ -417,33 +400,9 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 		newNode->initialize();
 
 		for (int i = 0; i < inputCount; i++) {
-			pNodeInput input = inputs[i].output;
-			std::string name = inputs[i].name;
-
-			const ChannelType *conversionType = newNode->getConversion(input, name);
-			
-			if (conversionType != nullptr) {
-				// A conversion is needed
-				const ChannelType *originalType = input->getType();
-				Node *conversionNode = program->getRules()->generateConversion({ originalType, conversionType });
-
-				if (conversionNode == nullptr) throw MissingConversion();
-
-				conversionNode->setName("$autoconversion");
-				conversionNode->setIrStructure(nullptr);
-				conversionNode->setIrContext(nullptr);
-				conversionNode->initialize();
-
-				if (conversionNode == nullptr) {
-					// TODO: Error for no valid conversion being found
-				}
-				else {
-					conversionNode->connectDefaultInput(input);
-					input = conversionNode->getPrimaryOutput();
-				}
-			}
-
-			newNode->connectInput(input, name.c_str());
+			newNode->connectInput(
+				inputs[i].output, 
+				inputs[i].name.c_str());
 		}
 
 		// Add the new node to the program
