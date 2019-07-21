@@ -7,8 +7,10 @@
 #include "../include/ir_attribute_definition_list.h"
 #include "../include/node.h"
 
-piranha::IrBinaryOperator::IrBinaryOperator(OPERATOR op, IrValue *left, IrValue *right) :
-														IrValue(IrValue::BINARY_OPERATION) {
+piranha::IrBinaryOperator::IrBinaryOperator(
+	OPERATOR op, IrValue *left, IrValue *right) 
+	: IrValue(IrValue::BINARY_OPERATION) 
+{
 	m_operator = op;
 	m_leftOperand = left;
 	m_rightOperand = right;
@@ -30,12 +32,15 @@ piranha::IrBinaryOperator::~IrBinaryOperator() {
 	/* void */
 }
 
-piranha::IrParserStructure *piranha::IrBinaryOperator::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrBinaryOperator::
+	resolveLocalName(const std::string &name) const 
+{
 	return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrBinaryOperator::getImmediateReference(
-					const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrBinaryOperator::
+	getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) 
+{
 	IR_RESET(query);
 	
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
@@ -129,17 +134,17 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 	if (m_operator == DOT) {
 		m_leftOperand->expandChain(context);
 	}
-
-	if (m_operator != DOT) {
+	else {
 		if (m_rules == nullptr) return;
-		bool emptyContext = (context->getContext() == nullptr);
+		bool emptyContext = context->isEmpty();
 
 		IrReferenceInfo leftInfo;
 		IrReferenceQuery leftQuery;
 		leftQuery.inputContext = context;
 		leftQuery.recordErrors = false;
 		m_leftOperand->expandChain(context);
-		IrParserStructure *leftReference = m_leftOperand->resolveToSingleChannel(leftQuery, &leftInfo);
+		IrParserStructure *leftReference = 
+			m_leftOperand->getReference(leftQuery, &leftInfo);
 
 		if (leftInfo.failed) return;
 		if (leftInfo.reachedDeadEnd) return;
@@ -149,7 +154,8 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		rightQuery.inputContext = context;
 		rightQuery.recordErrors = false;
 		m_rightOperand->expandChain(context);
-		IrParserStructure *rightReference = m_rightOperand->resolveToSingleChannel(rightQuery, &rightInfo);
+		IrParserStructure *rightReference = 
+			m_rightOperand->getReference(rightQuery, &rightInfo);
 
 		if (rightInfo.failed) return;
 		if (rightInfo.reachedDeadEnd) return;
@@ -157,11 +163,14 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		const ChannelType *leftType = leftReference->getImmediateChannelType();
 		const ChannelType *rightType = rightReference->getImmediateChannelType();
 
-		std::string builtinType = m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
+		std::string builtinType = 
+			m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
 
-		bool touchedMainContext = ((leftInfo.touchedMainContext && !leftInfo.isFixedType()) ||
-			(rightInfo.touchedMainContext && !rightInfo.isFixedType()));
 		if (builtinType.empty()) {
+			bool touchedMainContext = 
+				((leftInfo.touchedMainContext && !leftInfo.isFixedType()) ||
+				(rightInfo.touchedMainContext && !rightInfo.isFixedType()));
+
 			if (touchedMainContext || emptyContext) {
 				getParentUnit()->addCompilationError(
 					new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context)
@@ -174,11 +183,7 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 		IrCompilationUnit *parentUnit = getParentUnit();
 		IrNodeDefinition *nodeDefinition = parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
 
-		if (nodeDefinition == nullptr) {
-			// No definition found for this builtin type
-			int a = 0;
-		}
-
+		// Generate the expansion
 		IrAttribute *leftAttribute = new IrAttribute();
 		leftAttribute->setValue(m_leftOperand);
 

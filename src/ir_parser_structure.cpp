@@ -92,16 +92,21 @@ piranha::IrParserStructure *piranha::IrParserStructure::resolveName(const std::s
 	return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrParserStructure::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrParserStructure::getImmediateReference(
+	const IrReferenceQuery &query, IrReferenceInfo *output) 
+{
 	return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrParserStructure::getReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+piranha::IrParserStructure *piranha::IrParserStructure::getReference(
+	const IrReferenceQuery &query, IrReferenceInfo *output) 
+{
 	IR_RESET(query);
 
 	IrReferenceQuery immediateQuery = query;
 	IrReferenceInfo immediateInfo;
-	IrParserStructure *immediateReference = getImmediateReference(immediateQuery, &immediateInfo);
+	IrParserStructure *immediateReference = 
+		getImmediateReference(immediateQuery, &immediateInfo);
 
 	if (immediateInfo.failed) {
 		IR_FAIL();
@@ -123,7 +128,8 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(const IrRef
 		// already been checked/reported
 		nestedQuery.recordErrors = false;
 
-		IrParserStructure *fullReference = immediateReference->getReference(nestedQuery, &nestedInfo);
+		IrParserStructure *fullReference = 
+			immediateReference->getReference(nestedQuery, &nestedInfo);
 
 		if (nestedInfo.failed) {
 			IR_FAIL();
@@ -137,7 +143,10 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(const IrRef
 		}
 
 		IR_INFO_OUT(newContext, nestedInfo.newContext);
-		IR_INFO_OUT(touchedMainContext, nestedInfo.touchedMainContext || immediateInfo.touchedMainContext);
+		IR_INFO_OUT(touchedMainContext, 
+			nestedInfo.touchedMainContext ||
+			immediateInfo.touchedMainContext
+		);
 		
 		// Immediate takes precedence
 		if (nestedInfo.isFixedType()) IR_INFO_OUT(fixedType, nestedInfo.fixedType)
@@ -230,20 +239,6 @@ void piranha::IrParserStructure::checkTypes(IrContextTree *inputContext) {
 		m_components[i]->checkTypes(inputContext);
 	}
 
-	IrReferenceInfo info;
-	IrReferenceQuery query;
-	query.inputContext = inputContext;
-	query.recordErrors = false;
-
-	IrParserStructure *reference = getReference(query, &info);
-
-	if (info.failed) return;
-	if (info.reachedDeadEnd) return;
-
-	if (info.touchedMainContext || inputContext->getContext() == nullptr) {
-		_checkType(reference, inputContext);
-	}
-
 	_checkTypes(inputContext);
 }
 
@@ -289,10 +284,6 @@ void piranha::IrParserStructure::_checkTypes() {
 	/* void */
 }
 
-void piranha::IrParserStructure::_checkType(IrParserStructure *finalReference, IrContextTree *context) {
-	/* void */
-}
-
 void piranha::IrParserStructure::_checkTypes(IrContextTree *context) {
 	/* void */
 }
@@ -301,7 +292,9 @@ void piranha::IrParserStructure::_checkInstantiation() {
 	/* void */
 }
 
-void piranha::IrParserStructure::writeReferencesToFile(std::ofstream &file, IrContextTree *context, int tabLevel) {
+void piranha::IrParserStructure::writeReferencesToFile(
+	std::ofstream &file, IrContextTree *context, int tabLevel) 
+{
 	for (int i = 0; i < tabLevel; i++) {
 		file << " ";
 	}
@@ -350,12 +343,17 @@ void piranha::IrParserStructure::_expand(IrContextTree *inputContext) {
 	/* void */
 }
 
-piranha::IrParserStructure *piranha::IrParserStructure::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrParserStructure::resolveLocalName(
+	const std::string &name) const 
+{
 	return nullptr;
 }
 
 bool piranha::IrParserStructure::allowsExternalAccess() const {
-	IrVisibility visibility = (m_visibility == IrVisibility::DEFAULT) ? m_defaultVisibility : m_visibility;
+	IrVisibility visibility = (m_visibility == IrVisibility::DEFAULT) 
+		? m_defaultVisibility 
+		: m_visibility;
+
 	return visibility == IrVisibility::PUBLIC;
 }
 
@@ -364,28 +362,9 @@ piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
 	else return m_parentUnit;
 }
 
-piranha::IrParserStructure *piranha::IrParserStructure::resolveToSingleChannel(const IrReferenceQuery &query, IrReferenceInfo *output) {
-	IrReferenceInfo info;
-	IrParserStructure *reference = getReference(query, &info);
-
-	if (reference == nullptr) {
-		if (output != nullptr) *output = info;
-		return nullptr;
-	}
-
-	IrParserStructure *defaultPort = reference->getDefaultPort();
-	if (defaultPort == nullptr) {
-		if (output != nullptr) *output = info;
-		return reference;
-	}
-	
-	IrReferenceQuery portQuery;
-	portQuery.inputContext = info.newContext;
-	portQuery.recordErrors = false;
-	return defaultPort->getReference(portQuery, output);
-}
-
-piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(
+	IrContextTree *context, NodeProgram *program) 
+{
 	Node *node = program->getRules()->getCachedInstance(this, context);
 
 	if (node == nullptr) node = generateNode(context, program);
@@ -393,17 +372,24 @@ piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(IrContextTre
 	else return _generateNodeOutput(context, program);
 }
 
-piranha::Node *piranha::IrParserStructure::generateNode(IrContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::IrParserStructure::generateNode(
+	IrContextTree *context, NodeProgram *program) 
+{
 	Node *node = program->getRules()->getCachedInstance(this, context);
 
-	if (node == nullptr) return _generateNode(context, program);
-	else return node;
+	return (node == nullptr)
+		? _generateNode(context, program)
+		: node;
 }
 
-piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
+piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(
+	IrContextTree *context, NodeProgram *program) 
+{
 	return nullptr;
 }
 
-piranha::Node *piranha::IrParserStructure::_generateNode(IrContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::IrParserStructure::_generateNode(
+	IrContextTree *context, NodeProgram *program) 
+{
 	return nullptr;
 }

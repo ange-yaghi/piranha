@@ -39,39 +39,17 @@ namespace piranha {
 
 		// Resolution stage
 	public:
-		void setAttributeDefinition(IrAttributeDefinition *definition) { m_definition = definition; }
+		void setAttributeDefinition(IrAttributeDefinition *definition) { 
+			m_definition = definition; 
+		}
 		IrAttributeDefinition *getAttributeDefinition() const { return m_definition; }
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+		virtual IrParserStructure *getImmediateReference(
+			const IrReferenceQuery &query, IrReferenceInfo *output);
 		virtual void _checkTypes(IrContextTree *context);
 
 	protected:
 		IrAttributeDefinition *m_definition;
-
-	protected:
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-			// TODO: remove?
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = context;
-			query.recordErrors = false;
-			IrParserStructure *reference = getImmediateReference(query, &info);
-
-			if (reference == nullptr) return nullptr;
-			else return reference->generateNode(info.newContext, program);
-		}
-
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-			// TODO: remove?
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = context;
-			query.recordErrors = false;
-			IrParserStructure *reference = getImmediateReference(query, &info);
-
-			if (reference == nullptr) return nullptr;
-			else return reference->generateNodeOutput(info.newContext, program);
-		}
 	};
 
 } /* namespace piranha */

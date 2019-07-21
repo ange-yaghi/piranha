@@ -21,7 +21,9 @@ void piranha::IrAttributeList::addAttribute(IrAttribute *attribute) {
 	}
 }
 
-piranha::IrAttribute *piranha::IrAttributeList::getAttribute(IrAttributeDefinition *definition) const {
+piranha::IrAttribute *piranha::IrAttributeList::
+	getAttribute(IrAttributeDefinition *definition) const 
+{
 	int attributeCount = getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
 		IrAttribute *attribute = getAttribute(i);

@@ -14,7 +14,7 @@
 #define IR_FAIL()					IR_INFO_OUT(failed, true);
 #define IR_DEAD_END()				IR_INFO_OUT(reachedDeadEnd, true);
 #define IR_FAILED(output)			(((output) != nullptr) ? (output)->failed : false)
-#define IR_EMPTY_CONTEXT()			(query.inputContext == nullptr || query.inputContext->getContext() == nullptr)
+#define IR_EMPTY_CONTEXT()			(query.inputContext == nullptr || query.inputContext->isEmpty())
 
 namespace piranha {
 
@@ -106,8 +106,6 @@ namespace piranha {
 		void setParentUnit(IrCompilationUnit *unit) { m_parentUnit = unit; }
 		IrCompilationUnit *getParentUnit() const;
 
-		IrParserStructure *resolveToSingleChannel(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
-		virtual IrParserStructure *getDefaultPort() { return nullptr; }
 		virtual IrNode *getAsNode() { return nullptr; }
 
 	public:
@@ -130,7 +128,6 @@ namespace piranha {
 		virtual void _validate();
 
 		virtual void _checkTypes();
-		virtual void _checkType(IrParserStructure *finalReference, IrContextTree *context);
 		virtual void _checkTypes(IrContextTree *context);
 
 		virtual void _expand(IrContextTree *context);

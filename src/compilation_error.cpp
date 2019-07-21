@@ -15,7 +15,7 @@ piranha::CompilationError::~CompilationError() {
 }
 
 bool piranha::CompilationError::isInstantiationError() const {
-	return (m_instantiation != nullptr && m_instantiation->getContext() != nullptr);
+	return (m_instantiation != nullptr && !m_instantiation->isEmpty());
 }
 
 // Error definitions --------------------------------------

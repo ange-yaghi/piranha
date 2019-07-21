@@ -17,7 +17,9 @@ void piranha::IrAttributeDefinitionList::addDefinition(IrAttributeDefinition *de
 	}
 }
 
-piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getDefinition(int index, IrAttributeDefinition::DIRECTION direction) const {
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
+	getDefinition(int index, IrAttributeDefinition::DIRECTION direction) const 
+{
 	int totalCount = getDefinitionCount();
 	int inputIndex = 0;
 	for (int i = 0; i < totalCount; i++) {
@@ -34,11 +36,15 @@ piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getDefinitio
 	return nullptr;
 }
 
-piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getInputDefinition(int index) const {
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
+	getInputDefinition(int index) const 
+{
 	return getDefinition(index, IrAttributeDefinition::INPUT);
 }
 
-int piranha::IrAttributeDefinitionList::getCount(IrAttributeDefinition::DIRECTION direction) const {
+int piranha::IrAttributeDefinitionList::getCount(
+	IrAttributeDefinition::DIRECTION direction) const 
+{
 	int totalCount = getDefinitionCount();
 	int inputs = 0;
 	for (int i = 0; i < totalCount; i++) {
@@ -59,18 +65,22 @@ int piranha::IrAttributeDefinitionList::getOutputCount() const {
 	return getCount(IrAttributeDefinition::OUTPUT);
 }
 
-piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getOutputDefinition(int index) const {
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
+	getOutputDefinition(int index) const 
+{
 	return getDefinition(index, IrAttributeDefinition::OUTPUT);
 }
 
-piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getOutputDefinition(const std::string &name) const {
+piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
+	getOutputDefinition(const std::string &name) const 
+{
 	int totalCount = getDefinitionCount();
 	int inputs = 0;
 	for (int i = 0; i < totalCount; i++) {
 		IrAttributeDefinition *definition = m_definitions[i];
-		if (definition->getDirection() == IrAttributeDefinition::OUTPUT && name == definition->getName()) {
-			return definition;
-		}
+		if (definition->getDirection() != IrAttributeDefinition::OUTPUT) continue;
+
+		if (name == definition->getName()) return definition;
 	}
 
 	return nullptr;
@@ -86,6 +96,5 @@ piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getAliasOutp
 		}
 	}
 
-	// If not explicit default is found, return null
 	return nullptr;
 }

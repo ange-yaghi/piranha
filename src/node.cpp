@@ -47,13 +47,6 @@ void piranha::Node::evaluate() {
 		}
 	}
 
-	/*
-	if (requiresMaterials()) {
-		getProgram()
-			->getMaterialManager()
-			->evaluateAllMaterialNodes();
-	}*/
-
 	// Node can now self-evaluate
 	_evaluate();
 
@@ -71,7 +64,9 @@ void piranha::Node::destroy() {
 	_destroy();
 }
 
-const piranha::ChannelType *piranha::Node::getConversion(pNodeInput input, const std::string &name) {
+const piranha::ChannelType *piranha::Node::
+	getConversion(pNodeInput input, const std::string &name) 
+{
 	int inputCount = getInputCount();
 
 	for (int i = 0; i < inputCount; i++) {
@@ -154,7 +149,9 @@ void piranha::Node::registerInputs() {
 	/* void */
 }
 
-void piranha::Node::registerInput(pNodeInput *node, const std::string &name, const ChannelType *requiredNodeType) {
+void piranha::Node::registerInput(
+	pNodeInput *node, const std::string &name, const ChannelType *requiredNodeType) 
+{
 	m_inputs.push_back({ node, name, requiredNodeType });
 }
 

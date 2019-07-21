@@ -21,22 +21,30 @@ piranha::IrNodeDefinition::~IrNodeDefinition() {
 	/* void */
 }
 
-void piranha::IrNodeDefinition::setBuiltinName(const IrTokenInfo_string &builtinName) {
+void piranha::IrNodeDefinition::
+	setBuiltinName(const IrTokenInfo_string &builtinName) 
+{
 	m_builtinName = builtinName;
 	registerToken(&m_builtinName);
 }
 
-void piranha::IrNodeDefinition::setAttributeDefinitionList(IrAttributeDefinitionList *definitions) {
+void piranha::IrNodeDefinition::
+	setAttributeDefinitionList(IrAttributeDefinitionList *definitions) 
+{
 	m_attributes = definitions;
 	registerComponent(definitions);
 }
 
-void piranha::IrNodeDefinition::setScopeToken(const IrTokenInfo_string &scopeToken) {
+void piranha::IrNodeDefinition::
+	setScopeToken(const IrTokenInfo_string &scopeToken) 
+{
 	m_scopeToken = scopeToken;
 	registerToken(&scopeToken);
 }
 
-piranha::IrAttributeDefinition *piranha::IrNodeDefinition::getAttributeDefinition(const std::string &attributeName) const {
+piranha::IrAttributeDefinition *piranha::IrNodeDefinition::
+	getAttributeDefinition(const std::string &attributeName) const 
+{
 	if (m_attributes == nullptr) return nullptr;
 
 	int attributeCount = m_attributes->getDefinitionCount();
@@ -52,7 +60,9 @@ piranha::IrAttributeDefinition *piranha::IrNodeDefinition::getAttributeDefinitio
 	return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrNodeDefinition::resolveName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrNodeDefinition::
+	resolveName(const std::string &name) const 
+{
 	// Node definitions are not able to see variables outside of themselves for now
 	return resolveLocalName(name);
 }
@@ -61,7 +71,8 @@ const piranha::ChannelType *piranha::IrNodeDefinition::getChannelType() {
 	if (m_rules == nullptr) return nullptr;
 
 	if (isBuiltin()) {
-		const ChannelType *immediateChannelType = m_rules->resolveChannelType(getBuiltinName());
+		const ChannelType *immediateChannelType = 
+			m_rules->resolveChannelType(getBuiltinName());
 		if (immediateChannelType != nullptr) return immediateChannelType;
 	}
 
@@ -112,15 +123,14 @@ int piranha::IrNodeDefinition::countSymbolIncidence(const std::string &name) con
 	return count;
 }
 
-piranha::IrParserStructure *piranha::IrNodeDefinition::resolveLocalName(const std::string &name) const {
+piranha::IrParserStructure *piranha::IrNodeDefinition::resolveLocalName(
+	const std::string &name) const 
+{
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {
 			IrAttributeDefinition *definition = m_attributes->getDefinition(i);
-
-			if (definition->getName() == name) {
-				return definition;
-			}
+			if (definition->getName() == name) return definition;
 		}
 	}
 

@@ -42,10 +42,6 @@ piranha::IrContextTree *piranha::IrContextTree::_getMain() {
 	return nullptr;
 }
 
-piranha::IrContextTree *piranha::IrContextTree::search(const IrContextTree *reference) const {
-	return nullptr;
-}
-
 piranha::IrContextTree *piranha::IrContextTree::newChild(IrNode *context, bool mainContext) {
 	IrContextTree *newChild = new IrContextTree(context, mainContext);
 	newChild->setParent(this);
@@ -61,7 +57,9 @@ piranha::IrContextTree *piranha::IrContextTree::findContext(IrParserStructure *c
 	else return nullptr;
 }
 
-piranha::IrParserStructure *piranha::IrContextTree::resolveDefinition(IrAttributeDefinition *definition) {
+piranha::IrParserStructure *piranha::IrContextTree::resolveDefinition(
+	IrAttributeDefinition *definition) 
+{
 	if (m_context != nullptr) {
 		IrAttributeList *attributes = m_context->getAttributes();
 		if (attributes != nullptr) {
@@ -78,12 +76,14 @@ bool piranha::IrContextTree::isEqual(const IrContextTree *ref) const {
 
 	while (true) {
 		if (currentNode->getContext() != currentRefNode->getContext()) return false;
-		if (currentNode->getContext() == nullptr || currentRefNode->getContext() == nullptr) break;
+		if (currentNode->isEmpty() || currentRefNode->isEmpty()) break;
 
 		currentRefNode = currentRefNode->getParent();
 		currentNode = currentNode->getParent();
 
-		if (currentNode == nullptr || currentRefNode == nullptr) return currentNode == currentRefNode;
+		if (currentNode == nullptr || currentRefNode == nullptr) {
+			return currentNode == currentRefNode;
+		}
 	}
 
 	return (currentNode->getContext() == currentRefNode->getContext());

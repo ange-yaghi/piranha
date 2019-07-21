@@ -13,13 +13,6 @@ piranha::NodeProgram::~NodeProgram() {
 void piranha::NodeProgram::addNode(Node *node) {
 	node->setProgram(this);
 	m_nodes.push_back(node);
-
-	// This registers the node in case there is a node that
-	// has a dependency on materials
-	/*
-	if (node->isMaterial()) {
-		m_materialManager.addMaterialNode(node);
-	}*/
 }
 
 void piranha::NodeProgram::execute() {

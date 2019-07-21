@@ -35,8 +35,6 @@ namespace piranha {
 		virtual ~IrValue();
 
 		VALUE_TYPE getType() const { return m_type; }
-		bool isGeneric() const;
-
 		virtual IrValue *getAsValue() { return this; }
 
 	private:

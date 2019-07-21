@@ -24,24 +24,35 @@ namespace piranha {
 	protected:
 		typedef T_IrTokenInfo<T> _TokenInfo;
 
-		Node *generateNode(const piranha::native_float &value, IrContextTree *context, NodeProgram *program) {
+		Node *generateNode(
+			const piranha::native_float &value, IrContextTree *context, NodeProgram *program) 
+		{
 			return program->getRules()->generateLiteral<piranha::native_float>(value);
 		}
 
-		Node *generateNode(const piranha::native_string &value, IrContextTree *context, NodeProgram *program) {
+		Node *generateNode(
+			const piranha::native_string &value, IrContextTree *context, NodeProgram *program) 
+		{
 			return program->getRules()->generateLiteral<piranha::native_string>(value);
 		}
 
-		Node *generateNode(const piranha::native_bool &value, IrContextTree *context, NodeProgram *program) {
+		Node *generateNode(
+			const piranha::native_bool &value, IrContextTree *context, NodeProgram *program) 
+		{
 			return program->getRules()->generateLiteral<piranha::native_bool>(value);
 		}
 
-		Node *generateNode(const piranha::native_int &value, IrContextTree *context, NodeProgram *program) {
+		Node *generateNode(
+			const piranha::native_int &value, IrContextTree *context, NodeProgram *program) 
+		{
 			return program->getRules()->generateLiteral<piranha::native_int>(value);
 		}
 
 	public:
-		IrValueConstant(const _TokenInfo &value) : IrValue(TypeCode) { m_value = value.data; useToken(value); }
+		IrValueConstant(const _TokenInfo &value) : IrValue(TypeCode) { 
+			m_value = value.data; useToken(value); 
+		}
+
 		virtual ~IrValueConstant() { /* void */ }
 
 		const _TokenInfo *getToken() const { return &m_token; }
@@ -112,7 +123,9 @@ namespace piranha {
 		IrValueLabel(const _TokenInfo &value) : IrValueConstant(value) { /* void */ }
 		~IrValueLabel() { /* void */ }
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+		virtual IrParserStructure *
+			getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) 
+		{
 			IR_RESET(query);
 
 			IrParserStructure *reference = resolveName(m_value);
@@ -131,34 +144,15 @@ namespace piranha {
 
 			return reference;
 		}
-
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = context;
-			query.recordErrors = false;
-			IrParserStructure *reference = getReference(query, &info);
-
-			if (reference == nullptr) return nullptr;
-			else return reference->generateNode(info.newContext, program);
-		}
-
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-			IrReferenceInfo info;
-			IrReferenceQuery query;
-			query.inputContext = context;
-			query.recordErrors = false;
-			IrParserStructure *reference = getImmediateReference(query, &info);
-
-			if (reference == nullptr) return nullptr;
-			else return reference->generateNodeOutput(info.newContext, program);
-		}
 	};
 
 	// Specialized type for node references
 	class IrValueNodeRef : public IrValueConstant<IrNode *, IrValue::NODE_REF> {
 	public:
-		IrValueNodeRef(const _TokenInfo &value) : IrValueConstant(value) { registerComponent(value.data); }
+		IrValueNodeRef(const _TokenInfo &value) : IrValueConstant(value) { 
+			registerComponent(value.data); 
+		}
+
 		~IrValueNodeRef() { /* void */ }
 
 		virtual void setValue(IrNode *const &value) {
@@ -166,9 +160,10 @@ namespace piranha {
 			registerComponent(value); 
 		}
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+		virtual IrParserStructure *
+			getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) 
+		{
 			IR_RESET(query);
-
 			return m_value;
 		}
 
@@ -186,9 +181,13 @@ namespace piranha {
 	};
 
 	// Specialized type for internal structure references (during expansions)
-	class IrInternalReference : public IrValueConstant<IrParserStructure *, IrValue::INTERNAL_REFERENCE> {
+	class IrInternalReference 
+		: public IrValueConstant<IrParserStructure *, IrValue::INTERNAL_REFERENCE> 
+	{
 	public:
-		IrInternalReference(IrParserStructure *reference, IrContextTree *newContext) : IrValueConstant(_TokenInfo()) { 
+		IrInternalReference(IrParserStructure *reference, IrContextTree *newContext) 
+			: IrValueConstant(_TokenInfo()) 
+		{ 
 			setValue(reference); 
 			m_newContext = newContext; 
 		}
@@ -199,15 +198,14 @@ namespace piranha {
 			m_value = value;
 		}
 
-		IrContextTree *getNewContext() const {
-			return m_newContext;
-		}
+		IrContextTree *getNewContext() const { return m_newContext; }
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
+		virtual IrParserStructure *
+			getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) 
+		{
 			IR_RESET(query);
 
 			IR_INFO_OUT(newContext, m_newContext);
-
 			return m_value;
 		}
 
