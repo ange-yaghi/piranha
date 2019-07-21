@@ -51,7 +51,8 @@ namespace piranha {
 		void setTypeInfo(const IrTokenInfoSet<std::string, 2> &typeInfo) { m_typeInfo = typeInfo; }
 		bool typeInfoSpecified() const { return m_typeInfo.data[0].specified; }
 
-		IrNodeDefinition *getTypeDefinition() const { return m_typeDefinition; }
+		IrNodeDefinition *getTypeDefinition() const;
+		IrNodeDefinition *getImmediateTypeDefinition() const { return m_typeDefinition; }
 		virtual const ChannelType *getImmediateChannelType();
 
 		virtual void _expand(IrContextTree *context);

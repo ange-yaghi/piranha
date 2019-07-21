@@ -5,6 +5,7 @@
 
 #include "ir_token_info.h"
 #include "ir_structure_list.h"
+#include "fundamental_types.h"
 
 namespace piranha {
 
@@ -39,6 +40,9 @@ namespace piranha {
 		IrNodeList *getBody() const { return m_body; }
 
 		virtual IrParserStructure *resolveName(const std::string &name) const;
+
+		const ChannelType *getChannelType();
+		IrNodeDefinition *getAliasType();
 
 	protected:
 		IrTokenInfo_string m_name;

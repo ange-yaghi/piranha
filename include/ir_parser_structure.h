@@ -54,6 +54,9 @@ namespace piranha {
 			bool failed;
 			bool reachedDeadEnd;
 			bool touchedMainContext;
+			IrNodeDefinition *fixedType;
+
+			bool isFixedType() const { return fixedType != nullptr; }
 		};
 
 	public:

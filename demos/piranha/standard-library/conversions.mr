@@ -1,38 +1,48 @@
-public node int => __piranha__int {
-    input __in [int];
-}
-
-public node float => __piranha__float {
-    input __in [float];
-}
-
-public node string => __piranha__string {
-    input __in [string];
-}
-
-public node vector => __piranha__vector {
-    input __in0 [float];
-    input __in1 [float];
-    input __in2 [float];
-    input __in3 [float];
-
+public node int_channel => __piranha__int           { /* void */ }
+public node float_channel => __piranha__float       { /* void */ }
+public node string_channel => __piranha__string     { /* void */ }
+public node vector_channel => __piranha__vector { 
     output x [float];
     output y [float];
     output z [float];
     output w [float];
 }
 
+public node int {
+    input __in              [int_channel];
+    alias output __out      [int_channel]: __in;
+}
+
+public node float {
+    input __in              [float_channel];
+    alias output __out      [float_channel]: __in;
+}
+
+public node string {
+    input __in              [string_channel];
+    alias output __out      [string_channel]: __in;
+}
+
+public node vector => __piranha__vector_constructor {
+    input __in0             [float];
+    input __in1             [float];
+    input __in2             [float];
+    input __in3             [float];
+
+    alias output __out      [vector_channel];
+}
+
 public node string_to_float => __piranha__string_to_float {
-    input __in [string];
-    alias output __out [float];
+    input __in              [string];
+    alias output __out      [float];
 }
 
 public node float_to_string => __piranha__float_to_string {
-    input __in [float];
-    alias output __out [string];
+    input __in              [float];
+    alias output __out      [string];
 }
 
-public node int_to_Float => __piranha__int_to_float {
-    input __in [int];
-    alias output __out [float];
+public node int_to_float => __piranha__int_to_float {
+    input __in              [int];
+    alias output __out      [float];
 }

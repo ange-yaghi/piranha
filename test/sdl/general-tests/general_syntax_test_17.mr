@@ -1,0 +1,39 @@
+node float_channel => __piranha__float {}
+node string_channel => __piranha__string {}
+
+node float {
+    input __in [float_channel];
+    alias output __out [float_channel]: __in;
+}
+
+node string {
+    input __in [string_channel];
+    alias output __out [string_channel]: __in;
+}
+
+node string_to_float => __piranha__string_to_float {
+    input __in [string];
+    alias output __out [float];
+}
+
+node float_to_string => __piranha__float_to_string {
+    input __in [float];
+    alias output __out [string];
+}
+
+node console_out => __piranha__console_out {
+    input data: "";
+}
+
+node some_thing {
+    input in [float];
+    output out: in;
+}
+
+console_out(
+    float("5.0")
+)
+
+console_out(
+    some_thing("10").out
+)
