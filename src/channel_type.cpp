@@ -1,42 +1,42 @@
 #include "../include/channel_type.h"
 
 piranha::ChannelType::ChannelType() {
-	initialize("", nullptr);
+    initialize("", nullptr);
 }
 
 piranha::ChannelType::ChannelType(const char *type, const ChannelType *parent) {
-	initialize(type, parent);
+    initialize(type, parent);
 }
 
 piranha::ChannelType::~ChannelType() {
-	/* void */
+    /* void */
 }
 
 void piranha::ChannelType::initialize(const char *type, const ChannelType *parent) {
-	m_typeString = type; 
-	m_hash = generateHash(type); 
-	m_parent = parent;
+    m_typeString = type; 
+    m_hash = generateHash(type); 
+    m_parent = parent;
 }
 
 bool piranha::ChannelType::isCompatibleWith(const ChannelType &t) const {
-	if (this->operator==(t)) return true;
-	else {
-		return (m_parent == nullptr) 
-			? false
-			: m_parent->isCompatibleWith(t);
-	}
+    if (this->operator==(t)) return true;
+    else {
+        return (m_parent == nullptr) 
+            ? false
+            : m_parent->isCompatibleWith(t);
+    }
 }
 
 bool piranha::ChannelType::operator==(const ChannelType &t) const {
-	return (m_hash == t.m_hash) 
-		? strcmp(t.m_typeString, m_typeString) == 0
-		: false;
+    return (m_hash == t.m_hash) 
+        ? strcmp(t.m_typeString, m_typeString) == 0
+        : false;
 }
 
 int piranha::ChannelType::generateHash(const char *string) {
-	// Very simple hash for now
-	int sum = 0, i = 0;
-	while (string[i] != '\0') sum += (int)string[i++];
+    // Very simple hash for now
+    int sum = 0, i = 0;
+    while (string[i] != '\0') sum += (int)string[i++];
 
-	return sum;
+    return sum;
 }

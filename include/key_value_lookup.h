@@ -5,70 +5,70 @@
 
 namespace piranha {
 
-	template <typename KeyType, typename ValueType>
-	class KeyValueLookup {
-	private:
-		struct KeyValuePair {
-			KeyType key;
-			ValueType *value;
-		};
+    template <typename KeyType, typename ValueType>
+    class KeyValueLookup {
+    private:
+        struct KeyValuePair {
+            KeyType key;
+            ValueType *value;
+        };
 
-	public:
-		KeyValueLookup() {
-			/* void */
-		}
+    public:
+        KeyValueLookup() {
+            /* void */
+        }
 
-		~KeyValueLookup() {
-			/* void */
-		}
+        ~KeyValueLookup() {
+            /* void */
+        }
 
-		int getEntryCount() const {
-			return (int)m_lookupTable.size();
-		}
+        int getEntryCount() const {
+            return (int)m_lookupTable.size();
+        }
 
-		ValueType *lookup(const KeyType &key) const {
-			int entryCount = getEntryCount();
-			for (int i = 0; i < entryCount; i++) {
-				if (m_lookupTable[i].key == key) {
-					return m_lookupTable[i].value;
-				}
-			}
+        ValueType *lookup(const KeyType &key) const {
+            int entryCount = getEntryCount();
+            for (int i = 0; i < entryCount; i++) {
+                if (m_lookupTable[i].key == key) {
+                    return m_lookupTable[i].value;
+                }
+            }
 
-			return nullptr;
-		}
+            return nullptr;
+        }
 
-		const KeyType &getKey(int index) const {
-			return m_lookupTable[index].key;
-		}
+        const KeyType &getKey(int index) const {
+            return m_lookupTable[index].key;
+        }
 
-		ValueType *get(int index) const {
-			return m_lookupTable[index].value;
-		}
+        ValueType *get(int index) const {
+            return m_lookupTable[index].value;
+        }
 
-		template <typename T>
-		ValueType *newValue(const KeyType &key) {
-			KeyValuePair kvp;
-			kvp.key = key;
-			kvp.value = new T();
+        template <typename T>
+        ValueType *newValue(const KeyType &key) {
+            KeyValuePair kvp;
+            kvp.key = key;
+            kvp.value = new T();
 
-			m_lookupTable.push_back(kvp);
+            m_lookupTable.push_back(kvp);
 
-			return kvp.value;
-		}
+            return kvp.value;
+        }
 
-		ValueType *newValue(const KeyType &key) {
-			KeyValuePair kvp;
-			kvp.key = key;
-			kvp.value = new ValueType();
+        ValueType *newValue(const KeyType &key) {
+            KeyValuePair kvp;
+            kvp.key = key;
+            kvp.value = new ValueType();
 
-			m_lookupTable.push_back(kvp);
+            m_lookupTable.push_back(kvp);
 
-			return kvp.value;
-		}
+            return kvp.value;
+        }
 
-	protected:
-		std::vector<KeyValuePair> m_lookupTable;
-	};
+    protected:
+        std::vector<KeyValuePair> m_lookupTable;
+    };
 
  } /* namespace piranha */
 

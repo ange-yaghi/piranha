@@ -5,28 +5,28 @@
 
 namespace piranha {
 
-	class Node;
-	class LanguageRules;
+    class Node;
+    class LanguageRules;
 
-	class NodeProgram {
-	public:
-		NodeProgram();
-		~NodeProgram();
+    class NodeProgram {
+    public:
+        NodeProgram();
+        ~NodeProgram();
 
-		void execute();
+        void execute();
 
-		int getNodeCount() const { return (int)m_nodes.size();  }
-		void addNode(Node *node);
-		Node *getNode(int index) const { return m_nodes[index]; }
+        int getNodeCount() const { return (int)m_nodes.size();  }
+        void addNode(Node *node);
+        Node *getNode(int index) const { return m_nodes[index]; }
 
-		void setRules(LanguageRules *rules) { m_rules = rules; }
-		LanguageRules *getRules() { return m_rules; }
+        void setRules(LanguageRules *rules) { m_rules = rules; }
+        LanguageRules *getRules() { return m_rules; }
 
-	protected:
-		std::vector<Node *> m_nodes;
+    protected:
+        std::vector<Node *> m_nodes;
 
-		LanguageRules *m_rules;
-	};
+        LanguageRules *m_rules;
+    };
 
 } /* namespace piranha */
 

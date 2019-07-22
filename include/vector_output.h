@@ -7,23 +7,23 @@
 
 namespace piranha {
 
-	template <>
-	class FundamentalOutput<piranha::vector> : public NodeOutput {
-	public:
-		FundamentalOutput() : NodeOutput(&FundamentalType::VectorType) {};
-		~FundamentalOutput() {}
+    template <>
+    class FundamentalOutput<piranha::vector> : public NodeOutput {
+    public:
+        FundamentalOutput() : NodeOutput(&FundamentalType::VectorType) {};
+        ~FundamentalOutput() {}
 
-	protected:
-		virtual Node *generateInterface() {
-			VectorSplitNode *vectorInterface = new VectorSplitNode();
-			vectorInterface->initialize();
-			vectorInterface->connectInput(this, "__in");
+    protected:
+        virtual Node *generateInterface() {
+            VectorSplitNode *vectorInterface = new VectorSplitNode();
+            vectorInterface->initialize();
+            vectorInterface->connectInput(this, "__in");
 
-			return vectorInterface;
-		}
-	};
+            return vectorInterface;
+        }
+    };
 
-	typedef FundamentalOutput<piranha::native_vector> VectorValueOutput;
+    typedef FundamentalOutput<piranha::native_vector> VectorValueOutput;
 
 } /* namespace piranha */
 

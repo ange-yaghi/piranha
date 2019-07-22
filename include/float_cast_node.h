@@ -7,21 +7,21 @@
 
 namespace piranha {
 
-	class FloatCastNode : public Node {
-	public:
-		FloatCastNode();
-		~FloatCastNode();
+    class FloatCastNode : public Node {
+    public:
+        FloatCastNode();
+        ~FloatCastNode();
 
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-		virtual void registerOutputs();
-		virtual void registerInputs();
+        virtual void registerOutputs();
+        virtual void registerInputs();
 
-	protected:
-		pNodeInput m_input;
-	};
+    protected:
+        pNodeInput m_input;
+    };
 
 } /* namespace piranha */
 

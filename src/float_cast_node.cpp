@@ -3,30 +3,30 @@
 #include "../include/fundamental_types.h"
 
 piranha::FloatCastNode::FloatCastNode() {
-	/* void */
+    /* void */
 }
 
 piranha::FloatCastNode::~FloatCastNode() {
-	/* void */
+    /* void */
 }
 
 void piranha::FloatCastNode::_initialize() {
-	/* void */
+    /* void */
 }
 
 void piranha::FloatCastNode::_evaluate() {
-	/* void */
+    /* void */
 }
 
 void piranha::FloatCastNode::_destroy() {
-	/* void */
+    /* void */
 }
 
 void piranha::FloatCastNode::registerOutputs() {
-	setPrimaryOutputReference(&m_input);
-	registerOutputReference(&m_input, "__out");
+    setPrimaryOutputReference(&m_input);
+    registerOutputReference(&m_input, "__out");
 }
 
 void piranha::FloatCastNode::registerInputs() {
-	registerInput(&m_input, "__in", &FundamentalType::FloatType);
+    registerInput(&m_input, "__in", &FundamentalType::FloatType);
 }

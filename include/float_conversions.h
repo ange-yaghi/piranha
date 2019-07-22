@@ -6,35 +6,35 @@
 
 namespace piranha {
 
-	class StringToFloatConversionOutput : public FloatValueOutput {
-	public:
-		StringToFloatConversionOutput();
-		~StringToFloatConversionOutput();
+    class StringToFloatConversionOutput : public FloatValueOutput {
+    public:
+        StringToFloatConversionOutput();
+        ~StringToFloatConversionOutput();
 
-		virtual void fullCompute(void *target) const;
-		virtual void registerInputs();
+        virtual void fullCompute(void *target) const;
+        virtual void registerInputs();
 
-		pNodeInput *getInputConnection() { return &m_input; }
+        pNodeInput *getInputConnection() { return &m_input; }
 
-	protected:
-		pNodeInput m_input;
-	};
-	typedef PipeNode<StringToFloatConversionOutput> StringToFloatConversionNode;
+    protected:
+        pNodeInput m_input;
+    };
+    typedef PipeNode<StringToFloatConversionOutput> StringToFloatConversionNode;
 
-	class IntToFloatConversionOutput : public FloatValueOutput {
-	public:
-		IntToFloatConversionOutput();
-		~IntToFloatConversionOutput();
+    class IntToFloatConversionOutput : public FloatValueOutput {
+    public:
+        IntToFloatConversionOutput();
+        ~IntToFloatConversionOutput();
 
-		virtual void fullCompute(void *target) const;
-		virtual void registerInputs();
+        virtual void fullCompute(void *target) const;
+        virtual void registerInputs();
 
-		pNodeInput *getInputConnection() { return &m_input; }
+        pNodeInput *getInputConnection() { return &m_input; }
 
-	protected:
-		pNodeInput m_input;
-	};
-	typedef PipeNode<IntToFloatConversionOutput> IntToFloatConversionNode;
+    protected:
+        pNodeInput m_input;
+    };
+    typedef PipeNode<IntToFloatConversionOutput> IntToFloatConversionNode;
 
 } /* namespace piranha */
 
