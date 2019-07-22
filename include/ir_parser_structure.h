@@ -87,8 +87,6 @@ namespace piranha {
         virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
         IrParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
 
-        virtual IrValue *getAsValue() { return nullptr; }
-
         bool allowsExternalAccess() const;
 
         void setVisibility(IrVisibility visibility) { m_visibility = visibility; }
@@ -99,9 +97,6 @@ namespace piranha {
 
         void setCheckReferences(bool check) { m_checkReferences = check; }
         bool getCheckReferences() const { return m_checkReferences; }
-
-        virtual bool isInputPoint() const { return false; }
-        virtual bool isExternalInput() const { return false; }
 
         void setParentUnit(IrCompilationUnit *unit) { m_parentUnit = unit; }
         IrCompilationUnit *getParentUnit() const;
