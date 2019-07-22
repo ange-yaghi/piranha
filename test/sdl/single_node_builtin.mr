@@ -1,6 +1,6 @@
 module {
-    @author = "Ange Yaghi"
-    @date = "2019-05-30"
+    @author:    "Ange Yaghi"
+    @date:      "2019-05-30"
 }
 
 private import "test.sdl"
@@ -10,17 +10,17 @@ private import test
  * Second line.
  */
 
-@author = "Ange Yaghi"
-@comment =  "This is just a test node"
-            "Check out this multiline comment"
+@author:  "Ange Yaghi"
+@comment: "This is just a test node"
+          "Check out this multiline comment"
 public node NewNode => BuiltinNode {
     // Inputs
-    @doc = "Main input"
+    @doc: "Main input"
     alias input A;
     input B;
 
     // Outputs
-    @doc = "Main output"
+    @doc: "Main output"
     alias output A_out;
     output B_out;
 }

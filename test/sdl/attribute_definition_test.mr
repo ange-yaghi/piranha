@@ -1,6 +1,6 @@
 module {
-    @author = "Ange Yaghi"
-    @date = "2019-05-30"
+    @author:    "Ange Yaghi"
+    @date:      "2019-05-30"
 }
 
 node TestNode {
