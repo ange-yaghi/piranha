@@ -2,7 +2,7 @@ private node AddNode {
     input p1;
     input p2;
     output out: p1 + p2;
-    output boom: test_label$; // UnidentifiedToken;
+    output boom: test_label$; // UnidentifiedToken, UnresolvedReference
 }
 
 private node AddMulNode {

@@ -5,60 +5,64 @@
 
 #include "ir_token_info.h"
 #include "ir_structure_list.h"
+#include "fundamental_types.h"
 
 namespace piranha {
 
-	class IrAttributeDefinitionList;
-	class IrAttributeDefinition;
-	class IrCompilationUnit;
+    class IrAttributeDefinitionList;
+    class IrAttributeDefinition;
+    class IrCompilationUnit;
 
-	class IrNodeDefinition : public IrParserStructure {
-	public:
-		IrNodeDefinition(const IrTokenInfo_string &name);
-		virtual ~IrNodeDefinition();
+    class IrNodeDefinition : public IrParserStructure {
+    public:
+        IrNodeDefinition(const IrTokenInfo_string &name);
+        virtual ~IrNodeDefinition();
 
-		const IrTokenInfo *getBuiltinNameToken() const { return m_definesBuiltin ? &m_builtinName : nullptr; }
-		std::string getBuiltinName() const { return m_builtinName.data; }
-		void setBuiltinName(const IrTokenInfo_string &builtin);
+        const IrTokenInfo *getBuiltinNameToken() const { return m_definesBuiltin ? &m_builtinName : nullptr; }
+        std::string getBuiltinName() const { return m_builtinName.data; }
+        void setBuiltinName(const IrTokenInfo_string &builtin);
 
-		void setDefinesBuiltin(bool defines) { m_definesBuiltin = defines; }
-		bool isBuiltin() const { return m_definesBuiltin; }
+        void setDefinesBuiltin(bool defines) { m_definesBuiltin = defines; }
+        bool isBuiltin() const { return m_definesBuiltin; }
 
-		const IrTokenInfo *getNameToken() const { return &m_name; }
-		std::string getName() const { return m_name.data; }
+        const IrTokenInfo *getNameToken() const { return &m_name; }
+        std::string getName() const { return m_name.data; }
 
-		void setAttributeDefinitionList(IrAttributeDefinitionList *definitions);
-		const IrAttributeDefinitionList *getAttributeDefinitionList() const { return m_attributes; }
+        void setAttributeDefinitionList(IrAttributeDefinitionList *definitions);
+        const IrAttributeDefinitionList *getAttributeDefinitionList() const { return m_attributes; }
 
-		void setScopeToken(const IrTokenInfo_string &token);
-		const IrTokenInfo *getScopeToken() const { return &m_scopeToken; }
+        void setScopeToken(const IrTokenInfo_string &token);
+        const IrTokenInfo *getScopeToken() const { return &m_scopeToken; }
 
-		IrAttributeDefinition *getAttributeDefinition(const std::string &attributeName) const;
+        IrAttributeDefinition *getAttributeDefinition(const std::string &attributeName) const;
 
-		void setBody(IrNodeList *body) { m_body = body; registerComponent(body); }
-		IrNodeList *getBody() const { return m_body; }
+        void setBody(IrNodeList *body) { m_body = body; registerComponent(body); }
+        IrNodeList *getBody() const { return m_body; }
 
-		virtual IrParserStructure *resolveName(const std::string &name) const;
+        virtual IrParserStructure *resolveName(const std::string &name) const;
 
-	protected:
-		IrTokenInfo_string m_name;
+        const ChannelType *getChannelType();
+        IrNodeDefinition *getAliasType();
 
-		bool m_definesBuiltin;
-		IrTokenInfo_string m_builtinName;
+    protected:
+        IrTokenInfo_string m_name;
 
-		IrAttributeDefinitionList *m_attributes;
-		IrNodeList *m_body;
+        bool m_definesBuiltin;
+        IrTokenInfo_string m_builtinName;
 
-		IrTokenInfo_string m_scopeToken;
+        IrAttributeDefinitionList *m_attributes;
+        IrNodeList *m_body;
 
-		// Resolution stage
-	public:
-		int countSymbolIncidence(const std::string &name) const;
-		IrParserStructure *resolveLocalName(const std::string &name) const;
+        IrTokenInfo_string m_scopeToken;
 
-	protected:
-		virtual void _validate();
-	};
+        // Resolution stage
+    public:
+        int countSymbolIncidence(const std::string &name) const;
+        IrParserStructure *resolveLocalName(const std::string &name) const;
+
+    protected:
+        virtual void _validate();
+    };
 
 } /* namespace piranha */
 

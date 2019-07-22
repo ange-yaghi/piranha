@@ -5,42 +5,48 @@
 
 namespace piranha {
 
-	class IrNode;
-	class IrAttributeDefinition;
-	class IrParserStructure;
-	class Node;
-	class NodeOutput;
+    class IrNode;
+    class IrAttributeDefinition;
+    class IrParserStructure;
+    class Node;
+    class NodeOutput;
 
-	class IrContextTree {
-	public:
-		IrContextTree();
-		IrContextTree(IrNode *context, bool mainContext = false);
-		~IrContextTree();
+    class IrContextTree {
+    public:
+        IrContextTree();
+        IrContextTree(IrNode *context, bool mainContext = false);
+        ~IrContextTree();
 
-		void setParent(IrContextTree *parent) { m_parent = parent; }
-		IrContextTree *getParent() const { return m_parent; }
-		IrContextTree *getRoot();
+        void setParent(IrContextTree *parent) { m_parent = parent; }
+        IrContextTree *getParent() const { return m_parent; }
+        IrContextTree *getRoot();
+        IrContextTree *getMain();
 
-		IrContextTree *search(const IrContextTree *reference) const;
-		IrContextTree *newChild(IrNode *context, bool mainContext = false);
+        IrContextTree *newChild(IrNode *context, bool mainContext = false);
 
-		IrNode *getContext() const { return m_context; }
-		IrContextTree *findContext(IrParserStructure *context);
+        IrNode *getContext() const { return m_context; }
+        IrContextTree *findContext(IrParserStructure *context);
 
-		IrParserStructure *resolveDefinition(IrAttributeDefinition *definition);
+        IrParserStructure *resolveDefinition(IrAttributeDefinition *definition);
 
-		bool isMainContext() const { return m_mainContext; }
+        bool isMainContext() const { return m_mainContext; }
 
-		bool operator==(const IrContextTree &ref) const { return isEqual(&ref); }
-		bool isEqual(const IrContextTree *ref) const;
+        bool operator==(const IrContextTree &ref) const { return isEqual(&ref); }
+        bool isEqual(const IrContextTree *ref) const;
 
-	protected:
-		IrNode *m_context;
-		bool m_mainContext;
+        int getChildCount() const { return (int)m_children.size(); }
 
-		IrContextTree *m_parent;
-		std::vector<IrContextTree *> m_children;
-	};
+        bool isEmpty() const { return m_context == nullptr; }
+
+    protected:
+        IrContextTree *_getMain();
+
+        IrNode *m_context;
+        bool m_mainContext;
+
+        IrContextTree *m_parent;
+        std::vector<IrContextTree *> m_children;
+    };
 
 } /* namespace piranha */
 

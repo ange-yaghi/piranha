@@ -1,4 +1,4 @@
-@doc = "Defines a basic color class"
+@doc: "Defines a basic color class"
 public node Color {
     input in_r: 0.0;
     input in_g: 0.0;

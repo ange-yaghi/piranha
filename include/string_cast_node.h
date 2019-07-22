@@ -7,21 +7,21 @@
 
 namespace piranha {
 
-	class StringCastNode : public Node {
-	public:
-		StringCastNode();
-		~StringCastNode();
+    class StringCastNode : public Node {
+    public:
+        StringCastNode();
+        ~StringCastNode();
 
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-		virtual void registerOutputs();
-		virtual void registerInputs();
+        virtual void registerOutputs();
+        virtual void registerInputs();
 
-	protected:
-		pNodeInput m_input;
-	};
+    protected:
+        pNodeInput m_input;
+    };
 
 } /* namespace piranha */
 

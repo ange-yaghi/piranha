@@ -1,0 +1,24 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+private node reverse_vector {
+    input vector;
+    alias output reversed: 
+        std::vector(vector.w, vector.z, vector.y, vector.x);
+}
+
+private node print_vector {
+    input vector;
+
+    std::console_out(
+        string(vector.x) + ", " + 
+        string(vector.y) + ", " + 
+        string(vector.z) + ", " +
+        string(vector.w)
+    )
+}
+
+std::vector v1(0.0, 0.0, 0.0, 0.0)
+
+print_vector(
+    reverse_vector(v1 + vector(10, 0, 0, 0))
+)

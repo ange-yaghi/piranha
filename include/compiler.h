@@ -9,47 +9,47 @@
 
 namespace piranha {
 
-	class IrCompilationUnit;
-	class LanguageRules;
+    class IrCompilationUnit;
+    class LanguageRules;
 
-	typedef Path IrPath;
+    typedef Path IrPath;
 
-	class Compiler {
-	public:
-		Compiler(const LanguageRules *rules = nullptr);
-		~Compiler();
+    class Compiler {
+    public:
+        Compiler(const LanguageRules *rules = nullptr);
+        ~Compiler();
 
-		IrCompilationUnit *compile(const IrPath &scriptPath);
-		IrCompilationUnit *getUnit(const IrPath &scriptPath) const;
+        IrCompilationUnit *compile(const IrPath &scriptPath);
+        IrCompilationUnit *getUnit(const IrPath &scriptPath) const;
 
-		int getUnitCount() const { return (int)m_units.size(); }
+        int getUnitCount() const { return (int)m_units.size(); }
 
-		const ErrorList *getErrorList() const { return &m_errorList; }
+        const ErrorList *getErrorList() const { return &m_errorList; }
 
-		void addSearchPath(const IrPath &path);
-		int getSearchPathCount() const { return (int)m_searchPaths.size(); }
+        void addSearchPath(const IrPath &path);
+        int getSearchPathCount() const { return (int)m_searchPaths.size(); }
 
-		bool resolvePath(const IrPath &path, IrPath *target) const;
+        bool resolvePath(const IrPath &path, IrPath *target) const;
 
-	protected:
-		IrCompilationUnit *analyze(const IrPath &scriptPath);
-		bool isPathEquivalent(const IrPath &a, const IrPath &b) const;
+    protected:
+        IrCompilationUnit *analyze(const IrPath &scriptPath);
+        bool isPathEquivalent(const IrPath &a, const IrPath &b) const;
 
-		static bool hasEnding(std::string const &fullString, std::string const &ending);
+        static bool hasEnding(std::string const &fullString, std::string const &ending);
 
-	protected:
-		// Build steps
-		void resolve();
-		void validate();
+    protected:
+        // Build steps
+        void resolve();
+        void validate();
 
-	protected:
-		const LanguageRules *m_rules;
+    protected:
+        const LanguageRules *m_rules;
 
-		ErrorList m_errorList;
-		std::vector<IrCompilationUnit *> m_units;
+        ErrorList m_errorList;
+        std::vector<IrCompilationUnit *> m_units;
 
-		std::vector<IrPath> m_searchPaths;
-	};
+        std::vector<IrPath> m_searchPaths;
+    };
 
 } /* namespace piranha */
 

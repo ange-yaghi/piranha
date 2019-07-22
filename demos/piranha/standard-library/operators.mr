@@ -1,25 +1,25 @@
 private import "conversions.mr"
 
 public node int_add => __piranha__int_add {
-    input __in0;
-    input __in1;
+    input __in0 [int];
+    input __in1 [int];
     alias output __out [int];
 }
 
 public node float_add => __piranha__float_add {
-    input __in0;
-    input __in1;
+    input __in0 [float];
+    input __in1 [float];
     alias output __out [float];
 }
 
 public node string_add => __piranha__string_add {
-    input __in0;
-    input __in1;
+    input __in0 [string];
+    input __in1 [string];
     alias output __out [string];
 }
 
 public node vector_add => __piranha__vector_add {
-    input __in0;
-    input __in1;
+    input __in0 [vector];
+    input __in1 [vector];
     alias output __out [vector];
 }

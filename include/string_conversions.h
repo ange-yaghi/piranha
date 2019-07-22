@@ -6,20 +6,20 @@
 
 namespace piranha {
 
-	class FloatToStringConversionOutput : public StringValueOutput {
-	public:
-		FloatToStringConversionOutput();
-		~FloatToStringConversionOutput();
+    class FloatToStringConversionOutput : public StringValueOutput {
+    public:
+        FloatToStringConversionOutput();
+        ~FloatToStringConversionOutput();
 
-		virtual void fullCompute(void *target) const;
-		virtual void registerInputs();
+        virtual void fullCompute(void *target) const;
+        virtual void registerInputs();
 
-		pNodeInput *getInputConnection() { return &m_input; }
+        pNodeInput *getInputConnection() { return &m_input; }
 
-	protected:
-		pNodeInput m_input;
-	};
-	typedef PipeNode<FloatToStringConversionOutput> FloatToStringConversionNode;
+    protected:
+        pNodeInput m_input;
+    };
+    typedef PipeNode<FloatToStringConversionOutput> FloatToStringConversionNode;
 
 } /* namespace piranha */
 

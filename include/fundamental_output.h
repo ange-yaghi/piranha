@@ -9,41 +9,41 @@
 
 namespace piranha {
 
-	template <typename FundamentalType>
-	class FundamentalOutput : public NodeOutput {};
+    template <typename FundamentalType>
+    class FundamentalOutput : public NodeOutput {};
 
-	template <>
-	class FundamentalOutput<piranha::native_float> : public NodeOutput {
-	public:
-		FundamentalOutput() : NodeOutput(&FundamentalType::FloatType) {};
-		~FundamentalOutput() {}
-	};
+    template <>
+    class FundamentalOutput<piranha::native_float> : public NodeOutput {
+    public:
+        FundamentalOutput() : NodeOutput(&FundamentalType::FloatType) {};
+        ~FundamentalOutput() {}
+    };
 
-	template <>
-	class FundamentalOutput<piranha::native_int> : public NodeOutput {
-	public:
-		FundamentalOutput() : NodeOutput(&FundamentalType::IntType) {};
-		~FundamentalOutput() {}
-	};
+    template <>
+    class FundamentalOutput<piranha::native_int> : public NodeOutput {
+    public:
+        FundamentalOutput() : NodeOutput(&FundamentalType::IntType) {};
+        ~FundamentalOutput() {}
+    };
 
-	template <>
-	class FundamentalOutput<piranha::native_bool> : public NodeOutput {
-	public:
-		FundamentalOutput() : NodeOutput(&FundamentalType::BoolType) {};
-		~FundamentalOutput() {}
-	};
+    template <>
+    class FundamentalOutput<piranha::native_bool> : public NodeOutput {
+    public:
+        FundamentalOutput() : NodeOutput(&FundamentalType::BoolType) {};
+        ~FundamentalOutput() {}
+    };
 
-	template <>
-	class FundamentalOutput<piranha::native_string> : public NodeOutput {
-	public:
-		FundamentalOutput() : NodeOutput(&FundamentalType::StringType) {};
-		~FundamentalOutput() {}
-	};
+    template <>
+    class FundamentalOutput<piranha::native_string> : public NodeOutput {
+    public:
+        FundamentalOutput() : NodeOutput(&FundamentalType::StringType) {};
+        ~FundamentalOutput() {}
+    };
 
-	typedef FundamentalOutput<piranha::native_float> FloatValueOutput;
-	typedef FundamentalOutput<piranha::native_int> IntValueOutput;
-	typedef FundamentalOutput<piranha::native_bool> BoolValueOutput;
-	typedef FundamentalOutput<piranha::native_string> StringValueOutput;
+    typedef FundamentalOutput<piranha::native_float> FloatValueOutput;
+    typedef FundamentalOutput<piranha::native_int> IntValueOutput;
+    typedef FundamentalOutput<piranha::native_bool> BoolValueOutput;
+    typedef FundamentalOutput<piranha::native_string> StringValueOutput;
 
 } /* namespace piranha */
 

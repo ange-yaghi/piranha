@@ -11,45 +11,45 @@
 
 namespace piranha {
 
-	class ConsoleInputNode : public Node {
-	public:
-		ConsoleInputNode() {
-			/* void */
-		}
+    class ConsoleInputNode : public Node {
+    public:
+        ConsoleInputNode() {
+            /* void */
+        }
 
-		~ConsoleInputNode() {
-			/* void */
-		}
+        ~ConsoleInputNode() {
+            /* void */
+        }
 
-	protected:
-		virtual void _initialize() {
-			/* void */
-		}
+    protected:
+        virtual void _initialize() {
+            /* void */
+        }
 
-		virtual void _evaluate() {
-			std::string prompt;
-			m_promptInput->fullCompute(&prompt);
+        virtual void _evaluate() {
+            std::string prompt;
+            m_promptInput->fullCompute(&prompt);
 
-			std::cout << prompt;
-			std::cin >> m_inputData;
+            std::cout << prompt;
+            std::cin >> m_inputData;
 
-			m_output.setData(m_inputData);
-		}
+            m_output.setData(m_inputData);
+        }
 
-		virtual void registerInputs() {
-			registerInput(&m_promptInput, "prompt", &FundamentalType::StringType);
-		}
+        virtual void registerInputs() {
+            registerInput(&m_promptInput, "prompt", &FundamentalType::StringType);
+        }
 
-		virtual void registerOutputs() {
-			setPrimaryOutput(&m_output);
-			registerOutput(&m_output, "raw_input");
-		}
+        virtual void registerOutputs() {
+            setPrimaryOutput(&m_output);
+            registerOutput(&m_output, "raw_input");
+        }
 
-	protected:
-		pNodeInput m_promptInput;
-		LiteralNodeOutput<piranha::native_string> m_output;
-		std::string m_inputData;
-	};
+    protected:
+        pNodeInput m_promptInput;
+        LiteralNodeOutput<piranha::native_string> m_output;
+        std::string m_inputData;
+    };
 
 } /* namespace piranha */
 

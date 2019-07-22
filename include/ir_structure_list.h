@@ -7,23 +7,23 @@
 
 namespace piranha {
 
-	template <typename T>
-	class IrStructureList : public IrParserStructure {
-	public:
-		IrStructureList() { /* void */ }
-		~IrStructureList() { /* void */ }
+    template <typename T>
+    class IrStructureList : public IrParserStructure {
+    public:
+        IrStructureList() { /* void */ }
+        ~IrStructureList() { /* void */ }
 
-		void add(T *item) { m_items.push_back(item); registerComponent(item); }
-		T *getItem(int index) const { return m_items[index]; }
-		int getItemCount() const { return (int)m_items.size(); }
+        void add(T *item) { m_items.push_back(item); registerComponent(item); }
+        T *getItem(int index) const { return m_items[index]; }
+        int getItemCount() const { return (int)m_items.size(); }
 
-	protected:
-		std::vector<T *> m_items;
-	};
+    protected:
+        std::vector<T *> m_items;
+    };
 
-	class IrNode;
+    class IrNode;
 
-	typedef IrStructureList<IrNode> IrNodeList;
+    typedef IrStructureList<IrNode> IrNodeList;
 
 } /* namespace piranha */
 
