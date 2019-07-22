@@ -26,8 +26,7 @@ namespace piranha {
             UNARY_OPERATION,
 
             NODE_REF,
-            INTERNAL_REFERENCE,
-            GENERIC
+            INTERNAL_REFERENCE
         };
 
     public:
@@ -35,7 +34,6 @@ namespace piranha {
         virtual ~IrValue();
 
         VALUE_TYPE getType() const { return m_type; }
-        virtual IrValue *getAsValue() { return this; }
 
     private:
         VALUE_TYPE m_type;

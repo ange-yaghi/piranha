@@ -27,7 +27,6 @@ namespace piranha {
 
         // If no name is specified positional notation is assumed
         bool isPositional() const { return getName() == ""; }
-        virtual IrValue *getAsValue() { return m_value; }
 
         virtual bool isExternalInput() const { return true; }
 

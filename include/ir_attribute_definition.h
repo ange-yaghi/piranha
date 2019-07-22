@@ -42,8 +42,6 @@ namespace piranha {
 
         virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
-        virtual bool isInputPoint() const { return m_direction == INPUT; }
-
         void setTypeInfo(const IrTokenInfoSet<std::string, 2> &typeInfo) { m_typeInfo = typeInfo; }
         bool typeInfoSpecified() const { return m_typeInfo.data[0].specified; }
 
