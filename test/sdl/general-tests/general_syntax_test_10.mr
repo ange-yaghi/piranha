@@ -1,0 +1,15 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node print_stuff {
+    input a;
+    std::console_out(a + "\n")
+}
+
+node top_level {
+    print_stuff("Good")
+    print_stuff(2)          // InvalidOperands
+    print_stuff("Good")
+}
+
+top_level()
+top_level()

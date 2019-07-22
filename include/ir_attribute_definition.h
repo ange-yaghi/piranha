@@ -7,78 +7,74 @@
 
 namespace piranha {
 
-	class IrValue;
-	class IrInputConnection;
-	class CompilationError;
-	class IrNodeDefinition;
+    class IrValue;
+    class IrInputConnection;
+    class CompilationError;
+    class IrNodeDefinition;
 
-	class IrAttributeDefinition : public IrParserStructure {
-	public:
-		enum DIRECTION {
-			INPUT,
-			OUTPUT
-		};
+    class IrAttributeDefinition : public IrParserStructure {
+    public:
+        enum DIRECTION {
+            INPUT,
+            OUTPUT
+        };
 
-	public:
-		IrAttributeDefinition(const IrTokenInfo_string &directionToken, 
-			const IrTokenInfo_string &name, DIRECTION dir);
-		IrAttributeDefinition(const IrTokenInfo_string &name);
-		virtual ~IrAttributeDefinition();
+    public:
+        IrAttributeDefinition(const IrTokenInfo_string &directionToken, 
+            const IrTokenInfo_string &name, DIRECTION dir);
+        IrAttributeDefinition(const IrTokenInfo_string &name);
+        virtual ~IrAttributeDefinition();
 
-		const IrTokenInfo *getNameToken() const { return &m_name; }
-		std::string getName() const { return m_name.data; }
+        const IrTokenInfo *getNameToken() const { return &m_name; }
+        std::string getName() const { return m_name.data; }
 
-		void setDefaultValue(IrValue *value);
-		IrValue *getDefaultValue() const { return m_defaultValue; }
+        void setDefaultValue(IrValue *value);
+        IrValue *getDefaultValue() const { return m_defaultValue; }
 
-		void setAliasToken(const IrTokenInfo_string &name);
-		const IrTokenInfo *getAliasToken() const { return (m_isAlias) ? &m_aliasToken : nullptr; }
-		void setAlias(bool isAlias) { m_isAlias = isAlias; }
-		bool isAlias() const { return m_isAlias; }
+        void setAliasToken(const IrTokenInfo_string &name);
+        const IrTokenInfo *getAliasToken() const { return (m_isAlias) ? &m_aliasToken : nullptr; }
+        void setAlias(bool isAlias) { m_isAlias = isAlias; }
+        bool isAlias() const { return m_isAlias; }
 
-		const IrTokenInfo *getDirectionToken() const { return &m_directionToken; }
-		void setDirection(DIRECTION direction) { m_direction = direction; }
-		DIRECTION getDirection() const { return m_direction; }
+        const IrTokenInfo *getDirectionToken() const { return &m_directionToken; }
+        void setDirection(DIRECTION direction) { m_direction = direction; }
+        DIRECTION getDirection() const { return m_direction; }
 
-		IrInputConnection *getImpliedMember(int i) const { return m_impliedMembers[i]; }
-		int getImpliedMemberCount() const { return (int)m_impliedMembers.size(); }
-		IrInputConnection *getImpliedMember(const std::string &name) const;
+        virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+        void setTypeInfo(const IrTokenInfoSet<std::string, 2> &typeInfo) { m_typeInfo = typeInfo; }
+        bool typeInfoSpecified() const { return m_typeInfo.data[0].specified; }
 
-		virtual bool isInputPoint() const { return m_direction == INPUT; }
+        IrNodeDefinition *getTypeDefinition() const;
+        IrNodeDefinition *getImmediateTypeDefinition() const { return m_typeDefinition; }
+        virtual const ChannelType *getImmediateChannelType();
 
-		void setTypeInfo(const IrTokenInfoSet<std::string, 2> &typeInfo) { m_typeInfo = typeInfo; }
-		bool typeInfoSpecified() const { return m_typeInfo.data[0].specified; }
+        virtual void _expand(IrContextTree *context);
+        virtual void _checkTypes(IrContextTree *context);
 
-		IrNodeDefinition *getTypeDefinition() const { return m_typeDefinition; }
-		virtual const ChannelType *getImmediateChannelType();
+    protected:
+        IrTokenInfo_string m_directionToken;
+        IrTokenInfo_string m_aliasToken;
+        IrTokenInfo_string m_name;
+        IrTokenInfoSet<std::string, 2> m_typeInfo;
 
-		void _expand(IrContextTree *context);
+        IrValue *m_defaultValue;
 
-	protected:
-		IrTokenInfo_string m_directionToken;
-		IrTokenInfo_string m_aliasToken;
-		IrTokenInfo_string m_name;
-		IrTokenInfoSet<std::string, 2> m_typeInfo;
+        DIRECTION m_direction;
+        bool m_isAlias;
 
-		IrValue *m_defaultValue;
+        std::vector<IrInputConnection *> m_impliedMembers;
 
-		DIRECTION m_direction;
-		bool m_isAlias;
+        // Resolution stage
+    protected:
+        virtual void _resolveDefinitions();
 
-		std::vector<IrInputConnection *> m_impliedMembers;
+        IrNodeDefinition *m_typeDefinition;
 
-		// Resolution stage
-	protected:
-		virtual void _resolveDefinitions();
-
-		IrNodeDefinition *m_typeDefinition;
-
-	protected:
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-	};
+    protected:
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
+    };
 
 } /* namespace piranha */
 

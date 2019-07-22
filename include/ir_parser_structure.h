@@ -8,155 +8,161 @@
 #include <vector>
 #include <fstream>
 
-#define IR_RESET(query)				if (output != nullptr) { output->reset(); output->newContext = (query).inputContext; }
-#define IR_INFO_OUT(param, data)	if (output != nullptr) { output->param = (data); }
-#define IR_ERR_OUT(data)			IR_INFO_OUT(err, (data)); 
-#define IR_FAIL()					IR_INFO_OUT(failed, true);
-#define IR_DEAD_END()				IR_INFO_OUT(reachedDeadEnd, true);
-#define IR_FAILED(output)			(((output) != nullptr) ? (output)->failed : false)
-#define IR_EMPTY_CONTEXT()			(query.inputContext == nullptr || query.inputContext->getContext() == nullptr)
+#define IR_RESET(query)                if (output != nullptr) { output->reset(); output->newContext = (query).inputContext; }
+#define IR_INFO_OUT(param, data)    if (output != nullptr) { output->param = (data); }
+#define IR_ERR_OUT(data)            IR_INFO_OUT(err, (data)); 
+#define IR_FAIL()                    IR_INFO_OUT(failed, true);
+#define IR_DEAD_END()                IR_INFO_OUT(reachedDeadEnd, true);
+#define IR_FAILED(output)            (((output) != nullptr) ? (output)->failed : false)
+#define IR_EMPTY_CONTEXT()            (query.inputContext == nullptr || query.inputContext->isEmpty())
 
 namespace piranha {
 
-	class IrValue;
-	class IrCompilationUnit;
-	class CompilationError;
-	class IrNode;
-	class IrNodeDefinition;
-	class IrContextTree;
-	class Node;
-	class NodeOutput;
-	class NodeProgram;
-	class ChannelType;
-	class LanguageRules;
+    class IrValue;
+    class IrCompilationUnit;
+    class CompilationError;
+    class IrNode;
+    class IrNodeDefinition;
+    class IrContextTree;
+    class Node;
+    class NodeOutput;
+    class NodeProgram;
+    class ChannelType;
+    class LanguageRules;
 
-	class IrParserStructure {
-	public:
-		struct IrReferenceQuery {
-			IrReferenceQuery();
-			~IrReferenceQuery();
+    class IrParserStructure {
+    public:
+        struct IrReferenceQuery {
+            IrReferenceQuery();
+            ~IrReferenceQuery();
 
-			// Inputs
-			IrContextTree *inputContext;
-			bool recordErrors;
-		};
+            // Inputs
+            IrContextTree *inputContext;
+            bool recordErrors;
+        };
 
-		struct IrReferenceInfo {
-			IrReferenceInfo();
-			~IrReferenceInfo();
+        struct IrReferenceInfo {
+            IrReferenceInfo();
+            ~IrReferenceInfo();
 
-			void reset();
+            void reset();
 
-			// Ouputs
-			IrContextTree *newContext;
-			CompilationError *err;
+            // Ouputs
+            IrContextTree *newContext;
+            CompilationError *err;
 
-			bool failed;
-			bool reachedDeadEnd;
-			bool touchedMainContext;
-		};
+            bool failed;
+            bool reachedDeadEnd;
+            bool touchedMainContext;
+            IrNodeDefinition *fixedType;
 
-	public:
-		IrParserStructure();
-		virtual ~IrParserStructure();
-		
-		void setRules(const LanguageRules *rules);
-		const LanguageRules *getRules() const { return m_rules; }
+            bool isFixedType() const { return fixedType != nullptr; }
+        };
 
-		const IrTokenInfo *getSummaryToken() const { return &m_summaryToken; }
-		void registerToken(const IrTokenInfo *tokenInfo);
+    public:
+        IrParserStructure();
+        virtual ~IrParserStructure();
+        
+        void setRules(const LanguageRules *rules);
+        const LanguageRules *getRules() const { return m_rules; }
 
-		void registerComponent(IrParserStructure *child);
-		int getComponentCount() const { return (int)m_components.size(); }
+        const IrTokenInfo *getSummaryToken() const { return &m_summaryToken; }
+        void registerToken(const IrTokenInfo *tokenInfo);
 
-		virtual void setScopeParent(IrParserStructure *parent) { m_scopeParent = parent; }
-		IrParserStructure *getScopeParent() const { return m_scopeParent; }
+        void registerComponent(IrParserStructure *child);
+        int getComponentCount() const { return (int)m_components.size(); }
 
-		virtual void setLogicalParent(IrParserStructure *parent) { m_logicalParent = parent; }
-		IrParserStructure *getLogicalParent() const { return m_logicalParent; }
+        virtual void setScopeParent(IrParserStructure *parent) { m_scopeParent = parent; }
+        IrParserStructure *getScopeParent() const { return m_scopeParent; }
 
-		virtual IrParserStructure *resolveName(const std::string &name) const;
-		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
+        virtual void setLogicalParent(IrParserStructure *parent) { m_logicalParent = parent; }
+        IrParserStructure *getLogicalParent() const { return m_logicalParent; }
 
-		bool getDefinitionsResolved() const { return m_definitionsResolved; }
-		bool isValidated() const { return m_validated; }
-		virtual const ChannelType *getImmediateChannelType() { return nullptr; }
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
-		IrParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
+        virtual IrParserStructure *resolveName(const std::string &name) const;
+        virtual IrParserStructure *resolveLocalName(const std::string &name) const;
 
-		virtual IrValue *getAsValue() { return nullptr; }
+        bool getDefinitionsResolved() const { return m_definitionsResolved; }
+        bool isValidated() const { return m_validated; }
+        virtual const ChannelType *getImmediateChannelType() { return nullptr; }
+        virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
+        IrParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
 
-		bool allowsExternalAccess() const;
+        bool allowsExternalAccess() const;
 
-		void setVisibility(IrVisibility visibility) { m_visibility = visibility; }
-		IrVisibility getVisibility() const { return m_visibility; }
+        void setVisibility(IrVisibility visibility) { m_visibility = visibility; }
+        IrVisibility getVisibility() const { return m_visibility; }
 
-		void setDefaultVisibility(IrVisibility visibility) { m_defaultVisibility = visibility; }
-		IrVisibility getDefaultVisibility() const { return m_defaultVisibility; }
+        void setDefaultVisibility(IrVisibility visibility) { m_defaultVisibility = visibility; }
+        IrVisibility getDefaultVisibility() const { return m_defaultVisibility; }
 
-		void setCheckReferences(bool check) { m_checkReferences = check; }
-		bool getCheckReferences() const { return m_checkReferences; }
+        void setCheckReferences(bool check) { m_checkReferences = check; }
+        bool getCheckReferences() const { return m_checkReferences; }
 
-		virtual bool isInputPoint() const { return false; }
-		virtual bool isExternalInput() const { return false; }
+        void setParentUnit(IrCompilationUnit *unit) { m_parentUnit = unit; }
+        IrCompilationUnit *getParentUnit() const;
 
-		void setParentUnit(IrCompilationUnit *unit) { m_parentUnit = unit; }
-		IrCompilationUnit *getParentUnit() const;
+        virtual IrNode *getAsNode() { return nullptr; }
 
-		IrParserStructure *resolveToSingleChannel(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
-		virtual IrParserStructure *getDefaultPort() { return nullptr; }
-		virtual IrNode *getAsNode() { return nullptr; }
+    public:
+        // Compilation stages
+        void resolveDefinitions();
+        void expand();
+        void checkInstantiation();
+        void checkTypes();
+        void validate();
 
-	public:
-		// Compilation stages
-		void resolveDefinitions();
-		void expand(IrContextTree *context);
-		virtual void checkReferences(IrContextTree *inputContext = nullptr);
-		void checkInstantiation();
-		void validate();
+        void expand(IrContextTree *context);
+        void expandChain(IrContextTree *context);
+        virtual void checkReferences(IrContextTree *inputContext = nullptr);
+        void checkTypes(IrContextTree *inputContext);
 
-	protected:
-		virtual void _resolveDefinitions();
-		virtual void _expand(IrContextTree *context);
-		virtual void _checkInstantiation();
-		virtual void _validate();
+    protected:
+        virtual void _resolveDefinitions();
+        virtual void _expand();
+        virtual void _checkInstantiation();
+        virtual void _validate();
 
-	protected:
-		IrCompilationUnit *m_parentUnit;
-		IrParserStructure *m_scopeParent;
-		IrParserStructure *m_logicalParent;
-		IrTokenInfo m_summaryToken;
+        virtual void _checkTypes();
+        virtual void _checkTypes(IrContextTree *context);
 
-		PKeyValueLookup<IrContextTree, IrNode *> m_expansions;
+        virtual void _expand(IrContextTree *context);
 
-		std::vector<IrParserStructure *> m_components;
+    protected:
+        IrCompilationUnit *m_parentUnit;
+        IrParserStructure *m_scopeParent;
+        IrParserStructure *m_logicalParent;
+        IrTokenInfo m_summaryToken;
 
-	protected:
-		const LanguageRules *m_rules;
+        PKeyValueLookup<IrContextTree, IrNode *> m_expansions;
 
-		// Visibility
-		IrVisibility m_defaultVisibility;
-		IrVisibility m_visibility;
+        std::vector<IrParserStructure *> m_components;
 
-		// Compilation flags
-		bool m_definitionsResolved;
-		bool m_validated;
+    protected:
+        const LanguageRules *m_rules;
 
-		bool m_checkReferences;
+        // Visibility
+        IrVisibility m_defaultVisibility;
+        IrVisibility m_visibility;
 
-	public:
-		// Debugging
-		void writeReferencesToFile(std::ofstream &file, IrContextTree *context, int tabLevel = 0);
+        // Compilation flags
+        bool m_definitionsResolved;
+        bool m_validated;
 
-		// Building
-	public:
-		NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program);
-		Node *generateNode(IrContextTree *context, NodeProgram *program);
+        bool m_checkReferences;
 
-	protected:
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
-	};
+    public:
+        // Debugging
+        void writeReferencesToFile(std::ofstream &file, IrContextTree *context, int tabLevel = 0);
+
+        // Building
+    public:
+        NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program);
+        Node *generateNode(IrContextTree *context, NodeProgram *program);
+
+    protected:
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
+    };
 
 } /* namespace piranha */
 

@@ -8,45 +8,49 @@
 #include "../include/compiler.h"
 
 bool findError(const ErrorList *errorList, const ErrorCode_struct &errorCode, int line, 
-										const IrCompilationUnit *unit, bool instantiationError) {
-	int errorCount = errorList->getErrorCount();
+                                        const IrCompilationUnit *unit, bool instantiationError) {
+    int errorCount = errorList->getErrorCount();
 
-	for (int i = 0; i < errorCount; i++) {
-		CompilationError *error = errorList->getCompilationError(i);
-		if (unit == nullptr || error->getCompilationUnit() == unit) {
-			if (error->getErrorCode().code == errorCode.code && error->getErrorCode().stage == errorCode.stage) {
-				if (line == -1 || error->getErrorLocation()->lineStart == line) {
-					if (error->isInstantiationError() == instantiationError) {
-						return true;
-					}
-				}
-			}
-		}
-	}
+    for (int i = 0; i < errorCount; i++) {
+        CompilationError *error = errorList->getCompilationError(i);
+        if (unit == nullptr || error->getCompilationUnit() == unit) {
+            if (error->getErrorCode().code == errorCode.code && error->getErrorCode().stage == errorCode.stage) {
+                if (line == -1 || error->getErrorLocation()->lineStart == line) {
+                    if (error->isInstantiationError() == instantiationError) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
 
-	return false;
+    return false;
 }
 
 IrCompilationUnit *compileFile(const std::string &filename, const ErrorList **errList) {
-	piranha::Compiler *compiler = new Compiler();
-	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
-	EXPECT_NE(unit, nullptr);
+    TestRules *rules = new TestRules();
+    rules->registerBuiltinNodeTypes();
 
-	if (errList != nullptr) *errList = compiler->getErrorList();
+    piranha::Compiler *compiler = new Compiler(rules);
+    IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
+    EXPECT_NE(unit, nullptr);
 
-	return unit;
+    if (errList != nullptr) *errList = compiler->getErrorList();
+
+    return unit;
 }
 
 IrCompilationUnit *compileToUnit(const std::string &filename, const ErrorList **errList, LanguageRules **outputRules) {
-	TestRules *rules = new TestRules();
-	rules->registerBuiltinNodeTypes();
-	Compiler *compiler = new Compiler(rules);
+    TestRules *rules = new TestRules();
+    rules->registerBuiltinNodeTypes();
 
-	IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
-	EXPECT_NE(unit, nullptr);
+    Compiler *compiler = new Compiler(rules);
 
-	if (errList != nullptr) *errList = compiler->getErrorList();
-	if (outputRules != nullptr) *outputRules = rules;
+    IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
+    EXPECT_NE(unit, nullptr);
 
-	return unit;
+    if (errList != nullptr) *errList = compiler->getErrorList();
+    if (outputRules != nullptr) *outputRules = rules;
+
+    return unit;
 }

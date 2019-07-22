@@ -15,7 +15,7 @@ private node BrokenNodeDef {
     // Broken attribute, the rest should still work
     input a###: 5; // UnidentifiedToken
     input b;
-    alias output out: a - b; // UnresolvedReference
+    alias output out: a - b;
 }
 
 // This node should still be read even though
@@ -25,6 +25,5 @@ BrokenNodeDef brokenNodeInstance(
     fake_input_2: 6, // PortNotFound
     b: 15, // Good
 
-    // This should not work as a is not a valid port
-    a: "Kaboom" // UndefinedMember
+    a: "Works"
 )

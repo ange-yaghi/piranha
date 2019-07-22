@@ -8,60 +8,60 @@
 
 namespace piranha {
 
-	class OperationNode : public Node {
-	public:
-		OperationNode() {}
-		~OperationNode() {}
+    class OperationNode : public Node {
+    public:
+        OperationNode() {}
+        ~OperationNode() {}
 
-		virtual void connectLeft(pNodeInput input) {
-			(*m_inputs[0].input) = input;
-		}
+        virtual void connectLeft(pNodeInput input) {
+            (*m_inputs[0].input) = input;
+        }
 
-		virtual void connectRight(pNodeInput input) {
-			(*m_inputs[1].input) = input;
-		}
-	};
+        virtual void connectRight(pNodeInput input) {
+            (*m_inputs[1].input) = input;
+        }
+    };
 
-	template <typename FundamentalType>
-	class OperationNodeSpecialized : public OperationNode {
-	public:
-		OperationNodeSpecialized() {
-			/* void */
-		}
+    template <typename FundamentalType>
+    class OperationNodeSpecialized : public OperationNode {
+    public:
+        OperationNodeSpecialized() {
+            /* void */
+        }
 
-		~OperationNodeSpecialized() {
-			/* void */
-		}
+        ~OperationNodeSpecialized() {
+            /* void */
+        }
 
-		virtual void _initialize() {
-			m_output.initialize();
-		}
+        virtual void _initialize() {
+            m_output.initialize();
+        }
 
-		virtual void _evaluate() {
-			/* void */
-		}
+        virtual void _evaluate() {
+            /* void */
+        }
 
-		virtual void _destroy() {
-			/* void */
-		}
+        virtual void _destroy() {
+            /* void */
+        }
 
-		virtual void registerOutputs() {
-			setPrimaryOutput(&m_output);
-			registerOutput(&m_output, "__out");
-		}
+        virtual void registerOutputs() {
+            setPrimaryOutput(&m_output);
+            registerOutput(&m_output, "__out");
+        }
 
-		virtual void registerInputs() {
-			const ChannelType *type = NativeTypeLookup<FundamentalType>();
+        virtual void registerInputs() {
+            const ChannelType *type = NativeTypeLookup<FundamentalType>();
 
-			registerInput(
-				m_output.getLeftConnection(), "__in0", type);
-			registerInput(
-				m_output.getRightConnection(), "__in1", type);
-		}
+            registerInput(
+                m_output.getLeftConnection(), "__in0", type);
+            registerInput(
+                m_output.getRightConnection(), "__in1", type);
+        }
 
-	protected:
-		AddOperationNodeOutput<FundamentalType> m_output;
-	};
+    protected:
+        AddOperationNodeOutput<FundamentalType> m_output;
+    };
 
 } /* namespace piranha */
 

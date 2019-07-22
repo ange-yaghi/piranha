@@ -15,66 +15,77 @@
 #include "../include/operation_node.h"
 
 TestRules::TestRules() {
-	/* void */
+    /* void */
 }
 
 TestRules::~TestRules() {
-	/* void */
+    /* void */
 }
 
 void TestRules::registerBuiltinNodeTypes() {
-	// Builtin Types
-	registerBuiltinType<piranha::FloatCastNode>("__piranha__int", &piranha::FundamentalType::IntType);
-	registerBuiltinType<piranha::FloatCastNode>("__piranha__float", &piranha::FundamentalType::FloatType);
-	registerBuiltinType<piranha::StringCastNode>("__piranha__string", &piranha::FundamentalType::StringType);
-	registerBuiltinType<piranha::VectorConstructorNode>("__piranha__vector", &piranha::FundamentalType::VectorType);
+    // Builtin Types
+    registerBuiltinType<piranha::FloatCastNode>("__piranha__int", &piranha::FundamentalType::IntType);
+    registerBuiltinType<piranha::FloatCastNode>("__piranha__float", &piranha::FundamentalType::FloatType);
+    registerBuiltinType<piranha::StringCastNode>("__piranha__string", &piranha::FundamentalType::StringType);
+    registerBuiltinType<piranha::VectorSplitNode>("__piranha__vector", &piranha::FundamentalType::VectorType);
+    registerBuiltinType<piranha::VectorConstructorNode>("__piranha__vector_constructor", &piranha::FundamentalType::VectorType);
 
-	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_int>>("__piranha__int_add");
-	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_float>>("__piranha__float_add");
-	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_string>>("__piranha__string_add");
-	registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_vector>>("__piranha__vector_add");
+    registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_int>>("__piranha__int_add");
+    registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_float>>("__piranha__float_add");
+    registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_string>>("__piranha__string_add");
+    registerBuiltinType<piranha::OperationNodeSpecialized<piranha::native_vector>>("__piranha__vector_add");
 
-	registerBuiltinType<piranha::DefaultLiteralStringNode>("__piranha__literal_string", &piranha::FundamentalType::StringType);
-	registerBuiltinType<piranha::DefaultLiteralIntNode>("__piranha__literal_int", &piranha::FundamentalType::IntType);
-	registerBuiltinType<piranha::DefaultLiteralFloatNode>("__piranha__literal_float", &piranha::FundamentalType::FloatType);
-	registerBuiltinType<piranha::DefaultLiteralBoolNode>("__piranha__literal_bool", &piranha::FundamentalType::BoolType);
+    registerBuiltinType<piranha::DefaultLiteralStringNode>("__piranha__literal_string", &piranha::FundamentalType::StringType);
+    registerBuiltinType<piranha::DefaultLiteralIntNode>("__piranha__literal_int", &piranha::FundamentalType::IntType);
+    registerBuiltinType<piranha::DefaultLiteralFloatNode>("__piranha__literal_float", &piranha::FundamentalType::FloatType);
+    registerBuiltinType<piranha::DefaultLiteralBoolNode>("__piranha__literal_bool", &piranha::FundamentalType::BoolType);
 
-	registerBuiltinType<piranha::ConsoleOutputNode>("__piranha__console_out");
-	registerBuiltinType<piranha::ConsoleInputNode>("__piranha__console_in");
+    registerBuiltinType<piranha::StringToFloatConversionNode>("__piranha__string_to_float");
+    registerBuiltinType<piranha::FloatToStringConversionNode>("__piranha__float_to_string");
+    registerBuiltinType<piranha::IntToFloatConversionNode>("__piranha__int_to_float");
 
-	// Literals
-	registerLiteralType(piranha::LITERAL_STRING, "__piranha__literal_string");
-	registerLiteralType(piranha::LITERAL_INT, "__piranha__literal_int");
-	registerLiteralType(piranha::LITERAL_FLOAT, "__piranha__literal_float");
-	registerLiteralType(piranha::LITERAL_BOOL, "__piranha__literal_bool");
+    registerBuiltinType<piranha::ConsoleOutputNode>("__piranha__console_out");
+    registerBuiltinType<piranha::ConsoleInputNode>("__piranha__console_in");
 
-	// Conversions
-	registerConversion<piranha::StringToFloatConversionNode>(
-		{ &piranha::FundamentalType::StringType, &piranha::FundamentalType::FloatType }
-	);
-	registerConversion<piranha::FloatToStringConversionNode>(
-		{ &piranha::FundamentalType::FloatType, &piranha::FundamentalType::StringType }
-	);
+    // Literals
+    registerLiteralType(piranha::LITERAL_STRING, "__piranha__literal_string");
+    registerLiteralType(piranha::LITERAL_INT, "__piranha__literal_int");
+    registerLiteralType(piranha::LITERAL_FLOAT, "__piranha__literal_float");
+    registerLiteralType(piranha::LITERAL_BOOL, "__piranha__literal_bool");
 
-	// Operations
-	registerOperator(
-		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
-		"__piranha__int_add"
-	);
-	registerOperator(
-		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
-		"__piranha__float_add"
-	);
-	registerOperator(
-		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
-		"__piranha__float_add"
-	);
-	registerOperator(
-		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
-		"__piranha__string_add"
-	);
-	registerOperator(
-		{ piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
-		"__piranha__vector_add"
-	);
+    // Conversions
+    registerConversion(
+        { &piranha::FundamentalType::StringType, &piranha::FundamentalType::FloatType },
+        "__piranha__string_to_float"
+    );
+    registerConversion(
+        { &piranha::FundamentalType::FloatType, &piranha::FundamentalType::StringType },
+        "__piranha__float_to_string"
+    );
+    registerConversion(
+        { &piranha::FundamentalType::IntType, &piranha::FundamentalType::FloatType },
+        "__piranha__int_to_float"
+    );
+
+    // Operations
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        "__piranha__int_add"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
+        "__piranha__float_add"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
+        "__piranha__float_add"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
+        "__piranha__string_add"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
+        "__piranha__vector_add"
+    );
 }

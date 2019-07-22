@@ -3,11 +3,11 @@
 
 namespace piranha {
 
-		enum IrVisibility {
-			PRIVATE,
-			PUBLIC,
-			DEFAULT
-		};
+        enum IrVisibility {
+            PRIVATE,
+            PUBLIC,
+            DEFAULT
+        };
 
 } /* namespace piranha */
 

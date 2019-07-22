@@ -1,0 +1,13 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node fake_type {}
+node other_fake_type {}
+
+node processor {
+    input in [fake_type]: other_fake_type();
+    output out: in; 
+}
+
+processor(5)
+processor(fake_type())
+processor(other_fake_type())

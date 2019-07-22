@@ -10,29 +10,29 @@
 
 namespace piranha {
 
-	class IrAttributeDefinitionList : public IrParserStructure {
-	public:
-		IrAttributeDefinitionList();
-		~IrAttributeDefinitionList();
+    class IrAttributeDefinitionList : public IrParserStructure {
+    public:
+        IrAttributeDefinitionList();
+        ~IrAttributeDefinitionList();
 
-		void addDefinition(IrAttributeDefinition *definition);
-		IrAttributeDefinition *getDefinition(int index) const { return m_definitions[index]; }
-		int getDefinitionCount() const { return (int)m_definitions.size(); }
+        void addDefinition(IrAttributeDefinition *definition);
+        IrAttributeDefinition *getDefinition(int index) const { return m_definitions[index]; }
+        int getDefinitionCount() const { return (int)m_definitions.size(); }
 
-		IrAttributeDefinition *getDefinition(int index, IrAttributeDefinition::DIRECTION direction) const;
-		IrAttributeDefinition *getInputDefinition(int index) const;
+        IrAttributeDefinition *getDefinition(int index, IrAttributeDefinition::DIRECTION direction) const;
+        IrAttributeDefinition *getInputDefinition(int index) const;
 
-		IrAttributeDefinition *getOutputDefinition(int index) const;
-		IrAttributeDefinition *getOutputDefinition(const std::string &name) const;
-		IrAttributeDefinition *getAliasOutput() const;
+        IrAttributeDefinition *getOutputDefinition(int index) const;
+        IrAttributeDefinition *getOutputDefinition(const std::string &name) const;
+        IrAttributeDefinition *getAliasOutput() const;
 
-		int getCount(IrAttributeDefinition::DIRECTION direction) const;
-		int getInputCount() const;
-		int getOutputCount() const;
+        int getCount(IrAttributeDefinition::DIRECTION direction) const;
+        int getInputCount() const;
+        int getOutputCount() const;
 
-	protected:
-		std::vector<IrAttributeDefinition *> m_definitions;
-	};
+    protected:
+        std::vector<IrAttributeDefinition *> m_definitions;
+    };
 
 } /* namespace piranha */
 

@@ -1,4 +1,13 @@
-public node literal_string => __piranha__literal_string {}
-public node literal_int => __piranha__literal_int {}
-public node literal_float => __piranha__literal_float {}
-public node literal_bool => __piranha__literal_bool {}
+private import "conversions.mr"
+
+public node literal_string => __piranha__literal_string {
+    alias output __out [string];
+}
+
+public node literal_int => __piranha__literal_int {
+    alias output __out [int];
+}
+
+public node literal_float => __piranha__literal_float {
+    alias output __out [float];
+}

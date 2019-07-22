@@ -7,22 +7,22 @@
 
 namespace piranha {
 
-	class IrAttribute;
-	class IrAttributeDefinition;
+    class IrAttribute;
+    class IrAttributeDefinition;
 
-	class IrAttributeList : public IrParserStructure {
-	public:
-		IrAttributeList();
-		~IrAttributeList();
+    class IrAttributeList : public IrParserStructure {
+    public:
+        IrAttributeList();
+        ~IrAttributeList();
 
-		void addAttribute(IrAttribute *attribute);
-		IrAttribute *getAttribute(int index) const { return m_attributes[index]; }
-		IrAttribute *getAttribute(IrAttributeDefinition *definition) const;
-		int getAttributeCount() const { return (int)m_attributes.size(); }
+        void addAttribute(IrAttribute *attribute);
+        IrAttribute *getAttribute(int index) const { return m_attributes[index]; }
+        IrAttribute *getAttribute(IrAttributeDefinition *definition) const;
+        int getAttributeCount() const { return (int)m_attributes.size(); }
 
-	protected:
-		std::vector<IrAttribute *> m_attributes;
-	};
+    protected:
+        std::vector<IrAttribute *> m_attributes;
+    };
 
 } /* namespace piranha */
 

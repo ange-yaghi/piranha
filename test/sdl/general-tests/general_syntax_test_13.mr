@@ -1,0 +1,19 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node output_structure {
+    input some_input [string];
+    
+    output raw: some_input;
+    output formatted: "The result was " + some_input /* missing semicolon */
+}
+
+node test_node {
+    input my_default: "5.0";
+    input other_param [string]: float(my_default);
+    alias output __out: output_structure(other_param);
+}
+
+test_node test()
+
+console_out(test.raw)
+console_out(test.formatted)

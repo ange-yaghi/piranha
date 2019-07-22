@@ -9,121 +9,121 @@
 
 namespace piranha {
 
-	struct IntersectionPoint;
-	class StackAllocator;
-	class IrContextTree;
-	class IrParserStructure;
-	class NodeProgram;
+    struct IntersectionPoint;
+    class StackAllocator;
+    class IrContextTree;
+    class IrParserStructure;
+    class NodeProgram;
 
-	class Node {
-	public:
-		struct NodeSessionMemory {
-			unsigned char memory[64];
-			void *extraMemory;
-		};
+    class Node {
+    public:
+        struct NodeSessionMemory {
+            unsigned char memory[64];
+            void *extraMemory;
+        };
 
-		struct NodeInputPort {
-			pNodeInput *input;
-			std::string name;
+        struct NodeInputPort {
+            pNodeInput *input;
+            std::string name;
 
-			const ChannelType *requiredType;
-		};
+            const ChannelType *requiredType;
+        };
 
-		struct NodeOutputPort {
-			NodeOutput *output;
-			std::string name;
-		};
+        struct NodeOutputPort {
+            NodeOutput *output;
+            std::string name;
+        };
 
-		struct NodeOutputPortReference {
-			NodeOutput * const *output;
-			std::string name;
-		};
+        struct NodeOutputPortReference {
+            NodeOutput * const *output;
+            std::string name;
+        };
 
-	public:
-		Node();
-		virtual ~Node();
+    public:
+        Node();
+        virtual ~Node();
 
-		void initialize();
-		void evaluate();
-		void destroy();
+        void initialize();
+        void evaluate();
+        void destroy();
 
-		void setId(int id) { m_id = id; }
-		int getId() const { return m_id; }
+        void setId(int id) { m_id = id; }
+        int getId() const { return m_id; }
 
-		void setName(const std::string &name) { m_name = name; }
-		std::string getName() const { return m_name; }
+        void setName(const std::string &name) { m_name = name; }
+        std::string getName() const { return m_name; }
 
-		const ChannelType *getConversion(pNodeInput input, const std::string &name);
-		void connectInput(pNodeInput input, const std::string &name);
-		void connectInput(pNodeInput input, int index);
-		void connectDefaultInput(pNodeInput input);
-		int getInputCount() const { return (int)m_inputs.size(); }
+        const ChannelType *getConversion(pNodeInput input, const std::string &name);
+        void connectInput(pNodeInput input, const std::string &name);
+        void connectInput(pNodeInput input, int index);
+        void connectDefaultInput(pNodeInput input);
+        int getInputCount() const { return (int)m_inputs.size(); }
 
-		NodeOutput *getPrimaryOutput() const;
-		NodeOutput *getOutput(const std::string &name) const;
-		int getOutputCount() const { return (int)m_outputs.size(); }
+        NodeOutput *getPrimaryOutput() const;
+        NodeOutput *getOutput(const std::string &name) const;
+        int getOutputCount() const { return (int)m_outputs.size(); }
 
-		int getOutputReferenceCount() const { return (int)m_outputReferences.size(); }
+        int getOutputReferenceCount() const { return (int)m_outputReferences.size(); }
 
-		bool isInitialized() const { return m_initialized; }
-		bool isEvaluated() const { return m_evaluated; }
+        bool isInitialized() const { return m_initialized; }
+        bool isEvaluated() const { return m_evaluated; }
 
-		void setIrStructure(IrParserStructure *irStructure) { m_irStructure = irStructure; }
-		IrParserStructure *getIrStructure() const { return m_irStructure; }
+        void setIrStructure(IrParserStructure *irStructure) { m_irStructure = irStructure; }
+        IrParserStructure *getIrStructure() const { return m_irStructure; }
 
-		void setIrContext(IrContextTree *context) { m_context = context; }
-		IrContextTree *getContext() const { return m_context; }
+        void setIrContext(IrContextTree *context) { m_context = context; }
+        IrContextTree *getContext() const { return m_context; }
 
-		void setProgram(NodeProgram *program) { m_program = program; }
-		NodeProgram *getProgram() const { return m_program; }
+        void setProgram(NodeProgram *program) { m_program = program; }
+        NodeProgram *getProgram() const { return m_program; }
 
-		// Context dependencies
-		virtual bool isMaterial() const { return false; }
-		virtual bool requiresMaterials() const { return false; }
+        // Context dependencies
+        virtual bool isMaterial() const { return false; }
+        virtual bool requiresMaterials() const { return false; }
 
-	protected:
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-		virtual void registerOutputs();
-		virtual void registerInputs();
+        virtual void registerOutputs();
+        virtual void registerInputs();
 
-	protected:
-		int m_id;
-		std::string m_name;
+    protected:
+        int m_id;
+        std::string m_name;
 
-		IrContextTree *m_context;
-		IrParserStructure *m_irStructure;
+        IrContextTree *m_context;
+        IrParserStructure *m_irStructure;
 
-	protected:
-		std::vector<NodeInputPort> m_inputs;
-		void registerInput(pNodeInput *node, const std::string &name, const ChannelType *requiredType = nullptr);
+    protected:
+        std::vector<NodeInputPort> m_inputs;
+        void registerInput(pNodeInput *node, const std::string &name, const ChannelType *requiredType = nullptr);
 
-		std::vector<NodeOutputPort> m_outputs;
-		void registerOutput(NodeOutput *node, const std::string &name);
+        std::vector<NodeOutputPort> m_outputs;
+        void registerOutput(NodeOutput *node, const std::string &name);
 
-		std::vector<NodeOutputPortReference> m_outputReferences;
-		void registerOutputReference(NodeOutput *const *node, const std::string &name);
+        std::vector<NodeOutputPortReference> m_outputReferences;
+        void registerOutputReference(NodeOutput *const *node, const std::string &name);
 
-		void setPrimaryOutput(NodeOutput *node);
-		void setPrimaryOutputReference(NodeOutput **node);
+        void setPrimaryOutput(NodeOutput *node);
+        void setPrimaryOutputReference(NodeOutput **node);
 
-	protected:
-		NodeOutput *m_primaryOutput;
-		NodeOutput **m_primaryReference;
+    protected:
+        NodeOutput *m_primaryOutput;
+        NodeOutput **m_primaryReference;
 
-	private:
-		// State variables
+    private:
+        // State variables
 
-		// Initialization status
-		bool m_initialized;
-		bool m_evaluated;
+        // Initialization status
+        bool m_initialized;
+        bool m_evaluated;
 
-	protected:
-		// Context
-		NodeProgram *m_program;
-	};
+    protected:
+        // Context
+        NodeProgram *m_program;
+    };
 
 } /* namespace piranha */
 

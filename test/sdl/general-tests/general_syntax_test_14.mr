@@ -1,0 +1,9 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node output_structure {
+    input some_input [string];
+    output raw: some_input + "Hello";
+    output kaboom: some_input + 5.0; // some_input should have converted to a string, which would cause this to fail
+}
+
+output_structure(5.0)

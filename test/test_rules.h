@@ -5,10 +5,10 @@
 
 class TestRules : public piranha::LanguageRules {
 public:
-	TestRules();
-	~TestRules();
+    TestRules();
+    ~TestRules();
 
-	virtual void registerBuiltinNodeTypes();
+    virtual void registerBuiltinNodeTypes();
 };
 
 #endif /* TEST_GENERATOR_H */
