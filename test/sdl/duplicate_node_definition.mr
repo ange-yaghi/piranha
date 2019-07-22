@@ -4,12 +4,12 @@ private node the_same_node {    // DuplicateNodeDefinition
 }
 
 private node the_same_node {    // DuplicateNodeDefinition
-    input C;            // SymbolUsedMultipleTimes
-    input C;            // SymbolUsedMultipleTimes
-    input D;            // SymbolUsedMultipleTimes
-    output D: C;        // SymbolUsedMultipleTimes
-    output D;           // SymbolUsedMultipleTimes, OutputWithNoDefinition
-    output C;           // SymbolUsedMultipleTimes, OutputWithNoDefinition
+    input C;                    // SymbolUsedMultipleTimes
+    input C;                    // SymbolUsedMultipleTimes
+    input D;                    // SymbolUsedMultipleTimes
+    output D: C;                // SymbolUsedMultipleTimes
+    output D;                   // SymbolUsedMultipleTimes, OutputWithNoDefinition
+    output C;                   // SymbolUsedMultipleTimes, OutputWithNoDefinition
 
     interior_node C()           // SymbolUsedMultipleTimes
 }
