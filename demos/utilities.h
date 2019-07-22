@@ -6,8 +6,8 @@
 
 namespace piranha_demo {
 
-	void printError(const piranha::CompilationError *err);
-	void printErrorTrace(const piranha::ErrorList *errList);
+    void printError(const piranha::CompilationError *err);
+    void printErrorTrace(const piranha::ErrorList *errList);
 
 }
 

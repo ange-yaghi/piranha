@@ -10,30 +10,30 @@
 #include <string>
 
 int main() {
-	std::string filename;
-	std::cin >> filename;
+    std::string filename;
+    std::cin >> filename;
 
-	while (true) {
-		std::cout << " -- Compiling and running --------------" << std::endl;
-		piranha::NodeProgram nodeProgram;
-		piranha_demo::ReferenceLanguageRules languageRules;
-		languageRules.setNodeProgram(&nodeProgram);
-		languageRules.registerBuiltinNodeTypes();
-		nodeProgram.setRules(&languageRules);
+    while (true) {
+        std::cout << " -- Compiling and running --------------" << std::endl;
+        piranha::NodeProgram nodeProgram;
+        piranha_demo::ReferenceLanguageRules languageRules;
+        languageRules.setNodeProgram(&nodeProgram);
+        languageRules.registerBuiltinNodeTypes();
+        nodeProgram.setRules(&languageRules);
 
-		piranha::Compiler compiler(&languageRules);
-		piranha::IrCompilationUnit *unit = compiler.compile(filename);
+        piranha::Compiler compiler(&languageRules);
+        piranha::IrCompilationUnit *unit = compiler.compile(filename);
 
-		piranha_demo::printErrorTrace(compiler.getErrorList());
+        piranha_demo::printErrorTrace(compiler.getErrorList());
 
-		if (compiler.getErrorList()->getErrorCount() == 0) {
-			unit->build(&nodeProgram);
-			nodeProgram.execute();
-		}
+        if (compiler.getErrorList()->getErrorCount() == 0) {
+            unit->build(&nodeProgram);
+            nodeProgram.execute();
+        }
 
-		std::cout << std::endl << std::endl;
-		std::cin.get();
-	}
+        std::cout << std::endl << std::endl;
+        std::cin.get();
+    }
 
-	return 0;
+    return 0;
 }

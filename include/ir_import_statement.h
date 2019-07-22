@@ -9,27 +9,27 @@
 
 namespace piranha {
 
-	class IrCompilationUnit;
+    class IrCompilationUnit;
 
-	class IrImportStatement : public IrParserStructure {
-	public:
-		IrImportStatement(const IrTokenInfo_string &libName);
-		~IrImportStatement();
+    class IrImportStatement : public IrParserStructure {
+    public:
+        IrImportStatement(const IrTokenInfo_string &libName);
+        ~IrImportStatement();
 
-		std::string getLibName() const { return m_libName.data; }
+        std::string getLibName() const { return m_libName.data; }
 
-		void setUnit(IrCompilationUnit *unit) { m_unit = unit; }
-		IrCompilationUnit *getUnit() const { return m_unit; }
+        void setUnit(IrCompilationUnit *unit) { m_unit = unit; }
+        IrCompilationUnit *getUnit() const { return m_unit; }
 
-		void setShortName(const IrTokenInfo_string &shortName) { m_shortName = shortName; }
-		bool hasShortName() const { return m_shortName.specified; }
-		std::string getShortName() const { return m_shortName.data; }
+        void setShortName(const IrTokenInfo_string &shortName) { m_shortName = shortName; }
+        bool hasShortName() const { return m_shortName.specified; }
+        std::string getShortName() const { return m_shortName.data; }
 
-	protected:
-		IrTokenInfo_string m_shortName;
-		IrTokenInfo_string m_libName;
-		IrCompilationUnit *m_unit;
-	};
+    protected:
+        IrTokenInfo_string m_shortName;
+        IrTokenInfo_string m_libName;
+        IrCompilationUnit *m_unit;
+    };
 
 } /* namespace piranha */
 

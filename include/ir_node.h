@@ -10,85 +10,85 @@
 
 namespace piranha {
 
-	class IrAttributeList;
-	class IrNodeDefinition;
-	class IrCompilationUnit;
-	class IrAttribute;
-	class IrAttributeDefinition;
-	class IrContextTree;
-	class Node;
-	class NodeProgram;
+    class IrAttributeList;
+    class IrNodeDefinition;
+    class IrCompilationUnit;
+    class IrAttribute;
+    class IrAttributeDefinition;
+    class IrContextTree;
+    class Node;
+    class NodeProgram;
 
-	class IrNode : public IrParserStructure {
-	public:
-		IrNode();
-		IrNode(const IrTokenInfo_string &type, const IrTokenInfo_string &name, IrAttributeList *attributes, 
-			const IrTokenInfo_string &library);
-		IrNode(const IrTokenInfo_string &type, IrAttributeList *attributes, 
-			const IrTokenInfo_string &library);
-		~IrNode();
+    class IrNode : public IrParserStructure {
+    public:
+        IrNode();
+        IrNode(const IrTokenInfo_string &type, const IrTokenInfo_string &name, IrAttributeList *attributes, 
+            const IrTokenInfo_string &library);
+        IrNode(const IrTokenInfo_string &type, IrAttributeList *attributes, 
+            const IrTokenInfo_string &library);
+        ~IrNode();
 
-		IrTokenInfo getTypeToken() const { return m_type; }
-		IrTokenInfo getNameToken() const { return m_name; }
+        IrTokenInfo getTypeToken() const { return m_type; }
+        IrTokenInfo getNameToken() const { return m_name; }
 
-		const std::string &getType() const { return m_type.data; }
-		const std::string &getName() const { return m_name.data; }
+        const std::string &getType() const { return m_type.data; }
+        const std::string &getName() const { return m_name.data; }
 
-		virtual const ChannelType *getImmediateChannelType();
+        virtual const ChannelType *getImmediateChannelType();
 
-		void setAttributes(IrAttributeList *list);
-		IrAttributeList *getAttributes() const { return m_attributes; }
-		IrAttribute *getAttribute(const std::string &name, int *count = nullptr) const;
+        void setAttributes(IrAttributeList *list);
+        IrAttributeList *getAttributes() const { return m_attributes; }
+        IrAttribute *getAttribute(const std::string &name, int *count = nullptr) const;
 
-		virtual void setScopeParent(IrParserStructure *parentScope);
+        virtual void setScopeParent(IrParserStructure *parentScope);
 
-		IrParserStructure *getDefaultPort(bool *failed);
-		virtual IrNode *getAsNode() { return this; }
+        IrParserStructure *getDefaultPort(bool *failed);
+        virtual IrNode *getAsNode() { return this; }
 
-		void writeTraceToFile(std::ofstream &file);
+        void writeTraceToFile(std::ofstream &file);
 
-		virtual IrParserStructure *getImmediateReference(
-			const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
-		virtual void checkReferences(IrContextTree *inputContext = nullptr);
+        virtual IrParserStructure *getImmediateReference(
+            const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
+        virtual void checkReferences(IrContextTree *inputContext = nullptr);
 
-		void setInterface(bool isInterface) { m_isInterface = isInterface; }
-		bool isInterface() const { return m_isInterface; }
+        void setInterface(bool isInterface) { m_isInterface = isInterface; }
+        bool isInterface() const { return m_isInterface; }
 
-	protected:
-		IrTokenInfo_string m_type;
-		IrTokenInfo_string m_name;
-		IrTokenInfo_string m_library;
+    protected:
+        IrTokenInfo_string m_type;
+        IrTokenInfo_string m_name;
+        IrTokenInfo_string m_library;
 
-		IrAttributeList *m_attributes;
+        IrAttributeList *m_attributes;
 
-		IrAttribute *getAttribute(IrAttributeDefinition *definition, int *count = nullptr) const;
+        IrAttribute *getAttribute(IrAttributeDefinition *definition, int *count = nullptr) const;
 
-		// Resolution stage
-	public:
-		IrNodeDefinition *getDefinition() const { return m_definition; }
-		void setDefinition(IrNodeDefinition *definition) { m_definition = definition; }
+        // Resolution stage
+    public:
+        IrNodeDefinition *getDefinition() const { return m_definition; }
+        void setDefinition(IrNodeDefinition *definition) { m_definition = definition; }
 
-		virtual IrParserStructure *resolveLocalName(const std::string &name) const;
+        virtual IrParserStructure *resolveLocalName(const std::string &name) const;
 
-	protected:
-		virtual void _resolveDefinitions();
-		virtual void _validate();
-		virtual void _checkInstantiation();
-		virtual void _expand();
-		virtual void _expand(IrContextTree *context);
-		virtual void _checkTypes();
-		virtual void _checkTypes(IrContextTree *context);
+    protected:
+        virtual void _resolveDefinitions();
+        virtual void _validate();
+        virtual void _checkInstantiation();
+        virtual void _expand();
+        virtual void _expand(IrContextTree *context);
+        virtual void _checkTypes();
+        virtual void _checkTypes(IrContextTree *context);
 
-		void resolveNodeDefinition();
-		void resolveAttributeDefinitions();
+        void resolveNodeDefinition();
+        void resolveAttributeDefinitions();
 
-		IrNodeDefinition *m_definition;
-		bool m_isInterface;
+        IrNodeDefinition *m_definition;
+        bool m_isInterface;
 
-	public:
-		virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
-		virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-	};
+    public:
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
+    };
 
 } /* namespace piranha */
 

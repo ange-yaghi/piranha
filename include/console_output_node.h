@@ -10,39 +10,39 @@
 
 namespace piranha {
 
-	class ConsoleOutputNode : public Node {
-	public:
-		ConsoleOutputNode() {
-			/* void */
-		}
+    class ConsoleOutputNode : public Node {
+    public:
+        ConsoleOutputNode() {
+            /* void */
+        }
 
-		~ConsoleOutputNode() {
-			/* void */
-		}
+        ~ConsoleOutputNode() {
+            /* void */
+        }
 
-	protected:
-		virtual void _initialize() {
-			/* void */
-		}
+    protected:
+        virtual void _initialize() {
+            /* void */
+        }
 
-		virtual void _evaluate() {
-			std::string data;
-			m_dataOut->fullCompute(&data);
+        virtual void _evaluate() {
+            std::string data;
+            m_dataOut->fullCompute(&data);
 
-			std::cout << data;
-		}
+            std::cout << data;
+        }
 
-		virtual void registerInputs() {
-			registerInput(&m_dataOut, "data", &FundamentalType::StringType);
-		}
+        virtual void registerInputs() {
+            registerInput(&m_dataOut, "data", &FundamentalType::StringType);
+        }
 
-		virtual void registerOutputs() {
-			/* void */
-		}
+        virtual void registerOutputs() {
+            /* void */
+        }
 
-	protected:
-		pNodeInput m_dataOut;
-	};
+    protected:
+        pNodeInput m_dataOut;
+    };
 
 } /* namespace piranha */
 

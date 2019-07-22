@@ -5,151 +5,151 @@
 #include "../include/compilation_error.h"
 
 piranha::Compiler::Compiler(const LanguageRules *rules) {
-	m_rules = rules;
+    m_rules = rules;
 }
 
 piranha::Compiler::~Compiler() {
-	/* void */
+    /* void */
 }
 
 piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath) {
-	IrCompilationUnit *newUnit = getUnit(scriptPath);
-	Path rootDir;
-	scriptPath.getParentPath(&rootDir);
+    IrCompilationUnit *newUnit = getUnit(scriptPath);
+    Path rootDir;
+    scriptPath.getParentPath(&rootDir);
 
-	if (newUnit == nullptr) {
-		newUnit = new IrCompilationUnit();
-		newUnit->setErrorList(&m_errorList);
-		IrCompilationUnit::ParseResult parseResult = newUnit->parseFile(scriptPath);
+    if (newUnit == nullptr) {
+        newUnit = new IrCompilationUnit();
+        newUnit->setErrorList(&m_errorList);
+        IrCompilationUnit::ParseResult parseResult = newUnit->parseFile(scriptPath);
 
-		if (parseResult == IrCompilationUnit::IO_ERROR) {
-			delete newUnit;
-			return nullptr;
-		}
+        if (parseResult == IrCompilationUnit::IO_ERROR) {
+            delete newUnit;
+            return nullptr;
+        }
 
-		newUnit->setRules(m_rules);
-		m_units.push_back(newUnit);
+        newUnit->setRules(m_rules);
+        m_units.push_back(newUnit);
 
-		int importCount = newUnit->getImportStatementCount();
-		for (int i = 0; i < importCount; i++) {
-			IrImportStatement *s = newUnit->getImportStatement(i);
-			std::string libName = s->getLibName();
+        int importCount = newUnit->getImportStatementCount();
+        for (int i = 0; i < importCount; i++) {
+            IrImportStatement *s = newUnit->getImportStatement(i);
+            std::string libName = s->getLibName();
 
-			if (!hasEnding(libName, ".mr")) {
-				libName += ".mr";
-			}
+            if (!hasEnding(libName, ".mr")) {
+                libName += ".mr";
+            }
 
-			Path importPath(libName);
-			Path fullImportPath = importPath.isAbsolute() 
-				? importPath // TODO: Warn about use of absolute path
-				: rootDir.append(importPath);
+            Path importPath(libName);
+            Path fullImportPath = importPath.isAbsolute() 
+                ? importPath // TODO: Warn about use of absolute path
+                : rootDir.append(importPath);
 
-			if (!fullImportPath.exists()) {
-				Path resolvedPath;
-				bool fileFound = resolvePath(importPath, &resolvedPath);
+            if (!fullImportPath.exists()) {
+                Path resolvedPath;
+                bool fileFound = resolvePath(importPath, &resolvedPath);
 
-				if (!fileFound) {
-					newUnit->addCompilationError(new CompilationError(*s->getSummaryToken(),
-						ErrorCode::FileOpenFailed));
-					continue;
-				}
-				else fullImportPath = resolvedPath;
-			}
+                if (!fileFound) {
+                    newUnit->addCompilationError(new CompilationError(*s->getSummaryToken(),
+                        ErrorCode::FileOpenFailed));
+                    continue;
+                }
+                else fullImportPath = resolvedPath;
+            }
 
-			// Recursively build
-			IrCompilationUnit *importUnit = analyze(fullImportPath);
-			s->setUnit(importUnit);
-			if (importUnit == nullptr) {
-				newUnit->addCompilationError(new CompilationError(*s->getSummaryToken(),
-					ErrorCode::FileOpenFailed));
-			}
-			else newUnit->addDependency(importUnit);
-		}
-	}
+            // Recursively build
+            IrCompilationUnit *importUnit = analyze(fullImportPath);
+            s->setUnit(importUnit);
+            if (importUnit == nullptr) {
+                newUnit->addCompilationError(new CompilationError(*s->getSummaryToken(),
+                    ErrorCode::FileOpenFailed));
+            }
+            else newUnit->addDependency(importUnit);
+        }
+    }
 
-	return newUnit;
+    return newUnit;
 }
 
 piranha::IrCompilationUnit *piranha::Compiler::compile(const IrPath &scriptPath) {
-	IrCompilationUnit *topLevel = analyze(scriptPath);
+    IrCompilationUnit *topLevel = analyze(scriptPath);
 
-	// Resolution step
-	resolve();
+    // Resolution step
+    resolve();
 
-	// Validation step
-	validate();
+    // Validation step
+    validate();
 
-	return topLevel;
+    return topLevel;
 }
 
 piranha::IrCompilationUnit *piranha::Compiler::getUnit(const IrPath &scriptPath) const {
-	int nUnits = (int)m_units.size();
+    int nUnits = (int)m_units.size();
 
-	for (int i = 0; i < nUnits; i++) {
-		IrCompilationUnit *unit = m_units[i];
-		if (unit->getPath() == scriptPath) {
-			return unit;
-		}
-	}
+    for (int i = 0; i < nUnits; i++) {
+        IrCompilationUnit *unit = m_units[i];
+        if (unit->getPath() == scriptPath) {
+            return unit;
+        }
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 void piranha::Compiler::addSearchPath(const IrPath &path) {
-	m_searchPaths.push_back(path);
+    m_searchPaths.push_back(path);
 }
 
 bool piranha::Compiler::resolvePath(const IrPath &path, IrPath *target) const {
-	if (path.exists()) {
-		*target = path;
-		return true;
-	}
+    if (path.exists()) {
+        *target = path;
+        return true;
+    }
 
-	int searchPathCount = getSearchPathCount();
-	for (int i = 0; i < searchPathCount; i++) {
-		IrPath total = m_searchPaths[i].append(path);
+    int searchPathCount = getSearchPathCount();
+    for (int i = 0; i < searchPathCount; i++) {
+        IrPath total = m_searchPaths[i].append(path);
 
-		if (total.exists()) {
-			*target = total;
-			return true;
-		}
-	}
+        if (total.exists()) {
+            *target = total;
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 bool piranha::Compiler::isPathEquivalent(const IrPath &a, const IrPath &b) const {
-	return (a == b);
+    return (a == b);
 }
 
 bool piranha::Compiler::hasEnding(std::string const &fullString, std::string const &ending) {
-	if (fullString.length() >= ending.length()) {
-		int result = 
-			fullString.compare(
-				fullString.length() - ending.length(),
-				ending.length(),
-				ending);
+    if (fullString.length() >= ending.length()) {
+        int result = 
+            fullString.compare(
+                fullString.length() - ending.length(),
+                ending.length(),
+                ending);
 
-		return result == 0;
-	}
-	else return false;
+        return result == 0;
+    }
+    else return false;
 }
 
 void piranha::Compiler::resolve() {
-	int unitCount = getUnitCount();
-	for (int i = 0; i < unitCount; i++) {
-		IrCompilationUnit *unit = m_units[i];
-		unit->resolveDefinitions();
-		unit->expand();
-		unit->checkInstantiation();
-		unit->checkTypes();
-	}
+    int unitCount = getUnitCount();
+    for (int i = 0; i < unitCount; i++) {
+        IrCompilationUnit *unit = m_units[i];
+        unit->resolveDefinitions();
+        unit->expand();
+        unit->checkInstantiation();
+        unit->checkTypes();
+    }
 }
 
 void piranha::Compiler::validate() {
-	int unitCount = getUnitCount();
-	for (int i = 0; i < unitCount; i++) {
-		IrCompilationUnit *unit = m_units[i];
-		unit->validate();
-	}
+    int unitCount = getUnitCount();
+    for (int i = 0; i < unitCount; i++) {
+        IrCompilationUnit *unit = m_units[i];
+        unit->validate();
+    }
 }

@@ -5,13 +5,13 @@
 
 namespace piranha_demo {
 
-	class ReferenceLanguageRules : public piranha::LanguageRules {
-	public:
-		ReferenceLanguageRules();
-		~ReferenceLanguageRules();
+    class ReferenceLanguageRules : public piranha::LanguageRules {
+    public:
+        ReferenceLanguageRules();
+        ~ReferenceLanguageRules();
 
-		virtual void registerBuiltinNodeTypes();
-	};
+        virtual void registerBuiltinNodeTypes();
+    };
 
 } /* namespace piranha_demo */
 

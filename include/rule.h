@@ -5,51 +5,51 @@
 
 namespace piranha {
 
-	class Node;
+    class Node;
 
-	template <typename ValueType, typename NodeBase>
-	class Rule {
-	public:
-		Rule(const ValueType &value) {
-			m_value = value;
-		}
+    template <typename ValueType, typename NodeBase>
+    class Rule {
+    public:
+        Rule(const ValueType &value) {
+            m_value = value;
+        }
 
-		Rule() {
-			/* void */
-		}
+        Rule() {
+            /* void */
+        }
 
-		virtual ~Rule() {
-			/* void */
-		}
+        virtual ~Rule() {
+            /* void */
+        }
 
-		virtual NodeBase *buildNode() const = 0;
+        virtual NodeBase *buildNode() const = 0;
 
-		void setValue(const ValueType &value) { m_value = value; }
-		const ValueType &getValue() const { return m_value; }
+        void setValue(const ValueType &value) { m_value = value; }
+        const ValueType &getValue() const { return m_value; }
 
-	protected:
-		ValueType m_value;
-	};
+    protected:
+        ValueType m_value;
+    };
 
-	template <typename ValueType, typename NodeType, typename NodeBase>
-	class SpecializedRule : public Rule<ValueType, NodeBase> {
-	public:
-		SpecializedRule(const ValueType &value) : Rule(value) {
-			/* void */
-		}
+    template <typename ValueType, typename NodeType, typename NodeBase>
+    class SpecializedRule : public Rule<ValueType, NodeBase> {
+    public:
+        SpecializedRule(const ValueType &value) : Rule(value) {
+            /* void */
+        }
 
-		SpecializedRule() {
-			/* void */
-		}
+        SpecializedRule() {
+            /* void */
+        }
 
-		virtual ~SpecializedRule() {
-			/* void */
-		}
+        virtual ~SpecializedRule() {
+            /* void */
+        }
 
-		virtual NodeBase *buildNode() const {
-			return new NodeType();
-		}
-	};
+        virtual NodeBase *buildNode() const {
+            return new NodeType();
+        }
+    };
 
 } /* namespace piranha */
 

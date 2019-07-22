@@ -21,49 +21,49 @@
 using namespace piranha;
 
 TEST(IrSyntaxStressTests, IrSyntaxStressTest1) {
-	const ErrorList *errors;
-	compileFile("stress-testing/stress_test_1.mr", &errors);
+    const ErrorList *errors;
+    compileFile("stress-testing/stress_test_1.mr", &errors);
 
-	EXPECT_EQ(errors->getErrorCount(), 9);
+    EXPECT_EQ(errors->getErrorCount(), 9);
 
-	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 50));
-	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 51));
-	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 52));
+    EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 50));
+    EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 51));
+    EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 52));
 
-	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 54));
-	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 55));
-	EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 56));
+    EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 54));
+    EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 55));
+    EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 56));
 
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 60));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 60));
 
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 62));
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 67));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 62));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 67));
 }
 
 TEST(IrSyntaxStressTests, IrSyntaxNodeArgumentStressTest1) {
-	const ErrorList *errors;
-	compileFile("stress-testing/node_argument_stress_test_1.mr", &errors);
+    const ErrorList *errors;
+    compileFile("stress-testing/node_argument_stress_test_1.mr", &errors);
 
-	EXPECT_EQ(errors->getErrorCount(), 5);
+    EXPECT_EQ(errors->getErrorCount(), 5);
 
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 22, nullptr, true));
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 23, nullptr));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 22, nullptr, true));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 23, nullptr));
 }
 
 TEST(IrSyntaxStressTests, IrSyntaxDeepErrorIsolated) {
-	const ErrorList *errors;
-	compileFile("stress-testing/deep_error_isolated.mr", &errors);
+    const ErrorList *errors;
+    compileFile("stress-testing/deep_error_isolated.mr", &errors);
 
-	EXPECT_EQ(errors->getErrorCount(), 1);
+    EXPECT_EQ(errors->getErrorCount(), 1);
 
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 3, nullptr, true));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 3, nullptr, true));
 }
 
 TEST(IrSyntaxStressTests, IrSyntaxDeepError) {
-	const ErrorList *errors;
-	compileFile("stress-testing/deep_error.mr", &errors);
+    const ErrorList *errors;
+    compileFile("stress-testing/deep_error.mr", &errors);
 
-	EXPECT_EQ(errors->getErrorCount(), 3);
+    EXPECT_EQ(errors->getErrorCount(), 3);
 
-	EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 27, nullptr, true));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 27, nullptr, true));
 }

@@ -5,29 +5,29 @@
 
 namespace piranha {
 
-	class CompilationError;
+    class CompilationError;
 
-	class IrUnaryOperator : public IrValue {
-	public:
-		enum OPERATOR {
-			DEFAULT,
-			NUM_NEGATE,
-			BOOL_NEGATE
-		};
+    class IrUnaryOperator : public IrValue {
+    public:
+        enum OPERATOR {
+            DEFAULT,
+            NUM_NEGATE,
+            BOOL_NEGATE
+        };
 
-	public:
-		IrUnaryOperator(OPERATOR op, IrValue *operand);
-		~IrUnaryOperator();
+    public:
+        IrUnaryOperator(OPERATOR op, IrValue *operand);
+        ~IrUnaryOperator();
 
-		OPERATOR getOperator() const { return m_operator; }
-		IrValue *getOperand() const { return m_operand; }
+        OPERATOR getOperator() const { return m_operator; }
+        IrValue *getOperand() const { return m_operand; }
 
-		virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+        virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
-	protected:
-		OPERATOR m_operator;
-		IrValue *m_operand;
-	};
+    protected:
+        OPERATOR m_operator;
+        IrValue *m_operand;
+    };
 
 } /* namespace piranha */
 

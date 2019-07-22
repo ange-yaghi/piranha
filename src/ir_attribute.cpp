@@ -10,90 +10,90 @@
 #include "../include/ir_context_tree.h"
 
 piranha::IrAttribute::IrAttribute() {
-	/* void */
+    /* void */
 }
 
 piranha::IrAttribute::IrAttribute(const IrTokenInfo_string &name, IrValue *value) {
-	m_name = name;
-	m_value = value;
-	m_position = -1;
+    m_name = name;
+    m_value = value;
+    m_position = -1;
 
-	registerToken(&name);
-	registerComponent(value);
+    registerToken(&name);
+    registerComponent(value);
 
-	m_definition = nullptr;
+    m_definition = nullptr;
 }
 
 piranha::IrAttribute::IrAttribute(IrValue *value) {
-	m_value = value;
-	m_position = -1;
+    m_value = value;
+    m_position = -1;
 
-	registerComponent(value);
+    registerComponent(value);
 }
 
 piranha::IrAttribute::~IrAttribute() {
-	/* void */
+    /* void */
 }
 
 void piranha::IrAttribute::setValue(IrValue *value) {
-	m_value = value;
-	registerComponent(value);
+    m_value = value;
+    registerComponent(value);
 }
 
 piranha::IrParserStructure *piranha::IrAttribute::getImmediateReference(
-	const IrReferenceQuery &query, IrReferenceInfo *output) 
+    const IrReferenceQuery &query, IrReferenceInfo *output) 
 {
-	IR_INFO_OUT(err, nullptr);
-	IR_INFO_OUT(newContext, query.inputContext);
-	IR_INFO_OUT(failed, false);
+    IR_INFO_OUT(err, nullptr);
+    IR_INFO_OUT(newContext, query.inputContext);
+    IR_INFO_OUT(failed, false);
 
-	return m_value;
+    return m_value;
 }
 
 void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
-	if (m_definition == nullptr) return;
+    if (m_definition == nullptr) return;
 
-	IrReferenceInfo info;
-	IrReferenceQuery query;
-	query.inputContext = context;
-	query.recordErrors = false;
-	IrParserStructure *finalReference = getReference(query, &info);
+    IrReferenceInfo info;
+    IrReferenceQuery query;
+    query.inputContext = context;
+    query.recordErrors = false;
+    IrParserStructure *finalReference = getReference(query, &info);
 
-	if (info.failed) return;
-	if (info.reachedDeadEnd) return;
+    if (info.failed) return;
+    if (info.reachedDeadEnd) return;
 
-	if (!info.touchedMainContext && !context->isEmpty()) return;
-	if (info.isFixedType() && !context->isEmpty()) return;
+    if (!info.touchedMainContext && !context->isEmpty()) return;
+    if (info.isFixedType() && !context->isEmpty()) return;
 
-	IrNodeDefinition *typeDefinition = m_definition->getTypeDefinition();
+    IrNodeDefinition *typeDefinition = m_definition->getTypeDefinition();
 
-	if (typeDefinition != nullptr && m_definition->getDirection() == IrAttributeDefinition::INPUT) {
-		IrNode *refAsNode = finalReference->getAsNode();
+    if (typeDefinition != nullptr && m_definition->getDirection() == IrAttributeDefinition::INPUT) {
+        IrNode *refAsNode = finalReference->getAsNode();
 
-		if (info.isFixedType()) {
-			if (info.fixedType == typeDefinition) return;
-		}
+        if (info.isFixedType()) {
+            if (info.fixedType == typeDefinition) return;
+        }
 
-		if (refAsNode != nullptr) {
-			IrNodeDefinition *definition = refAsNode->getDefinition();
-			if (definition == nullptr) return;
-			if (definition == typeDefinition) return; // Type is confirmed to be correct
-		}
+        if (refAsNode != nullptr) {
+            IrNodeDefinition *definition = refAsNode->getDefinition();
+            if (definition == nullptr) return;
+            if (definition == typeDefinition) return; // Type is confirmed to be correct
+        }
 
-		if (m_rules == nullptr) return;
+        if (m_rules == nullptr) return;
 
-		const ChannelType *type = info.isFixedType() 
-			? info.fixedType->getChannelType() 
-			: finalReference->getImmediateChannelType();
-		const ChannelType *expectedType = typeDefinition->getChannelType();
+        const ChannelType *type = info.isFixedType() 
+            ? info.fixedType->getChannelType() 
+            : finalReference->getImmediateChannelType();
+        const ChannelType *expectedType = typeDefinition->getChannelType();
 
-		if (type == expectedType && expectedType != nullptr) return; // No conversion necessary
+        if (type == expectedType && expectedType != nullptr) return; // No conversion necessary
 
-		bool validConversion = m_rules->checkConversion({ type, expectedType });
-		if (validConversion) return;
+        bool validConversion = m_rules->checkConversion({ type, expectedType });
+        if (validConversion) return;
 
-		IrCompilationUnit *unit = getParentUnit();
-		unit->addCompilationError(new CompilationError(*getSummaryToken(),
-			ErrorCode::IncompatibleType, context));
-	}
+        IrCompilationUnit *unit = getParentUnit();
+        unit->addCompilationError(new CompilationError(*getSummaryToken(),
+            ErrorCode::IncompatibleType, context));
+    }
 }

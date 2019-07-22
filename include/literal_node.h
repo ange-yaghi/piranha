@@ -7,19 +7,19 @@
 
 namespace piranha {
 
-	template <typename LiteralType>
-	class LiteralNode : public Node {
-	public:
-		LiteralNode() {}
-		~LiteralNode() {}
+    template <typename LiteralType>
+    class LiteralNode : public Node {
+    public:
+        LiteralNode() {}
+        ~LiteralNode() {}
 
-		virtual void setData(LiteralType data) = 0;
-	};
+        virtual void setData(LiteralType data) = 0;
+    };
 
-	typedef LiteralNode<piranha::native_string> StringLiteralNode;
-	typedef LiteralNode<piranha::native_int> IntLiteralNode;
-	typedef LiteralNode<piranha::native_float> FloatLiteralNode;
-	typedef LiteralNode<piranha::native_bool> BoolLiteralNode;
+    typedef LiteralNode<piranha::native_string> StringLiteralNode;
+    typedef LiteralNode<piranha::native_int> IntLiteralNode;
+    typedef LiteralNode<piranha::native_float> FloatLiteralNode;
+    typedef LiteralNode<piranha::native_bool> BoolLiteralNode;
 
 } /* namespace piranha */
 
