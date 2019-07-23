@@ -365,7 +365,7 @@ piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
 piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(
     IrContextTree *context, NodeProgram *program) 
 {
-    Node *node = program->getRules()->getCachedInstance(this, context);
+    Node *node = program->getCachedInstance(this, context);
 
     if (node == nullptr) node = generateNode(context, program);
     if (node != nullptr) return node->getPrimaryOutput();
@@ -375,11 +375,19 @@ piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(
 piranha::Node *piranha::IrParserStructure::generateNode(
     IrContextTree *context, NodeProgram *program) 
 {
-    Node *node = program->getRules()->getCachedInstance(this, context);
+    Node *cachedNode = program->getCachedInstance(this, context);
+	if (cachedNode != nullptr) return cachedNode;
 
-    return (node == nullptr)
-        ? _generateNode(context, program)
-        : node;
+	Node *node = _generateNode(context, program);
+	if (node != nullptr) {
+		if (program->getCachedInstance(this, context) == nullptr) {
+			node->setIrContext(context);
+			node->setIrStructure(this);
+			program->addNode(node);
+		}
+	}
+
+	return node;
 }
 
 piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(

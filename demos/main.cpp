@@ -8,16 +8,18 @@
 
 #include <iostream>
 #include <string>
+#include <chrono>
 
 int main() {
     std::string filename;
     std::cin >> filename;
 
     while (true) {
-        std::cout << " -- Compiling and running --------------" << std::endl;
+		auto startCompile = std::chrono::high_resolution_clock::now();
+
+        std::cout << " -- Compiling --------------" << std::endl;
         piranha::NodeProgram nodeProgram;
         piranha_demo::ReferenceLanguageRules languageRules;
-        languageRules.setNodeProgram(&nodeProgram);
         languageRules.registerBuiltinNodeTypes();
         nodeProgram.setRules(&languageRules);
 
@@ -27,10 +29,24 @@ int main() {
         piranha_demo::printErrorTrace(compiler.getErrorList());
 
         if (compiler.getErrorList()->getErrorCount() == 0) {
-            unit->build(&nodeProgram);
-            nodeProgram.execute();
-        }
+			unit->build(&nodeProgram);
 
+			auto endCompile = std::chrono::high_resolution_clock::now();
+
+			std::cout << " -- Running --------------" << std::endl;
+            nodeProgram.execute();
+
+			auto endExecute = std::chrono::high_resolution_clock::now();
+
+			nodeProgram.writeAssembly("asm.txt");
+
+			std::cout << std::endl;
+			std::cout << " ----------------------" << std::endl;
+			std::cout << " Compile time:   " << 
+				(endCompile - startCompile).count() * 1.0e-6 << " ms" << std::endl;
+			std::cout << " Execution time: " << 
+				(endExecute - endCompile).count() * 1.0e-6 << " ms" << std::endl;
+        }
         std::cout << std::endl << std::endl;
         std::cin.get();
     }
