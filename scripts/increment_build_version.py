@@ -83,6 +83,12 @@ if __name__ == "__main__":
             os.makedirs(mypath + '/workspace/tracking/')
         except FileExistsError:
             pass
+
+    # Create other important directories
+    try:
+        os.makedirs(mypath + '/workspace/asm/')
+    except FileExistsError:
+        pass
         
     # Increment the build version
     build_version += 1

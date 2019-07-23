@@ -34,20 +34,20 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
     program.execute();
     
     double value;
-    program.getNode(0)->getPrimaryOutput()->fullCompute((void *)&value);
+    program.getNode(1)->getPrimaryOutput()->fullCompute((void *)&value);
     EXPECT_EQ(value, 10.0);
 
-    program.getNode(1)->getPrimaryOutput()->fullCompute((void *)&value);
+    program.getNode(3)->getPrimaryOutput()->fullCompute((void *)&value);
     EXPECT_EQ(value, 5.0);
 
-    program.getNode(2)->getPrimaryOutput()->fullCompute((void *)&value);
+    program.getNode(5)->getPrimaryOutput()->fullCompute((void *)&value);
     EXPECT_EQ(value, 15.0);
 
     std::string stringValue;
-    program.getNode(3)->getPrimaryOutput()->fullCompute((void *)&stringValue);
+    program.getNode(7)->getPrimaryOutput()->fullCompute((void *)&stringValue);
     EXPECT_EQ(stringValue, "5");
 
-    program.getNode(4)->getPrimaryOutput()->fullCompute((void *)&stringValue);
+    program.getNode(9)->getPrimaryOutput()->fullCompute((void *)&stringValue);
     EXPECT_EQ(stringValue, "123");
 }
 
@@ -62,7 +62,7 @@ TEST(IrConstructionTests, IrConstructionNestedTest) {
 
     program.execute();
 
-    Node *topLevel = program.getNode(4);
+    Node *topLevel = program.getNode(5);
     EXPECT_EQ(topLevel->getContext()->getContext()->getName(), "top_level");
 
     double value;

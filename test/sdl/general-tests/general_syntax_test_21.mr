@@ -1,0 +1,47 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node embedded {
+    input thing [int];
+    input empty_input;
+
+    output test_int1 [int];
+    output test_int2: thing;
+    output test_string: "";
+    output test_float: 10.0;
+    output empty: empty_input;
+}
+
+node prompt_info {
+    input msg [string]: "Test message";
+    input data: 10
+    input empty;
+
+    output str_msg: msg;
+    output some_data: data;
+    output embedded: embedded(empty, empty);
+}
+
+node do_something {
+    input prompt_info [prompt_info] : 10; // Invalid default value
+    output some_data [float]: prompt_info.some_data;
+    output original_prompt: prompt_info;
+    
+    string(prompt_info.embedded.test_int1 + prompt_info.embedded.test_string)
+    string(prompt_info.embedded.test_int1)
+    string(prompt_info.embedded.test_int2 + prompt_info.embedded.test_string)
+    string(prompt_info.embedded.test_int2)
+
+    string(prompt_info.embedded.test_float + 5.0)
+    string(prompt_info.embedded.test_string)
+    string(prompt_info.embedded.empty) // Should not cause an error
+}
+
+node do_something_else {
+    input some_value [int];
+    
+    console_out("Something else: " + string(float(some_value)))
+}
+
+do_something_else(
+    do_something().some_data
+)

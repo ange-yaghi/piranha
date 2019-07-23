@@ -68,16 +68,16 @@ namespace piranha {
         }
 
         virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-            Node *cachedNode = program->getRules()->getCachedInstance(this, context);
-            if (cachedNode != nullptr) return cachedNode;
-            else {
-                Node *newNode = generateNode(m_value, context, program);
-                newNode->initialize();
-                newNode->setIrContext(context);
-                newNode->setIrStructure(this);
+            //Node *cachedNode = program->getRules()->getCachedInstance(this, context);
+            //if (cachedNode != nullptr) return cachedNode;
+            //else {
+            Node *newNode = generateNode(m_value, context, program);
+            newNode->initialize();
+            //newNode->setIrContext(context);
+            //newNode->setIrStructure(this);
 
-                return newNode;
-            }
+            return newNode;
+            //}
         }
 
     protected:

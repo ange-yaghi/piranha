@@ -1,4 +1,12 @@
 private import "standard-library/standard_library.mr" as std
 
-std::vector vec(1, 2, 3, 4)
-std::console_out(string(vec.x) + "\n")
+std::vector vec1(1, 2, 3, 4)
+std::vector vec2(4, 3, 2, 1)
+
+node format_vector {
+    input a [std::vector];
+    alias output __out:
+        string(a.x) + ", " + string(a.y) + ", " + string(a.z) + ", " + string(a.w);
+}
+
+std::console_out(format_vector((vec1 + vec2 * vec1)) + "\n")

@@ -1,0 +1,20 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node embedded {
+    input thing [int];
+    output test_int2: thing;
+}
+
+node prompt_info {
+    input empty;
+    output embedded: embedded(empty);
+}
+
+node do_something {
+    input prompt_info [prompt_info] : 10; // Invalid default value
+    
+    string(prompt_info.embedded.test_int2 + "")
+    string(prompt_info.embedded.test_int2)
+}
+
+do_something()

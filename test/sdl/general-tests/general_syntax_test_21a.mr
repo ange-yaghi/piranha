@@ -1,0 +1,20 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node embedded {
+    input thing [int];
+    output test_int2: thing;
+}
+
+node fake_type {}
+
+node checker {
+    input a [fake_type];
+}
+
+node test {
+    input test [embedded] : 5;
+
+    checker(test.test_int2)
+}
+
+test()
