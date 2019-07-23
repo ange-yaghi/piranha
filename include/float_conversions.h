@@ -1,8 +1,9 @@
 #ifndef PIRANHA_FLOAT_CONVERSIONS_H
 #define PIRANHA_FLOAT_CONVERSIONS_H
 
-#include "pipe_node.h"
 #include "fundamental_output.h"
+
+#include "pipe_node.h"
 
 namespace piranha {
 

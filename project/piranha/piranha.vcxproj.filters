@@ -303,6 +303,15 @@
     <ClInclude Include="..\..\include\language_rules.h">
       <Filter>Header Files\syntax\language-rules</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\divide_operation_output.h">
+      <Filter>Header Files\nodes\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\multiply_operation_output.h">
+      <Filter>Header Files\nodes\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\subtract_operation_output.h">
+      <Filter>Header Files\nodes\operations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">

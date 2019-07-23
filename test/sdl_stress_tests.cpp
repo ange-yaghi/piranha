@@ -24,7 +24,10 @@ TEST(IrSyntaxStressTests, IrSyntaxStressTest1) {
     const ErrorList *errors;
     compileFile("stress-testing/stress_test_1.mr", &errors);
 
-    EXPECT_EQ(errors->getErrorCount(), 9);
+    EXPECT_EQ(errors->getErrorCount(), 11);
+
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedBuiltinType, 16));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedBuiltinType, 20));
 
     EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 50));
     EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 51));

@@ -166,9 +166,11 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\autogen\stack.hh" />
     <ClInclude Include="..\..\include\console_input_node.h" />
     <ClInclude Include="..\..\include\console_output_node.h" />
+    <ClInclude Include="..\..\include\divide_operation_output.h" />
     <ClInclude Include="..\..\include\exceptions.h" />
     <ClInclude Include="..\..\include\key_value_lookup.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
+    <ClInclude Include="..\..\include\multiply_operation_output.h" />
     <ClInclude Include="..\..\include\operation_node.h" />
     <ClInclude Include="..\..\include\add_operation_output.h" />
     <ClInclude Include="..\..\include\default_literal_node.h" />
@@ -212,6 +214,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\standard_allocator.h" />
     <ClInclude Include="..\..\include\string_cast_node.h" />
     <ClInclude Include="..\..\include\string_conversions.h" />
+    <ClInclude Include="..\..\include\subtract_operation_output.h" />
     <ClInclude Include="..\..\include\vector_constructor.h" />
     <ClInclude Include="..\..\include\vector_output.h" />
     <ClInclude Include="..\..\include\vector_split.h" />

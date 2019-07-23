@@ -1,5 +1,5 @@
 node string_channel => __piranha__string {}
-node float_channel => __piranha_float {}
+node float_channel => __piranha__float {}
 
 node float_to_string => __piranha__float_to_string {
     input __in [float];

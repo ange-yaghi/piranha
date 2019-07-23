@@ -22,9 +22,11 @@ piranha::IrCompilationUnit::~IrCompilationUnit() {
 }
 
 void piranha::IrCompilationUnit::build(NodeProgram *program) {
+	IrContextTree *context = new IrContextTree(nullptr);
+
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
-        m_nodes[i]->generateNode(nullptr, program);
+        m_nodes[i]->generateNode(context, program);
     }
 }
 

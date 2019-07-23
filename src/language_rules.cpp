@@ -17,51 +17,13 @@ piranha::LanguageRules::~LanguageRules() {
     /* void */
 }
 
-piranha::Node *piranha::LanguageRules::generateNode(IrNode *node, IrContextTree *context) {
-    Node *cachedNode = getCachedInstance(node, context);
-    if (cachedNode != nullptr) return cachedNode;
-    else {
-        IrNodeDefinition *definition = node->getDefinition();
-        if (definition == nullptr) return nullptr;
-        if (!definition->isBuiltin()) return nullptr;
-
-        Node *newNode = generateBuiltinType(definition->getBuiltinName());
-        newNode->setIrContext(context);
-        newNode->setIrStructure(node);
-
-        return newNode;
-    }
-}
-
-piranha::Node *piranha::LanguageRules::generateOperatorNode(
-    IrBinaryOperator *binOp, IrContextTree *context) 
-{
-    IrValue *left = binOp->getLeft();
-    IrValue *right = binOp->getRight();
-
-    NodeOutput *leftNodeOutput = left->generateNodeOutput(context, m_nodeProgram);
-    NodeOutput *rightNodeOutput = right->generateNodeOutput(context, m_nodeProgram);
-    
-    Node *node = generateOperator(
-        binOp->getOperator(), 
-        leftNodeOutput->getType(), 
-        rightNodeOutput->getType()
-    );
-
-    if (node != nullptr) {
-        node->initialize();
-
-        node->connectInput(leftNodeOutput, 0);
-        node->connectInput(rightNodeOutput, 1);
-
-        node->setIrContext(context);
-        node->setIrStructure(binOp);
-    }
-
-    // Make sure the user actually registered the node
-    assert(node == nullptr || getCachedInstance(binOp, context) != nullptr);
-
-    return node;
+piranha::Node *piranha::LanguageRules::generateNode(const std::string &builtinName) const {
+    //Node *cachedNode = getCachedInstance(node, context);
+    //if (cachedNode != nullptr) return cachedNode;
+    //else {
+    Node *newNode = generateBuiltinType(builtinName);
+    return newNode;
+    //}
 }
 
 std::string piranha::LanguageRules::resolveOperatorBuiltinType(
@@ -82,24 +44,6 @@ const piranha::ChannelType *piranha::LanguageRules::resolveChannelType(
         : rule->getValue().nodeType;
 }
 
-piranha::Node *piranha::LanguageRules::getCachedInstance(
-    IrParserStructure *ir, IrContextTree *context) 
-{
-    // TODO: this lookup could be made faster by having the lookup table be a tree
-    // with the first level being a lookup by node and the second by context
-
-    int nodeCount = getNodeCount();
-    for (int i = 0; i < nodeCount; i++) {
-        if (m_nodes[i]->getIrStructure() == ir) {
-            if (m_nodes[i]->getContext()->isEqual(context)) {
-                return m_nodes[i];
-            }
-        }
-    }
-
-    return nullptr;
-}
-
 piranha::Node *piranha::LanguageRules::generateOperator(
     IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) 
 {
@@ -112,14 +56,16 @@ piranha::Node *piranha::LanguageRules::generateOperator(
     return node;
 }
 
-piranha::Node *piranha::LanguageRules::generateBuiltinType(const std::string &typeName) {
+piranha::Node *piranha::LanguageRules::
+	generateBuiltinType(const std::string &typeName) const 
+{
     BuiltinRule *rule = m_builtinRules.lookup(typeName);
-    if (rule == nullptr) return nullptr;
+	if (rule == nullptr) return nullptr;
 
-    Node *newNode = rule->buildNode();
-    m_nodes.push_back(newNode);
+	Node *newNode = rule->buildNode();
+	newNode->setBuiltinName(typeName);
 
-    return newNode;
+	return newNode;
 }
 
 bool piranha::LanguageRules::checkConversion(const NodeTypeConversion &conversion) const {
@@ -139,6 +85,11 @@ std::string piranha::LanguageRules::resolveConversionBuiltinType(
     std::string *rule = m_conversionRules.lookup(conversion);
     if (rule == nullptr) return "";
     else return *rule;
+}
+
+bool piranha::LanguageRules::checkBuiltinType(const std::string &builtinType) const {
+    BuiltinRule *rule = m_builtinRules.lookup(builtinType);
+    return rule != nullptr;
 }
 
 void piranha::LanguageRules::registerLiteralType(
