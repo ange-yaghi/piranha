@@ -1,5 +1,6 @@
 private import "conversions.mr"
 
+// ADD NODES
 public node int_add => __piranha__int_add {
     input __in0 [int];
     input __in1 [int];
@@ -19,6 +20,63 @@ public node string_add => __piranha__string_add {
 }
 
 public node vector_add => __piranha__vector_add {
+    input __in0 [vector];
+    input __in1 [vector];
+    alias output __out [vector];
+}
+
+// SUBTRACT NODES
+public node int_subtract => __piranha__int_subtract {
+    input __in0 [int];
+    input __in1 [int];
+    alias output __out [int];
+}
+
+public node float_subtract => __piranha__float_subtract {
+    input __in0 [float];
+    input __in1 [float];
+    alias output __out [float];
+}
+
+public node vector_subtract => __piranha__vector_subtract {
+    input __in0 [vector];
+    input __in1 [vector];
+    alias output __out [vector];
+}
+
+// MULTIPLY NODES
+public node int_multiply => __piranha__int_multiply {
+    input __in0 [int];
+    input __in1 [int];
+    alias output __out [int];
+}
+
+public node float_multiply => __piranha__float_multiply {
+    input __in0 [float];
+    input __in1 [float];
+    alias output __out [float];
+}
+
+public node vector_multiply => __piranha__vector_multiply {
+    input __in0 [vector];
+    input __in1 [vector];
+    alias output __out [vector];
+}
+
+// DIVIDE NODES
+public node int_divide => __piranha__int_divide {
+    input __in0 [int];
+    input __in1 [int];
+    alias output __out [int];
+}
+
+public node float_divide => __piranha__float_divide {
+    input __in0 [float];
+    input __in1 [float];
+    alias output __out [float];
+}
+
+public node vector_divide => __piranha__vector_divide {
     input __in0 [vector];
     input __in1 [vector];
     alias output __out [vector];

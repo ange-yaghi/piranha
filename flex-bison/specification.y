@@ -234,25 +234,25 @@ type_name_namespace
   ;
 
 node
-  : type_name_namespace LABEL connection_block      { $$ = new IrNode($1.data[1], $2, $3, $1.data[0]); }
-  | type_name_namespace connection_block            {
-                                                        IrTokenInfo_string name;
-                                                        name.specified = false;
-                                                        name.data = "";
+  : type_name_namespace LABEL connection_block          { $$ = new IrNode($1.data[1], $2, $3, $1.data[0]); }
+  | type_name_namespace connection_block                {
+                                                            IrTokenInfo_string name;
+                                                            name.specified = false;
+                                                            name.data = "";
 
-                                                        $$ = new IrNode($1.data[1], name, $2, $1.data[0]);
-                                                    }
+                                                            $$ = new IrNode($1.data[1], name, $2, $1.data[0]);
+                                                        }
   ;
 
 node_list
-  : node                                            {
-                                                        $$ = new IrNodeList();
-                                                        $$->add($1);
-                                                    }
-  | node_list node                                  { 
-                                                        $$ = $1;
-                                                        $1->add($2);  
-                                                    }
+  : node                                                {
+                                                            $$ = new IrNodeList();
+                                                            $$->add($1);
+                                                        }
+  | node_list node                                      { 
+                                                            $$ = $1;
+                                                            $1->add($2);  
+                                                        }
   | node_list error                                     { $$ = $1; }
   ;
 

@@ -210,3 +210,91 @@ TEST(GeneralTests, GeneralSyntaxTest_17) {
 
     program.execute();
 }
+
+TEST(GeneralTests, GeneralSyntaxTest_18) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_18.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 1);
+    
+    EXPECT_TRUE(findError(errList, ErrorCode::UndefinedBuiltinType, 1, nullptr, false));
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_19) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_19.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 3);
+
+    EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 7, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 17, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 27, nullptr, false));
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_20) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_20.mr", &errList, &rules);
+
+    EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 7, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 12, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 16, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 26, nullptr, false));
+
+    EXPECT_EQ(errList->getErrorCount(), 4);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_21) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_21.mr", &errList, &rules);
+
+    EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 17, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 29, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 31, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 25, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 30, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 32, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 46, nullptr, false));
+
+    EXPECT_EQ(errList->getErrorCount(), 8);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_21a) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_21a.mr", &errList, &rules);
+
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 15, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 17, nullptr, false));
+
+    EXPECT_EQ(errList->getErrorCount(), 2);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_21b) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_21b.mr", &errList, &rules);
+
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 14, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 16, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 17, nullptr, false));
+
+    EXPECT_EQ(errList->getErrorCount(), 3);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_22) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_22.mr", &errList, &rules);
+
+    EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 17, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 33, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 38, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 48, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::OutputWithNoDefinition, 7, nullptr, false));
+
+    EXPECT_EQ(errList->getErrorCount(), 5);
+}

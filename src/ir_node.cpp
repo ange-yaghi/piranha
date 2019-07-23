@@ -330,9 +330,8 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         Node *node = getScopeParent()
             ->_generateNodeOutput(context, program)
             ->getInterface();
-		if (node != nullptr) {
-			node->setBuiltinName(m_definition->getBuiltinName());
-		}
+
+		if (node != nullptr) node->setBuiltinName(m_definition->getBuiltinName());
 
 		return node;
     }

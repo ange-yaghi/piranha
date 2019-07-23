@@ -51,6 +51,7 @@ namespace piranha {
         extern const ErrorCode_struct StandardOutputWithType;
         extern const ErrorCode_struct InputSpecifiedMultipleTimesPositional;
         extern const ErrorCode_struct DuplicateNodeDefinition;
+        extern const ErrorCode_struct UndefinedBuiltinType;
 
         // [T] - Type errors
         extern const ErrorCode_struct IncompatibleType;

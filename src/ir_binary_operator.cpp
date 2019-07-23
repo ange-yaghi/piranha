@@ -73,9 +73,19 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
             touchedMainContext = true;
         }
 
+        IrParserStructure *skeletonType = nullptr;
+        if (basicInfo.isFixedType()) {
+            skeletonType = basicInfo.fixedType;
+        }
+
         IrContextTree *currentContext = basicInfo.newContext;
         IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
+
         IrParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
+        // Try the fixed type
+        if (publicAttribute == nullptr && skeletonType != nullptr) {
+            publicAttribute = skeletonType->resolveLocalName(labelConstant->getValue());
+        }
 
         if (publicAttribute == nullptr) {
             IR_FAIL();
@@ -147,7 +157,10 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
             m_leftOperand->getReference(leftQuery, &leftInfo);
 
         if (leftInfo.failed) return;
-        if (leftInfo.reachedDeadEnd) return;
+        if (leftInfo.reachedDeadEnd) {
+            if (!leftInfo.isFixedType()) return;
+            else leftReference = leftInfo.fixedType;
+        }
 
         IrReferenceInfo rightInfo;
         IrReferenceQuery rightQuery;
@@ -158,10 +171,17 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
             m_rightOperand->getReference(rightQuery, &rightInfo);
 
         if (rightInfo.failed) return;
-        if (rightInfo.reachedDeadEnd) return;
+        if (rightInfo.reachedDeadEnd) {
+            if (!rightInfo.isFixedType()) return;
+            else rightReference = rightInfo.fixedType;
+        }
 
-        const ChannelType *leftType = leftReference->getImmediateChannelType();
-        const ChannelType *rightType = rightReference->getImmediateChannelType();
+        const ChannelType *leftType = (!leftInfo.isFixedType()) 
+            ? leftReference->getImmediateChannelType()
+            : leftInfo.fixedType->getChannelType();
+        const ChannelType *rightType = (!rightInfo.isFixedType())
+            ? rightReference->getImmediateChannelType()
+            : rightInfo.fixedType->getChannelType();
 
         std::string builtinType = 
             m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);

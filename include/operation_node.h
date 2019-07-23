@@ -22,7 +22,7 @@ namespace piranha {
         }
     };
 
-    template <typename FundamentalType>
+    template <typename FundamentalType, template<class> class OperationNodeType>
     class OperationNodeSpecialized : public OperationNode {
     public:
         OperationNodeSpecialized() {
@@ -60,7 +60,7 @@ namespace piranha {
         }
 
     protected:
-        AddOperationNodeOutput<FundamentalType> m_output;
+        OperationNodeType<FundamentalType> m_output;
     };
 
 } /* namespace piranha */

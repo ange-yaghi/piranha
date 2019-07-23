@@ -24,6 +24,18 @@ namespace piranha {
         vector operator+(const vector &v) const {
             return { x + v.x, y + v.y, z + v.z, w + v.w };
         }
+
+        vector operator-(const vector &v) const {
+            return { x - v.x, y - v.y, z - v.z, w - v.w };
+        }
+
+        vector operator/(const vector &v) const {
+            return { x / v.x, y / v.y, z / v.z, w / v.w };
+        }
+
+        vector operator*(const vector &v) const {
+            return { x * v.x, y * v.y, z * v.z, w * v.w };
+        }
     };
 
     // Native types

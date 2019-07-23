@@ -202,4 +202,16 @@ void piranha::IrNodeDefinition::_validate() {
             }
         }
     }
+
+    // Check that the builtin type is a real type
+    if (isBuiltin()) {
+        std::string builtinName = getBuiltinName();
+
+        if (m_rules != nullptr) {
+            if (!m_rules->checkBuiltinType(builtinName)) {
+                unit->addCompilationError(new CompilationError(*getBuiltinNameToken(),
+                    ErrorCode::UndefinedBuiltinType));
+            }
+        }
+    }
 }

@@ -87,6 +87,11 @@ std::string piranha::LanguageRules::resolveConversionBuiltinType(
     else return *rule;
 }
 
+bool piranha::LanguageRules::checkBuiltinType(const std::string &builtinType) const {
+    BuiltinRule *rule = m_builtinRules.lookup(builtinType);
+    return rule != nullptr;
+}
+
 void piranha::LanguageRules::registerLiteralType(
     LiteralType literalType, const std::string &builtinType) 
 {
