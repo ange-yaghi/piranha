@@ -249,15 +249,14 @@ TEST(IrOperatorTests, IrOperatorTest8) {
 
     NodeProgram program;
     program.setRules(rules);
-    rules->setNodeProgram(&program);
     unit->build(&program);
 
     program.execute();
 
     std::string result;
-    program.getNode(0)->getPrimaryOutput()->fullCompute((void *)&result);
+    program.getNode(2)->getPrimaryOutput()->fullCompute((void *)&result);
     EXPECT_EQ(result, "Hello world!");
 
-    program.getNode(1)->getPrimaryOutput()->fullCompute((void *)&result);
+    program.getNode(5)->getPrimaryOutput()->fullCompute((void *)&result);
     EXPECT_EQ(result, "Goodbye world!");
 }

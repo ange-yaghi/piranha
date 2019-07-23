@@ -50,10 +50,8 @@ namespace piranha {
         const ChannelType *nodeType;
     };
 
-    struct NullType {};
-
+	struct NullType {};
     typedef Rule<BuiltinTypeInfo, Node> BuiltinRule;
-    typedef Rule<NullType, Node> ConversionRule;
 
     class LanguageRules {
     public:
@@ -62,10 +60,8 @@ namespace piranha {
 
         virtual void registerBuiltinNodeTypes() = 0;
 
-        Node *getCachedInstance(IrParserStructure *ir, IrContextTree *context);
-
         template <typename NativeType>
-        LiteralNode<NativeType> *generateLiteral(const NativeType &data) {
+        LiteralNode<NativeType> *generateLiteral(const NativeType &data) const {
             typedef LiteralNode<NativeType> ResolvedLiteralNode;
 
             LiteralType literalType = LiteralTypeLookup<NativeType>();
@@ -79,9 +75,9 @@ namespace piranha {
             return node;
         }
 
-        Node *generateNode(IrNode *node, IrContextTree *context);
-        Node *generateOperatorNode(IrBinaryOperator *binOp, IrContextTree *context);
-        std::string resolveOperatorBuiltinType(IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const;
+        Node *generateNode(const std::string &builtinName) const;
+        std::string resolveOperatorBuiltinType(
+			IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const;
         const ChannelType *resolveChannelType(const std::string &builtinName) const;
 
         template <typename NativeType>
@@ -90,11 +86,6 @@ namespace piranha {
         template<> std::string getLiteralBuiltinName<piranha::native_string>() const  { return *m_literalRules.lookup(LITERAL_STRING); }
         template<> std::string getLiteralBuiltinName<piranha::native_int>() const  { return *m_literalRules.lookup(LITERAL_INT); }
         template<> std::string getLiteralBuiltinName<piranha::native_float>() const { return *m_literalRules.lookup(LITERAL_FLOAT); }
-
-        int getNodeCount() const { return (int)m_nodes.size(); }
-
-        void setNodeProgram(NodeProgram *program) { m_nodeProgram = program; }
-        NodeProgram *getNodeProgram() const { return m_nodeProgram; }
 
         bool checkConversion(const NodeTypeConversion &conversion) const;
         Node *generateConversion(const NodeTypeConversion &conversion);
@@ -105,15 +96,7 @@ namespace piranha {
         virtual Node *generateOperator(IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right);
 
     protected:
-        Node *generateBuiltinType(const std::string &typeName);
-
-        template <typename NodeType>
-        Node *allocateNode() {
-            NodeType *newNode = new NodeType();
-            m_nodes.push_back(newNode);
-
-            return newNode;
-        }
+        Node *generateBuiltinType(const std::string &typeName) const;
 
         template <typename NodeType>
         void registerBuiltinType(const std::string &builtinName, const ChannelType *nodeType = nullptr) {
@@ -131,7 +114,7 @@ namespace piranha {
         LiteralNode<BaseType> *generateLiteralInternal() { return nullptr; }
 
     private:
-        std::vector<Node *> m_nodes;
+        //std::vector<Node *> m_nodes;
 
         KeyValueLookup<std::string, BuiltinRule> m_builtinRules;
         KeyValueLookup<NodeTypeConversion, std::string> m_conversionRules;

@@ -7,6 +7,8 @@ namespace piranha {
 
     class Node;
     class LanguageRules;
+	class IrParserStructure;
+	class IrContextTree;
 
     class NodeProgram {
     public:
@@ -21,6 +23,10 @@ namespace piranha {
 
         void setRules(LanguageRules *rules) { m_rules = rules; }
         LanguageRules *getRules() { return m_rules; }
+
+		Node *getCachedInstance(IrParserStructure *ir, IrContextTree *context);
+
+		void writeAssembly(const std::string &fname) const;
 
     protected:
         std::vector<Node *> m_nodes;
