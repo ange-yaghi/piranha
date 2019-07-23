@@ -60,7 +60,10 @@ void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
     IrParserStructure *finalReference = getReference(query, &info);
 
     if (info.failed) return;
-    if (info.reachedDeadEnd) return;
+    if (info.reachedDeadEnd) {
+        if (!info.isFixedType()) return;
+        else finalReference = info.fixedType;
+    }
 
     if (!info.touchedMainContext && !context->isEmpty()) return;
     if (info.isFixedType() && !context->isEmpty()) return;

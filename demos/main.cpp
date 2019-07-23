@@ -17,7 +17,7 @@ int main() {
     while (true) {
 		auto startCompile = std::chrono::high_resolution_clock::now();
 
-        std::cout << " -- Compiling --------------" << std::endl;
+        std::cout << "--- Compiling --------------" << std::endl;
         piranha::NodeProgram nodeProgram;
         piranha_demo::ReferenceLanguageRules languageRules;
         languageRules.registerBuiltinNodeTypes();
@@ -33,15 +33,15 @@ int main() {
 
 			auto endCompile = std::chrono::high_resolution_clock::now();
 
-			std::cout << " -- Running --------------" << std::endl;
+			std::cout << "--- Running --------------" << std::endl;
             nodeProgram.execute();
 
 			auto endExecute = std::chrono::high_resolution_clock::now();
 
-			nodeProgram.writeAssembly("asm.txt");
+			nodeProgram.writeAssembly("../../workspace/asm/" + unit->getPath().getStem() + ".pasm");
 
 			std::cout << std::endl;
-			std::cout << " ----------------------" << std::endl;
+			std::cout << "-----------------------" << std::endl;
 			std::cout << " Compile time:   " << 
 				(endCompile - startCompile).count() * 1.0e-6 << " ms" << std::endl;
 			std::cout << " Execution time: " << 

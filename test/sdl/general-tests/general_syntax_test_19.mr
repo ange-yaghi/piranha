@@ -1,0 +1,28 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node prompt_info {
+    input msg [string];
+    input data
+
+    output str_msg: msg;
+    output some_data: data;
+}
+
+node do_something {
+    input prompt_info [prompt_info] :
+        prompt_info("Test message", 10);
+    output some_data [float]: prompt_info.some_data;
+    output original_prompt: prompt_info;
+    
+    console_out(prompt_info.str_msg + string(": ") + string(prompt_info.some_data))
+}
+
+node do_something_else {
+    input some_value [int];
+    
+    console_out("Something else: " + string(float(some_value)))
+}
+
+do_something_else(
+    do_something().some_data
+)

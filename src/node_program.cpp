@@ -85,25 +85,25 @@ void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
 		Node *node = getNode(i);
 		std::string builtinName = node->getBuiltinName();
 
-		file << builtinName << " ";
+		file << builtinName << "\n";
 
 		int nodeInputs = node->getInputCount();
 		if (nodeInputs > 0) {
-			file << "INPUTS { ";
+			file << "    INPUTS  { ";
 			for (int i = 0; i < nodeInputs; i++) {
 				const Node::NodeInputPort *port = node->getInput(i);
 				int index = *m_outputLookup.lookup(*port->input);
 
-				file << port->name << ": @" << index << "; ";
+				file << port->name << ": &" << index << "; ";
 			}
-			file << "} ";
+			file << "}\n";
 		}
 
 		int nodeOutputs = node->getOutputCount();
 		int nodeOutputReferences = node->getOutputReferenceCount();
 
 		if (nodeOutputReferences > 0 || nodeOutputs > 0) {
-			file << "OUTPUTS { ";
+			file << "    OUTPUTS { ";
 			for (int i = 0; i < nodeOutputs; i++) {
 				const Node::NodeOutputPort *port = node->getOutput(i);
 				int index = *m_outputLookup.lookup(port->output);
@@ -115,12 +115,10 @@ void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
 				const Node::NodeOutputPortReference *port = node->getOutputReference(i);
 				int index = *m_outputLookup.lookup(*port->output);
 
-				file << port->name << ": @" << index << "; ";
+				file << port->name << ": &" << index << "; ";
 			}
-			file << "}";
+			file << "}\n";
 		}
-
-		file << "\n";
 	}
 
 	file.close();

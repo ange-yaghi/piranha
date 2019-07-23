@@ -91,6 +91,8 @@ namespace piranha {
         Node *generateConversion(const NodeTypeConversion &conversion);
         std::string resolveConversionBuiltinType(const NodeTypeConversion &conversion) const;
 
+        bool checkBuiltinType(const std::string &builtinType) const;
+
     protected:
         // Main operator hook
         virtual Node *generateOperator(IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right);

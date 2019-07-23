@@ -180,10 +180,16 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
         IrParserStructure *reference = 
             immediateReference->getReference(referenceQuery, &referenceInfo);
 
-        if (referenceInfo.failed || referenceInfo.reachedDeadEnd) return;
+        if (referenceInfo.failed) return;
+        if (referenceInfo.reachedDeadEnd) {
+            // A dead end is okay as long as the fixed type is known
+            if (!referenceInfo.isFixedType()) return;
+            else reference = referenceInfo.fixedType;
+        }
 
-        IrNodeDefinition *fixedTypeDefinition = nullptr;
-        if (referenceInfo.isFixedType()) fixedTypeDefinition = referenceInfo.fixedType;
+        IrNodeDefinition *fixedTypeDefinition = (referenceInfo.isFixedType())
+            ? referenceInfo.fixedType
+            : nullptr;
         // IMPORTANT: fixed type information from the immediate reference cannot be 
         // used because it will always get forced to the type of this attribute definition
         // thereby preventing automatic conversion from taking place.
@@ -255,7 +261,11 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
         IrParserStructure *defaultReference = m_defaultValue->getReference(query, &info);
 
         if (info.failed) return;
-        if (info.reachedDeadEnd) return;
+        if (info.reachedDeadEnd) {
+            // A dead end is okay as long as the fixed type is known
+            if (!info.isFixedType()) return;
+            else defaultReference = info.fixedType;
+        }
 
         if (!info.touchedMainContext) {
             if (!context->isEmpty()) return;
