@@ -81,3 +81,41 @@ public node vector_divide => __piranha__vector_divide {
     input __in1 [vector];
     alias output __out [vector];
 }
+
+// UNARY OPERATORS
+
+// Numerical negate
+public node float_negate => __piranha__float_negate {
+    input __in [float];
+    alias output __out [float];
+}
+
+public node int_negate => __piranha__int_negate {
+    input __in [int];
+    alias output __out [int];
+}
+
+public node vector_negate => __piranha__vector_negate {
+    input __in [vector];
+    alias output __out [vector];
+}
+
+public node float_positive => __piranha__float_positive {
+    input __in [float];
+    alias output __out [float];
+}
+
+public node int_positive => __piranha__int_positive {
+    input __in [int];
+    alias output __out [int];
+}
+
+public node vector_positive => __piranha__vector_positive {
+    input __in [vector];
+    alias output __out [vector];
+}
+
+public node bool_negate => __piranha__bool_negate {
+    input __in [bool];
+    alias output __out [bool];
+}

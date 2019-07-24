@@ -10,3 +10,5 @@ node format_vector {
 }
 
 std::console_out(format_vector((vec1 + vec2 * vec1)) + "\n")
+
+std::console_out(format_vector(-(+vec1 + (-vec1) + vec1)))

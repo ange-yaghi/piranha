@@ -1,7 +1,8 @@
-public node int_channel => __piranha__int           { /* void */ }
-public node float_channel => __piranha__float       { /* void */ }
-public node string_channel => __piranha__string     { /* void */ }
-public node vector_channel => __piranha__vector { 
+public node int_channel =>      __piranha__int      { /* void */ }
+public node float_channel =>    __piranha__float    { /* void */ }
+public node string_channel =>   __piranha__string   { /* void */ }
+public node bool_channel =>     __piranha__bool     { /* void */ }
+public node vector_channel =>   __piranha__vector { 
     output x [float];
     output y [float];
     output z [float];
@@ -21,6 +22,11 @@ public node float {
 public node string {
     input __in              [string_channel];
     alias output __out      [string_channel]: __in;
+}
+
+public node bool {
+    input __in              [bool_channel];
+    alias output __out      [bool_channel]: __in;
 }
 
 public node vector => __piranha__vector_constructor {

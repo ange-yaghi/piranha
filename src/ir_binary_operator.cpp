@@ -132,9 +132,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
             IR_FAIL();
             return nullptr;
         }
-        else {
-            return *pNode;
-        }
+        else return *pNode;
     }
 }
 

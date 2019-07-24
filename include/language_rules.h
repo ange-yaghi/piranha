@@ -8,6 +8,7 @@
 #include "operation_node.h"
 #include "key_value_lookup.h"
 #include "channel_type.h"
+#include "ir_unary_operator.h"
 
 #include <string>
 #include <vector>
@@ -46,6 +47,16 @@ namespace piranha {
         }
     };
 
+    struct UnaryOperatorMapping {
+        IrUnaryOperator::OPERATOR op;
+        const ChannelType *type;
+
+        bool operator==(const UnaryOperatorMapping &ref) const {
+            bool typesMatch = type == ref.type;
+            return typesMatch && (op == ref.op);
+        }
+    };
+
     struct BuiltinTypeInfo {
         const ChannelType *nodeType;
     };
@@ -78,6 +89,8 @@ namespace piranha {
         Node *generateNode(const std::string &builtinName) const;
         std::string resolveOperatorBuiltinType(
 			IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const;
+        std::string resolveUnaryOperatorBuiltinType(
+            IrUnaryOperator::OPERATOR op, const ChannelType *type) const;
         const ChannelType *resolveChannelType(const std::string &builtinName) const;
 
         template <typename NativeType>
@@ -94,8 +107,8 @@ namespace piranha {
         bool checkBuiltinType(const std::string &builtinType) const;
 
     protected:
-        // Main operator hook
-        virtual Node *generateOperator(IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right);
+        Node *generateOperator(IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right);
+        Node *generateUnaryOperator(IrUnaryOperator::OPERATOR op, const ChannelType *type);
 
     protected:
         Node *generateBuiltinType(const std::string &typeName) const;
@@ -110,6 +123,7 @@ namespace piranha {
 
         void registerConversion(const NodeTypeConversion &conversion, const std::string &builtinType);
         void registerOperator(const OperatorMapping &op, const std::string &builtinType);
+        void registerUnaryOperator(const UnaryOperatorMapping &op, const std::string &builtinType);
 
     public:
         template <typename BaseType>
@@ -121,6 +135,7 @@ namespace piranha {
         KeyValueLookup<std::string, BuiltinRule> m_builtinRules;
         KeyValueLookup<NodeTypeConversion, std::string> m_conversionRules;
         KeyValueLookup<OperatorMapping, std::string> m_operatorRules;
+        KeyValueLookup<UnaryOperatorMapping, std::string> m_unaryOperatorRules;
         KeyValueLookup<LiteralType, std::string> m_literalRules;
 
         NodeProgram *m_nodeProgram;

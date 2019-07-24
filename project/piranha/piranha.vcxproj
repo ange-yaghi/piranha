@@ -164,6 +164,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
   <ItemGroup>
     <ClInclude Include="..\..\autogen\parser.auto.h" />
     <ClInclude Include="..\..\autogen\stack.hh" />
+    <ClInclude Include="..\..\include\bool_negate_operation.h" />
     <ClInclude Include="..\..\include\console_input_node.h" />
     <ClInclude Include="..\..\include\console_output_node.h" />
     <ClInclude Include="..\..\include\divide_operation_output.h" />
@@ -171,10 +172,11 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\key_value_lookup.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
     <ClInclude Include="..\..\include\multiply_operation_output.h" />
+    <ClInclude Include="..\..\include\no_op_node.h" />
+    <ClInclude Include="..\..\include\num_negate_operation.h" />
     <ClInclude Include="..\..\include\operation_node.h" />
     <ClInclude Include="..\..\include\add_operation_output.h" />
     <ClInclude Include="..\..\include\default_literal_node.h" />
-    <ClInclude Include="..\..\include\float_cast_node.h" />
     <ClInclude Include="..\..\include\float_conversions.h" />
     <ClInclude Include="..\..\include\fundamental_output.h" />
     <ClInclude Include="..\..\include\fundamental_types.h" />
@@ -212,7 +214,6 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\ir_visibility.h" />
     <ClInclude Include="..\..\include\pipe_node.h" />
     <ClInclude Include="..\..\include\standard_allocator.h" />
-    <ClInclude Include="..\..\include\string_cast_node.h" />
     <ClInclude Include="..\..\include\string_conversions.h" />
     <ClInclude Include="..\..\include\subtract_operation_output.h" />
     <ClInclude Include="..\..\include\vector_constructor.h" />
@@ -223,7 +224,6 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
   <ItemGroup>
     <ClCompile Include="..\..\autogen\parser.auto.cpp" />
     <ClCompile Include="..\..\autogen\scanner.auto.cpp" />
-    <ClCompile Include="..\..\src\float_cast_node.cpp" />
     <ClCompile Include="..\..\src\float_conversions.cpp" />
     <ClCompile Include="..\..\src\fundamental_types.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
@@ -249,7 +249,6 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\ir_unary_operator.cpp" />
     <ClCompile Include="..\..\src\ir_value.cpp" />
     <ClCompile Include="..\..\src\standard_allocator.cpp" />
-    <ClCompile Include="..\..\src\string_cast_node.cpp" />
     <ClCompile Include="..\..\src\string_conversions.cpp" />
     <ClCompile Include="..\..\src\vector_constructor.cpp" />
   </ItemGroup>

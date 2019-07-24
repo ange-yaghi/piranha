@@ -36,14 +36,18 @@ namespace piranha {
         vector operator*(const vector &v) const {
             return { x * v.x, y * v.y, z * v.z, w * v.w };
         }
+
+        vector operator-() const {
+            return { -x, -y, -z, -w };
+        }
     };
 
     // Native types
-    typedef double            native_float;
+    typedef double          native_float;
     typedef bool            native_bool;
-    typedef std::string        native_string;
-    typedef int                native_int;
-    typedef vector            native_vector;
+    typedef std::string     native_string;
+    typedef int             native_int;
+    typedef vector          native_vector;
 
     enum LiteralType {
         LITERAL_FLOAT,

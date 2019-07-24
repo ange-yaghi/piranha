@@ -131,6 +131,7 @@
 %type <piranha::IrValue *> mul_exp;
 %type <piranha::IrValue *> add_exp;
 %type <piranha::IrValue *> primary_exp;
+%type <piranha::IrValue *> unary_exp;
 %type <piranha::IrImportStatement *> import_statement;
 %type <piranha::IrImportStatement *> import_statement_visibility;
 %type <piranha::IrImportStatement *> import_statement_short_name;
@@ -432,13 +433,29 @@ data_access
                                         }
   ;
 
-mul_exp
+unary_exp
   : data_access                         { $$ = $1; }
-  | mul_exp '*' data_access             {
+  | '-' data_access                     {
+                                            $$ = static_cast<IrValue *>(
+                                                new IrUnaryOperator(IrUnaryOperator::NUM_NEGATE, $2));
+                                        }
+  | '+' data_access                     {
+                                            $$ = static_cast<IrValue *>(
+                                                new IrUnaryOperator(IrUnaryOperator::POSITIVE, $2));
+                                        }
+  | '!' data_access                     {
+                                            $$ = static_cast<IrValue *>(
+                                                new IrUnaryOperator(IrUnaryOperator::BOOL_NEGATE, $2));
+                                        }
+  ;
+
+mul_exp
+  : unary_exp                           { $$ = $1; }
+  | mul_exp '*' unary_exp               {
                                             $$ = static_cast<IrValue *>(
                                                 new IrBinaryOperator(IrBinaryOperator::MUL, $1, $3));
                                         }
-  | mul_exp '/' data_access             {
+  | mul_exp '/' unary_exp               {
                                             $$ = static_cast<IrValue *>(
                                                 new IrBinaryOperator(IrBinaryOperator::DIV, $1, $3));
                                         }

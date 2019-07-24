@@ -25,8 +25,6 @@ namespace piranha {
         struct NodeInputPort {
             pNodeInput *input;
             std::string name;
-
-            const ChannelType *requiredType;
         };
 
         struct NodeOutputPort {
@@ -83,10 +81,6 @@ namespace piranha {
         void setProgram(NodeProgram *program) { m_program = program; }
         NodeProgram *getProgram() const { return m_program; }
 
-        // Context dependencies
-        virtual bool isMaterial() const { return false; }
-        virtual bool requiresMaterials() const { return false; }
-
     protected:
         virtual void _initialize();
         virtual void _evaluate();
@@ -105,7 +99,7 @@ namespace piranha {
 
     protected:
         std::vector<NodeInputPort> m_inputs;
-        void registerInput(pNodeInput *node, const std::string &name, const ChannelType *requiredType = nullptr);
+        void registerInput(pNodeInput *node, const std::string &name);
 
         std::vector<NodeOutputPort> m_outputs;
         void registerOutput(NodeOutput *node, const std::string &name);

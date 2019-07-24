@@ -31,9 +31,9 @@ int main() {
         if (compiler.getErrorList()->getErrorCount() == 0) {
 			unit->build(&nodeProgram);
 
+            std::cout << "--- Running --------------" << std::endl;
 			auto endCompile = std::chrono::high_resolution_clock::now();
 
-			std::cout << "--- Running --------------" << std::endl;
             nodeProgram.execute();
 
 			auto endExecute = std::chrono::high_resolution_clock::now();
