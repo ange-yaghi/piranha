@@ -22,106 +22,106 @@ void piranha::NodeProgram::addNode(Node *node) {
 }
 
 piranha::Node *piranha::NodeProgram::
-	getCachedInstance(IrParserStructure *ir, IrContextTree *context)
+    getCachedInstance(IrParserStructure *ir, IrContextTree *context)
 {
-	// TODO: this lookup could be made faster by having the lookup table be a tree
-	// with the first level being a lookup by node and the second by context
+    // TODO: this lookup could be made faster by having the lookup table be a tree
+    // with the first level being a lookup by node and the second by context
 
-	int nodeCount = getNodeCount();
-	for (int i = 0; i < nodeCount; i++) {
-		if (m_nodes[i]->getIrStructure() == ir) {
-			if (m_nodes[i]->getContext()->isEqual(context)) {
-				return m_nodes[i];
-			}
-		}
-	}
+    int nodeCount = getNodeCount();
+    for (int i = 0; i < nodeCount; i++) {
+        if (m_nodes[i]->getIrStructure() == ir) {
+            if (m_nodes[i]->getContext()->isEqual(context)) {
+                return m_nodes[i];
+            }
+        }
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
-	KeyValueLookup<NodeOutput *, int> m_outputLookup;
-	int currentIndex = 0;
+    KeyValueLookup<NodeOutput *, int> m_outputLookup;
+    int currentIndex = 0;
 
-	int nodeCount = getNodeCount();
+    int nodeCount = getNodeCount();
 
-	for (int i = 0; i < nodeCount; i++) {
-		Node *node = getNode(i);
+    for (int i = 0; i < nodeCount; i++) {
+        Node *node = getNode(i);
 
-		int nodeInputs = node->getInputCount();
-		for (int i = 0; i < nodeInputs; i++) {
-			const Node::NodeInputPort *port = node->getInput(i);
-			int *index = m_outputLookup.lookup(*port->input);
+        int nodeInputs = node->getInputCount();
+        for (int i = 0; i < nodeInputs; i++) {
+            const Node::NodeInputPort *port = node->getInput(i);
+            int *index = m_outputLookup.lookup(*port->input);
 
-			if (index == nullptr) {
-				*m_outputLookup.newValue(*port->input) = currentIndex++;
-			}
-		}
+            if (index == nullptr) {
+                *m_outputLookup.newValue(*port->input) = currentIndex++;
+            }
+        }
 
-		int nodeOutputs = node->getOutputCount();
-		for (int i = 0; i < nodeOutputs; i++) {
-			const Node::NodeOutputPort *port = node->getOutput(i);
-			int *index = m_outputLookup.lookup(port->output);
+        int nodeOutputs = node->getOutputCount();
+        for (int i = 0; i < nodeOutputs; i++) {
+            const Node::NodeOutputPort *port = node->getOutput(i);
+            int *index = m_outputLookup.lookup(port->output);
 
-			if (index == nullptr) {
-				*m_outputLookup.newValue(port->output) = currentIndex++;
-			}
-		}
+            if (index == nullptr) {
+                *m_outputLookup.newValue(port->output) = currentIndex++;
+            }
+        }
 
-		int nodeOutputReferences = node->getOutputReferenceCount();
-		for (int i = 0; i < nodeOutputReferences; i++) {
-			const Node::NodeOutputPortReference *port = node->getOutputReference(i);
-			int *index = m_outputLookup.lookup(*port->output);
+        int nodeOutputReferences = node->getOutputReferenceCount();
+        for (int i = 0; i < nodeOutputReferences; i++) {
+            const Node::NodeOutputPortReference *port = node->getOutputReference(i);
+            int *index = m_outputLookup.lookup(*port->output);
 
-			if (index == nullptr) {
-				*m_outputLookup.newValue(*port->output) = currentIndex++;
-			}
-		}
-	}
+            if (index == nullptr) {
+                *m_outputLookup.newValue(*port->output) = currentIndex++;
+            }
+        }
+    }
 
-	std::ofstream file(fname);
+    std::ofstream file(fname);
 
-	for (int i = 0; i < nodeCount; i++) {
-		Node *node = getNode(i);
-		std::string builtinName = node->getBuiltinName();
+    for (int i = 0; i < nodeCount; i++) {
+        Node *node = getNode(i);
+        std::string builtinName = node->getBuiltinName();
 
-		file << builtinName << "\n";
+        file << builtinName << "\n";
 
-		int nodeInputs = node->getInputCount();
-		if (nodeInputs > 0) {
-			file << "    INPUTS  { ";
-			for (int i = 0; i < nodeInputs; i++) {
-				const Node::NodeInputPort *port = node->getInput(i);
-				int index = *m_outputLookup.lookup(*port->input);
+        int nodeInputs = node->getInputCount();
+        if (nodeInputs > 0) {
+            file << "    INPUTS  { ";
+            for (int i = 0; i < nodeInputs; i++) {
+                const Node::NodeInputPort *port = node->getInput(i);
+                int index = *m_outputLookup.lookup(*port->input);
 
-				file << port->name << ": &" << index << "; ";
-			}
-			file << "}\n";
-		}
+                file << port->name << ": &" << index << "; ";
+            }
+            file << "}\n";
+        }
 
-		int nodeOutputs = node->getOutputCount();
-		int nodeOutputReferences = node->getOutputReferenceCount();
+        int nodeOutputs = node->getOutputCount();
+        int nodeOutputReferences = node->getOutputReferenceCount();
 
-		if (nodeOutputReferences > 0 || nodeOutputs > 0) {
-			file << "    OUTPUTS { ";
-			for (int i = 0; i < nodeOutputs; i++) {
-				const Node::NodeOutputPort *port = node->getOutput(i);
-				int index = *m_outputLookup.lookup(port->output);
+        if (nodeOutputReferences > 0 || nodeOutputs > 0) {
+            file << "    OUTPUTS { ";
+            for (int i = 0; i < nodeOutputs; i++) {
+                const Node::NodeOutputPort *port = node->getOutput(i);
+                int index = *m_outputLookup.lookup(port->output);
 
-				file << port->name << ": @" << index << "; ";
-			}
+                file << port->name << ": @" << index << "; ";
+            }
 
-			for (int i = 0; i < nodeOutputReferences; i++) {
-				const Node::NodeOutputPortReference *port = node->getOutputReference(i);
-				int index = *m_outputLookup.lookup(*port->output);
+            for (int i = 0; i < nodeOutputReferences; i++) {
+                const Node::NodeOutputPortReference *port = node->getOutputReference(i);
+                int index = *m_outputLookup.lookup(*port->output);
 
-				file << port->name << ": &" << index << "; ";
-			}
-			file << "}\n";
-		}
-	}
+                file << port->name << ": &" << index << "; ";
+            }
+            file << "}\n";
+        }
+    }
 
-	file.close();
+    file.close();
 }
 
 void piranha::NodeProgram::execute() {

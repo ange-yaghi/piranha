@@ -61,7 +61,7 @@ namespace piranha {
         const ChannelType *nodeType;
     };
 
-	struct NullType {};
+    struct NullType {};
     typedef Rule<BuiltinTypeInfo, Node> BuiltinRule;
 
     class LanguageRules {
@@ -88,7 +88,7 @@ namespace piranha {
 
         Node *generateNode(const std::string &builtinName) const;
         std::string resolveOperatorBuiltinType(
-			IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const;
+            IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const;
         std::string resolveUnaryOperatorBuiltinType(
             IrUnaryOperator::OPERATOR op, const ChannelType *type) const;
         const ChannelType *resolveChannelType(const std::string &builtinName) const;

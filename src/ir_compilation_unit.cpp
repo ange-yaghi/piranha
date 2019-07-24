@@ -22,7 +22,7 @@ piranha::IrCompilationUnit::~IrCompilationUnit() {
 }
 
 void piranha::IrCompilationUnit::build(NodeProgram *program) {
-	IrContextTree *context = new IrContextTree(nullptr);
+    IrContextTree *context = new IrContextTree(nullptr);
 
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {

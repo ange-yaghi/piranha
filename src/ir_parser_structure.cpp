@@ -379,18 +379,18 @@ piranha::Node *piranha::IrParserStructure::generateNode(
     IrContextTree *context, NodeProgram *program) 
 {
     Node *cachedNode = program->getCachedInstance(this, context);
-	if (cachedNode != nullptr) return cachedNode;
+    if (cachedNode != nullptr) return cachedNode;
 
-	Node *node = _generateNode(context, program);
-	if (node != nullptr) {
-		if (program->getCachedInstance(this, context) == nullptr) {
-			node->setIrContext(context);
-			node->setIrStructure(this);
-			program->addNode(node);
-		}
-	}
+    Node *node = _generateNode(context, program);
+    if (node != nullptr) {
+        if (program->getCachedInstance(this, context) == nullptr) {
+            node->setIrContext(context);
+            node->setIrStructure(this);
+            program->addNode(node);
+        }
+    }
 
-	return node;
+    return node;
 }
 
 piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(

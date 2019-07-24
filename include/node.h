@@ -51,23 +51,23 @@ namespace piranha {
         void setName(const std::string &name) { m_name = name; }
         std::string getName() const { return m_name; }
 
-		void setBuiltinName(const std::string &name) { m_builtinName = name; }
-		std::string getBuiltinName() const { return m_builtinName; }
+        void setBuiltinName(const std::string &name) { m_builtinName = name; }
+        std::string getBuiltinName() const { return m_builtinName; }
 
         const ChannelType *getConversion(pNodeInput input, const std::string &name);
         void connectInput(pNodeInput input, const std::string &name);
         void connectInput(pNodeInput input, int index);
         void connectDefaultInput(pNodeInput input);
-		const NodeInputPort *getInput(int index) const { return &m_inputs[index]; }
+        const NodeInputPort *getInput(int index) const { return &m_inputs[index]; }
         int getInputCount() const { return (int)m_inputs.size(); }
 
         NodeOutput *getPrimaryOutput() const;
         NodeOutput *getOutput(const std::string &name) const;
         int getOutputCount() const { return (int)m_outputs.size(); }
-		const NodeOutputPort *getOutput(int index) const { return &m_outputs[index]; }
+        const NodeOutputPort *getOutput(int index) const { return &m_outputs[index]; }
 
         int getOutputReferenceCount() const { return (int)m_outputReferences.size(); }
-		const NodeOutputPortReference *getOutputReference(int index) const { return &m_outputReferences[index]; }
+        const NodeOutputPortReference *getOutputReference(int index) const { return &m_outputReferences[index]; }
 
         bool isInitialized() const { return m_initialized; }
         bool isEvaluated() const { return m_evaluated; }
@@ -92,7 +92,7 @@ namespace piranha {
     protected:
         int m_id;
         std::string m_name;
-		std::string m_builtinName;
+        std::string m_builtinName;
 
         IrContextTree *m_context;
         IrParserStructure *m_irStructure;
