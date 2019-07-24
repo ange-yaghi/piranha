@@ -4,6 +4,11 @@
 #include "../include/ir_node.h"
 #include "../include/node.h"
 #include "../include/ir_context_tree.h"
+#include "../include/ir_node_definition.h"
+#include "../include/language_rules.h"
+#include "../include/ir_compilation_unit.h"
+#include "../include/ir_attribute.h"
+#include "../include/ir_attribute_list.h"
 
 piranha::IrUnaryOperator::IrUnaryOperator(OPERATOR op, IrValue *operand) : IrValue(IrValue::UNARY_OPERATION) {
     m_operand = operand;
@@ -19,52 +24,74 @@ piranha::IrUnaryOperator::~IrUnaryOperator() {
 piranha::IrParserStructure *piranha::IrUnaryOperator::getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output) {
     IR_RESET(query);
 
-    IrReferenceInfo basicInfo;
-    IrReferenceQuery basicQuery;
-    basicQuery.inputContext = query.inputContext;
-    basicQuery.recordErrors = false;
-    IrParserStructure *resolvedOperand = m_operand->getReference(basicQuery, &basicInfo);
+    IrNode **pNode = m_expansions.lookup(query.inputContext);
 
-    if (IR_FAILED(&basicInfo) || resolvedOperand == nullptr) {
+    if (pNode == nullptr) {
+        IR_DEAD_END();
+        return nullptr;
+    }
+    else if (*pNode == nullptr) {
         IR_FAIL();
         return nullptr;
     }
+    else return *pNode;
+}
 
-    if (basicInfo.touchedMainContext) IR_INFO_OUT(touchedMainContext, true);
+void piranha::IrUnaryOperator::_expand(IrContextTree *context) {
+    if (m_rules == nullptr) return;
+    bool emptyContext = context->isEmpty();
 
-    bool isValidError = (IR_EMPTY_CONTEXT() || basicInfo.touchedMainContext);
+    IrReferenceInfo info;
+    IrReferenceQuery query;
+    query.inputContext = context;
+    query.recordErrors = false;
+    m_operand->expandChain(context);
+    IrParserStructure *reference =
+        m_operand->getReference(query, &info);
 
-    if (m_operator == DEFAULT) {
-        IrParserStructure *result = resolvedOperand;
-
-        if (basicInfo.reachedDeadEnd) {
-            // This means that this references an input point with no default value. Obviously
-            // it makes no sense to check for further errors.
-            IR_DEAD_END();
-            return nullptr;
-        }
-
-        IrNode *asNode = resolvedOperand->getAsNode();
-        //if (asNode != nullptr) result = asNode->getDefaultPort();
-
-        if (result == nullptr) {
-            IR_FAIL();
-
-            if (query.recordErrors && isValidError) {
-                // This object does not have a default value
-                IR_ERR_OUT(new CompilationError(*m_operand->getSummaryToken(),
-                    ErrorCode::CannotFindDefaultValue, query.inputContext));
-            }
-
-            return nullptr;
-        }
-
-        if (query.inputContext != nullptr) IR_INFO_OUT(newContext, query.inputContext->newChild(asNode));
-
-        return result;
+    if (info.failed) return;
+    if (info.reachedDeadEnd) {
+        if (!info.isFixedType()) return;
+        else reference = info.fixedType;
     }
 
-    // Shouldn't reach here
-    IR_FAIL();
-    return nullptr;
+    const ChannelType *type = (!info.isFixedType())
+        ? reference->getImmediateChannelType()
+        : info.fixedType->getChannelType();
+
+    std::string builtinType =
+        m_rules->resolveUnaryOperatorBuiltinType(m_operator, type);
+
+    if (builtinType.empty()) {
+        bool touchedMainContext = (info.touchedMainContext && !info.isFixedType());
+
+        if (touchedMainContext || emptyContext) {
+            getParentUnit()->addCompilationError(
+                new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context)
+            );
+        }
+        return;
+    }
+
+    int count = 0;
+    IrCompilationUnit *parentUnit = getParentUnit();
+    IrNodeDefinition *nodeDefinition = parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
+
+    // Generate the expansion
+    IrAttribute *attribute = new IrAttribute();
+    attribute->setValue(m_operand);
+
+    IrAttributeList *attributeList = new IrAttributeList();
+    attributeList->addAttribute(attribute);
+
+    IrNode *expansion = new IrNode();
+    expansion->setAttributes(attributeList);
+    expansion->setLogicalParent(this);
+    expansion->setScopeParent(this);
+    expansion->setDefinition(nodeDefinition);
+    expansion->setRules(m_rules);
+    expansion->expand(context);
+    expansion->resolveDefinitions();
+
+    *m_expansions.newValue(context) = expansion;
 }
