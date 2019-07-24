@@ -37,7 +37,7 @@ namespace piranha {
         }
 
         virtual void registerInputs() {
-            registerInput(&m_promptInput, "prompt", &FundamentalType::StringType);
+            registerInput(&m_promptInput, "prompt");
         }
 
         virtual void registerOutputs() {

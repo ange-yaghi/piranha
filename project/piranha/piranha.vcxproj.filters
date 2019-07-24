@@ -139,6 +139,12 @@
     <Filter Include="Header Files\syntax\language-rules">
       <UniqueIdentifier>{2a870fcd-d9da-4b6b-8268-3239e8db3c6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\operations\binary">
+      <UniqueIdentifier>{0e8a9ff1-a35c-484f-9811-e69c45c7eae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\operations\unary">
+      <UniqueIdentifier>{c0008b6c-2faf-4c9e-8d31-24dc3353e460}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\node_output.h">
@@ -243,12 +249,6 @@
     <ClInclude Include="..\..\include\float_conversions.h">
       <Filter>Header Files\nodes\conversions</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\float_cast_node.h">
-      <Filter>Header Files\nodes\casts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\string_cast_node.h">
-      <Filter>Header Files\nodes\casts</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\default_literal_node.h">
       <Filter>Header Files\nodes\nodes</Filter>
     </ClInclude>
@@ -260,12 +260,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\error_list.h">
       <Filter>Header Files\syntax\error-handling</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\add_operation_output.h">
-      <Filter>Header Files\nodes\operations</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\operation_node.h">
-      <Filter>Header Files\nodes\operations</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\rule.h">
       <Filter>Header Files\syntax\language-rules</Filter>
@@ -303,14 +297,29 @@
     <ClInclude Include="..\..\include\language_rules.h">
       <Filter>Header Files\syntax\language-rules</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\add_operation_output.h">
+      <Filter>Header Files\nodes\operations\binary</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\divide_operation_output.h">
-      <Filter>Header Files\nodes\operations</Filter>
+      <Filter>Header Files\nodes\operations\binary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\multiply_operation_output.h">
-      <Filter>Header Files\nodes\operations</Filter>
+      <Filter>Header Files\nodes\operations\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\operation_node.h">
+      <Filter>Header Files\nodes\operations\binary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\subtract_operation_output.h">
-      <Filter>Header Files\nodes\operations</Filter>
+      <Filter>Header Files\nodes\operations\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\num_negate_operation.h">
+      <Filter>Header Files\nodes\operations\unary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\bool_negate_operation.h">
+      <Filter>Header Files\nodes\operations\unary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\no_op_node.h">
+      <Filter>Header Files\nodes\operations\unary</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -382,12 +391,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\float_conversions.cpp">
       <Filter>Source Files\nodes\conversions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\string_cast_node.cpp">
-      <Filter>Source Files\nodes\casts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\float_cast_node.cpp">
-      <Filter>Source Files\nodes\casts</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\compilation_error.cpp">
       <Filter>Source Files\syntax\error-handling</Filter>

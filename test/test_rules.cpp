@@ -4,8 +4,6 @@
 
 #include "../include/console_input_node.h"
 #include "../include/console_output_node.h"
-#include "../include/float_cast_node.h"
-#include "../include/string_cast_node.h"
 #include "../include/vector_constructor.h"
 #include "../include/literal_node.h"
 #include "../include/float_conversions.h"
@@ -17,6 +15,9 @@
 #include "../include/add_operation_output.h"
 #include "../include/divide_operation_output.h"
 #include "../include/multiply_operation_output.h"
+#include "../include/no_op_node.h"
+#include "../include/num_negate_operation.h"
+#include "../include/bool_negate_operation.h"
 
 TestRules::TestRules() {
     /* void */
@@ -28,11 +29,18 @@ TestRules::~TestRules() {
 
 void TestRules::registerBuiltinNodeTypes() {
     // Builtin Types
-    registerBuiltinType<piranha::FloatCastNode>("__piranha__int", &piranha::FundamentalType::IntType);
-    registerBuiltinType<piranha::FloatCastNode>("__piranha__float", &piranha::FundamentalType::FloatType);
-    registerBuiltinType<piranha::StringCastNode>("__piranha__string", &piranha::FundamentalType::StringType);
-    registerBuiltinType<piranha::VectorSplitNode>("__piranha__vector", &piranha::FundamentalType::VectorType);
-    registerBuiltinType<piranha::VectorConstructorNode>("__piranha__vector_constructor", &piranha::FundamentalType::VectorType);
+    registerBuiltinType<piranha::NoOpNode>(
+        "__piranha__int", &piranha::FundamentalType::IntType);
+    registerBuiltinType<piranha::NoOpNode>(
+        "__piranha__float", &piranha::FundamentalType::FloatType);
+    registerBuiltinType<piranha::NoOpNode>(
+        "__piranha__string", &piranha::FundamentalType::StringType);
+    registerBuiltinType<piranha::VectorSplitNode>(
+        "__piranha__vector", &piranha::FundamentalType::VectorType);
+    registerBuiltinType<piranha::VectorSplitNode>(
+        "__piranha__bool", &piranha::FundamentalType::BoolType);
+    registerBuiltinType<piranha::VectorConstructorNode>(
+        "__piranha__vector_constructor", &piranha::FundamentalType::VectorType);
 
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_int, piranha::AddOperationNodeOutput>>("__piranha__int_add");
@@ -63,6 +71,17 @@ void TestRules::registerBuiltinNodeTypes() {
         piranha::native_float, piranha::DivideOperationNodeOutput>>("__piranha__float_divide");
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_vector, piranha::AddOperationNodeOutput>>("__piranha__vector_divide");
+
+    // Unary operations
+    registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_int>>("__piranha__int_negate");
+    registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>("__piranha__float_negate");
+    registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_vector>>("__piranha__vector_negate");
+
+    registerBuiltinType<piranha::NoOpNode>("__piranha__int_positive");
+    registerBuiltinType<piranha::NoOpNode>("__piranha__float_positive");
+    registerBuiltinType<piranha::NoOpNode>("__piranha__vector_positive");
+
+    registerBuiltinType<piranha::BoolNegateOperationNode<piranha::native_bool>>("__piranha__bool_negate");
 
     registerBuiltinType<piranha::DefaultLiteralStringNode>
         ("__piranha__literal_string", &piranha::FundamentalType::StringType);
@@ -176,5 +195,41 @@ void TestRules::registerBuiltinNodeTypes() {
     registerOperator(
         { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
         "__piranha__vector_divide"
+    );
+
+    // Unary operations
+
+    // POSITIVE
+    registerUnaryOperator(
+        { piranha::IrUnaryOperator::POSITIVE, &piranha::FundamentalType::IntType },
+        "__piranha__int_positive"
+    );
+    registerUnaryOperator(
+        { piranha::IrUnaryOperator::POSITIVE, &piranha::FundamentalType::FloatType },
+        "__piranha__float_positive"
+    );
+    registerUnaryOperator(
+        { piranha::IrUnaryOperator::POSITIVE, &piranha::FundamentalType::VectorType },
+        "__piranha__vector_positive"
+    );
+
+    // NEGATIVE
+    registerUnaryOperator(
+        { piranha::IrUnaryOperator::NUM_NEGATE, &piranha::FundamentalType::IntType },
+        "__piranha__int_negative"
+    );
+    registerUnaryOperator(
+        { piranha::IrUnaryOperator::NUM_NEGATE, &piranha::FundamentalType::FloatType },
+        "__piranha__float_negative"
+    );
+    registerUnaryOperator(
+        { piranha::IrUnaryOperator::NUM_NEGATE, &piranha::FundamentalType::VectorType },
+        "__piranha__vector_negative"
+    );
+
+    // INVERT
+    registerUnaryOperator(
+        { piranha::IrUnaryOperator::BOOL_NEGATE, &piranha::FundamentalType::BoolType },
+        "__piranha__bool_negate"
     );
 }

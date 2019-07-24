@@ -12,7 +12,8 @@ namespace piranha {
         enum OPERATOR {
             DEFAULT,
             NUM_NEGATE,
-            BOOL_NEGATE
+            BOOL_NEGATE,
+            POSITIVE
         };
 
     public:
@@ -23,6 +24,9 @@ namespace piranha {
         IrValue *getOperand() const { return m_operand; }
 
         virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
+
+    protected:
+        void _expand(IrContextTree *context);
 
     protected:
         OPERATOR m_operator;

@@ -25,27 +25,27 @@ namespace piranha {
         typedef T_IrTokenInfo<T> _TokenInfo;
 
         Node *generateNode(
-            const piranha::native_float &value, IrContextTree *context, NodeProgram *program) 
+            const piranha::native_float &value, IrContextTree *context) 
         {
-            return program->getRules()->generateLiteral<piranha::native_float>(value);
+            return m_rules->generateLiteral<piranha::native_float>(value);
         }
 
         Node *generateNode(
-            const piranha::native_string &value, IrContextTree *context, NodeProgram *program) 
+            const piranha::native_string &value, IrContextTree *context) 
         {
-            return program->getRules()->generateLiteral<piranha::native_string>(value);
+            return m_rules->generateLiteral<piranha::native_string>(value);
         }
 
         Node *generateNode(
-            const piranha::native_bool &value, IrContextTree *context, NodeProgram *program) 
+            const piranha::native_bool &value, IrContextTree *context) 
         {
-            return program->getRules()->generateLiteral<piranha::native_bool>(value);
+            return m_rules->generateLiteral<piranha::native_bool>(value);
         }
 
         Node *generateNode(
-            const piranha::native_int &value, IrContextTree *context, NodeProgram *program) 
+            const piranha::native_int &value, IrContextTree *context) 
         {
-            return program->getRules()->generateLiteral<piranha::native_int>(value);
+            return m_rules->generateLiteral<piranha::native_int>(value);
         }
 
     public:
@@ -68,16 +68,10 @@ namespace piranha {
         }
 
         virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-            //Node *cachedNode = program->getRules()->getCachedInstance(this, context);
-            //if (cachedNode != nullptr) return cachedNode;
-            //else {
-            Node *newNode = generateNode(m_value, context, program);
+            Node *newNode = generateNode(m_value, context);
             newNode->initialize();
-            //newNode->setIrContext(context);
-            //newNode->setIrStructure(this);
 
             return newNode;
-            //}
         }
 
     protected:

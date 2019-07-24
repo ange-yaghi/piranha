@@ -33,7 +33,7 @@ namespace piranha {
         }
 
         virtual void registerInputs() {
-            registerInput(&m_dataOut, "data", &FundamentalType::StringType);
+            registerInput(&m_dataOut, "data");
         }
 
         virtual void registerOutputs() {

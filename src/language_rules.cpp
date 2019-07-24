@@ -18,18 +18,22 @@ piranha::LanguageRules::~LanguageRules() {
 }
 
 piranha::Node *piranha::LanguageRules::generateNode(const std::string &builtinName) const {
-    //Node *cachedNode = getCachedInstance(node, context);
-    //if (cachedNode != nullptr) return cachedNode;
-    //else {
-    Node *newNode = generateBuiltinType(builtinName);
-    return newNode;
-    //}
+    return generateBuiltinType(builtinName);
 }
 
 std::string piranha::LanguageRules::resolveOperatorBuiltinType(
     IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const
 {
     std::string *rule = m_operatorRules.lookup({ op, left, right });
+    return (rule == nullptr)
+        ? ""
+        : *rule;
+}
+
+std::string piranha::LanguageRules::resolveUnaryOperatorBuiltinType(
+    IrUnaryOperator::OPERATOR op, const ChannelType *type) const
+{
+    std::string *rule = m_unaryOperatorRules.lookup({ op, type });
     return (rule == nullptr)
         ? ""
         : *rule;
@@ -48,6 +52,18 @@ piranha::Node *piranha::LanguageRules::generateOperator(
     IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) 
 {
     std::string *builtinType = m_operatorRules.lookup({ op, left, right });
+    if (builtinType == nullptr) return nullptr;
+
+    Node *node = generateBuiltinType(*builtinType);
+    assert(node != nullptr);
+
+    return node;
+}
+
+piranha::Node *piranha::LanguageRules::generateUnaryOperator(
+    IrUnaryOperator::OPERATOR op, const ChannelType *type)
+{
+    std::string *builtinType = m_unaryOperatorRules.lookup({ op, type });
     if (builtinType == nullptr) return nullptr;
 
     Node *node = generateBuiltinType(*builtinType);
@@ -108,4 +124,10 @@ void piranha::LanguageRules::registerOperator(
     const OperatorMapping &op, const std::string &builtinType) 
 {
     *m_operatorRules.newValue<std::string>(op) = builtinType;
+}
+
+void piranha::LanguageRules::registerUnaryOperator(
+    const UnaryOperatorMapping &op, const std::string &builtinType) 
+{
+    *m_unaryOperatorRules.newValue<std::string>(op) = builtinType;
 }

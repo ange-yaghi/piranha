@@ -51,12 +51,10 @@ namespace piranha {
         }
 
         virtual void registerInputs() {
-            const ChannelType *type = NativeTypeLookup<FundamentalType>();
-
             registerInput(
-                m_output.getLeftConnection(), "__in0", type);
+                m_output.getLeftConnection(), "__in0");
             registerInput(
-                m_output.getRightConnection(), "__in1", type);
+                m_output.getRightConnection(), "__in1");
         }
 
     protected:
