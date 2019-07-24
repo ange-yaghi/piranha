@@ -1,0 +1,20 @@
+private import "standard-library/standard_library.mr" as std
+
+node age_calculator {
+    input prompt;
+    output age: float(current_year) - birth_year;
+
+    console_in birth_year(prompt)
+    console_in current_year("Enter the current year: ")
+}
+
+node box {
+    input prompt;
+
+    age_calculator(10)
+}
+
+console_out("Your age is " + string(age_calculator("Enter birth year: ").age))
+console_out("Your age is " + string(age_calculator(10).age))
+
+box("Enter birth year: ")

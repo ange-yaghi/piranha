@@ -331,13 +331,13 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             ->_generateNodeOutput(context, program)
             ->getInterface();
 
-		if (node != nullptr) node->setBuiltinName(m_definition->getBuiltinName());
+        if (node != nullptr) node->setBuiltinName(m_definition->getBuiltinName());
 
-		return node;
+        return node;
     }
 
     IrContextTree *newContext;
-	IrContextTree *parentContext = context;
+    IrContextTree *parentContext = context;
     newContext = parentContext->newChild(this);
 
     IrNodeDefinition *definition = getDefinition();
@@ -382,8 +382,8 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         }
     }
 
-	std::string builtinType = m_definition->getBuiltinName();
-	if (builtinType.empty()) return nullptr;
+    std::string builtinType = m_definition->getBuiltinName();
+    if (builtinType.empty()) return nullptr;
 
     Node *newNode = m_rules->generateNode(builtinType);
     if (newNode != nullptr) {
@@ -395,10 +395,10 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             newNode->connectInput(inputs[i].output, inputs[i].name.c_str());
         }
     }
-	else {
-		// The type is not valid
-		// If errors are checked properly
-	}
+    else {
+        // The type is not valid
+        // If errors are checked properly
+    }
 
     return newNode;
 }

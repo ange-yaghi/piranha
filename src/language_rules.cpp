@@ -73,15 +73,15 @@ piranha::Node *piranha::LanguageRules::generateUnaryOperator(
 }
 
 piranha::Node *piranha::LanguageRules::
-	generateBuiltinType(const std::string &typeName) const 
+    generateBuiltinType(const std::string &typeName) const 
 {
     BuiltinRule *rule = m_builtinRules.lookup(typeName);
-	if (rule == nullptr) return nullptr;
+    if (rule == nullptr) return nullptr;
 
-	Node *newNode = rule->buildNode();
-	newNode->setBuiltinName(typeName);
+    Node *newNode = rule->buildNode();
+    newNode->setBuiltinName(typeName);
 
-	return newNode;
+    return newNode;
 }
 
 bool piranha::LanguageRules::checkConversion(const NodeTypeConversion &conversion) const {
