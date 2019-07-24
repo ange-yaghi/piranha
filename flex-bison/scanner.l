@@ -37,39 +37,39 @@ using token = piranha::Parser::token;
 %option noyywrap
 %option c++
 
-D                    [0-9]
-L                    [a-zA-Z_]
-H                    [a-fA-F0-9]
+D                   [0-9]
+L                   [a-zA-Z_]
+H                   [a-fA-F0-9]
 
 %%
-%{                    /** Code executed at the beginning of yylex **/
+%{                  /** Code executed at the beginning of yylex **/
                     m_yylval = lval;
 %}
 
 "import"            { DEFAULT_BUILD(location); return (token::IMPORT); }
 "as"                { DEFAULT_BUILD(location); return (token::AS); }
-"input"                { DEFAULT_BUILD(location); return (token::INPUT); }
+"input"             { DEFAULT_BUILD(location); return (token::INPUT); }
 "output"            { DEFAULT_BUILD(location); return (token::OUTPUT); }
-"alias"                { DEFAULT_BUILD(location); return (token::ALIAS); }
-"node"                { DEFAULT_BUILD(location); return (token::NODE); }
+"alias"             { DEFAULT_BUILD(location); return (token::ALIAS); }
+"node"              { DEFAULT_BUILD(location); return (token::NODE); }
 "public"            { DEFAULT_BUILD(location); return (token::PUBLIC); }
-"private"            { DEFAULT_BUILD(location); return (token::PRIVATE); }
-"operator"            { DEFAULT_BUILD(location); return (token::OPERATOR); }
+"private"           { DEFAULT_BUILD(location); return (token::PRIVATE); }
+"operator"          { DEFAULT_BUILD(location); return (token::OPERATOR); }
 "module"            { DEFAULT_BUILD(location); return (token::MODULE); }
-"@"                    { DEFAULT_BUILD(location); return (token::DECORATOR); }
-"true"                {
+"@"                 { DEFAULT_BUILD(location); return (token::DECORATOR); }
+"true"              {
                         buildValue<bool>(true, location);
                         return (token::BOOL);
                     }
-"false"                {
+"false"             {
                         buildValue<bool>(false, location);
                         return (token::BOOL);
                     }
-{L}({L}|{D})*        {
+{L}({L}|{D})*       {
                         DEFAULT_BUILD(location);
                         return (token::LABEL);
                     }
-0[xX]{H}+            {
+0[xX]{H}+           {
                         unsigned int value;
                         value = std::stoul(yytext, nullptr, 16);
 
@@ -83,14 +83,14 @@ H                    [a-fA-F0-9]
                         buildValue<int>((int)value, location);
                         return (token::INT);
                     }
-{D}+"."{D}+            {
+{D}+"."{D}+         {
                         double value;
                         value = std::stod(yytext);
 
                         buildValue<double>(value, location);
                         return (token::FLOAT);
                     }
-\"(\\.|[^\\"\n])*\"    {
+\"(\\.|[^\\"\n])*\" {
                         // String literal
                         size_t length = strlen(yytext);
                         char *str = new char[length];
@@ -103,31 +103,31 @@ H                    [a-fA-F0-9]
                         return (token::STRING);
                     }
 
-"("                    { DEFAULT_BUILD(location); return ('('); }
-")"                    { DEFAULT_BUILD(location); return (')'); }
-"["                    { DEFAULT_BUILD(location); return ('['); }
-"]"                    { DEFAULT_BUILD(location); return (']'); }
-"{"                    { DEFAULT_BUILD(location); return ('{'); }
-"}"                    { DEFAULT_BUILD(location); return ('}'); }
-":"                    { DEFAULT_BUILD(location); return (':'); }
-";"                    { DEFAULT_BUILD(location); return (';'); }
-","                    { DEFAULT_BUILD(location); return (','); }
-"^"                    { DEFAULT_BUILD(location); return ('^'); }
+"("                 { DEFAULT_BUILD(location); return ('('); }
+")"                 { DEFAULT_BUILD(location); return (')'); }
+"["                 { DEFAULT_BUILD(location); return ('['); }
+"]"                 { DEFAULT_BUILD(location); return (']'); }
+"{"                 { DEFAULT_BUILD(location); return ('{'); }
+"}"                 { DEFAULT_BUILD(location); return ('}'); }
+":"                 { DEFAULT_BUILD(location); return (':'); }
+";"                 { DEFAULT_BUILD(location); return (';'); }
+","                 { DEFAULT_BUILD(location); return (','); }
+"^"                 { DEFAULT_BUILD(location); return ('^'); }
 
-"."                    { DEFAULT_BUILD(location); return ('.'); }
-"*"                    { DEFAULT_BUILD(location); return ('*'); }
-"/"                    { DEFAULT_BUILD(location); return ('/'); }
-"+"                    { DEFAULT_BUILD(location); return ('+'); }
-"-"                    { DEFAULT_BUILD(location); return ('-'); }
+"."                 { DEFAULT_BUILD(location); return ('.'); }
+"*"                 { DEFAULT_BUILD(location); return ('*'); }
+"/"                 { DEFAULT_BUILD(location); return ('/'); }
+"+"                 { DEFAULT_BUILD(location); return ('+'); }
+"-"                 { DEFAULT_BUILD(location); return ('-'); }
 
 "=>"                { DEFAULT_BUILD(location); return (token::BUILTIN_POINTER); }
 "::"                { DEFAULT_BUILD(location); return (token::NAMESPACE_POINTER); }
-"="                    { DEFAULT_BUILD(location); return ('='); }
+"="                 { DEFAULT_BUILD(location); return ('='); }
 
-[ \t\v\n\f]            { }
-"//"[^\n]*            { }
+[ \t\v\n\f]         { }
+"//"[^\n]*          { }
 "/*"                { comment(); }
-.                    { BUILD_INVALID(location); return (token::UNRECOGNIZED); }
+.                   { BUILD_INVALID(location); return (token::UNRECOGNIZED); }
 %%
 
 void piranha::Scanner::comment(void) {
