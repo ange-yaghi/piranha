@@ -31,11 +31,11 @@ namespace piranha {
         }
 
         virtual void registerInputs() {
-            registerInput(&m_primaryInput, "__in", &FundamentalType::VectorType);
-            registerInput(m_outputX.getInputConnection(), "__in", &FundamentalType::VectorType);
-            registerInput(m_outputY.getInputConnection(), "__in", &FundamentalType::VectorType);
-            registerInput(m_outputZ.getInputConnection(), "__in", &FundamentalType::VectorType);
-            registerInput(m_outputW.getInputConnection(), "__in", &FundamentalType::VectorType);
+            registerInput(&m_primaryInput, "__in");
+            registerInput(m_outputX.getInputConnection(), "__in");
+            registerInput(m_outputY.getInputConnection(), "__in");
+            registerInput(m_outputZ.getInputConnection(), "__in");
+            registerInput(m_outputW.getInputConnection(), "__in");
         }
 
         virtual void registerOutputs() {
