@@ -15,7 +15,7 @@ int main() {
     std::cin >> filename;
 
     while (true) {
-		auto startCompile = std::chrono::high_resolution_clock::now();
+        auto startCompile = std::chrono::high_resolution_clock::now();
 
         std::cout << "--- Compiling --------------" << std::endl;
         piranha::NodeProgram nodeProgram;
@@ -29,23 +29,23 @@ int main() {
         piranha_demo::printErrorTrace(compiler.getErrorList());
 
         if (compiler.getErrorList()->getErrorCount() == 0) {
-			unit->build(&nodeProgram);
+            unit->build(&nodeProgram);
 
             std::cout << "--- Running --------------" << std::endl;
-			auto endCompile = std::chrono::high_resolution_clock::now();
+            auto endCompile = std::chrono::high_resolution_clock::now();
 
             nodeProgram.execute();
 
-			auto endExecute = std::chrono::high_resolution_clock::now();
+            auto endExecute = std::chrono::high_resolution_clock::now();
 
-			nodeProgram.writeAssembly("../../workspace/asm/" + unit->getPath().getStem() + ".pasm");
+            nodeProgram.writeAssembly("../../workspace/asm/" + unit->getPath().getStem() + ".pasm");
 
-			std::cout << std::endl;
-			std::cout << "-----------------------" << std::endl;
-			std::cout << " Compile time:   " << 
-				(endCompile - startCompile).count() * 1.0e-6 << " ms" << std::endl;
-			std::cout << " Execution time: " << 
-				(endExecute - endCompile).count() * 1.0e-6 << " ms" << std::endl;
+            std::cout << std::endl;
+            std::cout << "-----------------------" << std::endl;
+            std::cout << " Compile time:   " << 
+                (endCompile - startCompile).count() * 1.0e-6 << " ms" << std::endl;
+            std::cout << " Execution time: " << 
+                (endExecute - endCompile).count() * 1.0e-6 << " ms" << std::endl;
         }
         std::cout << std::endl << std::endl;
         std::cin.get();
