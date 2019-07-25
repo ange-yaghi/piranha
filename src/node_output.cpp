@@ -16,11 +16,11 @@ int piranha::NodeOutput::getModifyConnectionCount() const {
 	return (int)m_modifyConnections.size();
 }
 
-void piranha::NodeOutput::addModifyConnection(NodeOutput *output) {
+void piranha::NodeOutput::addModifyConnection(Node *output) {
 	m_modifyConnections.push_back(output);
 }
 
-piranha::NodeOutput *piranha::NodeOutput::getModifyConnection(int index) const {
+piranha::Node *piranha::NodeOutput::getModifyConnection(int index) const {
 	return m_modifyConnections[index];
 }
 
