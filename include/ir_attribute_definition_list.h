@@ -19,7 +19,7 @@ namespace piranha {
         IrAttributeDefinition *getDefinition(int index) const { return m_definitions[index]; }
         int getDefinitionCount() const { return (int)m_definitions.size(); }
 
-        IrAttributeDefinition *getDefinition(int index, IrAttributeDefinition::DIRECTION direction) const;
+        IrAttributeDefinition *getDefinition(int index, bool isInput) const;
         IrAttributeDefinition *getInputDefinition(int index) const;
 
         IrAttributeDefinition *getOutputDefinition(int index) const;

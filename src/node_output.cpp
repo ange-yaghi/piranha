@@ -40,7 +40,7 @@ void piranha::NodeOutput::evaluate() {
 
 	int modifyCount = getModifyConnectionCount();
 	for (int i = 0; i < modifyCount; i++) {
-		(*m_modifyConnections[i])->evaluate();
+		m_modifyConnections[i]->evaluate();
 	}
 
     if (m_parentNode != nullptr) {
