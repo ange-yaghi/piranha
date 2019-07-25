@@ -8,6 +8,7 @@
 #include "../include/ir_value.h"
 #include "../include/ir_context_tree.h"
 #include "../include/language_rules.h"
+#include "../include/node.h"
 
 piranha::IrNodeDefinition::IrNodeDefinition(const IrTokenInfo_string &name) {
     m_name = name;
@@ -203,8 +204,8 @@ void piranha::IrNodeDefinition::_validate() {
         }
     }
 
-    // Check that the builtin type is a real type
     if (isBuiltin()) {
+		// Check that the builtin type is a real type
         std::string builtinName = getBuiltinName();
 
         if (m_rules != nullptr) {
@@ -213,5 +214,18 @@ void piranha::IrNodeDefinition::_validate() {
                     ErrorCode::UndefinedBuiltinType));
             }
         }
+
+		// Check that the definition is compatible with the
+		// builtin node
+		Node *reference = m_rules->getReferenceNode(builtinName);
+		if (m_attributes != nullptr) {
+			int attributeCount = m_attributes->getDefinitionCount();
+			for (int i = 0; i < attributeCount; i++) {
+				IrAttributeDefinition *definition = m_attributes->getDefinition(i);
+				if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
+						
+				}
+			}
+		}
     }
 }

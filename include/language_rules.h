@@ -106,6 +106,8 @@ namespace piranha {
 
         bool checkBuiltinType(const std::string &builtinType) const;
 
+		const Node *getReferenceNode(const std::string &builtinType) const;
+
     protected:
         Node *generateOperator(IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right);
         Node *generateUnaryOperator(IrUnaryOperator::OPERATOR op, const ChannelType *type);
@@ -115,8 +117,9 @@ namespace piranha {
 
         template <typename NodeType>
         void registerBuiltinType(const std::string &builtinName, const ChannelType *nodeType = nullptr) {
-            m_builtinRules.newValue<SpecializedRule<BuiltinTypeInfo, NodeType, Node>>(builtinName)
-                ->setValue({ nodeType });
+			BuiltinRule *newRule =
+				m_builtinRules.newValue<SpecializedRule<BuiltinTypeInfo, NodeType, Node>>(builtinName);
+            newRule->setValue({ nodeType });
         }
 
         void registerLiteralType(LiteralType literalType, const std::string &builtinType);
@@ -130,8 +133,6 @@ namespace piranha {
         LiteralNode<BaseType> *generateLiteralInternal() { return nullptr; }
 
     private:
-        //std::vector<Node *> m_nodes;
-
         KeyValueLookup<std::string, BuiltinRule> m_builtinRules;
         KeyValueLookup<NodeTypeConversion, std::string> m_conversionRules;
         KeyValueLookup<OperatorMapping, std::string> m_operatorRules;
