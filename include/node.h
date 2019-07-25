@@ -33,7 +33,7 @@ namespace piranha {
         };
 
         struct NodeOutputPortReference {
-            NodeOutput * const *output;
+            NodeOutput *const *output;
             std::string name;
         };
 
@@ -54,7 +54,6 @@ namespace piranha {
         void setBuiltinName(const std::string &name) { m_builtinName = name; }
         std::string getBuiltinName() const { return m_builtinName; }
 
-        const ChannelType *getConversion(pNodeInput input, const std::string &name);
         void connectInput(pNodeInput input, const std::string &name);
         void connectInput(pNodeInput input, int index);
         void connectDefaultInput(pNodeInput input);

@@ -16,7 +16,8 @@ namespace piranha {
     public:
         enum DIRECTION {
             INPUT,
-            OUTPUT
+            OUTPUT,
+			MODIFY
         };
 
     public:
