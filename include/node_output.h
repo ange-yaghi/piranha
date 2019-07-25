@@ -22,7 +22,10 @@ namespace piranha {
         int getInputCount() const { return (int)m_inputs.size(); }
         NodeOutput **getInputConnection(int index) { return m_inputs[index]; }
 
-    public:
+		int getModifyConnectionCount() const;
+		void addModifyConnection(NodeOutput *output);
+		NodeOutput *getModifyConnection(int index) const;
+
         bool isType(const ChannelType &type) const { return m_singleType == &type; }
         const ChannelType *getType() const { return m_singleType; }
 
@@ -56,6 +59,7 @@ namespace piranha {
         virtual void registerInput(NodeOutput **nodeInput) { m_inputs.push_back(nodeInput); }
 
         std::vector<NodeOutput **> m_inputs;
+		std::vector<NodeOutput *> m_modifyConnections;
     };
 
     // Type to reduce confusion
