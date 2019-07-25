@@ -70,7 +70,7 @@ void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
 
     IrNodeDefinition *typeDefinition = m_definition->getTypeDefinition();
 
-    if (typeDefinition != nullptr && m_definition->getDirection() == IrAttributeDefinition::INPUT) {
+    if (typeDefinition != nullptr && m_definition->isInput()) {
         IrNode *refAsNode = finalReference->getAsNode();
 
         if (info.isFixedType()) {
