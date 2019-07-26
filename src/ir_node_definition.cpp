@@ -213,19 +213,40 @@ void piranha::IrNodeDefinition::_validate() {
                 unit->addCompilationError(new CompilationError(*getBuiltinNameToken(),
                     ErrorCode::UndefinedBuiltinType));
             }
+            else {
+                // Check that the definition is compatible with the
+                // builtin node
+                const Node *reference = m_rules->getReferenceNode(builtinName);
+                if (m_attributes != nullptr) {
+                    int attributeCount = m_attributes->getDefinitionCount();
+                    for (int i = 0; i < attributeCount; i++) {
+                        IrAttributeDefinition *definition = m_attributes->getDefinition(i);
+                        Node::PortInfo info;
+                        if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
+                            bool found = reference->getOutputPortInfo(definition->getName(), &info);
+                            if (!found) {
+                                unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+                                    ErrorCode::UndefinedBuiltinOutput));
+                            }
+                        }
+                        else if (definition->getDirection() == IrAttributeDefinition::INPUT ||
+                            definition->getDirection() == IrAttributeDefinition::MODIFY)
+                        {
+                            bool found = reference->getInputPortInfo(definition->getName(), &info);
+                            if (found) {
+                                if (info.modifiesInput && definition->getDirection() != IrAttributeDefinition::MODIFY) {
+                                    unit->addCompilationError(new CompilationError(*definition->getDirectionToken(),
+                                        ErrorCode::ModifyAttributeMismatch));
+                                }
+                            }
+                            else {
+                                unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+                                    ErrorCode::UndefinedBuiltinInput));
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-		// Check that the definition is compatible with the
-		// builtin node
-		Node *reference = m_rules->getReferenceNode(builtinName);
-		if (m_attributes != nullptr) {
-			int attributeCount = m_attributes->getDefinitionCount();
-			for (int i = 0; i < attributeCount; i++) {
-				IrAttributeDefinition *definition = m_attributes->getDefinition(i);
-				if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
-						
-				}
-			}
-		}
     }
 }

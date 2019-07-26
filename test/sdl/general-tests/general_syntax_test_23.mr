@@ -1,0 +1,5 @@
+node broken_definition => __piranha__float_add {
+    input __in_bad_name [float];
+    input __in1 [float];
+    output __out_bad_name [float];
+}

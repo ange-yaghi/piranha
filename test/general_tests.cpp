@@ -298,3 +298,14 @@ TEST(GeneralTests, GeneralSyntaxTest_22) {
 
     EXPECT_EQ(errList->getErrorCount(), 5);
 }
+
+TEST(GeneralTests, GeneralSyntaxTest_23) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_23.mr", &errList, &rules);
+
+    EXPECT_TRUE(findError(errList, ErrorCode::UndefinedBuiltinInput, 2, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::UndefinedBuiltinOutput, 4, nullptr, false));
+
+    EXPECT_EQ(errList->getErrorCount(), 5);
+}
