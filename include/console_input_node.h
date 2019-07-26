@@ -1,10 +1,10 @@
 #ifndef PIRANHA_CONSOLE_INPUT_NODE_H
 #define PIRANHA_CONSOLE_INPUT_NODE_H
 
-#include "../include/node.h"
+#include "node.h"
 
-#include "../include/literal_node_output.h"
-#include "../include/fundamental_types.h"
+#include "literal_node_output.h"
+#include "fundamental_types.h"
 
 #include <string>
 #include <iostream>

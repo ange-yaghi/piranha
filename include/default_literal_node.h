@@ -1,7 +1,7 @@
 #ifndef PIRANHA_DEFAULT_LITERAL_NODE_H
 #define PIRANHA_DEFAULT_LITERAL_NODE_H
 
-#include "../include/literal_node.h"
+#include "literal_node.h"
 
 namespace piranha {
 
