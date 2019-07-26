@@ -93,15 +93,19 @@ void piranha::Node::connectDefaultInput(pNodeInput input) {
 	connectInput(input, 0);
 }
 
-const piranha::Node::NodeInputPort piranha::Node::
-	getInputPortInfo(const std::string &name) const 
-{
-	int inputCount = getInputCount();
-	for (int i = 0; i < inputCount; i++) {
-		if (name == m_inputs[i].name) {
-			return &m_inputs[i];
-		}
-	}
+bool piranha::Node::getInputPortInfo(const std::string &name, PortInfo *info) const {
+    info->modifiesInput = false;
+
+    int inputCount = getInputCount();
+    bool found = false;
+    for (int i = 0; i < inputCount; i++) {
+        if (name == m_inputs[i].name) {
+            info->modifiesInput = m_inputs[i].modifiesInput || info->modifiesInput;
+            found = true;
+        }
+    }
+
+    return found;
 }
 
 piranha::NodeOutput *piranha::Node::getPrimaryOutput() const {
@@ -129,6 +133,27 @@ piranha::NodeOutput *piranha::Node::getOutput(const std::string &name) const {
     }
 
     return nullptr;
+}
+
+bool piranha::Node::getOutputPortInfo(const std::string &name, PortInfo *info) const {
+    info->modifiesInput = false;
+
+    bool found = false;
+    int referenceOutputCount = getOutputReferenceCount();
+    for (int i = 0; i < referenceOutputCount; i++) {
+        if (name == m_outputReferences[i].name) {
+            found = true;
+        }
+    }
+
+    int outputCount = getOutputCount();
+    for (int i = 0; i < outputCount; i++) {
+        if (name == m_outputs[i].name) {
+            found = true;
+        }
+    }
+
+    return found;
 }
 
 void piranha::Node::_initialize() {
