@@ -25,7 +25,7 @@ namespace piranha {
         struct NodeInputPort {
             pNodeInput *input;
             std::string name;
-			bool modifiesInput;
+            bool modifiesInput;
         };
 
         struct NodeOutputPort {
@@ -62,7 +62,7 @@ namespace piranha {
         void connectInput(pNodeInput input, const std::string &name);
         void connectInput(pNodeInput input, int index);
         void connectDefaultInput(pNodeInput input);
-		bool getInputPortInfo(const std::string &name, PortInfo *info) const;
+        bool getInputPortInfo(const std::string &name, PortInfo *info) const;
         const NodeInputPort *getInput(int index) const { return &m_inputs[index]; }
         int getInputCount() const { return (int)m_inputs.size(); }
 
@@ -70,7 +70,7 @@ namespace piranha {
         NodeOutput *getOutput(const std::string &name) const;
         int getOutputCount() const { return (int)m_outputs.size(); }
         const NodeOutputPort *getOutput(int index) const { return &m_outputs[index]; }
-		bool getOutputPortInfo(const std::string &name, PortInfo *info) const;
+        bool getOutputPortInfo(const std::string &name, PortInfo *info) const;
 
         int getOutputReferenceCount() const { return (int)m_outputReferences.size(); }
         const NodeOutputPortReference *getOutputReference(int index) const { return &m_outputReferences[index]; }

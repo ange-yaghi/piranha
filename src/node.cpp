@@ -69,7 +69,7 @@ void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
 
     for (int i = 0; i < inputCount; i++) {
         if (name == m_inputs[i].name) {
-			connectInput(input, i);
+            connectInput(input, i);
             
             // Warning: do not break here! There could potentially be multiple
             // inputs with the same name referencing different endpoints
@@ -80,17 +80,17 @@ void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
 void piranha::Node::connectInput(pNodeInput input, int index) {
     *m_inputs[index].input = input;
 
-	// If this port can modify the input value, the channel
-	// being connected has to be notified
-	if (m_inputs[index].modifiesInput) {
-		input->addModifyConnection(this);
-	}
+    // If this port can modify the input value, the channel
+    // being connected has to be notified
+    if (m_inputs[index].modifiesInput) {
+        input->addModifyConnection(this);
+    }
 }
 
 void piranha::Node::connectDefaultInput(pNodeInput input) {
     assert(getInputCount() == 1); // Use of this function is reserved with single input nodes
 
-	connectInput(input, 0);
+    connectInput(input, 0);
 }
 
 bool piranha::Node::getInputPortInfo(const std::string &name, PortInfo *info) const {
@@ -110,9 +110,9 @@ bool piranha::Node::getInputPortInfo(const std::string &name, PortInfo *info) co
 
 piranha::NodeOutput *piranha::Node::getPrimaryOutput() const {
     return (m_primaryOutput != nullptr) 
-		? m_primaryOutput
+        ? m_primaryOutput
         : (m_primaryReference != nullptr) 
-			? *m_primaryReference
+            ? *m_primaryReference
             : nullptr;
 }
 

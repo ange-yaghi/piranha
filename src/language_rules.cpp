@@ -109,8 +109,8 @@ bool piranha::LanguageRules::checkBuiltinType(const std::string &builtinType) co
 }
 
 const piranha::Node *piranha::LanguageRules::getReferenceNode(const std::string &builtinType) const {
-	BuiltinRule *rule = m_builtinRules.lookup(builtinType);
-	return rule->getReference();
+    BuiltinRule *rule = m_builtinRules.lookup(builtinType);
+    return rule->getReference();
 }
 
 void piranha::LanguageRules::registerLiteralType(
