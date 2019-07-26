@@ -16,7 +16,8 @@ namespace piranha {
     public:
         enum DIRECTION {
             INPUT,
-            OUTPUT
+            OUTPUT,
+            MODIFY
         };
 
     public:
@@ -51,6 +52,8 @@ namespace piranha {
 
         virtual void _expand(IrContextTree *context);
         virtual void _checkTypes(IrContextTree *context);
+
+        bool isInput() const;
 
     protected:
         IrTokenInfo_string m_directionToken;

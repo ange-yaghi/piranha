@@ -361,13 +361,13 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         query.recordErrors = false;
         IrParserStructure *reference = attributeDefinition->getReference(query, &info);
 
-        // Skip if this is a builtin output as wouldn't even be generated yet
+        // Skip if this is a builtin output as it wouldn't even be generated yet
         if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT &&
             m_definition->isBuiltin()) continue;
 
         NodeOutput *output = reference->generateNodeOutput(info.newContext, program);
 
-        if (attributeDefinition->getDirection() == IrAttributeDefinition::INPUT) {
+        if (attributeDefinition->isInput()) {
             inputs.push_back({ attributeDefinition->getName(), output });
         }
     }

@@ -18,13 +18,13 @@ void piranha::IrAttributeDefinitionList::addDefinition(IrAttributeDefinition *de
 }
 
 piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
-    getDefinition(int index, IrAttributeDefinition::DIRECTION direction) const 
+    getDefinition(int index, bool isInput) const 
 {
     int totalCount = getDefinitionCount();
     int inputIndex = 0;
     for (int i = 0; i < totalCount; i++) {
         IrAttributeDefinition *definition = m_definitions[i];
-        if (definition->getDirection() == direction) {
+        if (definition->isInput() == isInput) {
             if (inputIndex == index) {
                 return definition;
             }
@@ -39,7 +39,7 @@ piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
 piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
     getInputDefinition(int index) const 
 {
-    return getDefinition(index, IrAttributeDefinition::INPUT);
+    return getDefinition(index, true);
 }
 
 int piranha::IrAttributeDefinitionList::getCount(
@@ -58,7 +58,7 @@ int piranha::IrAttributeDefinitionList::getCount(
 }
 
 int piranha::IrAttributeDefinitionList::getInputCount() const {
-    return getCount(IrAttributeDefinition::INPUT);
+    return getCount(IrAttributeDefinition::INPUT) + getCount(IrAttributeDefinition::MODIFY);
 }
 
 int piranha::IrAttributeDefinitionList::getOutputCount() const {

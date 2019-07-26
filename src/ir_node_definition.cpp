@@ -8,6 +8,7 @@
 #include "../include/ir_value.h"
 #include "../include/ir_context_tree.h"
 #include "../include/language_rules.h"
+#include "../include/node.h"
 
 piranha::IrNodeDefinition::IrNodeDefinition(const IrTokenInfo_string &name) {
     m_name = name;
@@ -203,14 +204,48 @@ void piranha::IrNodeDefinition::_validate() {
         }
     }
 
-    // Check that the builtin type is a real type
     if (isBuiltin()) {
+        // Check that the builtin type is a real type
         std::string builtinName = getBuiltinName();
 
         if (m_rules != nullptr) {
             if (!m_rules->checkBuiltinType(builtinName)) {
                 unit->addCompilationError(new CompilationError(*getBuiltinNameToken(),
                     ErrorCode::UndefinedBuiltinType));
+            }
+            else {
+                // Check that the definition is compatible with the
+                // builtin node
+                const Node *reference = m_rules->getReferenceNode(builtinName);
+                if (m_attributes != nullptr) {
+                    int attributeCount = m_attributes->getDefinitionCount();
+                    for (int i = 0; i < attributeCount; i++) {
+                        IrAttributeDefinition *definition = m_attributes->getDefinition(i);
+                        Node::PortInfo info;
+                        if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
+                            bool found = reference->getOutputPortInfo(definition->getName(), &info);
+                            if (!found) {
+                                unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+                                    ErrorCode::UndefinedBuiltinOutput));
+                            }
+                        }
+                        else if (definition->getDirection() == IrAttributeDefinition::INPUT ||
+                            definition->getDirection() == IrAttributeDefinition::MODIFY)
+                        {
+                            bool found = reference->getInputPortInfo(definition->getName(), &info);
+                            if (found) {
+                                if (info.modifiesInput && definition->getDirection() != IrAttributeDefinition::MODIFY) {
+                                    unit->addCompilationError(new CompilationError(*definition->getDirectionToken(),
+                                        ErrorCode::ModifyAttributeMismatch));
+                                }
+                            }
+                            else {
+                                unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+                                    ErrorCode::UndefinedBuiltinInput));
+                            }
+                        }
+                    }
+                }
             }
         }
     }

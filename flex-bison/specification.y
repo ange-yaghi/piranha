@@ -76,26 +76,27 @@
 %define parse.assert
 
 %token END 0
-%token <piranha::IrTokenInfo_string> CHAR
-%token <piranha::IrTokenInfo_string> IMPORT
-%token <piranha::IrTokenInfo_string> AS
-%token <piranha::IrTokenInfo_string> NODE
-%token <piranha::IrTokenInfo_string> ALIAS
-%token <piranha::IrTokenInfo_string> INPUT
-%token <piranha::IrTokenInfo_string> OUTPUT
-%token <piranha::IrTokenInfo_string> LABEL
-%token <piranha::IrTokenInfo_int>    INT
-%token <piranha::IrTokenInfo_float>    FLOAT
-%token <piranha::IrTokenInfo_bool>    BOOL
-%token <piranha::IrTokenInfo_string> STRING
-%token <piranha::IrTokenInfo_string> DECORATOR
-%token <piranha::IrTokenInfo_string> PUBLIC
-%token <piranha::IrTokenInfo_string> PRIVATE
-%token <piranha::IrTokenInfo_string> BUILTIN_POINTER
-%token <piranha::IrTokenInfo_string> NAMESPACE_POINTER
-%token <piranha::IrTokenInfo_string> UNRECOGNIZED
-%token <piranha::IrTokenInfo_string> OPERATOR
-%token <piranha::IrTokenInfo_string> MODULE
+%token <piranha::IrTokenInfo_string>    CHAR
+%token <piranha::IrTokenInfo_string>    IMPORT
+%token <piranha::IrTokenInfo_string>    AS
+%token <piranha::IrTokenInfo_string>    NODE
+%token <piranha::IrTokenInfo_string>    ALIAS
+%token <piranha::IrTokenInfo_string>    INPUT
+%token <piranha::IrTokenInfo_string>    OUTPUT
+%token <piranha::IrTokenInfo_string>    MODIFY
+%token <piranha::IrTokenInfo_string>    LABEL
+%token <piranha::IrTokenInfo_int>       INT
+%token <piranha::IrTokenInfo_float>     FLOAT
+%token <piranha::IrTokenInfo_bool>      BOOL
+%token <piranha::IrTokenInfo_string>    STRING
+%token <piranha::IrTokenInfo_string>    DECORATOR
+%token <piranha::IrTokenInfo_string>    PUBLIC
+%token <piranha::IrTokenInfo_string>    PRIVATE
+%token <piranha::IrTokenInfo_string>    BUILTIN_POINTER
+%token <piranha::IrTokenInfo_string>    NAMESPACE_POINTER
+%token <piranha::IrTokenInfo_string>    UNRECOGNIZED
+%token <piranha::IrTokenInfo_string>    OPERATOR
+%token <piranha::IrTokenInfo_string>    MODULE
 
 %token <piranha::IrTokenInfo_string> '='
 %token <piranha::IrTokenInfo_string> '+'
@@ -328,6 +329,7 @@ port_definitions
 port_declaration
   : INPUT LABEL                                         { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::INPUT); }
   | OUTPUT LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::OUTPUT); }
+  | MODIFY LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::MODIFY); }  
   ;
 
 port_status

@@ -69,7 +69,7 @@ void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
 
     for (int i = 0; i < inputCount; i++) {
         if (name == m_inputs[i].name) {
-            *m_inputs[i].input = input;
+            connectInput(input, i);
             
             // Warning: do not break here! There could potentially be multiple
             // inputs with the same name referencing different endpoints
@@ -79,17 +79,40 @@ void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
 
 void piranha::Node::connectInput(pNodeInput input, int index) {
     *m_inputs[index].input = input;
+
+    // If this port can modify the input value, the channel
+    // being connected has to be notified
+    if (m_inputs[index].modifiesInput) {
+        input->addModifyConnection(this);
+    }
 }
 
 void piranha::Node::connectDefaultInput(pNodeInput input) {
     assert(getInputCount() == 1); // Use of this function is reserved with single input nodes
 
-    *m_inputs[0].input = input;
+    connectInput(input, 0);
+}
+
+bool piranha::Node::getInputPortInfo(const std::string &name, PortInfo *info) const {
+    info->modifiesInput = false;
+
+    int inputCount = getInputCount();
+    bool found = false;
+    for (int i = 0; i < inputCount; i++) {
+        if (name == m_inputs[i].name) {
+            info->modifiesInput = m_inputs[i].modifiesInput || info->modifiesInput;
+            found = true;
+        }
+    }
+
+    return found;
 }
 
 piranha::NodeOutput *piranha::Node::getPrimaryOutput() const {
-    return (m_primaryOutput != nullptr) ? m_primaryOutput
-        : (m_primaryReference != nullptr) ? *m_primaryReference
+    return (m_primaryOutput != nullptr) 
+        ? m_primaryOutput
+        : (m_primaryReference != nullptr) 
+            ? *m_primaryReference
             : nullptr;
 }
 
@@ -110,6 +133,27 @@ piranha::NodeOutput *piranha::Node::getOutput(const std::string &name) const {
     }
 
     return nullptr;
+}
+
+bool piranha::Node::getOutputPortInfo(const std::string &name, PortInfo *info) const {
+    info->modifiesInput = false;
+
+    bool found = false;
+    int referenceOutputCount = getOutputReferenceCount();
+    for (int i = 0; i < referenceOutputCount; i++) {
+        if (name == m_outputReferences[i].name) {
+            found = true;
+        }
+    }
+
+    int outputCount = getOutputCount();
+    for (int i = 0; i < outputCount; i++) {
+        if (name == m_outputs[i].name) {
+            found = true;
+        }
+    }
+
+    return found;
 }
 
 void piranha::Node::_initialize() {

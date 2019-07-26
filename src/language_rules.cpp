@@ -108,6 +108,11 @@ bool piranha::LanguageRules::checkBuiltinType(const std::string &builtinType) co
     return rule != nullptr;
 }
 
+const piranha::Node *piranha::LanguageRules::getReferenceNode(const std::string &builtinType) const {
+    BuiltinRule *rule = m_builtinRules.lookup(builtinType);
+    return rule->getReference();
+}
+
 void piranha::LanguageRules::registerLiteralType(
     LiteralType literalType, const std::string &builtinType) 
 {
