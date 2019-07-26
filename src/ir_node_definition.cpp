@@ -205,7 +205,7 @@ void piranha::IrNodeDefinition::_validate() {
     }
 
     if (isBuiltin()) {
-		// Check that the builtin type is a real type
+        // Check that the builtin type is a real type
         std::string builtinName = getBuiltinName();
 
         if (m_rules != nullptr) {

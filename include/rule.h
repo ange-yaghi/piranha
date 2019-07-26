@@ -12,11 +12,11 @@ namespace piranha {
     public:
         Rule(const ValueType &value) {
             m_value = value;
-			m_reference = nullptr;
+            m_reference = nullptr;
         }
 
         Rule() {
-			m_reference = nullptr;
+            m_reference = nullptr;
         }
 
         virtual ~Rule() {
@@ -28,34 +28,34 @@ namespace piranha {
         void setValue(const ValueType &value) { m_value = value; }
         const ValueType &getValue() const { return m_value; }
 
-		void setReference(NodeBase *reference) {
-			m_reference = reference;
-		}
+        void setReference(NodeBase *reference) {
+            m_reference = reference;
+        }
 
-		const NodeBase *getReference() const {
-			return m_reference;
-		}
+        const NodeBase *getReference() const {
+            return m_reference;
+        }
 
     protected:
         ValueType m_value;
-		NodeBase *m_reference;
+        NodeBase *m_reference;
     };
 
     template <typename ValueType, typename NodeType, typename NodeBase>
     class SpecializedRule : public Rule<ValueType, NodeBase> {
     public:
         SpecializedRule(const ValueType &value) : Rule<ValueType, NodeBase>(value) {
-			NodeType *reference = new NodeType();
-			reference->initialize();
+            NodeType *reference = new NodeType();
+            reference->initialize();
 
-			setReference(reference);
+            setReference(reference);
         }
 
         SpecializedRule() : Rule<ValueType, NodeBase>() {
-			NodeType *reference = new NodeType();
-			reference->initialize();
+            NodeType *reference = new NodeType();
+            reference->initialize();
 
-			Rule<ValueType, NodeBase>::setReference(reference);
+            Rule<ValueType, NodeBase>::setReference(reference);
         }
 
         virtual ~SpecializedRule() {
