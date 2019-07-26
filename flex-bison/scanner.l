@@ -50,6 +50,7 @@ H                   [a-fA-F0-9]
 "as"                { DEFAULT_BUILD(location); return (token::AS); }
 "input"             { DEFAULT_BUILD(location); return (token::INPUT); }
 "output"            { DEFAULT_BUILD(location); return (token::OUTPUT); }
+"modify"            { DEFAULT_BUILD(location); return (token::MODIFY); }
 "alias"             { DEFAULT_BUILD(location); return (token::ALIAS); }
 "node"              { DEFAULT_BUILD(location); return (token::NODE); }
 "public"            { DEFAULT_BUILD(location); return (token::PUBLIC); }

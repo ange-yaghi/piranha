@@ -76,7 +76,7 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
     }
 
     // An attribute definition will by default point to its definition (ie default value)
-    if (m_defaultValue == nullptr && m_direction == INPUT) {
+    if (m_defaultValue == nullptr && isInput()) {
         if (IR_EMPTY_CONTEXT() || query.inputContext->getContext()->isInterface()) {
             IrNode **expansion = m_expansions.lookup(query.inputContext);
 
@@ -294,7 +294,7 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
         IrCompilationUnit *unit = getParentUnit();
 
         // Errors for inputs/outputs differ only in code but are fundamentally the same
-        if (m_direction == INPUT) {
+        if (m_direction == INPUT || m_direction == MODIFY) {
             unit->addCompilationError(new CompilationError(*m_defaultValue->getSummaryToken(),
                 ErrorCode::IncompatibleDefaultType, context));
         }
@@ -303,6 +303,10 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
                 ErrorCode::IncompatibleOutputDefinitionType, context));
         }
     }
+}
+
+bool piranha::IrAttributeDefinition::isInput() const {
+    return m_direction == INPUT || m_direction == MODIFY;
 }
 
 void piranha::IrAttributeDefinition::_resolveDefinitions() {

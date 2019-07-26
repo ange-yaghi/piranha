@@ -14,7 +14,6 @@ namespace piranha {
     public:
         NodeProgram();
         ~NodeProgram();
-
         void execute();
 
         int getNodeCount() const { return (int)m_nodes.size();  }

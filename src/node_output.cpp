@@ -12,6 +12,18 @@ piranha::NodeOutput::~NodeOutput() {
     /* void */
 }
 
+int piranha::NodeOutput::getModifyConnectionCount() const {
+    return (int)m_modifyConnections.size();
+}
+
+void piranha::NodeOutput::addModifyConnection(Node *output) {
+    m_modifyConnections.push_back(output);
+}
+
+piranha::Node *piranha::NodeOutput::getModifyConnection(int index) const {
+    return m_modifyConnections[index];
+}
+
 void piranha::NodeOutput::initialize() {
     m_interface = generateInterface();
     registerInputs();
@@ -24,6 +36,11 @@ void piranha::NodeOutput::evaluate() {
     int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
         (*m_inputs[i])->evaluate();
+    }
+
+    int modifyCount = getModifyConnectionCount();
+    for (int i = 0; i < modifyCount; i++) {
+        m_modifyConnections[i]->evaluate();
     }
 
     if (m_parentNode != nullptr) {
