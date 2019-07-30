@@ -213,7 +213,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
         else if (referenceType == expectedType) return; // No expansion/conversion needed
 
         std::string builtinType = 
-            m_rules->resolveConversionBuiltinType({ referenceType, expectedType });
+            m_rules->resolveConversionBuiltinType(referenceType, expectedType);
 
         if (builtinType.empty()) return; // Incompatible types
 
@@ -288,7 +288,7 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
         const ChannelType *expectedType = getTypeDefinition()->getChannelType();
 
         if (type == expectedType && expectedType != nullptr) return; // No conversion necessary
-        if (m_rules->checkConversion({ type, expectedType })) return; // Conversion is valid
+        if (m_rules->checkConversion(type, expectedType)) return; // Conversion is valid
 
         // Conversion is invalid
         IrCompilationUnit *unit = getParentUnit();
