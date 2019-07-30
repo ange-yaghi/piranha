@@ -1,0 +1,6 @@
+private import "general_syntax_test_24a.mr"
+
+node test {
+    input a;
+    output b: a;
+}

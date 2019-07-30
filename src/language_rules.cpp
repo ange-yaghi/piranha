@@ -24,7 +24,10 @@ piranha::Node *piranha::LanguageRules::generateNode(const std::string &builtinNa
 std::string piranha::LanguageRules::resolveOperatorBuiltinType(
     IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const
 {
-    std::string *rule = m_operatorRules.lookup({ op, left, right });
+    if (left == nullptr) return "";
+    if (right == nullptr) return "";
+
+    std::string *rule = m_operatorRules.lookup({ op, left, right, false, false });
     return (rule == nullptr)
         ? ""
         : *rule;
@@ -33,7 +36,9 @@ std::string piranha::LanguageRules::resolveOperatorBuiltinType(
 std::string piranha::LanguageRules::resolveUnaryOperatorBuiltinType(
     IrUnaryOperator::OPERATOR op, const ChannelType *type) const
 {
-    std::string *rule = m_unaryOperatorRules.lookup({ op, type });
+    if (type == nullptr) return "";
+
+    std::string *rule = m_unaryOperatorRules.lookup({ op, type, false });
     return (rule == nullptr)
         ? ""
         : *rule;
@@ -51,7 +56,10 @@ const piranha::ChannelType *piranha::LanguageRules::resolveChannelType(
 piranha::Node *piranha::LanguageRules::generateOperator(
     IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) 
 {
-    std::string *builtinType = m_operatorRules.lookup({ op, left, right });
+    if (left == nullptr) return nullptr;
+    if (right == nullptr) return nullptr;
+
+    std::string *builtinType = m_operatorRules.lookup({ op, left, right, false, false });
     if (builtinType == nullptr) return nullptr;
 
     Node *node = generateBuiltinType(*builtinType);
@@ -63,7 +71,9 @@ piranha::Node *piranha::LanguageRules::generateOperator(
 piranha::Node *piranha::LanguageRules::generateUnaryOperator(
     IrUnaryOperator::OPERATOR op, const ChannelType *type)
 {
-    std::string *builtinType = m_unaryOperatorRules.lookup({ op, type });
+    if (type == nullptr) return nullptr;
+
+    std::string *builtinType = m_unaryOperatorRules.lookup({ op, type, false });
     if (builtinType == nullptr) return nullptr;
 
     Node *node = generateBuiltinType(*builtinType);
@@ -84,21 +94,27 @@ piranha::Node *piranha::LanguageRules::
     return newNode;
 }
 
-bool piranha::LanguageRules::checkConversion(const NodeTypeConversion &conversion) const {
-    return m_conversionRules.lookup(conversion) != nullptr;
+bool piranha::LanguageRules::checkConversion(const ChannelType *input, const ChannelType *output) const {
+    if (input == nullptr) return false;
+    if (output == nullptr) return false;
+
+    return m_conversionRules.lookup( {input, output, false} ) != nullptr;
 }
 
-piranha::Node *piranha::LanguageRules::generateConversion(const NodeTypeConversion &conversion) {
-    std::string rule = resolveConversionBuiltinType(conversion);
+piranha::Node *piranha::LanguageRules::generateConversion(const ChannelType *input, const ChannelType *output) {
+    std::string rule = resolveConversionBuiltinType(input, output);
     if (rule.empty()) return nullptr;
 
     return generateBuiltinType(rule);
 }
 
 std::string piranha::LanguageRules::resolveConversionBuiltinType(
-    const NodeTypeConversion &conversion) const 
+    const ChannelType *input, const ChannelType *output) const
 {
-    std::string *rule = m_conversionRules.lookup(conversion);
+    if (input == nullptr) return "";
+    if (output == nullptr) return "";
+
+    std::string *rule = m_conversionRules.lookup({ input, output, false });
     if (rule == nullptr) return "";
     else return *rule;
 }

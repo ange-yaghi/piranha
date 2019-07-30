@@ -19,7 +19,7 @@ void piranha::ChannelType::initialize(const char *type, const ChannelType *paren
 }
 
 bool piranha::ChannelType::isCompatibleWith(const ChannelType &t) const {
-    if (this->operator==(t)) return true;
+    if (isEqual(t)) return true;
     else {
         return (m_parent == nullptr) 
             ? false
@@ -27,7 +27,7 @@ bool piranha::ChannelType::isCompatibleWith(const ChannelType &t) const {
     }
 }
 
-bool piranha::ChannelType::operator==(const ChannelType &t) const {
+bool piranha::ChannelType::isEqual(const ChannelType &t) const {
     return (m_hash == t.m_hash) 
         ? strcmp(t.m_typeString, m_typeString) == 0
         : false;
