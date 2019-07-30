@@ -172,10 +172,10 @@ void piranha::Node::registerInputs() {
     /* void */
 }
 
-void piranha::Node::registerInput(
-    pNodeInput *node, const std::string &name) 
+void piranha::Node::
+	registerInput(pNodeInput *node, const std::string &name, bool modifiesInput) 
 {
-    m_inputs.push_back({ node, name });
+    m_inputs.push_back({ node, name, modifiesInput });
 }
 
 void piranha::Node::registerOutput(NodeOutput *node, const std::string &name) {
