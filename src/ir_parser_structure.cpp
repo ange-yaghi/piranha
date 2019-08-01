@@ -45,7 +45,10 @@ piranha::IrParserStructure::IrParserStructure() {
     m_checkReferences = true;
 
     m_definitionsResolved = false;
+    m_expanded = false;
     m_validated = false;
+    m_typesChecked = false;
+    m_instantiationChecked = false;
 
     m_visibility = IrVisibility::DEFAULT;
     m_defaultVisibility = IrVisibility::PRIVATE;
@@ -162,6 +165,7 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
 
 void piranha::IrParserStructure::resolveDefinitions() {
     if (m_definitionsResolved) return;
+    m_definitionsResolved = true;
 
     // Resolve components
     int componentCount = getComponentCount();
@@ -170,11 +174,12 @@ void piranha::IrParserStructure::resolveDefinitions() {
     }
 
     _resolveDefinitions();
-
-    m_definitionsResolved = true;
 }
 
 void piranha::IrParserStructure::expand() {
+    if (m_expanded) return;
+    m_expanded = true;
+
     // Check components
     int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
@@ -246,6 +251,9 @@ void piranha::IrParserStructure::checkTypes(IrContextTree *inputContext) {
 }
 
 void piranha::IrParserStructure::checkInstantiation() {
+    if (m_instantiationChecked) return;
+    m_instantiationChecked = true;
+
     // Check components
     int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
@@ -256,6 +264,9 @@ void piranha::IrParserStructure::checkInstantiation() {
 }
 
 void piranha::IrParserStructure::checkTypes() {
+    if (m_typesChecked) return;
+    m_typesChecked = true;
+
     // Check components
     int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
@@ -267,6 +278,7 @@ void piranha::IrParserStructure::checkTypes() {
 
 void piranha::IrParserStructure::validate() {
     if (m_validated) return;
+    m_validated = true;
 
     // Validate components
     int componentCount = getComponentCount();
@@ -274,9 +286,7 @@ void piranha::IrParserStructure::validate() {
         m_components[i]->validate();
     }
 
-    _validate();
-
-    m_validated = true;
+    _validate();  
 }
 
 void piranha::IrParserStructure::_validate() {

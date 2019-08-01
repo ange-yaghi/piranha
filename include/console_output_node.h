@@ -1,9 +1,9 @@
 #ifndef PIRANHA_CONSOLE_OUTPUT_NODE_H
 #define PIRANHA_CONSOLE_OUTPUT_NODE_H
 
-#include "../include/node.h"
+#include "node.h"
 
-#include "../include/fundamental_types.h"
+#include "fundamental_types.h"
 
 #include <string>
 #include <iostream>

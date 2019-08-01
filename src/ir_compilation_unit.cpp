@@ -78,6 +78,33 @@ void piranha::IrCompilationUnit::_checkTypes() {
     }
 }
 
+void piranha::IrCompilationUnit::resolveAll() {
+    if (m_unitResolved) return;
+    else m_unitResolved = true;
+
+    int dependencyCount = getDependencyCount();
+    for (int i = 0; i < dependencyCount; i++) {
+        getDependency(i)->resolveAll();
+    }
+
+    resolveDefinitions();
+    expand();
+    checkInstantiation();
+    checkTypes();
+}
+
+void piranha::IrCompilationUnit::validateAll() {
+    if (m_unitValidated) return;
+    else m_unitValidated = true;
+
+    int dependencyCount = getDependencyCount();
+    for (int i = 0; i < dependencyCount; i++) {
+        getDependency(i)->validateAll();
+    }
+
+    validate();
+}
+
 void piranha::IrCompilationUnit::_expand() {
     IrContextTree *mainContext = new IrContextTree(nullptr, true);
 
@@ -365,5 +392,4 @@ std::ostream& piranha::IrCompilationUnit::print(std::ostream &stream) {
 
 void piranha::IrCompilationUnit::addDependency(IrCompilationUnit *unit) { 
     m_dependencies.push_back(unit); 
-    registerComponent(unit); 
 }

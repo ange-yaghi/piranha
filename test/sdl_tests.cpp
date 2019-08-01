@@ -446,8 +446,8 @@ TEST(IrTests, IrPositionAttributeTest) {
     // 2 are from the dependency
     EXPECT_EQ(errorCount, 3);
 
-    CompilationError *err0 = errors->getCompilationError(0);
-    EXPECT_ERROR_CODE(err0, ErrorCode::ArgumentPositionOutOfBounds);
+    CompilationError *err2 = errors->getCompilationError(2);
+    EXPECT_ERROR_CODE(err2, ErrorCode::ArgumentPositionOutOfBounds);
 
     IrNode *nodeInstance = unit->getNode(0);
 
