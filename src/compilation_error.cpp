@@ -53,11 +53,10 @@ ERR(SymbolUsedMultipleTimes) =  { "V", "0030", "Symbol used multiple times" };
 ERR(InputNotConnected) =        { "V", "0040", "Input not connected" };
 ERR(OutputWithNoDefinition) =   { "V", "0050", "Output with no definition" };
 ERR(BuiltinOutputWithDefinition) =
-                                { "V", "0051", "Built-in output given a definition" };
-ERR(BuiltinOutputMissingType) = { "V", "0052", "Built-in output missing a definition" };
-ERR(StandardOutputWithType) =   { "V", "0051", "Built-in output given a definition" };
+                                { "V", "0051", "Builtin output given a definition" };
+ERR(BuiltinOutputMissingType) = { "V", "0052", "Builtin output missing a type" };
 ERR(InputSpecifiedMultipleTimesPositional) =
-                                { "V", "0011", "Input specified multiple times by positional" };
+                                { "V", "0011", "Input specified multiple times by position" };
 ERR(DuplicateNodeDefinition) =  { "V", "0060", "Multiple definitions with the same name" };
 ERR(UndefinedBuiltinType) =     { "V", "0070", "Undefined builtin type" };
 ERR(UndefinedBuiltinInput) =

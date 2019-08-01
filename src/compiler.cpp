@@ -139,10 +139,7 @@ void piranha::Compiler::resolve() {
     int unitCount = getUnitCount();
     for (int i = 0; i < unitCount; i++) {
         IrCompilationUnit *unit = m_units[i];
-        unit->resolveDefinitions();
-        unit->expand();
-        unit->checkInstantiation();
-        unit->checkTypes();
+        unit->resolveAll();
     }
 }
 
@@ -150,6 +147,6 @@ void piranha::Compiler::validate() {
     int unitCount = getUnitCount();
     for (int i = 0; i < unitCount; i++) {
         IrCompilationUnit *unit = m_units[i];
-        unit->validate();
+        unit->validateAll();
     }
 }

@@ -19,6 +19,8 @@ BUILD_DIR = ROOT_DIR + "/build/"
 OUTPUT_DIR = BUILD_DIR + "/piranha/"
 BINARY_PATH = ROOT_DIR + "/project/"
 INCLUDE_DIR = ROOT_DIR + "/include/"
+AUTOGEN_DIR = ROOT_DIR + "/autogen/"
+FLEX_DIR = ROOT_DIR + "/dependencies/libraries/flex/include/"
 
 BINARY_NAME = 'piranha.lib'
 PDB_NAME = 'piranha.pdb'
@@ -28,8 +30,20 @@ def generate_build_lib_path(architecture, mode):
     return OUTPUT_DIR + "/lib/{0}/{1}/".format(architecture, mode)
 
 
-def generate_build_include_path():
-    return OUTPUT_DIR + "/include/piranha/"
+def generate_build_header_path():
+    return OUTPUT_DIR + "/include/include/"
+
+
+def generate_main_path():
+    return OUTPUT_DIR + "/include/"
+
+
+def generate_build_autogen_path():
+    return OUTPUT_DIR + "/include/autogen/"
+
+
+def generate_library_header_path():
+    return OUTPUT_DIR + "/include/lib/"
 
 
 def genrate_binary_source_path(architecture, mode):
@@ -82,12 +96,48 @@ def copy_binary(architecture, mode):
 def copy_include_files(architecture, mode):
     log("INFO", "Copying include headers")
 
-    output_path = generate_build_include_path()
+    output_path = generate_build_header_path()
     make_directory(output_path)
 
+    all_headers = []
     for root, sub_dirs, files in os.walk(INCLUDE_DIR):
         for file_entry in files:
             shutil.copy(os.path.join(root, file_entry.strip()), output_path)
+            all_headers.append(file_entry)
+
+    output_path = generate_build_autogen_path()
+    make_directory(output_path)
+    for root, sub_dirs, files in os.walk(AUTOGEN_DIR):
+        for file_entry in files:
+            if file_entry.endswith('.h'):
+                shutil.copy(os.path.join(root, file_entry.strip()), output_path)
+
+    output_path = generate_library_header_path()
+    make_directory(output_path)
+    for root, sub_dirs, files in os.walk(FLEX_DIR):
+        for file_entry in files:
+            if file_entry.endswith('.h'):
+                shutil.copy(os.path.join(root, file_entry.strip()), output_path) 
+    
+    output_path = generate_main_path()
+    log("INFO", "Generating main include header: piranha.h")
+    with open(output_path + 'piranha.h', 'w') as f:
+        f.write('// Auto-generated on: {}\n'.format(datetime.datetime.now()))
+        f.write('\n')
+
+        f.write("#ifndef PIRANHA_PIRANHA_H\n")
+        f.write('#define PIRANHA_PIRANHA_H\n')
+
+        f.write('\n')
+        f.write("#define PIRANHA_DIST\n")
+        f.write('\n')
+
+        for filename in all_headers:
+            f.write('#include \"include/{}\"\n'.format(filename))
+
+        f.write('\n')
+
+        f.write('#endif /* PIRANHA_PIRANHA_H */\n')
 
 
 def write_info_file(architecture, mode):

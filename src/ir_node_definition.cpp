@@ -195,11 +195,6 @@ void piranha::IrNodeDefinition::_validate() {
                             ErrorCode::OutputWithNoDefinition));
                     }
                 }
-
-                if (definition->typeInfoSpecified() && !isBuiltin()) {
-                    unit->addCompilationError(new CompilationError(*definition->getNameToken(),
-                        ErrorCode::StandardOutputWithType));
-                }
             }
         }
     }

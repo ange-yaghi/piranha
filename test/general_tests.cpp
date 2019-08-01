@@ -309,3 +309,11 @@ TEST(GeneralTests, GeneralSyntaxTest_23) {
 
     EXPECT_EQ(errList->getErrorCount(), 5);
 }
+
+TEST(GeneralTests, GeneralSyntaxTest_24) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_24a.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+}

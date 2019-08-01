@@ -2,7 +2,11 @@
 #define PIRANHA_SCANNER_H
 
 #if !defined(yyFlexLexerOnce)
+#ifdef PIRANHA_DIST
+#include "../lib/FlexLexer.h"
+#else
 #include <FlexLexer.h>
+#endif /* PIRANHA_DIST */
 #endif
 
 #include "../autogen/parser.auto.h"
