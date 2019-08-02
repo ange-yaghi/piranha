@@ -218,8 +218,12 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
         expansion->setScopeParent(this);
         expansion->setDefinition(nodeDefinition);
         expansion->setRules(m_rules);
-        expansion->expand(context);
         expansion->resolveDefinitions();
+        expansion->expand(context);
+
+        if (nodeDefinition == nullptr) {
+            // TODO: raise error here
+        }
 
         *m_expansions.newValue(context) = expansion;
     }
