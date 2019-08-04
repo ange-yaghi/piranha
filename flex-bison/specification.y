@@ -84,6 +84,7 @@
 %token <piranha::IrTokenInfo_string>    INPUT
 %token <piranha::IrTokenInfo_string>    OUTPUT
 %token <piranha::IrTokenInfo_string>    MODIFY
+%token <piranha::IrTokenInfo_string>    TOGGLE
 %token <piranha::IrTokenInfo_string>    LABEL
 %token <piranha::IrTokenInfo_int>       INT
 %token <piranha::IrTokenInfo_float>     FLOAT
@@ -329,7 +330,8 @@ port_definitions
 port_declaration
   : INPUT LABEL                                         { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::INPUT); }
   | OUTPUT LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::OUTPUT); }
-  | MODIFY LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::MODIFY); }  
+  | MODIFY LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::MODIFY); }
+  | TOGGLE LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::TOGGLE); }  
   ;
 
 port_status

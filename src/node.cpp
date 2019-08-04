@@ -2,6 +2,7 @@
 
 #include "../include/node_output.h"
 #include "../include/node_program.h"
+#include "../include/fundamental_types.h"
 
 #include <assert.h>
 
@@ -13,6 +14,9 @@ piranha::Node::Node() {
     m_evaluated = false;
     m_primaryOutput = nullptr;
     m_primaryReference = nullptr;
+
+    m_enableInput = nullptr;
+    m_enabled = true;
 }
 
 piranha::Node::~Node() {
@@ -34,6 +38,9 @@ void piranha::Node::initialize() {
 
 void piranha::Node::evaluate() {
     if (isEvaluated()) return;
+
+    checkEnabled();
+    if (!isEnabled()) return;
 
     // Set evaluated flag
     m_evaluated = true;
@@ -95,12 +102,14 @@ void piranha::Node::connectDefaultInput(pNodeInput input) {
 
 bool piranha::Node::getInputPortInfo(const std::string &name, PortInfo *info) const {
     info->modifiesInput = false;
+    info->isToggle = false;
 
     int inputCount = getInputCount();
     bool found = false;
     for (int i = 0; i < inputCount; i++) {
         if (name == m_inputs[i].name) {
             info->modifiesInput = m_inputs[i].modifiesInput || info->modifiesInput;
+            info->isToggle = m_inputs[i].enableInput || info->isToggle;
             found = true;
         }
     }
@@ -173,9 +182,11 @@ void piranha::Node::registerInputs() {
 }
 
 void piranha::Node::
-    registerInput(pNodeInput *node, const std::string &name, bool modifiesInput) 
+    registerInput(pNodeInput *node, const std::string &name, bool modifiesInput, bool enableInput)
 {
-    m_inputs.push_back({ node, name, modifiesInput });
+    m_inputs.push_back({ node, name, modifiesInput, enableInput });
+
+    if (enableInput) m_enableInput = node;
 }
 
 void piranha::Node::registerOutput(NodeOutput *node, const std::string &name) {
@@ -189,6 +200,35 @@ void piranha::Node::setPrimaryOutput(NodeOutput *node) {
 
 void piranha::Node::setPrimaryOutputReference(NodeOutput **node) {
     m_primaryReference = node;
+}
+
+void piranha::Node::checkEnabled() {
+    if (m_checkedEnabled) return;
+    else m_checkedEnabled = true;
+
+    bool enabled = true;
+
+    // Check all dependencies
+    int inputCount = getInputCount();
+    for (int i = 0; i < inputCount; i++) {
+        pNodeInput *node = m_inputs[i].input;
+        if (node != nullptr && *node != nullptr) {
+            (*node)->checkEnabled();
+            if (!(*node)->isEnabled()) enabled = false;
+        }
+    }
+
+    // Check the enable input
+    if (m_enableInput != nullptr) {
+        pNodeInput node = *m_enableInput;
+
+        native_bool enable;
+        node->fullCompute((void *)&enable);
+
+        if (!enable) enabled = false;
+    }
+
+    m_enabled = enabled;
 }
 
 void piranha::Node::registerOutputReference(NodeOutput *const *node, const std::string &name) {

@@ -62,6 +62,7 @@ namespace piranha {
 
     protected:
         virtual void _validate();
+        void validateBuiltinMappings();
     };
 
 } /* namespace piranha */
