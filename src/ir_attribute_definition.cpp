@@ -2,15 +2,15 @@
 
 #include "../include/ir_value.h"
 #include "../include/ir_compilation_unit.h"
-#include "../include/compilation_error.h"
 #include "../include/ir_context_tree.h"
-#include "../include/language_rules.h"
 #include "../include/ir_node_definition.h"
 #include "../include/ir_node.h"
-#include "../include/node_output.h"
 #include "../include/ir_attribute.h"
 #include "../include/ir_attribute_list.h"
 #include "../include/ir_value_constant.h"
+#include "../include/compilation_error.h"
+#include "../include/node_output.h"
+#include "../include/language_rules.h"
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(
     const IrTokenInfo_string &directionToken, const IrTokenInfo_string &name, DIRECTION dir) 
@@ -23,8 +23,7 @@ piranha::IrAttributeDefinition::IrAttributeDefinition(
 
     m_direction = dir;
 
-    if (m_direction == OUTPUT) setVisibility(IrVisibility::PUBLIC);
-    else setVisibility(IrVisibility::PRIVATE);
+    setVisibility(IrVisibility::PUBLIC);
 }
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &name) {
@@ -253,7 +252,7 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
     // NOTE - This should only really be used in unit testing
     if (m_rules == nullptr) return;
 
-    if (m_typeDefinition != nullptr && m_defaultValue != nullptr) {
+    if (getTypeDefinition() != nullptr && m_defaultValue != nullptr) {
         IrReferenceInfo info;
         IrReferenceQuery query;
         query.inputContext = context;
@@ -277,9 +276,9 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 
         IrNode *refAsNode = defaultReference->getAsNode();
         if (refAsNode != nullptr) {
-            IrNodeDefinition *definition = refAsNode->getDefinition();
+            IrNodeDefinition *definition = refAsNode->getDefinition()->getAliasType();
             if (definition == nullptr) return; // A syntax error must have already occurred
-            if (definition == m_typeDefinition) return; // Type is confirmed to be correct
+            if (definition == getTypeDefinition()) return; // Type is confirmed to be correct
         }
 
         const ChannelType *type = info.isFixedType() 
@@ -294,7 +293,7 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
         IrCompilationUnit *unit = getParentUnit();
 
         // Errors for inputs/outputs differ only in code but are fundamentally the same
-        if (m_direction == INPUT || m_direction == MODIFY) {
+        if (m_direction == INPUT || m_direction == MODIFY || m_direction == TOGGLE) {
             unit->addCompilationError(new CompilationError(*m_defaultValue->getSummaryToken(),
                 ErrorCode::IncompatibleDefaultType, context));
         }
@@ -306,7 +305,7 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 }
 
 bool piranha::IrAttributeDefinition::isInput() const {
-    return m_direction == INPUT || m_direction == MODIFY;
+    return m_direction == INPUT || m_direction == MODIFY || m_direction == TOGGLE;
 }
 
 void piranha::IrAttributeDefinition::_resolveDefinitions() {

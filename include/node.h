@@ -26,6 +26,7 @@ namespace piranha {
             pNodeInput *input;
             std::string name;
             bool modifiesInput;
+            bool enableInput;
         };
 
         struct NodeOutputPort {
@@ -40,6 +41,7 @@ namespace piranha {
 
         struct PortInfo {
             bool modifiesInput;
+            bool isToggle;
         };
 
     public:
@@ -87,6 +89,9 @@ namespace piranha {
         void setProgram(NodeProgram *program) { m_program = program; }
         NodeProgram *getProgram() const { return m_program; }
 
+        void checkEnabled();
+        bool isEnabled() const { return m_enabled; }
+
     protected:
         virtual void _initialize();
         virtual void _evaluate();
@@ -106,7 +111,7 @@ namespace piranha {
     protected:
         std::vector<NodeInputPort> m_inputs;
         void registerInput(
-            pNodeInput *node, const std::string &name, bool modifiesInput=false);
+            pNodeInput *node, const std::string &name, bool modifiesInput=false, bool enableInput=false);
 
         std::vector<NodeOutputPort> m_outputs;
         void registerOutput(NodeOutput *node, const std::string &name);
@@ -121,12 +126,17 @@ namespace piranha {
         NodeOutput *m_primaryOutput;
         NodeOutput **m_primaryReference;
 
+        pNodeInput *m_enableInput;
+
     private:
         // State variables
 
         // Initialization status
         bool m_initialized;
         bool m_evaluated;
+        bool m_checkedEnabled;
+
+        bool m_enabled;
 
     protected:
         // Context

@@ -63,7 +63,8 @@ ERR(UndefinedBuiltinInput) =
                                 { "V", "0080", "Undefined builtin input" };
 ERR(UndefinedBuiltinOutput) =
                                 { "V", "0081", "Undefined builtin output" };
-ERR(ModifyAttributeMismatch) =  { "V", "0090", "Attribute should be declared as 'modify'" };
+ERR(ModifyAttributeMismatch) =  { "V", "0090", "Input modify flag doesn't match builtin type" };
+ERR(ToggleAttributeMismatch) =  { "V", "0100", "Input toggle flag doesn't match builtin type" };
 
 // [T] - Type errors
 ERR(IncompatibleType) =         { "T", "0010", "Argument with incompatible type specified; valid conversion not found" };
