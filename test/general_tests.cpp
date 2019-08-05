@@ -73,7 +73,6 @@ TEST(GeneralTests, GeneralSyntaxTest_06) {
     EXPECT_EQ(errList->getErrorCount(), 0);
 
     NodeProgram program;
-    program.setRules(rules);
     unit->build(&program);
 }
 
@@ -85,7 +84,6 @@ TEST(GeneralTests, GeneralSyntaxTest_07) {
     EXPECT_EQ(errList->getErrorCount(), 0);
 
     NodeProgram program;
-    program.setRules(rules);
     unit->build(&program);
 }
 
@@ -97,7 +95,6 @@ TEST(GeneralTests, GeneralSyntaxTest_08) {
     EXPECT_EQ(errList->getErrorCount(), 0);
 
     NodeProgram program;
-    program.setRules(rules);
     unit->build(&program);
 }
 
@@ -109,13 +106,12 @@ TEST(GeneralTests, GeneralSyntaxTest_09) {
     EXPECT_EQ(errList->getErrorCount(), 0);
 
     NodeProgram program;
-    program.setRules(rules);
     unit->build(&program);
 
     program.execute();
 
     piranha::vector v;
-    program.getNode(18)->getPrimaryOutput()->fullCompute(&v);
+    program.getTopLevelContainer()->getNode(18)->getPrimaryOutput()->fullCompute(&v);
 
     EXPECT_EQ(v.x, 0.0);
     EXPECT_EQ(v.y, 0.0);
@@ -205,7 +201,6 @@ TEST(GeneralTests, GeneralSyntaxTest_17) {
     EXPECT_EQ(errList->getErrorCount(), 0);
 
     NodeProgram program;
-    program.setRules(rules);
     unit->build(&program);
 
     program.execute();
@@ -316,4 +311,24 @@ TEST(GeneralTests, GeneralSyntaxTest_24) {
     IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_24a.mr", &errList, &rules);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_25) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_25.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+
+    piranha::native_int v;
+    program.getTopLevelContainer()->getNode(1)->getPrimaryOutput()->fullCompute((void *)&v);
+
+    EXPECT_EQ(v, 15);
+
+    int a = 0;
 }

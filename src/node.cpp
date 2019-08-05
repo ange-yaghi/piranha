@@ -3,6 +3,7 @@
 #include "../include/node_output.h"
 #include "../include/node_program.h"
 #include "../include/fundamental_types.h"
+#include "../include/node_container.h"
 
 #include <assert.h>
 
@@ -12,15 +13,55 @@ piranha::Node::Node() {
 
     m_initialized = false;
     m_evaluated = false;
-    m_primaryOutput = nullptr;
-    m_primaryReference = nullptr;
+    m_primaryOutput = "";
 
     m_enableInput = nullptr;
     m_enabled = true;
+    m_enableInputDependency = nullptr;
+
+    m_program = nullptr;
+    m_container = nullptr;
+    m_interfaceInput = nullptr;
 }
 
 piranha::Node::~Node() {
     /* void */
+}
+
+piranha::Node *piranha::Node::getAliasNode() {
+    NodeOutput *primary = getPrimaryOutput();
+    if (primary != nullptr) {
+        Node *outInterface = primary->getInterface();
+        if (outInterface != nullptr) {
+            return outInterface->getAliasNode();
+        }
+        else return this;
+    }
+
+    Node *primaryNode = getPrimaryNode();
+    if (primaryNode != nullptr) {
+        return primaryNode->getAliasNode();
+    }
+    
+    return this;
+}
+
+piranha::NodeOutput *piranha::Node::getAliasOutput() {
+    NodeOutput *primary = getPrimaryOutput();
+    if (primary != nullptr) {
+        Node *outInterface = primary->getInterface();
+        if (outInterface != nullptr) {
+            return outInterface->getAliasOutput();
+        }
+        else return primary;
+    }
+
+    Node *primaryNode = getPrimaryNode();
+    if (primaryNode != nullptr) {
+        return primaryNode->getAliasOutput();
+    }
+
+    return getInterfaceInput();
 }
 
 void piranha::Node::initialize() {
@@ -50,6 +91,11 @@ void piranha::Node::evaluate() {
     for (int i = 0; i < inputCount; i++) {
         pNodeInput *node = m_inputs[i].input;
         if (node != nullptr && *node != nullptr) {
+            // Evaluate the dependency first if it exists
+            if (m_inputs[i].dependency != nullptr) {
+                m_inputs[i].dependency->evaluate();
+            }
+
             (*node)->evaluate();
         }
     }
@@ -59,8 +105,11 @@ void piranha::Node::evaluate() {
 
     int outputReferenceCount = getOutputReferenceCount();
     for (int i = 0; i < outputReferenceCount; i++) {
-        NodeOutput *node = *m_outputReferences[i].output;
-        node->evaluate();
+        NodeOutput *output = *m_outputReferences[i].output;
+        if (output != nullptr) output->evaluate();
+
+        Node *nodeOutput = m_outputReferences[i].nodeOutput;
+        if (nodeOutput != nullptr) nodeOutput->evaluate();
     }
 }
 
@@ -71,12 +120,17 @@ void piranha::Node::destroy() {
     _destroy();
 }
 
-void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
+void piranha::Node::connectEnableInput(pNodeInput input, Node *dependency) {
+    *m_enableInput = input;
+    m_enableInputDependency = dependency;
+}
+
+void piranha::Node::connectInput(pNodeInput input, const std::string &name, Node *dependency, Node *nodeInput) {
     int inputCount = getInputCount();
 
     for (int i = 0; i < inputCount; i++) {
         if (name == m_inputs[i].name) {
-            connectInput(input, i);
+            connectInput(input, i, dependency, nodeInput);
             
             // Warning: do not break here! There could potentially be multiple
             // inputs with the same name referencing different endpoints
@@ -84,8 +138,9 @@ void piranha::Node::connectInput(pNodeInput input, const std::string &name) {
     }
 }
 
-void piranha::Node::connectInput(pNodeInput input, int index) {
+void piranha::Node::connectInput(pNodeInput input, int index, Node *dependency, Node *nodeInput) {
     *m_inputs[index].input = input;
+    m_inputs[index].dependency = dependency;
 
     // If this port can modify the input value, the channel
     // being connected has to be notified
@@ -94,15 +149,10 @@ void piranha::Node::connectInput(pNodeInput input, int index) {
     }
 }
 
-void piranha::Node::connectDefaultInput(pNodeInput input) {
-    assert(getInputCount() == 1); // Use of this function is reserved with single input nodes
-
-    connectInput(input, 0);
-}
-
 bool piranha::Node::getInputPortInfo(const std::string &name, PortInfo *info) const {
     info->modifiesInput = false;
     info->isToggle = false;
+    info->isAlias = false;
 
     int inputCount = getInputCount();
     bool found = false;
@@ -118,11 +168,11 @@ bool piranha::Node::getInputPortInfo(const std::string &name, PortInfo *info) co
 }
 
 piranha::NodeOutput *piranha::Node::getPrimaryOutput() const {
-    return (m_primaryOutput != nullptr) 
-        ? m_primaryOutput
-        : (m_primaryReference != nullptr) 
-            ? *m_primaryReference
-            : nullptr;
+    return getOutput(m_primaryOutput);
+}
+
+piranha::Node *piranha::Node::getPrimaryNode() const {
+    return getNodeOutput(m_primaryOutput);
 }
 
 piranha::NodeOutput *piranha::Node::getOutput(const std::string &name) const {
@@ -144,8 +194,25 @@ piranha::NodeOutput *piranha::Node::getOutput(const std::string &name) const {
     return nullptr;
 }
 
+piranha::Node *piranha::Node::getNodeOutput(const std::string &name) const {
+    int outputReferenceCount = getOutputReferenceCount();
+    for (int i = 0; i < outputReferenceCount; i++) {
+        if (name == m_outputReferences[i].name) {
+            return m_outputReferences[i].nodeOutput;
+        }
+    }
+
+    return nullptr;
+}
+
 bool piranha::Node::getOutputPortInfo(const std::string &name, PortInfo *info) const {
     info->modifiesInput = false;
+    info->isToggle = false;
+    info->isAlias = false;
+
+    if (m_primaryOutput == name) {
+        info->isAlias = true;
+    }
 
     bool found = false;
     int referenceOutputCount = getOutputReferenceCount();
@@ -163,6 +230,11 @@ bool piranha::Node::getOutputPortInfo(const std::string &name, PortInfo *info) c
     }
 
     return found;
+}
+
+piranha::NodeOutput *piranha::Node::getInterfaceInput() const {
+    if (m_interfaceInput == nullptr) return nullptr;
+    else return *m_interfaceInput;
 }
 
 void piranha::Node::_initialize() {
@@ -184,7 +256,7 @@ void piranha::Node::registerInputs() {
 void piranha::Node::
     registerInput(pNodeInput *node, const std::string &name, bool modifiesInput, bool enableInput)
 {
-    m_inputs.push_back({ node, name, modifiesInput, enableInput });
+    m_inputs.push_back({ node, nullptr, nullptr, name, modifiesInput, enableInput });
 
     if (enableInput) m_enableInput = node;
 }
@@ -194,45 +266,69 @@ void piranha::Node::registerOutput(NodeOutput *node, const std::string &name) {
     node->setParentNode(this);
 }
 
-void piranha::Node::setPrimaryOutput(NodeOutput *node) {
-    m_primaryOutput = node;
-}
-
-void piranha::Node::setPrimaryOutputReference(NodeOutput **node) {
-    m_primaryReference = node;
-}
-
 void piranha::Node::checkEnabled() {
     if (m_checkedEnabled) return;
     else m_checkedEnabled = true;
 
-    bool enabled = true;
+    m_enabled = true;
 
     // Check all dependencies
     int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
-        pNodeInput *node = m_inputs[i].input;
-        if (node != nullptr && *node != nullptr) {
-            (*node)->checkEnabled();
-            if (!(*node)->isEnabled()) enabled = false;
+        // Check the dependency node first
+        Node *dependency = m_inputs[i].dependency;
+        bool isDependencyDisabled = false;
+        if (dependency != nullptr) {
+            dependency->checkEnabled();
+            if (!dependency->isEnabled()) {
+                isDependencyDisabled = true;
+                m_enabled = false;
+            }
+        }
+
+        if (!isDependencyDisabled) {
+            pNodeInput *node = m_inputs[i].input;
+            if (node != nullptr && *node != nullptr) {
+                (*node)->checkEnabled();
+                if (!(*node)->isEnabled()) m_enabled = false;
+            }
         }
     }
 
     // Check the enable input
     if (m_enableInput != nullptr) {
-        pNodeInput node = *m_enableInput;
+        bool isDependencyDisabled = false;
+        if (m_enableInputDependency != nullptr) {
+            m_enableInputDependency->checkEnabled();
+            if (!m_enableInputDependency->isEnabled()) {
+                m_enabled = false;
+                isDependencyDisabled = true;
+            }
+        }
 
-        native_bool enable;
-        node->fullCompute((void *)&enable);
+        if (!isDependencyDisabled) {
+            pNodeInput node = *m_enableInput;
 
-        if (!enable) enabled = false;
+            native_bool enable;
+            node->fullCompute((void *)&enable);
+
+            if (!enable) m_enabled = false;
+        }
     }
 
-    m_enabled = enabled;
+    // Check parent
+    if (m_container != nullptr) {
+        m_container->checkEnabled();
+        if (!m_container->isEnabled()) m_enabled = false;
+    }
 }
 
-void piranha::Node::registerOutputReference(NodeOutput *const *node, const std::string &name) {
-    m_outputReferences.push_back({ node, name });
+void piranha::Node::registerOutputReference(NodeOutput *const *output, const std::string &name, Node *node) {
+    m_outputReferences.push_back({ output, node, name });
+}
+
+void piranha::Node::setPrimaryOutput(const std::string &name) {
+    m_primaryOutput = name;
 }
 
 void piranha::Node::registerOutputs() {

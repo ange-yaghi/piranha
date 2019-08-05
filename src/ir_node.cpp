@@ -13,11 +13,12 @@
 #include "../include/node.h"
 #include "../include/standard_allocator.h"
 #include "../include/exceptions.h"
-#include "../include/node_program.h"
+#include "../include/node_container.h"
 
 piranha::IrNode::IrNode() {
     m_attributes = nullptr;
     m_isInterface = false;
+    m_build = true;
     m_definition = nullptr;
 }
 
@@ -37,6 +38,7 @@ piranha::IrNode::IrNode(
 
     m_definition = nullptr;
     m_isInterface = false;
+    m_build = true;
 }
 
 piranha::IrNode::IrNode(
@@ -54,6 +56,7 @@ piranha::IrNode::IrNode(
 
     m_definition = nullptr;
     m_isInterface = false;
+    m_build = true;
 }
 
 piranha::IrNode::~IrNode() {
@@ -222,7 +225,7 @@ void piranha::IrNode::_expand(IrContextTree *context) {
 }
 
 void piranha::IrNode::_checkTypes() {
-    // Check types with this node as the focus                   ____
+    // Check types with this node as the focus                 ____
     IrContextTree *parentContext = new IrContextTree(nullptr); ////
     IrContextTree *mainContext = parentContext->newChild(this, true);
     if (m_definition != nullptr) {
@@ -325,11 +328,15 @@ void piranha::IrNode::resolveAttributeDefinitions() {
     }
 }
 
-piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgram *program) {
+piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeContainer *container) {
+    if (!isBuildEnabled()) return nullptr;
     if (isInterface()) {
-        Node *node = getScopeParent()
-            ->_generateNodeOutput(context, program)
-            ->getInterface();
+        Node *node = getScopeParent()->_generateNode(context, container);
+
+        //Node *node = getScopeParent()
+        //    ->_generateNodeOutput(context, container)
+        //    ->getInterface();
+        //Node *node = context->getContext()->generateNodeOutput(context->getParent(), container)->getInterface();
 
         if (node != nullptr) {
             node->setBuiltinName(m_definition->getBuiltinName());
@@ -345,32 +352,66 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     IrNodeDefinition *definition = getDefinition();
     const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
     const IrAttributeList *specifiedAttributes = getAttributes();
-    
-    struct Mapping {
-        std::string name;
-        NodeOutput *output;
-    };
 
-    std::vector<Mapping> inputs;
+    bool nonInlineContainer = false;
+    NodeContainer *newContainer = container;
+    Node *newNode = nullptr;
+    if (!m_definition->isBuiltin() && !m_definition->isInline()) {
+        newContainer = new NodeContainer;
+        newContainer->setName(getName());
+        newContainer->initialize();
+
+        newNode = newContainer;
+        nonInlineContainer = true;
+    }
+    
+    if (m_definition->isBuiltin()) {
+        std::string builtinType = m_definition->getBuiltinName();
+        if (builtinType.empty()) return nullptr;
+
+        newNode = m_rules->generateNode(builtinType);
+        if (newNode != nullptr) {
+            newNode->setName(getName());
+            newNode->initialize();
+        }
+        else return nullptr;
+    }
 
     int attributeCount = allAttributes->getDefinitionCount();
     for (int i = 0; i < attributeCount; i++) {
         IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
 
-        IrReferenceInfo info;
-        IrReferenceQuery query;
-        query.inputContext = newContext;
-        query.recordErrors = false;
-        IrParserStructure *reference = attributeDefinition->getReference(query, &info);
-
         // Skip if this is a builtin output as it wouldn't even be generated yet
         if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT &&
             m_definition->isBuiltin()) continue;
 
-        NodeOutput *output = reference->generateNodeOutput(info.newContext, program);
+        NodeOutput *output = attributeDefinition->generateNodeOutput(newContext, newContainer);
+        Node *node = attributeDefinition->generateNode(newContext, newContainer);
 
-        if (attributeDefinition->isInput()) {
-            inputs.push_back({ attributeDefinition->getName(), output });
+        if (nonInlineContainer) {
+            if (attributeDefinition->isInput()) {
+                newContainer->addContainerInput(attributeDefinition->getName(),
+                    attributeDefinition->getDirection() == IrAttributeDefinition::MODIFY,
+                    attributeDefinition->getDirection() == IrAttributeDefinition::TOGGLE);
+            }
+            else {
+                if (output != nullptr) output->addDependency(newNode);
+                if (node != nullptr) node->addDependency(newNode);
+
+                newContainer->addContainerOutput(
+                    output, 
+                    node, 
+                    attributeDefinition->getName(),
+                    attributeDefinition->isAlias());
+            }
+        }
+
+        if (attributeDefinition->isInput() && newNode != nullptr) {
+            if (output == nullptr) {
+                int a = 0;
+            }
+
+            newNode->connectInput(output, attributeDefinition->getName(), node);
         }
     }
 
@@ -380,37 +421,23 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         int nestedNodeCount = nestedNodeList->getItemCount();
         for (int i = 0; i < nestedNodeCount; i++) {
             IrNode *node = nestedNodeList->getItem(i);
-            node->generateNode(newContext, program);
+            node->generateNode(newContext, newContainer);
         }
-    }
-
-    std::string builtinType = m_definition->getBuiltinName();
-    if (builtinType.empty()) return nullptr;
-
-    Node *newNode = m_rules->generateNode(builtinType);
-    if (newNode != nullptr) {
-        newNode->setName(getName());
-        newNode->initialize();
-
-        int inputCount = (int)inputs.size();
-        for (int i = 0; i < inputCount; i++) {
-            newNode->connectInput(inputs[i].output, inputs[i].name.c_str());
-        }
-    }
-    else {
-        // The type is not valid
-        // If errors are checked properly
     }
 
     return newNode;
 }
 
 piranha::NodeOutput *piranha::IrNode::_generateNodeOutput(
-    IrContextTree *context, NodeProgram *program) 
+    IrContextTree *context, NodeContainer *container)
 {
-    return isInterface()
-        ? getScopeParent()->generateNodeOutput(context, program)
-        : nullptr;
+    if (isInterface()) {
+        if (!isBuildEnabled()) return nullptr;
+        return getScopeParent()->generateNodeOutput(context, container);
+    }
+    else {
+        return IrParserStructure::_generateNodeOutput(context, container);
+    }
 }
 
 piranha::IrParserStructure *piranha::IrNode::getDefaultPort(bool *failed) {

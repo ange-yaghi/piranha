@@ -53,6 +53,7 @@ H                   [a-fA-F0-9]
 "modify"            { DEFAULT_BUILD(location); return (token::MODIFY); }
 "toggle"            { DEFAULT_BUILD(location); return (token::TOGGLE); }
 "alias"             { DEFAULT_BUILD(location); return (token::ALIAS); }
+"inline"            { DEFAULT_BUILD(location); return (token::INLINE); }
 "node"              { DEFAULT_BUILD(location); return (token::NODE); }
 "public"            { DEFAULT_BUILD(location); return (token::PUBLIC); }
 "private"           { DEFAULT_BUILD(location); return (token::PRIVATE); }

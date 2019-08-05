@@ -1,12 +1,12 @@
 private import "../../../demos/piranha/standard-library/standard_library.mr" as std
 
-private node reverse_vector {
+private inline node reverse_vector {
     input vector;
     alias output reversed: 
         std::vector(vector.w, vector.z, vector.y, vector.x);
 }
 
-private node print_vector {
+private inline node print_vector {
     input vector;
 
     std::console_out(

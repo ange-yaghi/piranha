@@ -45,6 +45,8 @@ namespace piranha {
 
         void overrideType(const ChannelType *type) { m_singleType = type; }
 
+        void addDependency(Node *node) { m_dependencyChain.push_back(node); }
+
     protected:
         virtual Node *generateInterface() { return nullptr; }
 
@@ -67,6 +69,7 @@ namespace piranha {
 
         std::vector<NodeOutput **> m_inputs;
         std::vector<Node *> m_modifyConnections;
+        std::vector<Node *> m_dependencyChain;
     };
 
     // Type to reduce confusion

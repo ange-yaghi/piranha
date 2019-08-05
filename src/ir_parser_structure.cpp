@@ -13,6 +13,7 @@ piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
     failed = false;
     reachedDeadEnd = false;
     touchedMainContext = false;
+
     fixedType = nullptr;
 }
 
@@ -144,8 +145,10 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
         // Immediate takes precedence
         // NOTE - this has to be done here because even when reaching a dead end
         // fixed type information can still be used
-        if (nestedInfo.isFixedType()) IR_INFO_OUT(fixedType, nestedInfo.fixedType)
-        if (immediateInfo.isFixedType()) IR_INFO_OUT(fixedType, immediateInfo.fixedType)
+        if (immediateInfo.isFixedType())                    
+            { IR_INFO_OUT(fixedType, immediateInfo.fixedType); }
+        else if (nestedInfo.isFixedType())                  
+            { IR_INFO_OUT(fixedType, nestedInfo.fixedType); }
 
         if (nestedInfo.reachedDeadEnd) {
             IR_DEAD_END();
@@ -376,41 +379,65 @@ piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
 }
 
 piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(
-    IrContextTree *context, NodeProgram *program) 
+    IrContextTree *context, NodeProgram *program)
 {
     Node *node = program->getCachedInstance(this, context);
 
     if (node == nullptr) node = generateNode(context, program);
-    if (node != nullptr) return node->getPrimaryOutput();
+    if (node != nullptr) return node->getAliasOutput();
     else return _generateNodeOutput(context, program);
 }
 
 piranha::Node *piranha::IrParserStructure::generateNode(
-    IrContextTree *context, NodeProgram *program) 
+    IrContextTree *context, NodeProgram *program)
 {
-    Node *cachedNode = program->getCachedInstance(this, context);
-    if (cachedNode != nullptr) return cachedNode;
+    Node *node = program->getCachedInstance(this, context);
 
-    Node *node = _generateNode(context, program);
-    if (node != nullptr) {
-        if (program->getCachedInstance(this, context) == nullptr) {
+    if (node != nullptr) return node->getAliasNode();
+    else {
+        node = _generateNode(context, program);
+        if (node != nullptr) {
             node->setIrContext(context);
             node->setIrStructure(this);
-            program->addNode(node);
+
+            if (program->getCachedInstance(this, context) == nullptr) {
+                container->addNode(node);
+            }
+
+            return node->getAliasNode();
         }
+        else return nullptr;
     }
 
-    return node;
+    //if (node != nullptr) {
+    //    if (container->getTopLevel()->getCachedInstance(this, context) == nullptr) {
+    //        container->addNode(node);
+    //    }
+    //}
+
+    //return node->getAliasNode();
 }
 
 piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(
-    IrContextTree *context, NodeProgram *program) 
+    IrContextTree *context, NodeProgram *program)
 {
-    return nullptr;
+    IrReferenceInfo info;
+    IrReferenceQuery query;
+    query.inputContext = context;
+    query.recordErrors = false;
+    IrParserStructure *immediateReference = getImmediateReference(query, &info);
+
+    return immediateReference->generateNodeOutput(info.newContext, program);
 }
 
 piranha::Node *piranha::IrParserStructure::_generateNode(
-    IrContextTree *context, NodeProgram *program) 
+    IrContextTree *context, NodeProgram *program)
 {
-    return nullptr;
+    IrReferenceInfo info;
+    IrReferenceQuery query;
+    query.inputContext = context;
+    query.recordErrors = false;
+    IrParserStructure *immediateReference = getImmediateReference(query, &info);
+
+    return immediateReference->generateNode(info.newContext, program);
 }

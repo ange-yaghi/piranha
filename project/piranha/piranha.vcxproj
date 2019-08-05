@@ -172,6 +172,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\key_value_lookup.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
     <ClInclude Include="..\..\include\multiply_operation_output.h" />
+    <ClInclude Include="..\..\include\node_container.h" />
     <ClInclude Include="..\..\include\no_op_node.h" />
     <ClInclude Include="..\..\include\num_negate_operation.h" />
     <ClInclude Include="..\..\include\operation_node.h" />
@@ -227,6 +228,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\src\float_conversions.cpp" />
     <ClCompile Include="..\..\src\fundamental_types.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
+    <ClCompile Include="..\..\src\node_container.cpp" />
     <ClCompile Include="..\..\src\node_output.cpp" />
     <ClCompile Include="..\..\src\node_program.cpp" />
     <ClCompile Include="..\..\src\channel_type.cpp" />

@@ -1,6 +1,8 @@
 #ifndef PIRANHA_NODE_PROGRAM_H
 #define PIRANHA_NODE_PROGRAM_H
 
+#include "node_container.h"
+
 #include <vector>
 
 namespace piranha {
@@ -16,21 +18,12 @@ namespace piranha {
         ~NodeProgram();
         void execute();
 
-        int getNodeCount() const { return (int)m_nodes.size();  }
-        void addNode(Node *node);
-        Node *getNode(int index) const { return m_nodes[index]; }
-
-        void setRules(LanguageRules *rules) { m_rules = rules; }
-        LanguageRules *getRules() { return m_rules; }
-
-        Node *getCachedInstance(IrParserStructure *ir, IrContextTree *context);
-
         void writeAssembly(const std::string &fname) const;
 
-    protected:
-        std::vector<Node *> m_nodes;
+        NodeContainer *getTopLevelContainer() { return &m_topLevelContainer; }
 
-        LanguageRules *m_rules;
+    protected:
+        NodeContainer m_topLevelContainer;
     };
 
 } /* namespace piranha */

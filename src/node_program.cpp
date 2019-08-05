@@ -9,44 +9,21 @@
 #include <fstream>
 
 piranha::NodeProgram::NodeProgram() {
-    m_rules = nullptr;
+    /* void */
 }
 
 piranha::NodeProgram::~NodeProgram() {
     /* void */
 }
 
-void piranha::NodeProgram::addNode(Node *node) {
-    node->setProgram(this);
-    m_nodes.push_back(node);
-}
-
-piranha::Node *piranha::NodeProgram::
-    getCachedInstance(IrParserStructure *ir, IrContextTree *context)
-{
-    // TODO: this lookup could be made faster by having the lookup table be a tree
-    // with the first level being a lookup by node and the second by context
-
-    int nodeCount = getNodeCount();
-    for (int i = 0; i < nodeCount; i++) {
-        if (m_nodes[i]->getIrStructure() == ir) {
-            if (m_nodes[i]->getContext()->isEqual(context)) {
-                return m_nodes[i];
-            }
-        }
-    }
-
-    return nullptr;
-}
-
 void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
     KeyValueLookup<NodeOutput *, int> m_outputLookup;
     int currentIndex = 0;
 
-    int nodeCount = getNodeCount();
+    int nodeCount = m_topLevelContainer.getNodeCount();
 
     for (int i = 0; i < nodeCount; i++) {
-        Node *node = getNode(i);
+        Node *node = m_topLevelContainer.getNode(i);
 
         int nodeInputs = node->getInputCount();
         for (int i = 0; i < nodeInputs; i++) {
@@ -82,7 +59,7 @@ void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
     std::ofstream file(fname);
 
     for (int i = 0; i < nodeCount; i++) {
-        Node *node = getNode(i);
+        Node *node = m_topLevelContainer.getNode(i);
         std::string builtinName = node->getBuiltinName();
 
         file << builtinName << "\n";
@@ -125,16 +102,16 @@ void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
 }
 
 void piranha::NodeProgram::execute() {
-    int nodeCount = getNodeCount();
+    int nodeCount = m_topLevelContainer.getNodeCount();
 
     // Initialize all nodes
     for (int i = 0; i < nodeCount; i++) {
-        Node *node = getNode(i);
+        Node *node = m_topLevelContainer.getNode(i);
         node->initialize();
     }
 
     for (int i = 0; i < nodeCount; i++) {
-        Node *node = getNode(i);
+        Node *node = m_topLevelContainer.getNode(i);
         node->evaluate();
     }
 }
