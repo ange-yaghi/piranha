@@ -21,7 +21,6 @@ int main() {
         piranha::NodeProgram nodeProgram;
         piranha_demo::ReferenceLanguageRules languageRules;
         languageRules.registerBuiltinNodeTypes();
-        nodeProgram.setRules(&languageRules);
 
         piranha::Compiler compiler(&languageRules);
         piranha::IrCompilationUnit *unit = compiler.compile(filename);

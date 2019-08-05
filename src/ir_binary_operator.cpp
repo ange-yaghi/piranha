@@ -228,3 +228,33 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
         *m_expansions.newValue(context) = expansion;
     }
 }
+
+piranha::Node *piranha::IrBinaryOperator::
+    _generateNode(IrContextTree *context, NodeContainer *container) 
+{
+    if (m_operator == DOT) {
+        IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
+        Node *node = m_leftOperand->generateNode(context, container);
+        
+        if (node != nullptr) {
+            return node->getNodeOutput(labelConstant->getValue());
+        }
+        else return nullptr;
+    }
+    else return IrParserStructure::_generateNode(context, container);
+}
+
+piranha::NodeOutput *piranha::IrBinaryOperator::
+    _generateNodeOutput(IrContextTree *context, NodeContainer *container) 
+{
+    if (m_operator == DOT) {
+        IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
+        Node *node = m_leftOperand->generateNode(context, container);
+
+        if (node != nullptr) {
+            return node->getOutput(labelConstant->getValue());
+        }
+        else return nullptr;
+    }
+    else return IrParserStructure::_generateNodeOutput(context, container);
+}

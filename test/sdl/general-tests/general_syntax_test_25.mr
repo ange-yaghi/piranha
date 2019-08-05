@@ -1,0 +1,13 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+private node test {
+    output test: 15;
+}
+
+private node do_stuff {
+    input test;
+    alias output t: test.test;
+}
+
+test test()
+do_stuff(test)

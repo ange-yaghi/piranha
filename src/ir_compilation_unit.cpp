@@ -26,7 +26,7 @@ void piranha::IrCompilationUnit::build(NodeProgram *program) {
 
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
-        m_nodes[i]->generateNode(context, program);
+        m_nodes[i]->generateNode(context, program->getTopLevelContainer());
     }
 }
 

@@ -25,6 +25,9 @@ namespace piranha {
         void setDefinesBuiltin(bool defines) { m_definesBuiltin = defines; }
         bool isBuiltin() const { return m_definesBuiltin; }
 
+        void setIsInline(bool isInline) { m_isInline = isInline; }
+        bool isInline() const { return m_isInline; }
+
         const IrTokenInfo *getNameToken() const { return &m_name; }
         std::string getName() const { return m_name.data; }
 
@@ -49,6 +52,8 @@ namespace piranha {
 
         bool m_definesBuiltin;
         IrTokenInfo_string m_builtinName;
+
+        bool m_isInline;
 
         IrAttributeDefinitionList *m_attributes;
         IrNodeList *m_body;

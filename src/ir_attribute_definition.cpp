@@ -160,6 +160,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
             expansion->setLogicalParent(this);
             expansion->setScopeParent(this);
             expansion->setInterface(true);
+            expansion->setBuild(false);
             expansion->setDefinition(getTypeDefinition());
             expansion->setRules(m_rules);
             expansion->expand(context);
@@ -348,30 +349,30 @@ void piranha::IrAttributeDefinition::_resolveDefinitions() {
 }
 
 piranha::Node *piranha::IrAttributeDefinition::_generateNode(
-    IrContextTree *context, NodeProgram *program) 
+    IrContextTree *context, NodeContainer *container)
 {
     if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
         // This must be an interface
         return context
             ->getContext()
-            ->generateNode(context->getParent(), program)
+            ->_generateNode(context->getParent(), container)
             ->getOutput(getName())
             ->getInterface();
     }
 
-    return nullptr;
+    return IrParserStructure::_generateNode(context, container);
 }
 
 piranha::NodeOutput *piranha::IrAttributeDefinition::_generateNodeOutput(
-    IrContextTree *context, NodeProgram *program) 
+    IrContextTree *context, NodeContainer *container)
 {
     if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
         // This must be an interface
         return context
             ->getContext()
-            ->generateNode(context->getParent(), program)
+            ->generateNode(context->getParent(), container)
             ->getOutput(getName());
     }
 
-    return nullptr;
+    return IrParserStructure::_generateNodeOutput(context, container);
 }

@@ -67,7 +67,7 @@ namespace piranha {
             );
         }
 
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
+        virtual Node *_generateNode(IrContextTree *context, NodeContainer *container) {
             Node *newNode = generateNode(m_value, context);
             newNode->initialize();
 
@@ -138,6 +138,14 @@ namespace piranha {
 
             return reference;
         }
+
+        virtual Node *_generateNode(IrContextTree *context, NodeContainer *container) {
+            return IrParserStructure::_generateNode(context, container);
+        }
+
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeContainer *container) {
+            return IrParserStructure::_generateNodeOutput(context, container);
+        }
     };
 
     // Specialized type for node references
@@ -165,12 +173,12 @@ namespace piranha {
             return m_value;
         }
 
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-            return m_value->generateNode(context, program);
+        virtual Node *_generateNode(IrContextTree *context, NodeContainer *container) {
+            return m_value->generateNode(context, container);
         }
 
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-            return nullptr;
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeContainer *container) {
+            return m_value->generateNodeOutput(context, container);
         }
     };
 
@@ -201,6 +209,14 @@ namespace piranha {
 
             IR_INFO_OUT(newContext, m_newContext);
             return m_value;
+        }
+
+        virtual Node *_generateNode(IrContextTree *context, NodeContainer *container) {
+            return IrParserStructure::_generateNode(context, container);
+        }
+
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeContainer *container) {
+            return IrParserStructure::_generateNodeOutput(context, container);
         }
 
     protected:

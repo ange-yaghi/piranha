@@ -321,6 +321,9 @@
     <ClInclude Include="..\..\include\no_op_node.h">
       <Filter>Header Files\nodes\operations\unary</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\node_container.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
@@ -409,6 +412,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\ir_context_tree.cpp">
       <Filter>Source Files\syntax\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\node_container.cpp">
+      <Filter>Source Files\nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

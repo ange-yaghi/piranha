@@ -232,6 +232,10 @@ void piranha::IrNodeDefinition::validateBuiltinMappings() {
                 unit->addCompilationError(new CompilationError(*definition->getNameToken(),
                     ErrorCode::UndefinedBuiltinOutput));
             }
+            else if (info.isAlias != definition->isAlias()) {
+                unit->addCompilationError(new CompilationError(*definition->getNameToken(),
+                    ErrorCode::AliasAttributeMismatch));
+            }
         }
         else if (
             definition->getDirection() == IrAttributeDefinition::INPUT ||

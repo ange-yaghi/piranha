@@ -28,8 +28,9 @@ piranha::Node *piranha::NodeOutput::getModifyConnection(int index) const {
 }
 
 void piranha::NodeOutput::initialize() {
-    m_interface = generateInterface();
     registerInputs();
+
+    m_interface = generateInterface();
 }
 
 void piranha::NodeOutput::evaluate() {

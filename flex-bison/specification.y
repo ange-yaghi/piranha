@@ -80,6 +80,7 @@
 %token <piranha::IrTokenInfo_string>    IMPORT
 %token <piranha::IrTokenInfo_string>    AS
 %token <piranha::IrTokenInfo_string>    NODE
+%token <piranha::IrTokenInfo_string>    INLINE
 %token <piranha::IrTokenInfo_string>    ALIAS
 %token <piranha::IrTokenInfo_string>    INPUT
 %token <piranha::IrTokenInfo_string>    OUTPUT
@@ -140,6 +141,7 @@
 %type <piranha::IrTokenInfo_string> string;
 
 %type <piranha::IrNodeDefinition *> node_name;
+%type <piranha::IrNodeDefinition *> node_inline;
 %type <piranha::IrNodeDefinition *> node_shadow;
 %type <piranha::IrNodeDefinition *> node_decorator;
 %type <piranha::IrNodeDefinition *> node_definition;
@@ -276,9 +278,14 @@ node_name
                                                         }
   ;
 
+node_inline
+  : INLINE node_name                                    { $$ = $2; $$->setIsInline(true); }
+  | node_name                                           { $$ = $1; $$->setIsInline(false); }
+  ;
+
 node_shadow
-  : node_name BUILTIN_POINTER LABEL                     { $$ = $1; $$->setBuiltinName($3); $$->setDefinesBuiltin(true); }
-  | node_name                                           { $$ = $1; $$->setDefinesBuiltin(false); }
+  : node_inline BUILTIN_POINTER LABEL                   { $$ = $1; $$->setBuiltinName($3); $$->setDefinesBuiltin(true); }
+  | node_inline                                         { $$ = $1; $$->setDefinesBuiltin(false); }
   ;
 
 node_port_definitions
