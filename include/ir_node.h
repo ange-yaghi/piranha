@@ -90,8 +90,8 @@ namespace piranha {
         bool m_build;
 
     public:
-        virtual Node *_generateNode(IrContextTree *context, NodeContainer *container);
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeContainer *container);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
     };
 
 } /* namespace piranha */

@@ -67,9 +67,26 @@ namespace piranha {
             );
         }
 
-        virtual Node *_generateNode(IrContextTree *context, NodeContainer *container) {
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            Node *cachedNode = program->getCachedInstance(this, context);
+            if (cachedNode != nullptr) return cachedNode;
+
             Node *newNode = generateNode(m_value, context);
             newNode->initialize();
+            newNode->setIrStructure(this);
+            newNode->setIrContext(context);
+
+            // Find a context
+            IrContextTree *c = context;
+            NodeContainer *parentContainer = nullptr;
+            while (c != nullptr && parentContainer == nullptr) {
+                parentContainer = program->getContainer(c);
+                c = c->getParent();
+            }
+
+            if (!parentContainer->findNode(newNode)) {
+                parentContainer->addNode(newNode);
+            }
 
             return newNode;
         }
@@ -139,12 +156,12 @@ namespace piranha {
             return reference;
         }
 
-        virtual Node *_generateNode(IrContextTree *context, NodeContainer *container) {
-            return IrParserStructure::_generateNode(context, container);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNode(context, program, container);
         }
 
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeContainer *container) {
-            return IrParserStructure::_generateNodeOutput(context, container);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNodeOutput(context, program, container);
         }
     };
 
@@ -173,12 +190,12 @@ namespace piranha {
             return m_value;
         }
 
-        virtual Node *_generateNode(IrContextTree *context, NodeContainer *container) {
-            return m_value->generateNode(context, container);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNode(context, program, container);
         }
 
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeContainer *container) {
-            return m_value->generateNodeOutput(context, container);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNodeOutput(context, program, container);
         }
     };
 
@@ -211,12 +228,12 @@ namespace piranha {
             return m_value;
         }
 
-        virtual Node *_generateNode(IrContextTree *context, NodeContainer *container) {
-            return IrParserStructure::_generateNode(context, container);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNode(context, program, container);
         }
 
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeContainer *container) {
-            return IrParserStructure::_generateNodeOutput(context, container);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNodeOutput(context, program, container);
         }
 
     protected:
