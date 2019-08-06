@@ -334,11 +334,6 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     if (isInterface()) {
         Node *node = getScopeParent()->_generateNode(context, program, _container);
 
-        //Node *node = getScopeParent()
-        //    ->_generateNodeOutput(context, container)
-        //    ->getInterface();
-        //Node *node = context->getContext()->generateNodeOutput(context->getParent(), container)->getInterface();
-
         if (node != nullptr) {
             node->setBuiltinName(m_definition->getBuiltinName());
             node->setIrStructure(this);
@@ -351,11 +346,6 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     Node *cachedInstance = program->getCachedInstance(this, context);
     if (cachedInstance != nullptr) {
         return cachedInstance;
-    }
-    else {
-        if (this->getName() == "settings") {
-            int a = 0;
-        }
     }
 
     IrContextTree *newContext;

@@ -401,23 +401,12 @@ piranha::Node *piranha::IrParserStructure::generateNode(
                 if (program->getCachedInstance(node->getIrStructure(), node->getContext()) == nullptr) {
                     program->addNode(node);
                 }
-                else {
-                    int a = 0;
-                }
             }
 
             return node->getAliasNode();
         }
         else return nullptr;
     }
-
-    //if (node != nullptr) {
-    //    if (container->getTopLevel()->getCachedInstance(this, context) == nullptr) {
-    //        container->addNode(node);
-    //    }
-    //}
-
-    //return node->getAliasNode();
 }
 
 piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(
