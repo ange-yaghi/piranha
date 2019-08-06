@@ -17,6 +17,7 @@ piranha::Node::Node() {
 
     m_enableInput = nullptr;
     m_enabled = true;
+    m_checkedEnabled = false;
     m_enableInputDependency = nullptr;
 
     m_program = nullptr;

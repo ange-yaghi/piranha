@@ -331,6 +331,15 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 
 piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *_container) {
     if (!isBuildEnabled()) return nullptr;
+
+    // Find a context
+    IrContextTree *c = context;
+    NodeContainer *parentContainer = nullptr;
+    while (c != nullptr && parentContainer == nullptr) {
+        parentContainer = program->getContainer(c);
+        c = c->getParent();
+    }
+
     if (isInterface()) {
         Node *node = getScopeParent()->_generateNode(context, program, _container);
 
@@ -338,6 +347,10 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             node->setBuiltinName(m_definition->getBuiltinName());
             node->setIrStructure(this);
             node->setIrContext(context);
+
+            program->addNode(node);
+            parentContainer->addNode(node);
+
             return node;
         }
         else return nullptr;
@@ -355,14 +368,6 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     IrNodeDefinition *definition = getDefinition();
     const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
     const IrAttributeList *specifiedAttributes = getAttributes();
-
-    // Find a context
-    IrContextTree *c = context;
-    NodeContainer *parentContainer = nullptr;
-    while (c != nullptr && parentContainer == nullptr) {
-        parentContainer = program->getContainer(c);
-        c = c->getParent();
-    }
 
     bool nonInlineContainer = false;
     NodeContainer *newContainer = parentContainer;
@@ -405,8 +410,8 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
 
         // Skip if this is a builtin output as it wouldn't even be generated yet
-        if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT &&
-            m_definition->isBuiltin()) continue;
+        //if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT &&
+        //    m_definition->isBuiltin()) continue;
 
         NodeOutput *output = attributeDefinition->generateNodeOutput(newContext, program, newContainer);
         Node *node = attributeDefinition->generateNode(newContext, program, newContainer);
@@ -438,10 +443,6 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         }
 
         if (attributeDefinition->isInput() && newNode != nullptr) {
-            if (output == nullptr) {
-                int a = 0;
-            }
-
             newNode->connectInput(output, attributeDefinition->getName(), node);
         }
     }
