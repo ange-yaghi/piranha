@@ -379,29 +379,31 @@ piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
 }
 
 piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(
-    IrContextTree *context, NodeProgram *program)
+    IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
     Node *node = program->getCachedInstance(this, context);
 
-    if (node == nullptr) node = generateNode(context, program);
+    if (node == nullptr) node = generateNode(context, program, container);
     if (node != nullptr) return node->getAliasOutput();
-    else return _generateNodeOutput(context, program);
+    else return _generateNodeOutput(context, program, container);
 }
 
 piranha::Node *piranha::IrParserStructure::generateNode(
-    IrContextTree *context, NodeProgram *program)
+    IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
     Node *node = program->getCachedInstance(this, context);
 
     if (node != nullptr) return node->getAliasNode();
     else {
-        node = _generateNode(context, program);
+        node = _generateNode(context, program, container);
         if (node != nullptr) {
-            node->setIrContext(context);
-            node->setIrStructure(this);
-
-            if (program->getCachedInstance(this, context) == nullptr) {
-                container->addNode(node);
+            if (node->getIrStructure() != nullptr) {
+                if (program->getCachedInstance(node->getIrStructure(), node->getContext()) == nullptr) {
+                    program->addNode(node);
+                }
+                else {
+                    int a = 0;
+                }
             }
 
             return node->getAliasNode();
@@ -419,7 +421,7 @@ piranha::Node *piranha::IrParserStructure::generateNode(
 }
 
 piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(
-    IrContextTree *context, NodeProgram *program)
+    IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
     IrReferenceInfo info;
     IrReferenceQuery query;
@@ -427,11 +429,12 @@ piranha::NodeOutput *piranha::IrParserStructure::_generateNodeOutput(
     query.recordErrors = false;
     IrParserStructure *immediateReference = getImmediateReference(query, &info);
 
-    return immediateReference->generateNodeOutput(info.newContext, program);
+    if (immediateReference == nullptr) return nullptr;
+    else return immediateReference->generateNodeOutput(info.newContext, program, container);
 }
 
 piranha::Node *piranha::IrParserStructure::_generateNode(
-    IrContextTree *context, NodeProgram *program)
+    IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
     IrReferenceInfo info;
     IrReferenceQuery query;
@@ -439,5 +442,6 @@ piranha::Node *piranha::IrParserStructure::_generateNode(
     query.recordErrors = false;
     IrParserStructure *immediateReference = getImmediateReference(query, &info);
 
-    return immediateReference->generateNode(info.newContext, program);
+    if (immediateReference == nullptr) return nullptr;
+    else return immediateReference->generateNode(info.newContext, program, container);
 }

@@ -160,11 +160,11 @@ namespace piranha {
 
         // Building
     public:
-        NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program);
-        Node *generateNode(IrContextTree *context, NodeProgram *program);
+        NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        Node *generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
 
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
     };
 
 } /* namespace piranha */

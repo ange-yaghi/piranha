@@ -14,10 +14,10 @@ namespace piranha {
 
         void addNode(Node *node);
         Node *getNode(int index) const { return m_nodes[index]; }
+        bool findNode(Node *node) const;
         int getNodeCount() const { return (int)m_nodes.size(); }
 
-        Node *getCachedInstance(IrParserStructure *ir, IrContextTree *context);
-
+        void addChild(NodeContainer *container);
         int getChildCount() const { return (int)m_children.size(); }
 
         NodeContainer *getTopLevel();

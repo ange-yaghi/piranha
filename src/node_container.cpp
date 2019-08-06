@@ -11,27 +11,32 @@ piranha::NodeContainer::~NodeContainer() {
 }
 
 void piranha::NodeContainer::addNode(Node *node) {
+    if (getTopLevel()->findNode(node)) return;
+
+    if (node->getName() == "settings") {
+        int a = 0;
+    }
+
     m_nodes.push_back(node);
     node->setContainer(this);
 }
 
-piranha::Node *piranha::NodeContainer::getCachedInstance(IrParserStructure *ir, IrContextTree *context) {
+bool piranha::NodeContainer::findNode(Node *node) const {
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
-        if (m_nodes[i]->getIrStructure() == ir) {
-            if (m_nodes[i]->getContext()->isEqual(context)) {
-                return m_nodes[i];
-            }
-        }
+        if (m_nodes[i] == node) return true;
     }
 
     int childCount = getChildCount();
     for (int i = 0; i < childCount; i++) {
-        piranha::Node *node = m_children[i]->getCachedInstance(ir, context);
-        if (node != nullptr) return node;
+        if (m_children[i]->findNode(node)) return true;
     }
 
-    return nullptr;
+    return false;
+}
+
+void piranha::NodeContainer::addChild(NodeContainer *container) {
+    m_children.push_back(container);
 }
 
 piranha::NodeContainer *piranha::NodeContainer::getTopLevel() {

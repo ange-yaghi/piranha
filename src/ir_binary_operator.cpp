@@ -230,31 +230,31 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 }
 
 piranha::Node *piranha::IrBinaryOperator::
-    _generateNode(IrContextTree *context, NodeContainer *container) 
+    _generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
     if (m_operator == DOT) {
         IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
-        Node *node = m_leftOperand->generateNode(context, container);
+        Node *node = m_leftOperand->generateNode(context, program, container);
         
         if (node != nullptr) {
             return node->getNodeOutput(labelConstant->getValue());
         }
         else return nullptr;
     }
-    else return IrParserStructure::_generateNode(context, container);
+    else return IrParserStructure::_generateNode(context, program, container);
 }
 
 piranha::NodeOutput *piranha::IrBinaryOperator::
-    _generateNodeOutput(IrContextTree *context, NodeContainer *container) 
+    _generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
     if (m_operator == DOT) {
         IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
-        Node *node = m_leftOperand->generateNode(context, container);
+        Node *node = m_leftOperand->generateNode(context, program, container);
 
         if (node != nullptr) {
             return node->getOutput(labelConstant->getValue());
         }
         else return nullptr;
     }
-    else return IrParserStructure::_generateNodeOutput(context, container);
+    else return IrParserStructure::_generateNodeOutput(context, program, container);
 }

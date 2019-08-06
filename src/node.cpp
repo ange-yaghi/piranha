@@ -22,6 +22,9 @@ piranha::Node::Node() {
     m_program = nullptr;
     m_container = nullptr;
     m_interfaceInput = nullptr;
+
+    m_context = nullptr;
+    m_irStructure = nullptr;
 }
 
 piranha::Node::~Node() {
@@ -81,7 +84,8 @@ void piranha::Node::evaluate() {
     if (isEvaluated()) return;
 
     checkEnabled();
-    if (!isEnabled()) return;
+    if (!isEnabled()) 
+        return;
 
     // Set evaluated flag
     m_evaluated = true;
@@ -191,6 +195,13 @@ piranha::NodeOutput *piranha::Node::getOutput(const std::string &name) const {
         }
     }
 
+    int inputCount = getInputCount();
+    for (int i = 0; i < inputCount; i++) {
+        if (name == m_inputs[i].name) {
+            return *m_inputs[i].input;
+        }
+    }
+
     return nullptr;
 }
 
@@ -199,6 +210,13 @@ piranha::Node *piranha::Node::getNodeOutput(const std::string &name) const {
     for (int i = 0; i < outputReferenceCount; i++) {
         if (name == m_outputReferences[i].name) {
             return m_outputReferences[i].nodeOutput;
+        }
+    }
+
+    int inputCount = getInputCount();
+    for (int i = 0; i < inputCount; i++) {
+        if (name == m_inputs[i].name) {
+            return m_inputs[i].nodeInput;
         }
     }
 
@@ -310,6 +328,7 @@ void piranha::Node::checkEnabled() {
             pNodeInput node = *m_enableInput;
 
             native_bool enable;
+            node->evaluate();
             node->fullCompute((void *)&enable);
 
             if (!enable) m_enabled = false;

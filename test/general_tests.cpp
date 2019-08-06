@@ -329,6 +329,21 @@ TEST(GeneralTests, GeneralSyntaxTest_25) {
     program.getTopLevelContainer()->getNode(1)->getPrimaryOutput()->fullCompute((void *)&v);
 
     EXPECT_EQ(v, 15);
+}
 
-    int a = 0;
+TEST(GeneralTests, GeneralSyntaxTest_26) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_26.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(0)->isEnabled());
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(1)->isEnabled());
+    EXPECT_TRUE(program.getTopLevelContainer()->getNode(2)->isEnabled());
 }
