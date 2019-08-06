@@ -111,7 +111,7 @@ TEST(GeneralTests, GeneralSyntaxTest_09) {
     program.execute();
 
     piranha::vector v;
-    program.getTopLevelContainer()->getNode(18)->getPrimaryOutput()->fullCompute(&v);
+    program.getTopLevelContainer()->getNode(19)->getPrimaryOutput()->fullCompute(&v);
 
     EXPECT_EQ(v.x, 0.0);
     EXPECT_EQ(v.y, 0.0);
@@ -343,7 +343,7 @@ TEST(GeneralTests, GeneralSyntaxTest_26) {
 
     program.execute();
 
-    EXPECT_FALSE(program.getTopLevelContainer()->getNode(0)->isEnabled());
     EXPECT_FALSE(program.getTopLevelContainer()->getNode(1)->isEnabled());
-    EXPECT_TRUE(program.getTopLevelContainer()->getNode(2)->isEnabled());
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(2)->isEnabled());
+    EXPECT_TRUE(program.getTopLevelContainer()->getNode(4)->isEnabled());
 }
