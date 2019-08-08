@@ -111,7 +111,7 @@ TEST(GeneralTests, GeneralSyntaxTest_09) {
     program.execute();
 
     piranha::vector v;
-    program.getTopLevelContainer()->getNode(19)->getPrimaryOutput()->fullCompute(&v);
+    program.getTopLevelContainer()->getNode(18)->getPrimaryOutput()->fullCompute(&v);
 
     EXPECT_EQ(v.x, 0.0);
     EXPECT_EQ(v.y, 0.0);
@@ -346,4 +346,51 @@ TEST(GeneralTests, GeneralSyntaxTest_26) {
     EXPECT_FALSE(program.getTopLevelContainer()->getNode(1)->isEnabled());
     EXPECT_FALSE(program.getTopLevelContainer()->getNode(2)->isEnabled());
     EXPECT_TRUE(program.getTopLevelContainer()->getNode(4)->isEnabled());
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_27) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_27.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(1)->isEnabled());
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(2)->isEnabled());
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(3)->isEnabled());
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_28) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_28.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(1)->isEnabled());
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(2)->isEnabled());
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(3)->isEnabled());
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_29) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_29.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
 }

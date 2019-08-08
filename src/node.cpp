@@ -210,7 +210,17 @@ piranha::Node *piranha::Node::getNodeOutput(const std::string &name) const {
     int outputReferenceCount = getOutputReferenceCount();
     for (int i = 0; i < outputReferenceCount; i++) {
         if (name == m_outputReferences[i].name) {
-            return m_outputReferences[i].nodeOutput;
+            if (m_outputReferences[i].nodeOutput == nullptr) {
+                return (*m_outputReferences[i].output)->getInterface();
+            }
+            else return m_outputReferences[i].nodeOutput;
+        }
+    }
+
+    int outputCount = getOutputCount();
+    for (int i = 0; i < outputCount; i++) {
+        if (name == m_outputs[i].name) {
+            return m_outputs[i].output->getInterface();
         }
     }
 
