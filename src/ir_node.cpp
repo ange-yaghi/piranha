@@ -60,6 +60,18 @@ piranha::IrNode::IrNode(
     m_build = true;
 }
 
+piranha::IrNode::IrNode(const IrTokenInfo_string &name, IrNodeDefinition *nodeDefinition, IrAttributeList *attributes) {
+    m_name = name;
+    m_attributes = attributes;
+
+    registerToken(&name);
+    registerComponent(attributes);
+
+    m_definition = nodeDefinition;
+    m_isInterface = false;
+    m_build = true;
+}
+
 piranha::IrNode::~IrNode() {
     /* void */
 }
@@ -357,9 +369,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     }
 
     Node *cachedInstance = program->getCachedInstance(this, context);
-    if (cachedInstance != nullptr) {
-        return cachedInstance;
-    }
+    if (cachedInstance != nullptr) return cachedInstance;
 
     IrContextTree *newContext;
     IrContextTree *parentContext = context;
@@ -405,45 +415,32 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         program->addNode(newNode);
     }
 
+    // Generate inputs first
     int attributeCount = allAttributes->getDefinitionCount();
     for (int i = 0; i < attributeCount; i++) {
         IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
 
-        // Skip if this is a builtin output as it wouldn't even be generated yet
-        //if (attributeDefinition->getDirection() == IrAttributeDefinition::OUTPUT &&
-        //    m_definition->isBuiltin()) continue;
+        if (attributeDefinition->isInput()) {
+            NodeOutput *output = attributeDefinition->generateNodeOutput(newContext, program, newContainer);
+            Node *node = attributeDefinition->generateNode(newContext, program, newContainer);
 
-        NodeOutput *output = attributeDefinition->generateNodeOutput(newContext, program, newContainer);
-        Node *node = attributeDefinition->generateNode(newContext, program, newContainer);
-
-        if (!m_definition->isBuiltin()) {
-            if (!m_definition->isInline()) {
-                if (attributeDefinition->isInput()) {
+            if (!m_definition->isBuiltin()) {
+                if (!m_definition->isInline()) {
                     newContainer->addContainerInput(attributeDefinition->getName(),
                         attributeDefinition->getDirection() == IrAttributeDefinition::MODIFY,
                         attributeDefinition->getDirection() == IrAttributeDefinition::TOGGLE);
                 }
-                else {
-                    if (output != nullptr) output->addDependency(newNode);
-                    if (node != nullptr) node->addDependency(newNode);
+            }
 
-                    newContainer->addContainerOutput(
-                        output,
-                        node,
-                        attributeDefinition->getName(),
-                        attributeDefinition->isAlias());
+            if (node != nullptr) {
+                if (!newContainer->findNode(node) && !newContainer->getTopLevel()->findContainer(node)) {
+                    newContainer->addNode(node);
                 }
             }
-        }
 
-        if (node != nullptr) {
-            if (!newContainer->findNode(newNode)) {
-                newContainer->addNode(node);
+            if (newNode != nullptr) {
+                newNode->connectInput(output, attributeDefinition->getName(), node);
             }
-        }
-
-        if (attributeDefinition->isInput() && newNode != nullptr) {
-            newNode->connectInput(output, attributeDefinition->getName(), node);
         }
     }
 
@@ -463,6 +460,35 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 
             if (newContainer != nullptr && nestedNode != nullptr) {
                 newContainer->addNode(nestedNode);
+            }
+        }
+    }
+
+    // Generate outputs last
+    for (int i = 0; i < attributeCount; i++) {
+        IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
+
+        if (!attributeDefinition->isInput()) {
+            NodeOutput *output = attributeDefinition->generateNodeOutput(newContext, program, newContainer);
+            Node *node = attributeDefinition->generateNode(newContext, program, newContainer);
+
+            if (!m_definition->isBuiltin()) {
+                if (!m_definition->isInline()) {
+                    if (output != nullptr) output->addDependency(newNode);
+                    if (node != nullptr) node->addDependency(newNode);
+
+                    newContainer->addContainerOutput(
+                        output,
+                        node,
+                        attributeDefinition->getName(),
+                        attributeDefinition->isAlias());
+                }
+            }
+
+            if (node != nullptr) {
+                if (!newContainer->findNode(newNode) && !newContainer->findContainer(node)) {
+                    newContainer->addNode(node);
+                }
             }
         }
     }

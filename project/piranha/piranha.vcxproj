@@ -169,6 +169,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\console_output_node.h" />
     <ClInclude Include="..\..\include\divide_operation_output.h" />
     <ClInclude Include="..\..\include\exceptions.h" />
+    <ClInclude Include="..\..\include\int_conversions.h" />
     <ClInclude Include="..\..\include\key_value_lookup.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
     <ClInclude Include="..\..\include\multiply_operation_output.h" />
@@ -227,6 +228,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\autogen\scanner.auto.cpp" />
     <ClCompile Include="..\..\src\float_conversions.cpp" />
     <ClCompile Include="..\..\src\fundamental_types.cpp" />
+    <ClCompile Include="..\..\src\int_conversions.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
     <ClCompile Include="..\..\src\node_container.cpp" />
     <ClCompile Include="..\..\src\node_output.cpp" />

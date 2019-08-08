@@ -1,0 +1,8 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+private node test {
+    input test;
+    output a: 5;
+    
+    std::console_out("Node 1\n")
+} (test) -> test
