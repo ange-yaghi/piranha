@@ -1,0 +1,11 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+vector v1(0.0, 0.0, 0.0, 0.0)
+
+test(true, v1.x)
+test(false, v1)
+
+private node test {
+    toggle enable;
+    input test;
+}
