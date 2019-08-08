@@ -490,6 +490,15 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
                     newContainer->addNode(node);
                 }
             }
+
+            if (output != nullptr) {
+                Node *nodeInterface = output->getInterface();
+                if (nodeInterface != nullptr) {
+                    if (!newContainer->findNode(nodeInterface) && !newContainer->findContainer(nodeInterface)) {
+                        newContainer->addNode(nodeInterface);
+                    }
+                }
+            }
         }
     }
 

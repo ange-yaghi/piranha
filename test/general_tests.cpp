@@ -394,3 +394,19 @@ TEST(GeneralTests, GeneralSyntaxTest_29) {
 
     program.execute();
 }
+
+TEST(GeneralTests, GeneralSyntaxTest_30) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_30.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+
+    EXPECT_TRUE(program.getTopLevelContainer()->getNode(7)->isEnabled());
+    EXPECT_FALSE(program.getTopLevelContainer()->getNode(9)->isEnabled());
+}
