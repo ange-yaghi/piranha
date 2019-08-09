@@ -8,8 +8,12 @@
     * [1.1.3 String](#1.1.3)
     * [1.1.4 Floating-point Values](#1.1.4)
   * [1.2 Nodes](#1.1)
-    * [1.2.1 Node Definitions](#1.1.1)
-    * [1.2.2 Node Instances](#1.1.2)
+    * [1.2.1 Node Definitions](#1.2.1)
+    * [1.2.2 Node Instances](#1.2.2)
+    * [1.2.3 Default Inputs](#1.2.3)
+    * [1.2.4 Node Visibility](#1.2.4)
+    * [1.2.5 Immediate Node Instances](#1.2.5)
+    * [1.2.6 Nested Nodes](#1.2.6)
 <br/>
 
 # <a name="1"/>1 Introduction
@@ -131,5 +135,103 @@ as is the following:
 </pre>
 
 This is because the `left` input parameter was set multiple times, once through positional notation and once directly by name.
+
+### <a name="1.2.3"/>1.2.3 Default Inputs
+
+Defining default values for inputs is done through the following syntax:
+
+<pre>
+<b>node</b> adder {
+  <b>input</b> left: 5.0;
+  <b>input</b> right;
+  <b>output</b> out: left + right;
+}
+</pre>
+
+With the code above, if the `left` parameter is not specified, it will take on the value of 5.0. Piranha also allows for default values to be equal to the value of an input. For example, the following is valid:
+
+<pre>
+<b>node</b> adder {
+  <b>input</b> left: right;
+  <b>input</b> right;
+  <b>output</b> out: left + right;
+}
+</pre>
+
+### <a name="1.2.4"/>1.2.4 Node Visibility
+
+Access to a particular node definition can be limited to a single file using node visibility keywords. Valid visibility keywords are `public` and `private`. Nodes are `public` by default. For example:
+
+<pre>
+<b>private</b> <b>node</b> adder {
+  <b>input</b> left: right;
+  <b>input</b> right;
+  <b>output</b> out: left + right;
+}
+</pre>
+
+Since this node is declared as `private` it will only be visible within the file in which it is defined. 
+
+### <a name="1.2.5"/>1.2.5 Immediate Node Instances
+
+In some cases it can be useful to instantiate a node immediately after declaring it. Rather than write out a full instantiation, one can use the following shorthand:
+
+<pre>
+<b>node</b> adder {
+  <b>input</b> left;
+  <b>input</b> right;
+  <b>output</b> out: left + right;
+} (5.0, 5.0) -> <b>auto</b>
+</pre>
+
+The `auto` keyword will make the new instance have the same name as the node definition it is instantiating. For a node with no inputs, the first part `( ... )` can be omitted. The `node` keyword can also be replaced by an arbitrary node name. For instance, the following is valid:
+
+<pre>
+<b>node</b> adder {
+  <b>input</b> left: 0.0;
+  <b>input</b> right: 0.0;
+  <b>output</b> out: left + right;
+} -> zero_adder
+</pre>
+
+### <a name="1.2.6"/>1.2.6 Nested Nodes
+
+Nodes can be instantiated inside of other nodes. This can be thought of as aggregating nodes into larger nodes with more complex outputs. For instance, take the following hypothetical node definition:
+
+<pre>
+<b>node</b> multiply_add {
+ <b>input</b> a;
+ <b>input</b> b;
+ <b>input</b> c;
+ <b>output</b> out: a * b + c;
+
+<b>node</b> calculate {
+  <b>input</b> a;
+  <b>input</b> b;
+  <b>input</b> c;
+  <b>input</b> scale;
+  <b>output</b> out: madd.out * scale;
+  
+  <b>multiply_add</b> madd(
+   a: a,
+   b: b,
+   c: c
+  )
+}
+</pre>
+
+Using the `.` operator, outputs from a node can be referenced by name. In this case the output of the `calculate` node is the `out` output from the `multiply_add` node nested inside the `calculate` node multiplied by the `scale` input.
+
+Similarly it's also possible to instantiate nodes in an inline fashion like so:
+
+<pre>
+<b>node</b> calculate {
+  <b>input</b> a;
+  <b>input</b> b;
+  <b>input</b> c;
+  <b>input</b> scale;
+  <b>output</b> out: <b>multiply_add</b>(a, b, c).out * scale;
+}
+</pre>
 
 **UNDER CONSTRUCTION**
