@@ -13,10 +13,6 @@ piranha::NodeContainer::~NodeContainer() {
 void piranha::NodeContainer::addNode(Node *node) {
     if (getTopLevel()->findNode(node)) return;
 
-    if (node->getInterfaceInput() != nullptr) {
-        int a = 0;
-    }
-
     m_nodes.push_back(node);
     node->setContainer(this);
 }

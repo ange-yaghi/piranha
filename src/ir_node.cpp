@@ -433,7 +433,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             }
 
             if (node != nullptr) {
-                if (!newContainer->findNode(node) && !newContainer->getTopLevel()->findContainer(node)) {
+                if (!newContainer->getTopLevel()->findContainer(node)) {
                     newContainer->addNode(node);
                 }
             }
@@ -486,7 +486,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             }
 
             if (node != nullptr) {
-                if (!newContainer->findNode(newNode) && !newContainer->findContainer(node)) {
+                if (!newContainer->findContainer(node)) {
                     newContainer->addNode(node);
                 }
             }
@@ -494,9 +494,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             if (output != nullptr) {
                 Node *nodeInterface = output->getInterface();
                 if (nodeInterface != nullptr) {
-                    if (!newContainer->findNode(nodeInterface) && !newContainer->findContainer(nodeInterface)) {
-                        newContainer->addNode(nodeInterface);
-                    }
+                    newContainer->addNode(nodeInterface);
                 }
             }
         }
