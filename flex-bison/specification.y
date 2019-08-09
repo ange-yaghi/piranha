@@ -80,10 +80,12 @@
 %token <piranha::IrTokenInfo_string>    IMPORT
 %token <piranha::IrTokenInfo_string>    AS
 %token <piranha::IrTokenInfo_string>    NODE
+%token <piranha::IrTokenInfo_string>    INLINE
 %token <piranha::IrTokenInfo_string>    ALIAS
 %token <piranha::IrTokenInfo_string>    INPUT
 %token <piranha::IrTokenInfo_string>    OUTPUT
 %token <piranha::IrTokenInfo_string>    MODIFY
+%token <piranha::IrTokenInfo_string>    TOGGLE
 %token <piranha::IrTokenInfo_string>    LABEL
 %token <piranha::IrTokenInfo_int>       INT
 %token <piranha::IrTokenInfo_float>     FLOAT
@@ -94,9 +96,11 @@
 %token <piranha::IrTokenInfo_string>    PRIVATE
 %token <piranha::IrTokenInfo_string>    BUILTIN_POINTER
 %token <piranha::IrTokenInfo_string>    NAMESPACE_POINTER
+%token <piranha::IrTokenInfo_string>    INSTANCE_POINTER
 %token <piranha::IrTokenInfo_string>    UNRECOGNIZED
 %token <piranha::IrTokenInfo_string>    OPERATOR
 %token <piranha::IrTokenInfo_string>    MODULE
+%token <piranha::IrTokenInfo_string>    AUTO
 
 %token <piranha::IrTokenInfo_string> '='
 %token <piranha::IrTokenInfo_string> '+'
@@ -139,11 +143,12 @@
 %type <piranha::IrTokenInfo_string> string;
 
 %type <piranha::IrNodeDefinition *> node_name;
+%type <piranha::IrNodeDefinition *> node_inline;
 %type <piranha::IrNodeDefinition *> node_shadow;
 %type <piranha::IrNodeDefinition *> node_decorator;
 %type <piranha::IrNodeDefinition *> node_definition;
-%type <piranha::IrNodeDefinition *> node_port_definitions;
 %type <piranha::IrNodeDefinition *> specific_node_definition;
+%type <piranha::IrNodeDefinition *> immediate_node_definition;
 
 %type <piranha::IrAttributeDefinition *> port_value;
 %type <piranha::IrAttributeDefinition *> port_declaration;
@@ -174,7 +179,7 @@ decorator_list
 statement
   : node                                { driver.addNode($1); }
   | import_statement_short_name         { driver.addImportStatement($1); }
-  | node_decorator                      { driver.addNodeDefinition($1); }
+  | immediate_node_definition           { driver.addNodeDefinition($1); }
   | MODULE '{' decorator_list '}'       { }
   ;
 
@@ -246,6 +251,34 @@ node
                                                         }
   ;
 
+immediate_node_definition
+  : node_decorator connection_block INSTANCE_POINTER LABEL
+                                                        {
+                                                            $$ = $1;
+                                                            IrNode *newNode = new IrNode($4, $1, $2);
+                                                            driver.addNode(newNode);
+                                                        }
+  | node_decorator connection_block INSTANCE_POINTER AUTO
+                                                        {
+                                                            $$ = $1;
+                                                            IrNode *newNode = new IrNode(*($1->getNameToken()), $1, $2);
+                                                            driver.addNode(newNode);
+                                                        }
+  | node_decorator INSTANCE_POINTER LABEL
+                                                        {
+                                                            $$ = $1;
+                                                            IrNode *newNode = new IrNode($3, $1, new IrAttributeList());
+                                                            driver.addNode(newNode);
+                                                        }
+  | node_decorator INSTANCE_POINTER AUTO
+                                                        {
+                                                            $$ = $1;
+                                                            IrNode *newNode = new IrNode(*($1->getNameToken()), $1, new IrAttributeList());
+                                                            driver.addNode(newNode);
+                                                        }
+  | node_decorator                                      { $$ = $1; }
+  ;
+
 node_list
   : node                                                {
                                                             $$ = new IrNodeList();
@@ -275,21 +308,23 @@ node_name
                                                         }
   ;
 
-node_shadow
-  : node_name BUILTIN_POINTER LABEL                     { $$ = $1; $$->setBuiltinName($3); $$->setDefinesBuiltin(true); }
-  | node_name                                           { $$ = $1; $$->setDefinesBuiltin(false); }
+node_inline
+  : INLINE node_name                                    { $$ = $2; $$->setIsInline(true); }
+  | node_name                                           { $$ = $1; $$->setIsInline(false); }
   ;
 
-node_port_definitions
-  : node_shadow port_definitions                        { $$ = $1; $$->setAttributeDefinitionList($2); }
-  | node_shadow error port_definitions                  { $$ = $1; $$->setAttributeDefinitionList($3); }
+node_shadow
+  : node_inline BUILTIN_POINTER LABEL                   { $$ = $1; $$->setBuiltinName($3); $$->setDefinesBuiltin(true); }
+  | node_inline                                         { $$ = $1; $$->setDefinesBuiltin(false); }
   ;
 
 node_definition
-  : node_port_definitions '}'                           { $$ = $1; $$->setBody(nullptr); }
-  | node_port_definitions node_list '}'                 { $$ = $1; $$->setBody($2); }
-  | error '{' port_definitions '}'                      { $$ = nullptr; yyerrok; }
-  | error '{' port_definitions node_list '}'            { $$ = nullptr; yyerrok; }
+  : node_shadow port_definitions '}'                    { $$ = $1; $$->setAttributeDefinitionList($2); $$->setBody(nullptr); }
+  | node_shadow port_definitions node_list '}'          { $$ = $1; $$->setAttributeDefinitionList($2); $$->setBody($3); }
+  | node_shadow error port_definitions '}'              { $$ = $1; $$->setAttributeDefinitionList($3); $$->setBody(nullptr); }
+  | node_shadow error port_definitions node_list '}'    { $$ = $1; $$->setAttributeDefinitionList($3); $$->setBody($4); }
+  | error port_definitions '}'                          { $$ = nullptr; yyerrok; }
+  | error port_definitions node_list '}'                { $$ = nullptr; yyerrok; }
   ;
 
 specific_node_definition
@@ -329,7 +364,8 @@ port_definitions
 port_declaration
   : INPUT LABEL                                         { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::INPUT); }
   | OUTPUT LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::OUTPUT); }
-  | MODIFY LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::MODIFY); }  
+  | MODIFY LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::MODIFY); }
+  | TOGGLE LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::TOGGLE); }  
   ;
 
 port_status

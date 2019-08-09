@@ -26,6 +26,7 @@ namespace piranha {
             const IrTokenInfo_string &library);
         IrNode(const IrTokenInfo_string &type, IrAttributeList *attributes, 
             const IrTokenInfo_string &library);
+        IrNode(const IrTokenInfo_string &name, IrNodeDefinition *nodeDefinition, IrAttributeList *attributes);
         ~IrNode();
 
         IrTokenInfo getTypeToken() const { return m_type; }
@@ -53,6 +54,9 @@ namespace piranha {
 
         void setInterface(bool isInterface) { m_isInterface = isInterface; }
         bool isInterface() const { return m_isInterface; }
+
+        void setBuild(bool enableBuild) { m_build = enableBuild; }
+        bool isBuildEnabled() const { return m_build; }
 
     protected:
         IrTokenInfo_string m_type;
@@ -84,10 +88,11 @@ namespace piranha {
 
         IrNodeDefinition *m_definition;
         bool m_isInterface;
+        bool m_build;
 
     public:
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
     };
 
 } /* namespace piranha */

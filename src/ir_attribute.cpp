@@ -78,7 +78,7 @@ void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
         }
 
         if (refAsNode != nullptr) {
-            IrNodeDefinition *definition = refAsNode->getDefinition();
+            IrNodeDefinition *definition = refAsNode->getDefinition()->getAliasType();
             if (definition == nullptr) return;
             if (definition == typeDefinition) return; // Type is confirmed to be correct
         }

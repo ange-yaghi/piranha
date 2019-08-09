@@ -1,0 +1,33 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+private node test {
+    toggle enable: true; 
+    alias output a: 5;
+    
+    std::console_out("Node 1\n")
+}
+
+private node do_stuff0 {
+    input test;
+    alias output t: test;
+
+    std::console_out("Node 2\n")
+}
+
+private node do_stuff1 {
+    input test;
+    alias output t: test;
+
+    std::console_out("Node 3\n")
+}
+
+private node do_stuff2 {
+    input test;
+    alias output t: test;
+
+    std::console_out("Node 4\n")
+}
+
+test test(enable: false)
+do_stuff0 node0(test)
+do_stuff1 node1(node0)
