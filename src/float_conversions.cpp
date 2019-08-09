@@ -20,7 +20,7 @@ void piranha::StringToFloatConversionOutput::fullCompute(void *_target) const {
     std::stringstream ss(value);
     ss >> floatValue;
 
-    piranha::native_float *target = reinterpret_cast<double *>(_target);
+    piranha::native_float *target = reinterpret_cast<piranha::native_float *>(_target);
     *target = floatValue;
 }
 
@@ -42,7 +42,7 @@ void piranha::IntToFloatConversionOutput::fullCompute(void *_target) const {
     int value;
     m_input->fullCompute((void *)&value);
 
-    piranha::native_float *target = reinterpret_cast<double *>(_target);
+    piranha::native_float *target = reinterpret_cast<piranha::native_float *>(_target);
     *target = (piranha::native_float)value;
 }
 

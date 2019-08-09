@@ -1,6 +1,6 @@
 private import "operators.mr" as operators
 
-node test {
+inline node test {
     input input1;
     alias output test1: (input1 + " world!");
 }

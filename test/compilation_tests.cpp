@@ -28,26 +28,25 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
     TestRules generator;
     generator.registerBuiltinNodeTypes();
     NodeProgram program;
-    program.setRules(&generator);
     unit->build(&program);
 
     program.execute();
     
     double value;
-    program.getNode(1)->getPrimaryOutput()->fullCompute((void *)&value);
+    program.getTopLevelContainer()->getNode(1)->getPrimaryOutput()->fullCompute((void *)&value);
     EXPECT_EQ(value, 10.0);
 
-    program.getNode(3)->getPrimaryOutput()->fullCompute((void *)&value);
+    program.getTopLevelContainer()->getNode(3)->getPrimaryOutput()->fullCompute((void *)&value);
     EXPECT_EQ(value, 5.0);
 
-    program.getNode(5)->getPrimaryOutput()->fullCompute((void *)&value);
+    program.getTopLevelContainer()->getNode(5)->getPrimaryOutput()->fullCompute((void *)&value);
     EXPECT_EQ(value, 15.0);
 
     std::string stringValue;
-    program.getNode(7)->getPrimaryOutput()->fullCompute((void *)&stringValue);
+    program.getTopLevelContainer()->getNode(7)->getPrimaryOutput()->fullCompute((void *)&stringValue);
     EXPECT_EQ(stringValue, "5");
 
-    program.getNode(9)->getPrimaryOutput()->fullCompute((void *)&stringValue);
+    program.getTopLevelContainer()->getNode(9)->getPrimaryOutput()->fullCompute((void *)&stringValue);
     EXPECT_EQ(stringValue, "123");
 }
 
@@ -57,12 +56,11 @@ TEST(IrConstructionTests, IrConstructionNestedTest) {
     TestRules generator;
     generator.registerBuiltinNodeTypes();
     NodeProgram program;
-    program.setRules(&generator);
     unit->build(&program);
 
     program.execute();
 
-    Node *topLevel = program.getNode(5);
+    Node *topLevel = program.getTopLevelContainer()->getNode(5);
     EXPECT_EQ(topLevel->getContext()->getContext()->getName(), "top_level");
 
     double value;

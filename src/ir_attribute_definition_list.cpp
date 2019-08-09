@@ -58,7 +58,10 @@ int piranha::IrAttributeDefinitionList::getCount(
 }
 
 int piranha::IrAttributeDefinitionList::getInputCount() const {
-    return getCount(IrAttributeDefinition::INPUT) + getCount(IrAttributeDefinition::MODIFY);
+    return 
+        getCount(IrAttributeDefinition::INPUT) + 
+        getCount(IrAttributeDefinition::MODIFY) +
+        getCount(IrAttributeDefinition::TOGGLE);
 }
 
 int piranha::IrAttributeDefinitionList::getOutputCount() const {

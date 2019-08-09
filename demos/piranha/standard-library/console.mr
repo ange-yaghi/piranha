@@ -1,10 +1,10 @@
 private import "conversions.mr"
 
-public node console_in => __piranha__console_in {
+public inline node console_in => __piranha__console_in {
     input prompt [string]: "";
     alias output raw_input [string]; 
 }
 
-public node console_out => __piranha__console_out {
+public inline node console_out => __piranha__console_out {
     input data [string]: "";
 }

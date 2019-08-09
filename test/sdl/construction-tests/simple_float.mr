@@ -1,22 +1,22 @@
 public node float_channel => __piranha__float {}
 public node string_channel => __piranha__string {}
 
-public node float {
+public inline node float {
     input __in [float_channel]: "10.0";
     alias output __out [float_channel]: __in;
 }
 
-public node string {
+public inline node string {
     input __in [string_channel]: 123.0;
     alias output __out [string_channel]: __in;
 }
 
-public node float_to_string => __piranha__float_to_string {
+public inline node float_to_string => __piranha__float_to_string {
     input __in [float];
     alias output __out [string];
 }
 
-public node string_to_float => __piranha__string_to_float {
+public inline node string_to_float => __piranha__string_to_float {
     input __in [string];
     alias output __out [float];
 }
