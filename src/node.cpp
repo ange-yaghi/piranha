@@ -4,6 +4,7 @@
 #include "../include/node_program.h"
 #include "../include/fundamental_types.h"
 #include "../include/node_container.h"
+#include "../include/assembly.h"
 
 #include <assert.h>
 
@@ -264,6 +265,45 @@ bool piranha::Node::getOutputPortInfo(const std::string &name, PortInfo *info) c
 piranha::NodeOutput *piranha::Node::getInterfaceInput() const {
     if (m_interfaceInput == nullptr) return nullptr;
     else return *m_interfaceInput;
+}
+
+void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly) const {
+    std::string builtinName = getBuiltinName();
+
+    file << builtinName << "\n";
+
+    int nodeInputs = getInputCount();
+    if (nodeInputs > 0) {
+        file << "    INPUTS  { ";
+        for (int i = 0; i < nodeInputs; i++) {
+            const Node::NodeInputPort *port = getInput(i);
+            int index = assembly->getOutputLabel(*port->input);
+
+            file << port->name << ": &" << index << "; ";
+        }
+        file << "}\n";
+    }
+
+    int nodeOutputs = getOutputCount();
+    int nodeOutputReferences = getOutputReferenceCount();
+
+    if (nodeOutputReferences > 0 || nodeOutputs > 0) {
+        file << "    OUTPUTS { ";
+        for (int i = 0; i < nodeOutputs; i++) {
+            const Node::NodeOutputPort *port = getOutput(i);
+            int index = assembly->getOutputLabel(port->output);
+
+            file << port->name << ": @" << index << "; ";
+        }
+
+        for (int i = 0; i < nodeOutputReferences; i++) {
+            const Node::NodeOutputPortReference *port = getOutputReference(i);
+            int index = assembly->getOutputLabel(*port->output);
+
+            file << port->name << ": &" << index << "; ";
+        }
+        file << "}\n";
+    }
 }
 
 void piranha::Node::_initialize() {

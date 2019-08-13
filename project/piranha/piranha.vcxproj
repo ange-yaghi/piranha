@@ -164,6 +164,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
   <ItemGroup>
     <ClInclude Include="..\..\autogen\parser.auto.h" />
     <ClInclude Include="..\..\autogen\stack.hh" />
+    <ClInclude Include="..\..\include\assembly.h" />
     <ClInclude Include="..\..\include\bool_negate_operation.h" />
     <ClInclude Include="..\..\include\console_input_node.h" />
     <ClInclude Include="..\..\include\console_output_node.h" />
@@ -226,6 +227,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
   <ItemGroup>
     <ClCompile Include="..\..\autogen\parser.auto.cpp" />
     <ClCompile Include="..\..\autogen\scanner.auto.cpp" />
+    <ClCompile Include="..\..\src\assembly.cpp" />
     <ClCompile Include="..\..\src\float_conversions.cpp" />
     <ClCompile Include="..\..\src\fundamental_types.cpp" />
     <ClCompile Include="..\..\src\int_conversions.cpp" />

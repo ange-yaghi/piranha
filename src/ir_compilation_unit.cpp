@@ -342,6 +342,7 @@ void piranha::IrCompilationUnit::addNodeDefinition(IrNodeDefinition *nodeDefinit
         registerComponent(nodeDefinition);
 
         nodeDefinition->setParentUnit(this);
+        nodeDefinition->setScopeParent(this);
     }
 }
 

@@ -526,7 +526,6 @@ TEST(IrTests, IrReferenceResolutionError1Test) {
 
     const ErrorList *errors = compiler.getErrorList();
 
-    EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 18));
     EXPECT_TRUE(findError(errors, ErrorCode::AccessingInternalMember, 21));
     EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 22));
     EXPECT_TRUE(findError(errors, ErrorCode::AccessingInternalMember, 23));
@@ -535,7 +534,7 @@ TEST(IrTests, IrReferenceResolutionError1Test) {
     EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimes, 32));
     EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimes, 33));
 
-    EXPECT_EQ(errors->getErrorCount(), 7);
+    EXPECT_EQ(errors->getErrorCount(), 6);
 }
 
 TEST(IrTests, IrReferenceResolutionError2Test) {
@@ -693,4 +692,16 @@ TEST(IrTests, IrDuplicateNodeDefinitionTest) {
     EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 14));
 
     EXPECT_EQ(errors->getErrorCount(), 11);
+}
+
+TEST(IrTests, IrGlobalNodeReferenceTest) {
+    Compiler compiler;
+    IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "global_reference_test.mr");
+    EXPECT_NE(unit, nullptr);
+
+    const ErrorList *errors = compiler.getErrorList();
+
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 8));
+
+    EXPECT_EQ(errors->getErrorCount(), 1);
 }
