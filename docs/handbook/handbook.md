@@ -334,7 +334,7 @@ All node definitions within this file that are public will now be visible.
 
 ### <a name="1.3.2"></a>1.3.2 Import Visibility
 
-Imports are private by default. This means that if file *A* imports file *B*, by default if another file *C* imports *A*, then the definitions inside *B* will not be available to *C*.
+Imports are private by default. This means that if file *A* imports file *B*, then by default if another file *C* imports *A*, then the definitions inside *B* will not be available to *C*.
 
 To ensure that node definitions imported from another file are visible to outside files, the import statement must be preceded by the `public` keyword as follows:
 
@@ -356,4 +356,123 @@ To ensure that node definitions imported from another file are visible to outsid
 
 // Error: Unresolved node
 <b>priv</b>( ... )
+</pre>
+
+### <a name="1.3.3"></a>1.3.3 Name Safety
+
+To distinguish between two node definitions with the same name but from different libraries, Piranha provides a feature called *import naming*. To name a file that is being imported, the following syntax is used:
+
+<pre>
+<b>import</b> "some_library.pr" <b>as</b> lib
+</pre>
+
+To instantiate a node type that is defined in "some_lib.pr" one could then write:
+
+<pre>
+lib::<b>some_type</b>( ... )
+</pre>
+
+If the type being accessed is within a public import inside `some_lib.pr` then it is still accessed through the library name `lib`. At this time Piranha doesn't support nested namespaces in the same way that C++ does.
+
+## <a name="1.4"></a>1.4 Execution Model
+
+### <a name="1.4.1"></a>1.4.1 Introduction
+
+Piranha differs from other programming languages considerably when it comes to its execution model; that is, the order and manner in which statements are executed. Consider the following simple program:
+
+<pre>
+<b>print_to_console</b>(result)
+<b>add</b> result(10, 30)
+</pre>
+
+For those familiar with most sequential programming languages, this program would appear to be written backwards. In fact, it would also be logical to assume that such a program would result in a syntax error since the node *result* is used before it's even instantiated. 
+
+In Piranha, however, such a program is completely valid. All of the dependencies of a node are *evaluated* before the node itself. So even though the add operation is instantiated after the print node textually, it is evaluated first.
+
+The default execution direction is *down*. For example, consider this program:
+
+<pre>
+<b>print_to_console</b>("1")
+<b>print_to_console</b>("2")
+<b>print_to_console</b>("3")
+</pre>
+
+This program will print the numbers in the order printed and Piranha will *guarantee* this order since these nodes don't have any dependencies. 
+
+### <a name="1.4.2"></a>1.4.2 Node Evaluation
+
+When a node "runs" it is called *node evaluation*. The Piranha interpreter will ensure that any node will be evaluated one time only. For example:
+
+<pre>
+<b>print_to_console</b>(result)
+<b>print_to_console</b>(result + 1)
+<b>add</b> result(2, 7)
+</pre>
+
+In this example, the node `result` is referenced twice in two `print_to_console` nodes. Despite this it is only evaluated once when the first print node is instantiated.
+
+All of a node's dependencies will be evaluated before it is evaluated. For instance, in the example below the node `a` is executed first followed by `b` and then `c`.
+
+<pre>
+<b>add</b> c(a, b)
+<b>add</b> b(1, 2)
+<b>add</b> a(3, 4)
+</pre>
+
+### <a name="1.4.3"></a>1.4.3 Composite Node Evaluation
+
+In previous examples, all nodes were builtin types and so did not have any nested nodes. Evaluation of composite nodes follows the same execution model as described previously with the additional stipulation that inputs are evaluated first and outputs are evaluated last. For example:
+
+<pre>
+<b>node</b> example {
+  <b>input</b> a: <b>add</b>(1, 2);
+  <b>input</b> b;
+  <b>output</b> result;
+
+  <b>print_to_console</b>(result)
+  <b>add</b> result(a, b)
+}
+
+<b>example</b>(b: 5)
+
+</pre>
+
+One could equivalently express the above code in *execution order* as:
+
+<pre>
+<b>add</b> node0(1, 2)
+<b>add</b> result(node0, 5)
+<b>print_to_console</b>(result)
+</pre>
+
+The example below further demonstrates how composite node dependencies are treated:
+
+<pre>
+<b>node</b> get_value {
+  <b>alias</b> <b>output</b> out: 5;
+
+  <b>print_to_console</b>("Returning 5")
+}
+
+<b>node</b> example {
+  <b>input</b> a;
+  <b>input</b> b;
+  <b>output</b> result;
+
+  <b>print_to_console</b>("The result is: ")
+  <b>print_to_console</b>(result)
+  <b>add</b> result(a, b)
+}
+
+<b>example</b>(value, 10)
+<b>get_value</b> value()
+
+</pre>
+
+The above program outputs:
+
+<pre>
+Returning 5
+The result is:
+15
 </pre>

@@ -51,9 +51,9 @@ private node test {
     output test2: container.output1.x;          // UnresolvedReference
     output test3: container.output1.z;          // UnresolvedReference
 
-    output test4: test_container.output1.output1.x;     // UnresolvedReference
-    output test5: test_container.output1.x;             // UnresolvedReference
-    output test6: test_container.output1.z;             // UnresolvedReference
+    output test4: test_container.output1.output1.x;     // Okay
+    output test5: test_container.output1.x;             // UndefinedMember
+    output test6: test_container.output1.z;             // UndefinedMember
 
     output test7: internal_container.output1.output1.x;         // Okay
     output test8: internal_container.output1.output1.x;         // Okay

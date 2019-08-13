@@ -1,6 +1,8 @@
 #include "../include/node_container.h"
 
 #include "../include/ir_context_tree.h"
+#include "../include/key_value_lookup.h"
+#include "../include/assembly.h"
 
 piranha::NodeContainer::NodeContainer() {
     /* void */
@@ -69,6 +71,18 @@ void piranha::NodeContainer::addContainerOutput(pNodeInput output, Node *node, c
     if (primary) {
         setPrimaryOutput(name);
     }
+}
+
+void piranha::NodeContainer::writeAssembly(std::fstream &file, Assembly *assembly) const {
+    int currentIndex = 0;
+
+    int nodeCount = getNodeCount();
+    for (int i = 0; i < nodeCount; i++) {
+        Node *node = getNode(i);
+        
+    }
+
+    file.close();
 }
 
 void piranha::NodeContainer::_initialize() {

@@ -64,8 +64,10 @@ piranha::IrAttributeDefinition *piranha::IrNodeDefinition::
 piranha::IrParserStructure *piranha::IrNodeDefinition::
     resolveName(const std::string &name) const 
 {
+    return IrParserStructure::resolveName(name);
+
     // Node definitions are not able to see variables outside of themselves for now
-    return resolveLocalName(name);
+    //return resolveLocalName(name);
 }
 
 const piranha::ChannelType *piranha::IrNodeDefinition::getChannelType() {
