@@ -454,6 +454,10 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             NodeOutput *output = attributeDefinition->generateNodeOutput(newContext, program, newContainer);
             Node *node = attributeDefinition->generateNode(newContext, program, newContainer);
 
+            if (node == nullptr && output == nullptr) {
+                throw EmptyPort();
+            }
+
             if (!m_definition->isBuiltin()) {
                 if (!m_definition->isInline()) {
                     newContainer->addContainerInput(attributeDefinition->getName(),
@@ -501,6 +505,10 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         if (!attributeDefinition->isInput()) {
             NodeOutput *output = attributeDefinition->generateNodeOutput(newContext, program, newContainer);
             Node *node = attributeDefinition->generateNode(newContext, program, newContainer);
+
+            if (node == nullptr && output == nullptr) {
+                throw EmptyPort();
+            }
 
             if (!m_definition->isBuiltin()) {
                 if (!m_definition->isInline()) {
