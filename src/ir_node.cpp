@@ -445,8 +445,41 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         program->addNode(newNode);
     }
 
-    // Generate inputs first
+    // Generate attribute skeletons
     int attributeCount = allAttributes->getDefinitionCount();
+    for (int i = 0; i < attributeCount; i++) {
+        IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
+
+        Node::PortSkeleton skeleton;
+        skeleton.container = newContainer;
+        skeleton.context = newContext;
+        skeleton.definition = attributeDefinition;
+        skeleton.name = attributeDefinition->getName();
+
+        if (m_definition->isBuiltin()) {
+            NodeOutput *output = newNode->getOutput(skeleton.name);
+            skeleton.nodeOutput = (output != nullptr)
+                ? output->getInterface()
+                : nullptr;
+            skeleton.output = output;
+        }
+        else {
+            skeleton.nodeOutput = nullptr;
+            skeleton.output = nullptr;
+
+            if (!m_definition->isInline()) {
+                newContainer->addContainerInput(attributeDefinition->getName(),
+                    attributeDefinition->getDirection() == IrAttributeDefinition::MODIFY,
+                    attributeDefinition->getDirection() == IrAttributeDefinition::TOGGLE);
+            }
+        }
+
+        if (newNode != nullptr) {
+            newNode->addPortSkeleton(skeleton);
+        }
+    }
+
+    // Generate inputs first
     for (int i = 0; i < attributeCount; i++) {
         IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
 
@@ -456,14 +489,6 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 
             if (node == nullptr && output == nullptr) {
                 throw EmptyPort();
-            }
-
-            if (!m_definition->isBuiltin()) {
-                if (!m_definition->isInline()) {
-                    newContainer->addContainerInput(attributeDefinition->getName(),
-                        attributeDefinition->getDirection() == IrAttributeDefinition::MODIFY,
-                        attributeDefinition->getDirection() == IrAttributeDefinition::TOGGLE);
-                }
             }
 
             if (node != nullptr) {

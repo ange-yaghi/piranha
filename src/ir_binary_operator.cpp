@@ -237,7 +237,7 @@ piranha::Node *piranha::IrBinaryOperator::
         Node *node = m_leftOperand->generateNode(context, program, container);
         
         if (node != nullptr) {
-            return node->getNodeOutput(labelConstant->getValue());
+            return node->generateNodeOutput(labelConstant->getValue());
         }
         else return nullptr;
     }
@@ -252,7 +252,7 @@ piranha::NodeOutput *piranha::IrBinaryOperator::
         Node *node = m_leftOperand->generateNode(context, program, container);
 
         if (node != nullptr) {
-            return node->getOutput(labelConstant->getValue());
+            return node->generateOutput(labelConstant->getValue());
         }
         else return nullptr;
     }
