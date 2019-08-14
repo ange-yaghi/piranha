@@ -5,12 +5,14 @@
 #include "../include/node_program.h"
 #include "../include/node.h"
 #include "../include/language_rules.h"
+#include "../include/compilation_error.h"
 
 piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
     newContext = nullptr;
     err = nullptr;
 
     failed = false;
+    infiniteLoop = -1;
     reachedDeadEnd = false;
     touchedMainContext = false;
 
@@ -26,6 +28,7 @@ void piranha::IrParserStructure::IrReferenceInfo::reset() {
     err = nullptr;
 
     failed = false;
+    infiniteLoop = -1;
     reachedDeadEnd = false;
     touchedMainContext = false;
     fixedType = nullptr;
@@ -34,10 +37,31 @@ void piranha::IrParserStructure::IrReferenceInfo::reset() {
 piranha::IrParserStructure::IrReferenceQuery::IrReferenceQuery() {
     inputContext = nullptr;
     recordErrors = false;
+    recordInfiniteLoops = false;
 }
 
 piranha::IrParserStructure::IrReferenceQuery::~IrReferenceQuery() {
     /* void */
+}
+
+void piranha::IrParserStructure::IrReferenceChain::
+    addLink(IrParserStructure *structure, IrContextTree *context) 
+{
+    list.push_back({ structure, context });
+}
+
+int piranha::IrParserStructure::IrReferenceChain::
+    searchLink(IrParserStructure *structure, IrContextTree *context) 
+{
+    int links = (int)list.size();
+    for (int i = 0; i < links; i++) {
+        const Link &link = list[i];
+        if (link.structure == structure && link.context->isEqual(context)) {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 piranha::IrParserStructure::IrParserStructure() {
@@ -105,11 +129,40 @@ piranha::IrParserStructure *piranha::IrParserStructure::getImmediateReference(
 piranha::IrParserStructure *piranha::IrParserStructure::getReference(
     const IrReferenceQuery &query, IrReferenceInfo *output) 
 {
+    IrReferenceChain chain;
+    chain.addLink(this, query.inputContext);
+
+    IrReferenceInfo info;
+    IrParserStructure *reference = getReference(query, &info, &chain);
+
+    if (output != nullptr) *output = info;
+
+    if (query.recordErrors && info.infiniteLoop >= 0) {
+        const IrReferenceChain::Link &link = chain.list[info.infiniteLoop];
+
+        if (!link.structure->isInfiniteLoop(link.context)) {
+            if (output->touchedMainContext || IR_EMPTY_CONTEXT()) {
+                IR_ERR_OUT(new CompilationError(*link.structure->getSummaryToken(),
+                    ErrorCode::CircularReference, link.context));
+            }
+        }
+
+        for (int i = info.infiniteLoop; i < (int)chain.list.size(); i++) {
+            chain.list[i].structure->setInfiniteLoop(chain.list[i].context);
+        }
+    }
+
+    return reference;
+}
+
+piranha::IrParserStructure *piranha::IrParserStructure::getReference(
+    const IrReferenceQuery &query, IrReferenceInfo *output, IrReferenceChain *chain)
+{
     IR_RESET(query);
 
     IrReferenceQuery immediateQuery = query;
     IrReferenceInfo immediateInfo;
-    IrParserStructure *immediateReference = 
+    IrParserStructure *immediateReference =
         getImmediateReference(immediateQuery, &immediateInfo);
 
     if (immediateInfo.failed) {
@@ -121,10 +174,22 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
     if (immediateInfo.reachedDeadEnd) {
         IR_DEAD_END();
         if (immediateInfo.isFixedType()) IR_INFO_OUT(fixedType, immediateInfo.fixedType)
-        return nullptr;
+            return nullptr;
     }
 
     if (immediateReference != nullptr) {
+        // Check for an infinite loop
+        int infiniteLoop = chain->searchLink(immediateReference, immediateInfo.newContext);
+        if (infiniteLoop >= 0) {
+            IR_FAIL();
+            IR_INFO_OUT(infiniteLoop, infiniteLoop);
+            IR_INFO_OUT(touchedMainContext, immediateInfo.touchedMainContext);
+            return nullptr;
+        }
+        else {
+            chain->addLink(immediateReference, immediateInfo.newContext);
+        }
+
         IrReferenceInfo nestedInfo;
         IrReferenceQuery nestedQuery;
         nestedQuery.inputContext = immediateInfo.newContext;
@@ -132,23 +197,32 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
         // Error checking is not done on any parent nodes because it's assumed that errors have
         // already been checked/reported
         nestedQuery.recordErrors = false;
+        nestedQuery.recordInfiniteLoops = query.recordErrors || query.recordInfiniteLoops;
 
-        IrParserStructure *fullReference = 
-            immediateReference->getReference(nestedQuery, &nestedInfo);
+        IrParserStructure *fullReference =
+            immediateReference->getReference(nestedQuery, &nestedInfo, chain);
+
+        IR_INFO_OUT(touchedMainContext,
+            nestedInfo.touchedMainContext ||
+            immediateInfo.touchedMainContext
+        );
 
         if (nestedInfo.failed) {
             IR_FAIL();
             IR_ERR_OUT(nestedInfo.err);
+            IR_INFO_OUT(infiniteLoop, nestedInfo.infiniteLoop);
             return nullptr;
         }
 
         // Immediate takes precedence
         // NOTE - this has to be done here because even when reaching a dead end
         // fixed type information can still be used
-        if (immediateInfo.isFixedType())                    
-            { IR_INFO_OUT(fixedType, immediateInfo.fixedType); }
-        else if (nestedInfo.isFixedType())                  
-            { IR_INFO_OUT(fixedType, nestedInfo.fixedType); }
+        if (immediateInfo.isFixedType()) {
+            IR_INFO_OUT(fixedType, immediateInfo.fixedType);
+        }
+        else if (nestedInfo.isFixedType()) {
+            IR_INFO_OUT(fixedType, nestedInfo.fixedType);
+        }
 
         if (nestedInfo.reachedDeadEnd) {
             IR_DEAD_END();
@@ -156,10 +230,6 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
         }
 
         IR_INFO_OUT(newContext, nestedInfo.newContext);
-        IR_INFO_OUT(touchedMainContext, 
-            nestedInfo.touchedMainContext ||
-            immediateInfo.touchedMainContext
-        );
 
         return fullReference;
     }
@@ -168,7 +238,7 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
 
 void piranha::IrParserStructure::resolveDefinitions() {
     if (m_definitionsResolved) return;
-    m_definitionsResolved = true;
+    else m_definitionsResolved = true;
 
     // Resolve components
     int componentCount = getComponentCount();
@@ -179,9 +249,25 @@ void piranha::IrParserStructure::resolveDefinitions() {
     _resolveDefinitions();
 }
 
+void piranha::IrParserStructure::checkCircularDefinitions() {
+    /* void */
+}
+
+void piranha::IrParserStructure::checkCircularDefinitions(IrContextTree *context, IrNodeDefinition *root) {
+    // Check components
+    int componentCount = getComponentCount();
+    for (int i = 0; i < componentCount; i++) {
+        if (m_components[i]->getCheckReferences()) {
+            m_components[i]->checkCircularDefinitions(context, root);
+        }
+    }
+
+    _checkCircularDefinitions(context, root);
+}
+
 void piranha::IrParserStructure::expand() {
     if (m_expanded) return;
-    m_expanded = true;
+    else m_expanded = true;
 
     // Check components
     int componentCount = getComponentCount();
@@ -194,7 +280,7 @@ void piranha::IrParserStructure::expand() {
 
 void piranha::IrParserStructure::expand(IrContextTree *context) {
     if (m_expansions.lookup(context) != nullptr) return;
-    *m_expansions.newValue(context) = nullptr;
+    else *m_expansions.newValue(context) = nullptr;
 
     // Expand components
     int componentCount = getComponentCount();
@@ -209,6 +295,14 @@ void piranha::IrParserStructure::expand(IrContextTree *context) {
 }
 
 void piranha::IrParserStructure::expandChain(IrContextTree *context) {
+    IrReferenceChain chain;
+    expandChain(context, &chain);
+}
+
+void piranha::IrParserStructure::expandChain(IrContextTree *context, IrReferenceChain *chain) {
+    if (chain->searchLink(this, context) >= 0) return;
+    else chain->addLink(this, context);
+
     expand(context);
 
     // Expand reference
@@ -219,7 +313,7 @@ void piranha::IrParserStructure::expandChain(IrContextTree *context) {
     IrParserStructure *immediateReference = getImmediateReference(query, &info);
 
     if (immediateReference != nullptr) {
-        immediateReference->expandChain(info.newContext);
+        immediateReference->expandChain(info.newContext, chain);
     }
 }
 
@@ -347,6 +441,10 @@ void piranha::IrParserStructure::writeReferencesToFile(
     }
 }
 
+void piranha::IrParserStructure::_checkCircularDefinitions(IrContextTree *context, IrNodeDefinition *root) {
+    /* void */
+}
+
 void piranha::IrParserStructure::_resolveDefinitions() {
     /* void */
 }
@@ -376,6 +474,23 @@ bool piranha::IrParserStructure::allowsExternalAccess() const {
 piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
     if (m_parentUnit == nullptr) return m_logicalParent->getParentUnit();
     else return m_parentUnit;
+}
+
+bool piranha::IrParserStructure::isInfiniteLoop(IrContextTree *context) {
+    int infiniteLoops = (int)m_infiniteLoops.size();
+    for (int i = 0; i < infiniteLoops; i++) {
+        if (m_infiniteLoops[i]->isEqual(context)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void piranha::IrParserStructure::setInfiniteLoop(IrContextTree *context) {
+    if (isInfiniteLoop(context)) return;
+
+    m_infiniteLoops.push_back(context);
 }
 
 piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(

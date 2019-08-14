@@ -230,8 +230,13 @@ void piranha::IrNode::_expand() {
 }
 
 void piranha::IrNode::_expand(IrContextTree *context) {
+    if (context->findContext(this)) {
+        return;
+    }
+
     // Standard expand with a different focus            _____
     IrContextTree *mainContext = context->newChild(this, false);
+
     if (m_definition != nullptr) {
         m_definition->expand(mainContext);
     }
@@ -241,16 +246,41 @@ void piranha::IrNode::_checkTypes() {
     // Check types with this node as the focus                 ____
     IrContextTree *parentContext = new IrContextTree(nullptr); ////
     IrContextTree *mainContext = parentContext->newChild(this, true);
+
     if (m_definition != nullptr) {
         m_definition->checkTypes(mainContext);
     }
 }
 
 void piranha::IrNode::_checkTypes(IrContextTree *context) {
+    if (context->findContext(this)) {
+        return;
+    }
+
     // Standard type check with a different focus        _____
     IrContextTree *mainContext = context->newChild(this, false);
     if (m_definition != nullptr) {
         m_definition->checkTypes(mainContext);
+    }
+}
+
+void piranha::IrNode::_checkCircularDefinitions(IrContextTree *context, IrNodeDefinition *root) {
+    if (m_definition == root) {
+        getParentUnit()->addCompilationError(
+            new CompilationError(*getSummaryToken(), ErrorCode::CircularDefinition, context)
+        );
+        return;
+    }
+
+    // Prevent infinite loops if a loop occurs in a definition that is not the focus
+    if (context->findContext(this)) {
+        return;
+    }
+
+    IrContextTree *newContext = context->newChild(this, true);
+
+    if (m_definition != nullptr) {
+        m_definition->IrParserStructure::checkCircularDefinitions(newContext, root);
     }
 }
 
@@ -567,6 +597,8 @@ piranha::IrParserStructure *piranha::IrNode::getImmediateReference(
 }
 
 void piranha::IrNode::checkReferences(IrContextTree *inputContext) {
+    if (inputContext->findContext(this)) return;
+
     IrContextTree *thisContext = inputContext->newChild(this, false);
     IrAttributeList *attributes = getAttributes();
 

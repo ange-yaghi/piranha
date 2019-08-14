@@ -228,7 +228,10 @@ piranha::Node *piranha::Node::getNodeOutput(const std::string &name) const {
     int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
         if (name == m_inputs[i].name) {
-            return m_inputs[i].nodeInput;
+            if (m_inputs[i].nodeInput == nullptr) {
+                return (*m_inputs[i].input)->getInterface();
+            }
+            else return m_inputs[i].nodeInput;
         }
     }
 

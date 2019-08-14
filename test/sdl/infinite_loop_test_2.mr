@@ -1,0 +1,20 @@
+node int => __piranha__int {}
+node float => __piranha__float {}
+
+node int_to_float => __piranha__int_to_float {
+    input __in [int];
+    alias output __out [float];
+}
+
+node float_add => __piranha__float_add {
+    input __in0 [float];
+    input __in1 [float];
+    alias output __out [float];
+}
+
+node test {
+    input test [float]: test;
+    output b: test + 5.0;
+}
+
+test(5)

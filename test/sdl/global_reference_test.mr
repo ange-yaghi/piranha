@@ -1,6 +1,6 @@
-private node some_node {
+auto private node some_node {
     output a: 5;
-} -> auto
+}
 
 private node other_node {
     input t: some_node;

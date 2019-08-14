@@ -1,0 +1,7 @@
+node test {
+    input test: test;
+    output b: test;
+}
+
+test A(5)
+test B(B.b)

@@ -34,6 +34,7 @@ ERR(UnexpectedToken) =          { "P", "0010", "Unexpected token" };
 
 // [E] - Expansion errors
 ERR(InvalidOperandTypes) =      { "E", "0010", "Invalid operand types" };
+ERR(CircularDefinition) =       { "E", "0020", "Circular definition detected" };
 
 // [R] - Resolution errors
 ERR(UndefinedNodeType) =        { "R", "0010", "Undefined node type" };
@@ -45,6 +46,7 @@ ERR(UnresolvedReference) =      { "R", "0050", "Unresolved reference" };
 ERR(UndefinedMember) =          { "R", "0060", "Undefined member" };
 ERR(AccessingInternalMember) =  { "R", "0061", "Invalid reference to an internal member" };
 ERR(CannotFindDefaultValue) =   { "R", "0070", "Cannot find default value" };
+ERR(CircularReference) =        { "R", "0080", "Circular reference detected" };
 
 // [V] - Validation errors
 ERR(InputSpecifiedMultipleTimes) = 
