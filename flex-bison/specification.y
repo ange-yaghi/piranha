@@ -96,7 +96,6 @@
 %token <piranha::IrTokenInfo_string>    PRIVATE
 %token <piranha::IrTokenInfo_string>    BUILTIN_POINTER
 %token <piranha::IrTokenInfo_string>    NAMESPACE_POINTER
-%token <piranha::IrTokenInfo_string>    INSTANCE_POINTER
 %token <piranha::IrTokenInfo_string>    UNRECOGNIZED
 %token <piranha::IrTokenInfo_string>    OPERATOR
 %token <piranha::IrTokenInfo_string>    MODULE
@@ -179,7 +178,7 @@ decorator_list
 statement
   : node                                { driver.addNode($1); }
   | import_statement_short_name         { driver.addImportStatement($1); }
-  | immediate_node_definition           { driver.addNodeDefinition($1); }
+  | node_decorator                      { driver.addNodeDefinition($1); }
   | MODULE '{' decorator_list '}'       { }
   ;
 
@@ -251,34 +250,6 @@ node
                                                         }
   ;
 
-immediate_node_definition
-  : node_decorator connection_block INSTANCE_POINTER LABEL
-                                                        {
-                                                            $$ = $1;
-                                                            IrNode *newNode = new IrNode($4, $1, $2);
-                                                            driver.addNode(newNode);
-                                                        }
-  | node_decorator connection_block INSTANCE_POINTER AUTO
-                                                        {
-                                                            $$ = $1;
-                                                            IrNode *newNode = new IrNode(*($1->getNameToken()), $1, $2);
-                                                            driver.addNode(newNode);
-                                                        }
-  | node_decorator INSTANCE_POINTER LABEL
-                                                        {
-                                                            $$ = $1;
-                                                            IrNode *newNode = new IrNode($3, $1, new IrAttributeList());
-                                                            driver.addNode(newNode);
-                                                        }
-  | node_decorator INSTANCE_POINTER AUTO
-                                                        {
-                                                            $$ = $1;
-                                                            IrNode *newNode = new IrNode(*($1->getNameToken()), $1, new IrAttributeList());
-                                                            driver.addNode(newNode);
-                                                        }
-  | node_decorator                                      { $$ = $1; }
-  ;
-
 node_list
   : node                                                {
                                                             $$ = new IrNodeList();
@@ -347,9 +318,20 @@ specific_node_definition
                                                         }
   ;
 
-node_decorator
-  : decorator_list specific_node_definition             { $$ = $2; }
+immediate_node_definition
+  : AUTO specific_node_definition                       {   
+                                                            $$ = $2;
+                                                            if ($$ != nullptr) {
+                                                                IrNode *newNode = new IrNode(*($2->getNameToken()), $2, new IrAttributeList());
+                                                                driver.addNode(newNode);
+                                                            }
+                                                        }
   | specific_node_definition                            { $$ = $1; }
+  ;
+
+node_decorator
+  : decorator_list immediate_node_definition            { $$ = $2; }
+  | immediate_node_definition                           { $$ = $1; }
   ;
 
 port_definitions

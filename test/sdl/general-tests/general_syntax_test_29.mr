@@ -1,8 +1,9 @@
 private import "../../../demos/piranha/standard-library/standard_library.mr" as std
 
+auto 
 private node test {
-    input test;
+    input this: test;
     output a: 5;
     
     std::console_out("Node 1\n")
-} (test) -> test
+}

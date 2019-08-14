@@ -64,10 +64,10 @@ piranha::IrAttributeDefinition *piranha::IrNodeDefinition::
 piranha::IrParserStructure *piranha::IrNodeDefinition::
     resolveName(const std::string &name) const 
 {
-    return IrParserStructure::resolveName(name);
+    //return IrParserStructure::resolveName(name);
 
     // Node definitions are not able to see variables outside of themselves for now
-    //return resolveLocalName(name);
+    return resolveLocalName(name);
 }
 
 const piranha::ChannelType *piranha::IrNodeDefinition::getChannelType() {
@@ -96,6 +96,12 @@ piranha::IrNodeDefinition *piranha::IrNodeDefinition::getAliasType() {
     if (typeDefinition == nullptr) return this;
 
     return typeDefinition->getAliasType();
+}
+
+void piranha::IrNodeDefinition::checkCircularDefinitions() {
+    IrContextTree *newContext = new IrContextTree(nullptr);
+
+    IrParserStructure::checkCircularDefinitions(newContext, this);
 }
 
 int piranha::IrNodeDefinition::countSymbolIncidence(const std::string &name) const {

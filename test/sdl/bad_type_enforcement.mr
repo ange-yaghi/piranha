@@ -1,0 +1,6 @@
+node test_node {
+	input test_input [fake_node];
+}
+
+test_node(5)
+test_node(5)
