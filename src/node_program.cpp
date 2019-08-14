@@ -22,6 +22,8 @@ void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
 
 void piranha::NodeProgram::addNode(Node *node) {
     m_nodeCache.push_back(node);
+
+    node->setProgram(this);
 }
 
 void piranha::NodeProgram::addContainer(IrContextTree *context, NodeContainer *container) {

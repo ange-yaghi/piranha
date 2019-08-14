@@ -180,6 +180,11 @@ void piranha::Node::addPortSkeleton(const PortSkeleton &skeleton) {
 
 piranha::Node *piranha::Node::generateNodeOutput(const std::string &name) {
     PortSkeleton *skeleton = getSkeleton(name);
+    if (skeleton == nullptr) {
+        // This must be an interface node
+        return getNodeOutput(name);
+    }
+
     if (skeleton->nodeOutput != nullptr) return skeleton->nodeOutput;
 
     NodeContainer *container = skeleton->container;
@@ -196,10 +201,17 @@ piranha::Node *piranha::Node::generateNodeOutput(const std::string &name) {
     }
 
     skeleton->nodeOutput = newNode;
+
+    return newNode;
 }
 
 piranha::NodeOutput *piranha::Node::generateOutput(const std::string &name) {
     PortSkeleton *skeleton = getSkeleton(name);
+    if (skeleton == nullptr) {
+        // This must be an interface node
+        return getOutput(name);
+    }
+
     if (skeleton->output != nullptr) return skeleton->output;
 
     NodeContainer *container = skeleton->container;
@@ -217,6 +229,8 @@ piranha::NodeOutput *piranha::Node::generateOutput(const std::string &name) {
     }
 
     skeleton->output = newOutput;
+
+    return newOutput;
 }
 
 piranha::NodeOutput *piranha::Node::getPrimaryOutput() const {
@@ -376,6 +390,9 @@ void piranha::Node::
     m_inputs.push_back({ node, nullptr, nullptr, name, modifiesInput, enableInput });
 
     if (enableInput) m_enableInput = node;
+
+    // Reset the port
+    *node = nullptr;
 }
 
 void piranha::Node::registerOutput(NodeOutput *node, const std::string &name) {
@@ -446,7 +463,7 @@ void piranha::Node::registerOutputReference(NodeOutput *const *output, const std
 }
 
 piranha::Node::PortSkeleton *piranha::Node::getSkeleton(const std::string &name) {
-    int count = m_portSkeletons.size();
+    int count = (int)m_portSkeletons.size();
     for (int i = 0; i < count; i++) {
         if (m_portSkeletons[i].name == name) {
             return &m_portSkeletons[i];
