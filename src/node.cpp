@@ -28,6 +28,8 @@ piranha::Node::Node() {
 
     m_context = nullptr;
     m_irStructure = nullptr;
+
+    m_isVirtual = false;
 }
 
 piranha::Node::~Node() {
@@ -369,14 +371,17 @@ piranha::NodeOutput *piranha::Node::getInterfaceInput() const {
     else return *m_interfaceInput;
 }
 
-void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly) const {
+void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly, int indent) const {
+    std::string prefixIndent = "";
+    for (int i = 0; i < indent; i++) prefixIndent += "    ";
+
     std::string builtinName = getBuiltinName();
 
-    file << builtinName << "\n";
+    file << prefixIndent + builtinName << "\n";
 
     int nodeInputs = getInputCount();
     if (nodeInputs > 0) {
-        file << "    INPUTS  { ";
+        file << prefixIndent + "    INPUTS  { ";
         for (int i = 0; i < nodeInputs; i++) {
             const Node::NodeInputPort *port = getInput(i);
             int index = assembly->getOutputLabel(*port->input);
@@ -390,7 +395,7 @@ void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly) const 
     int nodeOutputReferences = getOutputReferenceCount();
 
     if (nodeOutputReferences > 0 || nodeOutputs > 0) {
-        file << "    OUTPUTS { ";
+        file << prefixIndent + "    OUTPUTS { ";
         for (int i = 0; i < nodeOutputs; i++) {
             const Node::NodeOutputPort *port = getOutput(i);
             int index = assembly->getOutputLabel(port->output);

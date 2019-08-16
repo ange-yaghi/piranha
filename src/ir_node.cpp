@@ -425,7 +425,10 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             parentContainer->addChild(newContainer);
             program->addContainer(newContext, newContainer);
         }
-        else newContainer = parentContainer;
+        else {
+            newNode->setVirtual(true);
+            newContainer = parentContainer;
+        }
     }
     else {
         std::string builtinType = m_definition->getBuiltinName();
@@ -496,7 +499,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
                 throw EmptyPort();
             }
 
-            if (node != nullptr) {
+            if (node != nullptr && !node->isVirtual()) {
                 if (!newContainer->getTopLevel()->findContainer(node)) {
                     newContainer->addNode(node);
                 }
@@ -508,7 +511,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         }
     }
 
-    if (newNode != nullptr && (!m_definition->isInline() || m_definition->isBuiltin())) {
+    if (newNode != nullptr && !newNode->isVirtual()) {
         if (!parentContainer->findNode(newNode)) {
             parentContainer->addNode(newNode);
         }
@@ -553,7 +556,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
                     attributeDefinition->isAlias());
             }
 
-            if (node != nullptr) {
+            if (node != nullptr && !node->isVirtual()) {
                 if (!newContainer->findContainer(node)) {
                     newContainer->addNode(node);
                 }

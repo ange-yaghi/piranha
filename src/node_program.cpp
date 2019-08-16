@@ -5,11 +5,12 @@
 #include "../include/key_value_lookup.h"
 #include "../include/ir_node.h"
 #include "../include/ir_node_definition.h"
+#include "../include/assembly.h"
 
 #include <fstream>
 
 piranha::NodeProgram::NodeProgram() {
-    /* void */
+    m_topLevelContainer.setName("root");
 }
 
 piranha::NodeProgram::~NodeProgram() {
@@ -17,7 +18,12 @@ piranha::NodeProgram::~NodeProgram() {
 }
 
 void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
+    std::fstream file(fname, std::ios::out);
 
+    Assembly assembly;
+    m_topLevelContainer.writeAssembly(file, &assembly, 0);
+
+    file.close();
 }
 
 void piranha::NodeProgram::addNode(Node *node) {
