@@ -92,6 +92,9 @@ namespace piranha {
         Node *generateNodeOutput(const std::string &name);
         NodeOutput *generateOutput(const std::string &name);
 
+        Node *generateAliasNode();
+        NodeOutput *generateAliasOutput();
+
         NodeOutput *getPrimaryOutput() const;
         Node *getPrimaryNode() const;
         NodeOutput *getOutput(const std::string &name) const;
@@ -128,6 +131,8 @@ namespace piranha {
 
         virtual void writeAssembly(std::fstream &file, Assembly *assembly) const;
 
+        void setPrimaryOutput(const std::string &name);
+
     protected:
         virtual void _initialize();
         virtual void _evaluate();
@@ -157,8 +162,6 @@ namespace piranha {
 
         PortSkeleton *getSkeleton(const std::string &name);
         std::vector<PortSkeleton> m_portSkeletons;
-
-        void setPrimaryOutput(const std::string &name);
 
     protected:
         pNodeInput *m_interfaceInput;

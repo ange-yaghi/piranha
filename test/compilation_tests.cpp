@@ -23,7 +23,10 @@
 using namespace piranha;
 
 TEST(IrConstructionTests, IrConstructionSanityCheck) {
-    IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr");
+    const ErrorList *list;
+    IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr", &list);
+
+    EXPECT_EQ(list->getErrorCount(), 0);
 
     TestRules generator;
     generator.registerBuiltinNodeTypes();

@@ -449,3 +449,17 @@ TEST(GeneralTests, GeneralSyntaxTest_33) {
 
     program.execute();
 }
+
+TEST(GeneralTests, GeneralSyntaxTest_34) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_34.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+}
+

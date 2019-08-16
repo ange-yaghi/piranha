@@ -6,6 +6,7 @@
 
 piranha::Compiler::Compiler(const LanguageRules *rules) {
     m_rules = rules;
+    m_extension = ".mr";
 }
 
 piranha::Compiler::~Compiler() {
@@ -35,8 +36,8 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
             IrImportStatement *s = newUnit->getImportStatement(i);
             std::string libName = s->getLibName();
 
-            if (!hasEnding(libName, ".mr")) {
-                libName += ".mr";
+            if (!hasEnding(libName, m_extension)) {
+                libName += m_extension;
             }
 
             Path importPath(libName);

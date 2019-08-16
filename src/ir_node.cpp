@@ -409,10 +409,9 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
     const IrAttributeList *specifiedAttributes = getAttributes();
 
-    bool nonInlineContainer = false;
     NodeContainer *newContainer = parentContainer;
     Node *newNode = nullptr;
-    if (!m_definition->isBuiltin() && !m_definition->isInline()) {
+    if (!m_definition->isBuiltin()) {
         newContainer = new NodeContainer;
         newContainer->setName(getName());
         newContainer->initialize();
@@ -420,14 +419,15 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         newContainer->setIrContext(parentContext);
         newContainer->setContainer(parentContainer);
 
-        parentContainer->addChild(newContainer);
-        program->addContainer(newContext, newContainer);
-
         newNode = newContainer;
-        nonInlineContainer = true;
+
+        if (!m_definition->isInline()) {
+            parentContainer->addChild(newContainer);
+            program->addContainer(newContext, newContainer);
+        }
+        else newContainer = parentContainer;
     }
-    
-    if (m_definition->isBuiltin()) {
+    else {
         std::string builtinType = m_definition->getBuiltinName();
         if (builtinType.empty()) return nullptr;
 
@@ -467,10 +467,15 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             skeleton.nodeOutput = nullptr;
             skeleton.output = nullptr;
 
-            if (!m_definition->isInline()) {
+            if (attributeDefinition->isInput()) {
                 newContainer->addContainerInput(attributeDefinition->getName(),
                     attributeDefinition->getDirection() == IrAttributeDefinition::MODIFY,
                     attributeDefinition->getDirection() == IrAttributeDefinition::TOGGLE);
+            }
+            else {
+                if (attributeDefinition->isAlias()) {
+                    newNode->setPrimaryOutput(skeleton.name);
+                }
             }
         }
 
@@ -503,7 +508,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         }
     }
 
-    if (newNode != nullptr) {
+    if (newNode != nullptr && (!m_definition->isInline() || m_definition->isBuiltin())) {
         if (!parentContainer->findNode(newNode)) {
             parentContainer->addNode(newNode);
         }
@@ -539,13 +544,13 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
                 if (!m_definition->isInline()) {
                     if (output != nullptr) output->addDependency(newNode);
                     if (node != nullptr) node->addDependency(newNode);
-
-                    newContainer->addContainerOutput(
-                        output,
-                        node,
-                        attributeDefinition->getName(),
-                        attributeDefinition->isAlias());
                 }
+
+                newContainer->addContainerOutput(
+                    output,
+                    node,
+                    attributeDefinition->getName(),
+                    attributeDefinition->isAlias());
             }
 
             if (node != nullptr) {

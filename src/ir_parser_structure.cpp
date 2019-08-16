@@ -499,7 +499,7 @@ piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(
     Node *node = program->getCachedInstance(this, context);
 
     if (node == nullptr) node = generateNode(context, program, container);
-    if (node != nullptr) return node->getAliasOutput();
+    if (node != nullptr) return node->generateAliasOutput();
     else return _generateNodeOutput(context, program, container);
 }
 
@@ -508,7 +508,7 @@ piranha::Node *piranha::IrParserStructure::generateNode(
 {
     Node *node = program->getCachedInstance(this, context);
 
-    if (node != nullptr) return node->getAliasNode();
+    if (node != nullptr) return node->generateAliasNode();
     else {
         node = _generateNode(context, program, container);
         if (node != nullptr) {
@@ -518,7 +518,7 @@ piranha::Node *piranha::IrParserStructure::generateNode(
                 }
             }
 
-            return node->getAliasNode();
+            return node->generateAliasNode();
         }
         else return nullptr;
     }
