@@ -179,6 +179,8 @@ void piranha::Node::addPortSkeleton(const PortSkeleton &skeleton) {
 }
 
 piranha::Node *piranha::Node::generateNodeOutput(const std::string &name) {
+    if (name.empty()) return nullptr;
+
     PortSkeleton *skeleton = getSkeleton(name);
     if (skeleton == nullptr) {
         // This must be an interface node
@@ -206,6 +208,8 @@ piranha::Node *piranha::Node::generateNodeOutput(const std::string &name) {
 }
 
 piranha::NodeOutput *piranha::Node::generateOutput(const std::string &name) {
+    if (name.empty()) return nullptr;
+
     PortSkeleton *skeleton = getSkeleton(name);
     if (skeleton == nullptr) {
         // This must be an interface node
@@ -231,6 +235,42 @@ piranha::NodeOutput *piranha::Node::generateOutput(const std::string &name) {
     skeleton->output = newOutput;
 
     return newOutput;
+}
+
+piranha::Node *piranha::Node::generateAliasNode() {
+    NodeOutput *primary = generateOutput(m_primaryOutput);
+    if (primary != nullptr) {
+        Node *outInterface = primary->getInterface();
+        if (outInterface != nullptr) {
+            return outInterface->generateAliasNode();
+        }
+        else return this;
+    }
+
+    Node *primaryNode = generateNodeOutput(m_primaryOutput);
+    if (primaryNode != nullptr) {
+        return primaryNode->generateAliasNode();
+    }
+
+    return this;
+}
+
+piranha::NodeOutput *piranha::Node::generateAliasOutput() {
+    NodeOutput *primary = generateOutput(m_primaryOutput);
+    if (primary != nullptr) {
+        Node *outInterface = primary->getInterface();
+        if (outInterface != nullptr) {
+            return outInterface->generateAliasOutput();
+        }
+        else return primary;
+    }
+
+    Node *primaryNode = generateNodeOutput(m_primaryOutput);
+    if (primaryNode != nullptr) {
+        return primaryNode->generateAliasOutput();
+    }
+
+    return getInterfaceInput();
 }
 
 piranha::NodeOutput *piranha::Node::getPrimaryOutput() const {
