@@ -131,6 +131,8 @@ namespace piranha {
         void setVirtual(bool isVirtual) { m_isVirtual = isVirtual; }
         bool isVirtual() const { return m_isVirtual; }
 
+        virtual bool isLiteral() const { return false; }
+
     protected:
         virtual void _initialize();
         virtual void _evaluate();
