@@ -1,0 +1,12 @@
+node test {
+    output a: test();
+    output b: 5.0;
+}
+
+node test2 {
+    output a: test().b;
+    output b: test().a.a.a.b;
+    output c: test().a.a.a.c;
+    output d: test().c;
+    output e: test().a.c;
+}

@@ -90,6 +90,13 @@ void piranha::IrCompilationUnit::resolveAll() {
     }
 
     resolveDefinitions();
+
+    // Check for circular definitions
+    int definitionCount = getNodeDefinitionCount();
+    for (int i = 0; i < definitionCount; i++) {
+        getNodeDefinition(i)->checkCircularDefinitions();
+    }
+
     expand();
     checkInstantiation();
     checkTypes();
@@ -342,6 +349,7 @@ void piranha::IrCompilationUnit::addNodeDefinition(IrNodeDefinition *nodeDefinit
         registerComponent(nodeDefinition);
 
         nodeDefinition->setParentUnit(this);
+        nodeDefinition->setScopeParent(this);
     }
 }
 
