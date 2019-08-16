@@ -1,4 +1,5 @@
 private import "conversions.mr"
+private import "literals.mr"
 
 public inline node console_in => __piranha__console_in {
     input prompt [string]: "";

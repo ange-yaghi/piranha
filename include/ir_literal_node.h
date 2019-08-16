@@ -28,24 +28,28 @@ namespace piranha {
             Node *newNode = IrNode::_generateNode(context, program, container);
             
             if (!newNode->isLiteral()) {
+                throw InvalidLiteralType();
+            }
+            else {
+                LiteralNode<NativeType> *literalNode =
+                    static_cast<LiteralNode<NativeType> *>(newNode);
 
+                // Inject the literal data
+                literalNode->setData(m_literalData);
             }
 
-        }
-
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
-
+            return newNode;
         }
 
     protected:
         NativeType m_literalData;
 
     protected:
-        static void reset(const piranha::native_bool &s) { s = false; }
-        static void reset(const piranha::native_float &s) { s = (piranha::native_float)0.0; }
-        static void reset(const piranha::native_int &s) { s = (piranha::native_int)0; }
-        static void reset(const piranha::native_string &s) { s = ""; }
-        static void reset(const piranha::native_vector &s) { s = { 0.0, 0.0, 0.0, 0.0 }; }
+        static void reset(piranha::native_bool &s) { s = false; }
+        static void reset(piranha::native_float &s) { s = (piranha::native_float)0.0; }
+        static void reset(piranha::native_int &s) { s = (piranha::native_int)0; }
+        static void reset(piranha::native_string &s) { s = ""; }
+        static void reset(piranha::native_vector &s) { s = { 0.0, 0.0, 0.0, 0.0 }; }
     };
 
 } /* namespace piranha */

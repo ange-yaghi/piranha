@@ -125,6 +125,13 @@ namespace piranha {
             return node;
         }
 
+        std::string resolveLiteralBuiltinType(LiteralType typeCode) const {
+            std::string *builtinType = m_literalRules.lookup(typeCode);
+            return (builtinType == nullptr)
+                ? ""
+                : *builtinType;
+        }
+
         Node *generateNode(const std::string &builtinName) const;
         std::string resolveOperatorBuiltinType(
             IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const;
