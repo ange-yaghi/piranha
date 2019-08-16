@@ -22,7 +22,6 @@ piranha::IrAttributeDefinition::IrAttributeDefinition(
     registerToken(&m_directionToken);
 
     m_direction = dir;
-
     setVisibility(IrVisibility::PUBLIC);
 }
 

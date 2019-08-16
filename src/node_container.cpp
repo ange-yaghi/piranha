@@ -73,16 +73,24 @@ void piranha::NodeContainer::addContainerOutput(pNodeInput output, Node *node, c
     }
 }
 
-void piranha::NodeContainer::writeAssembly(std::fstream &file, Assembly *assembly) const {
-    int currentIndex = 0;
+void piranha::NodeContainer::
+    writeAssembly(std::fstream &file, Assembly *assembly, int indent) const 
+{
+    std::string prefixIndent = "";
+    for (int i = 0; i < indent; i++) prefixIndent += "    ";
+
+    std::string name = getName();
+    file << prefixIndent << "CONTAINER ";
+    if (name.empty()) file << "{" << std::endl;
+    else file << name << " {" << std::endl;
 
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
         Node *node = getNode(i);
-        
+        node->writeAssembly(file, assembly, indent + 1);
     }
 
-    file.close();
+    file << prefixIndent << "}" << std::endl;
 }
 
 void piranha::NodeContainer::_initialize() {
