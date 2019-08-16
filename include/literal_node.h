@@ -14,6 +14,7 @@ namespace piranha {
         ~LiteralNode() {}
 
         virtual void setData(LiteralType data) = 0;
+        virtual bool isLiteral() const { return true; }
     };
 
     typedef LiteralNode<piranha::native_string> StringLiteralNode;
