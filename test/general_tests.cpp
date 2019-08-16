@@ -410,3 +410,56 @@ TEST(GeneralTests, GeneralSyntaxTest_30) {
     EXPECT_TRUE(program.getTopLevelContainer()->getNode(7)->isEnabled());
     EXPECT_FALSE(program.getTopLevelContainer()->getNode(9)->isEnabled());
 }
+
+TEST(GeneralTests, GeneralSyntaxTest_31) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_31.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_32) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_32.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_33) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_33.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_34) {
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_34.mr", &errList, &rules);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+}
+

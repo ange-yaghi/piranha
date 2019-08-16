@@ -125,7 +125,6 @@ H                   [a-fA-F0-9]
 "-"                 { DEFAULT_BUILD(location); return ('-'); }
 
 "=>"                { DEFAULT_BUILD(location); return (token::BUILTIN_POINTER); }
-"->"                { DEFAULT_BUILD(location); return (token::INSTANCE_POINTER); }
 "::"                { DEFAULT_BUILD(location); return (token::NAMESPACE_POINTER); }
 "="                 { DEFAULT_BUILD(location); return ('='); }
 

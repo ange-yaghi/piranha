@@ -230,8 +230,13 @@ void piranha::IrNode::_expand() {
 }
 
 void piranha::IrNode::_expand(IrContextTree *context) {
+    if (context->findContext(this)) {
+        return;
+    }
+
     // Standard expand with a different focus            _____
     IrContextTree *mainContext = context->newChild(this, false);
+
     if (m_definition != nullptr) {
         m_definition->expand(mainContext);
     }
@@ -241,16 +246,41 @@ void piranha::IrNode::_checkTypes() {
     // Check types with this node as the focus                 ____
     IrContextTree *parentContext = new IrContextTree(nullptr); ////
     IrContextTree *mainContext = parentContext->newChild(this, true);
+
     if (m_definition != nullptr) {
         m_definition->checkTypes(mainContext);
     }
 }
 
 void piranha::IrNode::_checkTypes(IrContextTree *context) {
+    if (context->findContext(this)) {
+        return;
+    }
+
     // Standard type check with a different focus        _____
     IrContextTree *mainContext = context->newChild(this, false);
     if (m_definition != nullptr) {
         m_definition->checkTypes(mainContext);
+    }
+}
+
+void piranha::IrNode::_checkCircularDefinitions(IrContextTree *context, IrNodeDefinition *root) {
+    if (m_definition == root) {
+        getParentUnit()->addCompilationError(
+            new CompilationError(*getSummaryToken(), ErrorCode::CircularDefinition, context)
+        );
+        return;
+    }
+
+    // Prevent infinite loops if a loop occurs in a definition that is not the focus
+    if (context->findContext(this)) {
+        return;
+    }
+
+    IrContextTree *newContext = context->newChild(this, true);
+
+    if (m_definition != nullptr) {
+        m_definition->IrParserStructure::checkCircularDefinitions(newContext, root);
     }
 }
 
@@ -379,10 +409,9 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
     const IrAttributeList *specifiedAttributes = getAttributes();
 
-    bool nonInlineContainer = false;
     NodeContainer *newContainer = parentContainer;
     Node *newNode = nullptr;
-    if (!m_definition->isBuiltin() && !m_definition->isInline()) {
+    if (!m_definition->isBuiltin()) {
         newContainer = new NodeContainer;
         newContainer->setName(getName());
         newContainer->initialize();
@@ -390,14 +419,15 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         newContainer->setIrContext(parentContext);
         newContainer->setContainer(parentContainer);
 
-        parentContainer->addChild(newContainer);
-        program->addContainer(newContext, newContainer);
-
         newNode = newContainer;
-        nonInlineContainer = true;
+
+        if (!m_definition->isInline()) {
+            parentContainer->addChild(newContainer);
+            program->addContainer(newContext, newContainer);
+        }
+        else newContainer = parentContainer;
     }
-    
-    if (m_definition->isBuiltin()) {
+    else {
         std::string builtinType = m_definition->getBuiltinName();
         if (builtinType.empty()) return nullptr;
 
@@ -415,8 +445,46 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         program->addNode(newNode);
     }
 
-    // Generate inputs first
+    // Generate attribute skeletons
     int attributeCount = allAttributes->getDefinitionCount();
+    for (int i = 0; i < attributeCount; i++) {
+        IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
+
+        Node::PortSkeleton skeleton;
+        skeleton.container = newContainer;
+        skeleton.context = newContext;
+        skeleton.definition = attributeDefinition;
+        skeleton.name = attributeDefinition->getName();
+
+        if (m_definition->isBuiltin()) {
+            NodeOutput *output = newNode->getOutput(skeleton.name);
+            skeleton.nodeOutput = (output != nullptr)
+                ? output->getInterface()
+                : nullptr;
+            skeleton.output = output;
+        }
+        else {
+            skeleton.nodeOutput = nullptr;
+            skeleton.output = nullptr;
+
+            if (attributeDefinition->isInput()) {
+                newContainer->addContainerInput(attributeDefinition->getName(),
+                    attributeDefinition->getDirection() == IrAttributeDefinition::MODIFY,
+                    attributeDefinition->getDirection() == IrAttributeDefinition::TOGGLE);
+            }
+            else {
+                if (attributeDefinition->isAlias()) {
+                    newNode->setPrimaryOutput(skeleton.name);
+                }
+            }
+        }
+
+        if (newNode != nullptr) {
+            newNode->addPortSkeleton(skeleton);
+        }
+    }
+
+    // Generate inputs first
     for (int i = 0; i < attributeCount; i++) {
         IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
 
@@ -424,12 +492,8 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             NodeOutput *output = attributeDefinition->generateNodeOutput(newContext, program, newContainer);
             Node *node = attributeDefinition->generateNode(newContext, program, newContainer);
 
-            if (!m_definition->isBuiltin()) {
-                if (!m_definition->isInline()) {
-                    newContainer->addContainerInput(attributeDefinition->getName(),
-                        attributeDefinition->getDirection() == IrAttributeDefinition::MODIFY,
-                        attributeDefinition->getDirection() == IrAttributeDefinition::TOGGLE);
-                }
+            if (node == nullptr && output == nullptr) {
+                throw EmptyPort();
             }
 
             if (node != nullptr) {
@@ -444,7 +508,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         }
     }
 
-    if (newNode != nullptr) {
+    if (newNode != nullptr && (!m_definition->isInline() || m_definition->isBuiltin())) {
         if (!parentContainer->findNode(newNode)) {
             parentContainer->addNode(newNode);
         }
@@ -472,17 +536,21 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             NodeOutput *output = attributeDefinition->generateNodeOutput(newContext, program, newContainer);
             Node *node = attributeDefinition->generateNode(newContext, program, newContainer);
 
+            if (node == nullptr && output == nullptr) {
+                throw EmptyPort();
+            }
+
             if (!m_definition->isBuiltin()) {
                 if (!m_definition->isInline()) {
                     if (output != nullptr) output->addDependency(newNode);
                     if (node != nullptr) node->addDependency(newNode);
-
-                    newContainer->addContainerOutput(
-                        output,
-                        node,
-                        attributeDefinition->getName(),
-                        attributeDefinition->isAlias());
                 }
+
+                newContainer->addContainerOutput(
+                    output,
+                    node,
+                    attributeDefinition->getName(),
+                    attributeDefinition->isAlias());
             }
 
             if (node != nullptr) {
@@ -567,6 +635,8 @@ piranha::IrParserStructure *piranha::IrNode::getImmediateReference(
 }
 
 void piranha::IrNode::checkReferences(IrContextTree *inputContext) {
+    if (inputContext->findContext(this)) return;
+
     IrContextTree *thisContext = inputContext->newChild(this, false);
     IrAttributeList *attributes = getAttributes();
 

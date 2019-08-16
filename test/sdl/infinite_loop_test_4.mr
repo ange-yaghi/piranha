@@ -1,0 +1,8 @@
+node nested {
+    output c: test();
+}
+
+node test {
+    output a: nested();
+    output b: 5.0;
+}

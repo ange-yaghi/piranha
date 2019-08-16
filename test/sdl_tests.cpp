@@ -526,7 +526,6 @@ TEST(IrTests, IrReferenceResolutionError1Test) {
 
     const ErrorList *errors = compiler.getErrorList();
 
-    EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 18));
     EXPECT_TRUE(findError(errors, ErrorCode::AccessingInternalMember, 21));
     EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 22));
     EXPECT_TRUE(findError(errors, ErrorCode::AccessingInternalMember, 23));
@@ -535,7 +534,7 @@ TEST(IrTests, IrReferenceResolutionError1Test) {
     EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimes, 32));
     EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimes, 33));
 
-    EXPECT_EQ(errors->getErrorCount(), 7);
+    EXPECT_EQ(errors->getErrorCount(), 6);
 }
 
 TEST(IrTests, IrReferenceResolutionError2Test) {
@@ -693,4 +692,81 @@ TEST(IrTests, IrDuplicateNodeDefinitionTest) {
     EXPECT_TRUE(findError(errors, ErrorCode::SymbolUsedMultipleTimes, 14));
 
     EXPECT_EQ(errors->getErrorCount(), 11);
+}
+
+TEST(IrTests, IrGlobalNodeReferenceTest) {
+    Compiler compiler;
+    IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "global_reference_test.mr");
+    EXPECT_NE(unit, nullptr);
+
+    const ErrorList *errors = compiler.getErrorList();
+
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 8));
+
+    EXPECT_EQ(errors->getErrorCount(), 1);
+}
+
+TEST(IrTests, IrInfiniteLoopTest) {
+    Compiler compiler;
+    IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "infinite_loop_test_1.mr");
+    EXPECT_NE(unit, nullptr);
+
+    const ErrorList *errors = compiler.getErrorList();
+
+    EXPECT_TRUE(findError(errors, ErrorCode::CircularReference, 2));
+    EXPECT_TRUE(findError(errors, ErrorCode::CircularReference, 2, nullptr, true));
+
+    EXPECT_EQ(errors->getErrorCount(), 2);
+}
+
+TEST(IrTests, IrInfiniteLoopTest2) {
+    Compiler compiler;
+    IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "infinite_loop_test_2.mr");
+    EXPECT_NE(unit, nullptr);
+
+    const ErrorList *errors = compiler.getErrorList();
+
+    EXPECT_TRUE(findError(errors, ErrorCode::CircularReference, 16));
+
+    EXPECT_EQ(errors->getErrorCount(), 1);
+}
+
+TEST(IrTests, IrInfiniteLoopTest3) {
+    Compiler compiler;
+    IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "infinite_loop_test_3.mr");
+    EXPECT_NE(unit, nullptr);
+
+    const ErrorList *errors = compiler.getErrorList();
+
+    EXPECT_TRUE(findError(errors, ErrorCode::CircularDefinition, 2));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 9));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 10));
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 11));
+
+    EXPECT_EQ(errors->getErrorCount(), 4);
+}
+
+TEST(IrTests, IrInfiniteLoopTest4) {
+    Compiler compiler;
+    IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "infinite_loop_test_4.mr");
+    EXPECT_NE(unit, nullptr);
+
+    const ErrorList *errors = compiler.getErrorList();
+
+    EXPECT_TRUE(findError(errors, ErrorCode::CircularDefinition, 2, nullptr, true));
+    EXPECT_TRUE(findError(errors, ErrorCode::CircularDefinition, 6, nullptr, true));
+
+    EXPECT_EQ(errors->getErrorCount(), 2);
+}
+
+TEST(IrTests, IrBadTypeEnforcementTest) {
+    Compiler compiler;
+    IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "bad_type_enforcement.mr");
+    EXPECT_NE(unit, nullptr);
+
+    const ErrorList *errors = compiler.getErrorList();
+
+    EXPECT_TRUE(findError(errors, ErrorCode::UndefinedNodeType, 2));
+
+    EXPECT_EQ(errors->getErrorCount(), 1);
 }

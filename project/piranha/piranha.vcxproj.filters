@@ -145,6 +145,12 @@
     <Filter Include="Header Files\nodes\operations\unary">
       <UniqueIdentifier>{c0008b6c-2faf-4c9e-8d31-24dc3353e460}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\assembly">
+      <UniqueIdentifier>{c50a710d-983d-49c5-be8d-5e27a040433a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assembly">
+      <UniqueIdentifier>{96f997b4-3714-49eb-acaf-18fc8da5d689}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\node_output.h">
@@ -327,6 +333,9 @@
     <ClInclude Include="..\..\include\int_conversions.h">
       <Filter>Header Files\nodes\conversions</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\assembly.h">
+      <Filter>Header Files\assembly</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
@@ -421,6 +430,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\int_conversions.cpp">
       <Filter>Source Files\nodes\conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\assembly.cpp">
+      <Filter>Source Files\assembly</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

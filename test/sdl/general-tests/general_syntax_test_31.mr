@@ -1,0 +1,5 @@
+auto private node test {
+    input value: 5;
+    output value_out: value;
+    output out: test.value_out;
+}

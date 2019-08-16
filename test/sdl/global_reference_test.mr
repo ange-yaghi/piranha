@@ -1,0 +1,9 @@
+auto private node some_node {
+    output a: 5;
+}
+
+private node other_node {
+    input t: some_node;
+    output a: some_node.a;
+    output b: some_node.b; // Undefined member
+}
