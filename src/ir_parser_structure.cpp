@@ -18,6 +18,7 @@ piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
 
     fixedType = nullptr;
     fixedTypeContext = nullptr;
+    staticType = true;
 }
 
 piranha::IrParserStructure::IrReferenceInfo::~IrReferenceInfo() {
@@ -35,6 +36,7 @@ void piranha::IrParserStructure::IrReferenceInfo::reset() {
 
     fixedType = nullptr;
     fixedTypeContext = nullptr;
+    staticType = true;
 }
 
 piranha::IrParserStructure::IrReferenceQuery::IrReferenceQuery() {
@@ -224,10 +226,12 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
         // NOTE - this has to be done here because even when reaching a dead end
         // fixed type information can still be used
         if (immediateInfo.isFixedType()) {
+            IR_INFO_OUT(staticType, immediateInfo.staticType);
             IR_INFO_OUT(fixedType, immediateInfo.fixedType);
             IR_INFO_OUT(fixedTypeContext, immediateInfo.newContext);
         }
         else if (nestedInfo.isFixedType()) {
+            IR_INFO_OUT(staticType, immediateInfo.staticType && nestedInfo.staticType);
             IR_INFO_OUT(fixedType, nestedInfo.fixedType);
             IR_INFO_OUT(fixedTypeContext, nestedInfo.newContext);
         }
