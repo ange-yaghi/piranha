@@ -71,11 +71,13 @@ namespace piranha {
             int infiniteLoop;
             IrNodeDefinition *fixedType;
             IrContextTree *fixedTypeContext;
+            bool staticType;
 
             bool isFixedType() const { return fixedType != nullptr; }
             bool isFixedTypeOutside(const IrContextTree *context) const { 
                 return isFixedType() && fixedTypeContext->isOutside(context); 
             }
+            bool isStaticType() const { return isFixedType() && staticType; }
         };
 
     public:

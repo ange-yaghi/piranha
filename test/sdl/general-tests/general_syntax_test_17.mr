@@ -1,6 +1,14 @@
 node float_channel => __piranha__float {}
 node string_channel => __piranha__string {}
 
+public node literal_string => __piranha__literal_string {
+    alias output __out [string];
+}
+
+public node literal_float => __piranha__literal_float {
+    alias output __out [float];
+}
+
 node float {
     input __in [float_channel];
     alias output __out [float_channel]: __in;

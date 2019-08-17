@@ -185,9 +185,9 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
             m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
 
         if (builtinType.empty()) {
-            bool touchedMainContext = 
-                ((leftInfo.touchedMainContext) ||
-                (rightInfo.touchedMainContext));
+            bool touchedMainContext =
+                ((leftInfo.touchedMainContext && !leftInfo.isStaticType()) ||
+                (rightInfo.touchedMainContext && !rightInfo.isStaticType()));
 
             bool isOutside = leftInfo.isFixedTypeOutside(context);
 

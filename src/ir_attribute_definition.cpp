@@ -53,7 +53,12 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
     IR_RESET(query);
 
     // If a type definition is present, then this chain of references must have a fixed type
-    if (m_typeDefinition != nullptr) IR_INFO_OUT(fixedType, getTypeDefinition());
+    if (m_typeDefinition != nullptr) {
+        IR_INFO_OUT(fixedType, getTypeDefinition());
+    }
+    else if (isInput()) {
+        IR_INFO_OUT(staticType, false);
+    }
 
     // First check the input context for the reference
     if (!IR_EMPTY_CONTEXT()) {
@@ -272,7 +277,7 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
         }
 
         // If the incoming type is fixed, then only the null context would interest us
-        if (info.isFixedType() && !context->isEmpty()) return;
+        if (info.isStaticType() && !context->isEmpty()) return;
 
         IrNode *refAsNode = defaultReference->getAsNode();
         if (refAsNode != nullptr) {
