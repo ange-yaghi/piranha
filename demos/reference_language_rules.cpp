@@ -14,9 +14,10 @@
 #include "../include/subtract_operation_output.h"
 #include "../include/divide_operation_output.h"
 #include "../include/multiply_operation_output.h"
-#include "../include/no_op_node.h"
+#include "../include/channel_node.h"
 #include "../include/num_negate_operation.h"
 #include "../include/bool_negate_operation.h"
+#include "../include/no_op_node.h"
 
 piranha_demo::ReferenceLanguageRules::ReferenceLanguageRules() {
     /* void */
@@ -28,11 +29,11 @@ piranha_demo::ReferenceLanguageRules::~ReferenceLanguageRules() {
 
 void piranha_demo::ReferenceLanguageRules::registerBuiltinNodeTypes() {
     // Builtin Types
-    registerBuiltinType<piranha::NoOpNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__piranha__int", &piranha::FundamentalType::IntType);
-    registerBuiltinType<piranha::NoOpNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__piranha__float", &piranha::FundamentalType::FloatType);
-    registerBuiltinType<piranha::NoOpNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__piranha__string", &piranha::FundamentalType::StringType);
     registerBuiltinType<piranha::VectorSplitNode>(
         "__piranha__vector", &piranha::FundamentalType::VectorType);

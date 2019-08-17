@@ -29,7 +29,7 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
     EXPECT_EQ(list->getErrorCount(), 0);
 
     TestRules generator;
-    generator.registerBuiltinNodeTypes();
+    generator.initialize();
     NodeProgram program;
     unit->build(&program);
 
@@ -57,7 +57,7 @@ TEST(IrConstructionTests, IrConstructionNestedTest) {
     IrCompilationUnit *unit = compileFile("construction-tests/nested_conversions.mr");
 
     TestRules generator;
-    generator.registerBuiltinNodeTypes();
+    generator.initialize();
     NodeProgram program;
     unit->build(&program);
 

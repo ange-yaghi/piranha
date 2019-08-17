@@ -324,9 +324,6 @@
     <ClInclude Include="..\..\include\bool_negate_operation.h">
       <Filter>Header Files\nodes\operations\unary</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\no_op_node.h">
-      <Filter>Header Files\nodes\operations\unary</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\node_container.h">
       <Filter>Header Files\nodes</Filter>
     </ClInclude>
@@ -338,6 +335,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\ir_literal_node.h">
       <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\no_op_node.h">
+      <Filter>Header Files\nodes\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\channel_node.h">
+      <Filter>Header Files\nodes\nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -436,6 +439,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\assembly.cpp">
       <Filter>Source Files\assembly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\no_op_node.cpp">
+      <Filter>Source Files\nodes\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\channel_node.cpp">
+      <Filter>Source Files\nodes\nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
