@@ -90,8 +90,9 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
         if (publicAttribute == nullptr) {
             IR_FAIL();
 
-            bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
-                (basicInfo.isFixedType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
+            //bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
+            //    (basicInfo.isStaticType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
+            bool isValidError = (touchedMainContext && !basicInfo.isStaticType()) || IR_EMPTY_CONTEXT();
             if (query.recordErrors && isValidError) {
                 // Left hand does not have this member
                 IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),

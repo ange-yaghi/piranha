@@ -66,7 +66,7 @@ void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
     }
 
     if (!info.touchedMainContext && !context->isEmpty()) return;
-    if (info.isFixedType() && !context->isEmpty()) return;
+    if (info.isStaticType() && !context->isEmpty()) return;
 
     IrNodeDefinition *typeDefinition = m_definition->getTypeDefinition();
 
@@ -76,11 +76,12 @@ void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
         if (info.isFixedType()) {
             if (info.fixedType == typeDefinition) return;
         }
-
-        if (refAsNode != nullptr) {
-            IrNodeDefinition *definition = refAsNode->getDefinition()->getAliasType();
-            if (definition == nullptr) return;
-            if (definition == typeDefinition) return; // Type is confirmed to be correct
+        else {
+            if (refAsNode != nullptr) {
+                IrNodeDefinition *definition = refAsNode->getDefinition()->getAliasType();
+                if (definition == nullptr) return;
+                if (definition == typeDefinition) return; // Type is confirmed to be correct
+            }
         }
 
         if (m_rules == nullptr) return;
