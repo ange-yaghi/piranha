@@ -186,8 +186,10 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 
         if (builtinType.empty()) {
             bool touchedMainContext = 
-                ((leftInfo.touchedMainContext && !leftInfo.isFixedType()) ||
-                (rightInfo.touchedMainContext && !rightInfo.isFixedType()));
+                ((leftInfo.touchedMainContext) ||
+                (rightInfo.touchedMainContext));
+
+            bool isOutside = leftInfo.isFixedTypeOutside(context);
 
             if (touchedMainContext || emptyContext) {
                 getParentUnit()->addCompilationError(

@@ -134,9 +134,9 @@ TEST(GeneralTests, GeneralSyntaxTest_11) {
     LanguageRules *rules;
     IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_11.mr", &errList, &rules);
 
-    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 24, nullptr, false));
-    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 27, nullptr, false));
-    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 20, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 37, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 40, nullptr, false));
+    EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 33, nullptr, false));
 
     EXPECT_EQ(errList->getErrorCount(), 3);
 }
