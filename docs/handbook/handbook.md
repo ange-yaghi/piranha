@@ -2,18 +2,47 @@
 
 ## Table of Contents
 * [1 Introduction](#1)
-  * [1.1 Literals](#1.1)
-    * [1.1.1 Booleans](#1.1.1)
-    * [1.1.2 Integers](#1.1.2)
-    * [1.1.3 String](#1.1.3)
-    * [1.1.4 Floating-point Values](#1.1.4)
-  * [1.2 Nodes](#1.2)
-    * [1.2.1 Node Definitions](#1.2.1)
-    * [1.2.2 Node Instances](#1.2.2)
-    * [1.2.3 Default Inputs](#1.2.3)
-    * [1.2.4 Node Visibility](#1.2.4)
-    * [1.2.5 Immediate Node Instances](#1.2.5)
-    * [1.2.6 Nested Nodes](#1.2.6)
+* [2 Syntax Overview](#2)
+  * [1.1 Literals](#2.1)
+    * [1.1.1 Booleans](#2.1.1)
+    * [1.1.2 Integers](#2.1.2)
+    * [1.1.3 String](#2.1.3)
+    * [1.1.4 Floating-point Values](#2.1.4)
+  * [2.2 Nodes](#2.2)
+    * [2.2.1 Node Definitions](#2.2.1)
+    * [2.2.2 Node Instances](#2.2.2)
+    * [2.2.3 Default Inputs](#2.2.3)
+    * [2.2.4 Node Visibility](#2.2.4)
+    * [2.2.5 Immediate Node Instances](#2.2.5)
+    * [2.2.6 Nested Nodes](#2.2.6)
+    * [2.2.7 Toggle Inputs](#2.2.7)
+    * [2.2.8 Output Aliasing](#2.2.8)
+    * [2.2.9 Input Type Enforcement](#2.2.9)
+    * [2.2.10 Binding to Native Code](#2.2.10)
+  * [2.3 Files](#2.3)
+    * [2.3.1 Importing Files](#2.3.1)
+    * [2.3.2 Import Visibility](#2.3.2)
+    * [2.3.3 Name Safety](#2.3.3)
+  * [2.4 Execution Model](#2.4)
+    * [2.4.1 Introduction](#2.4.1)
+    * [2.4.2 Node Evaluation](#2.4.2)
+    * [2.4.3 Composite Node Evaluation](#2.4.3)
+    * [2.4.4 Out of Order Ports](#2.4.4)
+  * [2.5 Comments and Documentation](#2.5)
+    * [2.5.1 C/C++ Style Comments](#2.5.1)
+    * [2.5.2 Piranha Documentation Tags](#2.5.2)
+* [3 C++ API](#3)
+  * [3.1 Introduction](#3.1)
+  * [3.2 Hello World Compiler](#3.2)
+    * [3.2.1 Getting Started](#3.2.1)
+    * [3.2.2 Understanding the Compilation Error List](#3.2.2)
+    * [3.2.3 Building a Program](#3.2.3)
+    * [3.2.4 Channels and Literals](#3.2.4)
+    * [3.2.5 Assembly Output](#3.2.5)
+    * [3.2.6 Custom Nodes](#3.3.6)
+    * [3.2.7 Operations](#3.2.7)
+    * [3.2.8 Conversions](#3.2.8)
+    * [3.2.9 Advanced Functionality](#3.2.9)
 <br/>
 
 # <a name="1"></a>1 Introduction
@@ -303,7 +332,7 @@ In this exampe, the `post_process` node requires that both inputs be references 
 )
 </pre>
 
-### <a name="2.2.9"></a>2.2.9 Binding to Native Code
+### <a name="2.2.10"></a>2.2.10 Binding to Native Code
 
 Through the following notation, a Piranha node definition can be made to point to an underlying C++ type. This type of node definition is called a *builtin type*. When binding to a native type, every input and output must have type enforcement tags present. See [1.2.9](#1.2.9) for details. The following is a hypothetical node definition that aliases a C++ class:
 
