@@ -6,6 +6,7 @@
 #include "../include/ir_context_tree.h"
 #include "../include/ir_node_definition.h"
 #include "../include/ir_value_constant.h"
+#include "../include/channel_node.h"
 
 #include <assert.h>
 
@@ -15,6 +16,10 @@ piranha::LanguageRules::LanguageRules() {
 
 piranha::LanguageRules::~LanguageRules() {
     /* void */
+}
+
+void piranha::LanguageRules::initialize() {
+    registerBuiltinNodeTypes();
 }
 
 piranha::Node *piranha::LanguageRules::generateNode(const std::string &builtinName) const {
