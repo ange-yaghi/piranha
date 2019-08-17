@@ -373,15 +373,21 @@ piranha::NodeOutput *piranha::Node::getInterfaceInput() const {
 
 void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly, int indent) const {
     std::string prefixIndent = "";
-    for (int i = 0; i < indent; i++) prefixIndent += "    ";
+    for (int i = 0; i < indent; i++) prefixIndent += "  ";
 
     std::string builtinName = getBuiltinName();
-
-    file << prefixIndent + builtinName << "\n";
+    std::string name = getName();
+    
+    if (name.empty()) {
+        file << prefixIndent + builtinName << "\n";
+    }
+    else {
+        file << prefixIndent + builtinName << ": " << name << "\n";
+    }
 
     int nodeInputs = getInputCount();
     if (nodeInputs > 0) {
-        file << prefixIndent + "    INPUTS  { ";
+        file << prefixIndent + "  in  { ";
         for (int i = 0; i < nodeInputs; i++) {
             const Node::NodeInputPort *port = getInput(i);
             int index = assembly->getOutputLabel(*port->input);
@@ -395,7 +401,7 @@ void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly, int in
     int nodeOutputReferences = getOutputReferenceCount();
 
     if (nodeOutputReferences > 0 || nodeOutputs > 0) {
-        file << prefixIndent + "    OUTPUTS { ";
+        file << prefixIndent + "  out { ";
         for (int i = 0; i < nodeOutputs; i++) {
             const Node::NodeOutputPort *port = getOutput(i);
             int index = assembly->getOutputLabel(port->output);

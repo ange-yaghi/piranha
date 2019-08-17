@@ -25,31 +25,6 @@ namespace piranha {
     protected:
         typedef T_IrTokenInfo<T> _TokenInfo;
 
-        /*
-        Node *generateNode(
-            const piranha::native_float &value, IrContextTree *context) 
-        {
-            return m_rules->generateLiteral<piranha::native_float>(value);
-        }
-
-        Node *generateNode(
-            const piranha::native_string &value, IrContextTree *context) 
-        {
-            return m_rules->generateLiteral<piranha::native_string>(value);
-        }
-
-        Node *generateNode(
-            const piranha::native_bool &value, IrContextTree *context) 
-        {
-            return m_rules->generateLiteral<piranha::native_bool>(value);
-        }
-
-        Node *generateNode(
-            const piranha::native_int &value, IrContextTree *context) 
-        {
-            return m_rules->generateLiteral<piranha::native_int>(value);
-        }*/
-
     public:
         IrValueConstant(const _TokenInfo &value) : IrValue(TypeCode) { 
             m_value = value.data; useToken(value); 
@@ -62,40 +37,6 @@ namespace piranha {
 
         virtual void setValue(const T &value) { m_value = value; }
         T getValue() const { return m_value; }
-
-        /*
-        virtual const ChannelType *getImmediateChannelType() {
-            if (m_rules == nullptr) return nullptr;
-
-            return m_rules->resolveChannelType(
-                m_rules->getLiteralBuiltinName<T>()
-            );
-        }*/
-
-        /*
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
-            Node *cachedNode = program->getCachedInstance(this, context);
-            if (cachedNode != nullptr) return cachedNode;
-
-            Node *newNode = generateNode(m_value, context);
-            newNode->initialize();
-            newNode->setIrStructure(this);
-            newNode->setIrContext(context);
-
-            // Find a context
-            IrContextTree *c = context;
-            NodeContainer *parentContainer = nullptr;
-            while (c != nullptr && parentContainer == nullptr) {
-                parentContainer = program->getContainer(c);
-                c = c->getParent();
-            }
-
-            if (!parentContainer->findNode(newNode)) {
-                parentContainer->addNode(newNode);
-            }
-
-            return newNode;
-        }*/
 
     protected:
         virtual void _validate() {
@@ -127,6 +68,13 @@ namespace piranha {
             }
 
             return res;
+        }
+
+        std::string valueToString() const {
+            std::stringstream ss;
+            ss << m_value;
+
+            return ss.str();
         }
 
     protected:
@@ -167,6 +115,7 @@ namespace piranha {
             IrAttributeList *attributeList = new IrAttributeList();
 
             IrLiteralNode<T> *expansion = new IrLiteralNode<T>();
+            expansion->setName("\"" + Base::valueToString() + "\"");
             expansion->setLiteralData(Base::m_value);
             expansion->setAttributes(attributeList);
             expansion->setLogicalParent(this);
