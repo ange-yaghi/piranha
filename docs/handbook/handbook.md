@@ -6,7 +6,7 @@
   * [1.1 Literals](#2.1)
     * [1.1.1 Booleans](#2.1.1)
     * [1.1.2 Integers](#2.1.2)
-    * [1.1.3 String](#2.1.3)
+    * [1.1.3 Strings](#2.1.3)
     * [1.1.4 Floating-point Values](#2.1.4)
   * [2.2 Nodes](#2.2)
     * [2.2.1 Node Definitions](#2.2.1)
