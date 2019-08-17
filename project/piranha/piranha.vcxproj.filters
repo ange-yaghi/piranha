@@ -336,6 +336,9 @@
     <ClInclude Include="..\..\include\assembly.h">
       <Filter>Header Files\assembly</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\ir_literal_node.h">
+      <Filter>Header Files\syntax\parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
