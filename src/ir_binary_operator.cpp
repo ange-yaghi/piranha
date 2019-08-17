@@ -90,8 +90,9 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
         if (publicAttribute == nullptr) {
             IR_FAIL();
 
-            bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
-                (basicInfo.isFixedType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
+            //bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
+            //    (basicInfo.isStaticType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
+            bool isValidError = (touchedMainContext && !basicInfo.isStaticType()) || IR_EMPTY_CONTEXT();
             if (query.recordErrors && isValidError) {
                 // Left hand does not have this member
                 IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),
@@ -185,9 +186,11 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
             m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
 
         if (builtinType.empty()) {
-            bool touchedMainContext = 
-                ((leftInfo.touchedMainContext && !leftInfo.isFixedType()) ||
-                (rightInfo.touchedMainContext && !rightInfo.isFixedType()));
+            bool touchedMainContext =
+                ((leftInfo.touchedMainContext && !leftInfo.isStaticType()) ||
+                (rightInfo.touchedMainContext && !rightInfo.isStaticType()));
+
+            bool isOutside = leftInfo.isFixedTypeOutside(context);
 
             if (touchedMainContext || emptyContext) {
                 getParentUnit()->addCompilationError(
