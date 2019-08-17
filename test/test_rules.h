@@ -8,6 +8,7 @@ public:
     TestRules();
     ~TestRules();
 
+protected:
     virtual void registerBuiltinNodeTypes();
 };
 

@@ -29,7 +29,7 @@ bool findError(const ErrorList *errorList, const ErrorCode_struct &errorCode, in
 
 IrCompilationUnit *compileFile(const std::string &filename, const ErrorList **errList) {
     TestRules *rules = new TestRules();
-    rules->registerBuiltinNodeTypes();
+    rules->initialize();
 
     piranha::Compiler *compiler = new Compiler(rules);
     IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
@@ -42,7 +42,7 @@ IrCompilationUnit *compileFile(const std::string &filename, const ErrorList **er
 
 IrCompilationUnit *compileToUnit(const std::string &filename, const ErrorList **errList, LanguageRules **outputRules) {
     TestRules *rules = new TestRules();
-    rules->registerBuiltinNodeTypes();
+    rules->initialize();
 
     Compiler *compiler = new Compiler(rules);
 

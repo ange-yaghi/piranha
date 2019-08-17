@@ -77,10 +77,10 @@ void piranha::NodeContainer::
     writeAssembly(std::fstream &file, Assembly *assembly, int indent) const 
 {
     std::string prefixIndent = "";
-    for (int i = 0; i < indent; i++) prefixIndent += "    ";
+    for (int i = 0; i < indent; i++) prefixIndent += "  ";
 
     std::string name = getName();
-    file << prefixIndent << "CONTAINER ";
+    file << prefixIndent;
     if (name.empty()) file << "{" << std::endl;
     else file << name << " {" << std::endl;
 

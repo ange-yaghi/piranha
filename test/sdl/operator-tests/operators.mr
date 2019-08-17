@@ -1,14 +1,6 @@
-public inline node int => __piranha__int {
-    input __in;
-}
-
-public inline node float => __piranha__float {
-    input __in;
-}
-
-public inline node string => __piranha__string {
-    input __in;
-}
+public node int => __piranha__int {}
+public node float => __piranha__float {}
+public node string => __piranha__string {}
 
 public inline node int_add => __piranha__int_add {
     input __in0;
@@ -28,7 +20,14 @@ public inline node string_add => __piranha__string_add {
     alias output __out [string];
 }
 
-public inline node literal_string => __piranha__literal_string {}
-public inline node literal_int => __piranha__literal_int {}
-public inline node literal_float => __piranha__literal_float {}
-public inline node literal_bool => __piranha__literal_bool {}
+public inline node literal_string => __piranha__literal_string {
+    alias output __out [string];
+}
+
+public inline node literal_int => __piranha__literal_int {
+    alias output __out [int];
+}
+
+public inline node literal_float => __piranha__literal_float {
+    alias output __out [float];
+}

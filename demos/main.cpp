@@ -20,7 +20,7 @@ int main() {
         std::cout << "--- Compiling --------------" << std::endl;
         piranha::NodeProgram nodeProgram;
         piranha_demo::ReferenceLanguageRules languageRules;
-        languageRules.registerBuiltinNodeTypes();
+        languageRules.initialize();
 
         piranha::Compiler compiler(&languageRules);
         piranha::IrCompilationUnit *unit = compiler.compile(filename);

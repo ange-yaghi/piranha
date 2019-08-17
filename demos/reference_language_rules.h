@@ -10,6 +10,7 @@ namespace piranha_demo {
         ReferenceLanguageRules();
         ~ReferenceLanguageRules();
 
+    protected:
         virtual void registerBuiltinNodeTypes();
     };
 
