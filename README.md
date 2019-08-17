@@ -2,6 +2,12 @@
 
 
 **Piranha** is an open-source scripting framework currently under development. It is a reusable framework which allows developers to quickly write scripting interfaces to native C++ libraries.
+
+Piranha is currently used as an SDL (scene description language) for the [MantaRay](https://github.com/ange-yaghi/manta-ray) ray-tracer.
+
+To get started, check out the introductory handbook: [Piranha Handbook](https://github.com/ange-yaghi/piranha/blob/master/docs/handbook/handbook.md)
+
+Example Piranha compiler implementation: [Hello World Piranha Compiler](https://github.com/ange-yaghi/piranha-hello-world-compiler)
  
 ### Setup Instructions For Developers
 
