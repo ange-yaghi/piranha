@@ -17,6 +17,7 @@ piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
     touchedMainContext = false;
 
     fixedType = nullptr;
+    fixedTypeContext = nullptr;
 }
 
 piranha::IrParserStructure::IrReferenceInfo::~IrReferenceInfo() {
@@ -31,7 +32,9 @@ void piranha::IrParserStructure::IrReferenceInfo::reset() {
     infiniteLoop = -1;
     reachedDeadEnd = false;
     touchedMainContext = false;
+
     fixedType = nullptr;
+    fixedTypeContext = nullptr;
 }
 
 piranha::IrParserStructure::IrReferenceQuery::IrReferenceQuery() {
@@ -173,8 +176,11 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
 
     if (immediateInfo.reachedDeadEnd) {
         IR_DEAD_END();
-        if (immediateInfo.isFixedType()) IR_INFO_OUT(fixedType, immediateInfo.fixedType)
-            return nullptr;
+        if (immediateInfo.isFixedType()) {
+            IR_INFO_OUT(fixedType, immediateInfo.fixedType);
+            IR_INFO_OUT(fixedTypeContext, immediateInfo.fixedTypeContext);
+        }
+        return nullptr;
     }
 
     if (immediateReference != nullptr) {
@@ -219,9 +225,11 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
         // fixed type information can still be used
         if (immediateInfo.isFixedType()) {
             IR_INFO_OUT(fixedType, immediateInfo.fixedType);
+            IR_INFO_OUT(fixedTypeContext, immediateInfo.newContext);
         }
         else if (nestedInfo.isFixedType()) {
             IR_INFO_OUT(fixedType, nestedInfo.fixedType);
+            IR_INFO_OUT(fixedTypeContext, nestedInfo.newContext);
         }
 
         if (nestedInfo.reachedDeadEnd) {

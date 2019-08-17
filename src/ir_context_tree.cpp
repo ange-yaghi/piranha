@@ -51,6 +51,14 @@ piranha::IrContextTree *piranha::IrContextTree::newChild(IrNode *context, bool m
     return newChild;
 }
 
+bool piranha::IrContextTree::hasParent(const IrContextTree *context) const {
+    if (m_parent != nullptr) {
+        if (m_parent->isEqual(context)) return true;
+        else return m_parent->hasParent(context);
+    }
+    else return false;
+}
+
 piranha::IrContextTree *piranha::IrContextTree::findContext(IrNode *context) {
     if (m_context == context) return this;
     else if (m_parent != nullptr) return m_parent->findContext(context);
@@ -87,4 +95,16 @@ bool piranha::IrContextTree::isEqual(const IrContextTree *ref) const {
     }
 
     return (currentNode->getContext() == currentRefNode->getContext());
+}
+
+bool piranha::IrContextTree::isOutside(const IrContextTree *ref) const {
+    const IrContextTree *currentRefNode = this;
+
+    while (currentRefNode != nullptr) {
+        if (ref->isEqual(currentRefNode)) return false;
+        else if (ref->hasParent(currentRefNode)) return true;
+        else currentRefNode = currentRefNode->getParent();
+    }
+
+    return false;
 }
