@@ -144,6 +144,8 @@ namespace piranha {
         ~IrValueLiteral() {}
 
         virtual void _expand(IrContextTree *context) {
+            if (Base::m_rules == nullptr) return;
+
             std::string builtinType =
                 Base::m_rules->resolveLiteralBuiltinType(LiteralTypeLookup<T>());
 
@@ -185,6 +187,8 @@ namespace piranha {
             const Base::IrReferenceQuery &query, Base::IrReferenceInfo *output) 
         {
             IR_RESET(query);
+            if (Base::m_rules == nullptr) return nullptr;
+
             IrNode **pNode = Base::m_expansions.lookup(query.inputContext);
 
             if (pNode == nullptr) {

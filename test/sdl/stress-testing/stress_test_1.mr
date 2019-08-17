@@ -72,3 +72,18 @@ private node test {
 }
 
 test test()
+
+public node int_channel => __piranha__int {}
+public node literal_int => __piranha__literal_int {
+    alias output __out [int_channel];
+}
+
+public node float_channel => __piranha__float {}
+public node literal_float => __piranha__literal_float {
+    alias output __out [float_channel];
+}
+
+public node string_channel => __piranha__string {}
+public node literal_string => __piranha__literal_string {
+    alias output __out [string_channel];
+}
