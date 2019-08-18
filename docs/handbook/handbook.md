@@ -596,7 +596,7 @@ To include all required Piranha headers use the following include statement:
 #include <piranha.h>
 ```
 
-A bare minimum compiler (that essentially does nothing but check for basic syntax errors could be written as follows):
+A bare minimum compiler (that essentially does nothing but check for basic syntax errors) could be written as follows:
 
 `src/main.cpp`:
 ```C++
