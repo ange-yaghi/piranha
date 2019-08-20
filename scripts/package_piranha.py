@@ -50,11 +50,12 @@ def genrate_binary_source_path(architecture, mode):
     return BINARY_PATH + "/{0}/{1}/".format(architecture, mode)
 
 
-def clean_build():
+def clean_build(architecture, mode):
     log("INFO", "Deleting last build...")
 
     try:
-        shutil.rmtree(OUTPUT_DIR)
+        shutil.rmtree(generate_main_path())
+        shutil.rmtree(generate_build_lib_path(architecture, mode))
     except FileNotFoundError:
         log("INFO", "No previous build found, skipping clean")
     except OSError:
@@ -154,7 +155,7 @@ if __name__ == "__main__":
     mode = sys.argv[2]
 
     print_full_header("Packaging Piranha Build")
-    clean_build()
+    clean_build(architecture, mode)
     generate_dir()
     copy_binary(architecture, mode)
     copy_include_files(architecture, mode)
