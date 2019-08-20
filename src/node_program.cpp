@@ -11,6 +11,10 @@
 
 piranha::NodeProgram::NodeProgram() {
     m_topLevelContainer.setName("root");
+
+    m_errorMessage = "";
+    m_errorNode = nullptr;
+    m_runtimeError = false;
 }
 
 piranha::NodeProgram::~NodeProgram() {
@@ -42,6 +46,12 @@ piranha::NodeContainer *piranha::NodeProgram::getContainer(IrContextTree *contex
      else return *container;
 }
 
+void piranha::NodeProgram::throwRuntimeError(const std::string &msg, Node *node) {
+    m_errorMessage = msg;
+    m_errorNode = node;
+    m_runtimeError = true;
+}
+
 piranha::Node *piranha::NodeProgram::getCachedInstance(IrParserStructure *ir, IrContextTree *context) {
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
@@ -55,7 +65,7 @@ piranha::Node *piranha::NodeProgram::getCachedInstance(IrParserStructure *ir, Ir
     return nullptr;
 }
 
-void piranha::NodeProgram::execute() {
+bool piranha::NodeProgram::execute() {
     int nodeCount = m_topLevelContainer.getNodeCount();
 
     // Initialize all nodes
@@ -66,6 +76,9 @@ void piranha::NodeProgram::execute() {
 
     for (int i = 0; i < nodeCount; i++) {
         Node *node = m_topLevelContainer.getNode(i);
-        node->evaluate();
+        bool result = node->evaluate();
+        if (!result) return false;
     }
+
+    return true;
 }

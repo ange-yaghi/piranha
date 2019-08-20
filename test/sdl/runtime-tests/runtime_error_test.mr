@@ -1,0 +1,4 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+throw_runtime_error(true)
+throw_runtime_error(false)

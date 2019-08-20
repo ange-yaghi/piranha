@@ -33,49 +33,58 @@ void piranha::NodeOutput::initialize() {
     m_interface = generateInterface();
 }
 
-void piranha::NodeOutput::evaluate() {
-    if (m_evaluated) return;
+bool piranha::NodeOutput::evaluate() {
+    if (m_evaluated) return true;
     else m_evaluated = true;
 
     int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
-        (*m_inputs[i])->evaluate();
+        bool result = (*m_inputs[i])->evaluate();
+        if (!result) return false;
     }
 
     int modifyCount = getModifyConnectionCount();
     for (int i = 0; i < modifyCount; i++) {
-        m_modifyConnections[i]->evaluate();
+        bool result = m_modifyConnections[i]->evaluate();
+        if (!result) return false;
     }
 
     if (m_parentNode != nullptr) {
-        m_parentNode->evaluate();
+        bool result = m_parentNode->evaluate();
+        if (!result) return false;
     }
 
     _evaluate();
+    return true;
 }
 
-void piranha::NodeOutput::checkEnabled() {
-    if (m_checkedEnabled) return;
+bool piranha::NodeOutput::checkEnabled() {
+    if (m_checkedEnabled) return true;
     else m_checkedEnabled = true;
 
     m_enabled = true;
 
     int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
-        (*m_inputs[i])->checkEnabled();
+        bool status = (*m_inputs[i])->checkEnabled();
+        if (!status) return false;
         if (!(*m_inputs[i])->isEnabled()) m_enabled = false;
     }
 
     int modifyCount = getModifyConnectionCount();
     for (int i = 0; i < modifyCount; i++) {
-        m_modifyConnections[i]->checkEnabled();
+        bool status = m_modifyConnections[i]->checkEnabled();
+        if (!status) return false;
         if (!m_modifyConnections[i]->isEnabled()) m_enabled = false;
     }
 
     if (m_parentNode != nullptr) {
-        m_parentNode->checkEnabled();
+        bool status = m_parentNode->checkEnabled();
+        if (!status) return false;
         if (!m_parentNode->isEnabled()) m_enabled = false;
     }
+
+    return true;
 }
 
 void piranha::NodeOutput::_evaluate() {

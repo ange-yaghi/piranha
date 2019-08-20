@@ -30,6 +30,8 @@ piranha::Node::Node() {
     m_irStructure = nullptr;
 
     m_isVirtual = false;
+
+    m_runtimeError = false;
 }
 
 piranha::Node::~Node() {
@@ -85,12 +87,12 @@ void piranha::Node::initialize() {
     registerOutputs();
 }
 
-void piranha::Node::evaluate() {
-    if (isEvaluated()) return;
+bool piranha::Node::evaluate() {
+    if (isEvaluated()) return true;
 
-    checkEnabled();
-    if (!isEnabled()) 
-        return;
+    bool status = checkEnabled();
+    if (!status) return false;
+    if (!isEnabled()) return true;
 
     // Set evaluated flag
     m_evaluated = true;
@@ -102,24 +104,35 @@ void piranha::Node::evaluate() {
         if (node != nullptr && *node != nullptr) {
             // Evaluate the dependency first if it exists
             if (m_inputs[i].dependency != nullptr) {
-                m_inputs[i].dependency->evaluate();
+                bool result = m_inputs[i].dependency->evaluate();
+                if (!result) return false;
             }
 
-            (*node)->evaluate();
+            bool result = (*node)->evaluate();
+            if (!result) return false;
         }
     }
 
     // Node can now self-evaluate
     _evaluate();
+    if (m_runtimeError) return false;
 
     int outputReferenceCount = getOutputReferenceCount();
     for (int i = 0; i < outputReferenceCount; i++) {
         NodeOutput *output = *m_outputReferences[i].output;
-        if (output != nullptr) output->evaluate();
+        if (output != nullptr) {
+            bool result = output->evaluate();
+            if (!result) return false;
+        }
 
         Node *nodeOutput = m_outputReferences[i].nodeOutput;
-        if (nodeOutput != nullptr) nodeOutput->evaluate();
+        if (nodeOutput != nullptr) {
+            bool result = nodeOutput->evaluate();
+            if (!result) return false;
+        }
     }
+
+    return true;
 }
 
 void piranha::Node::destroy() {
@@ -127,6 +140,11 @@ void piranha::Node::destroy() {
     m_evaluated = false;
 
     _destroy();
+}
+
+void piranha::Node::throwError(const std::string errorMessage) {
+    m_runtimeError = true;
+    m_program->throwRuntimeError(errorMessage, this);
 }
 
 void piranha::Node::connectEnableInput(pNodeInput input, Node *dependency) {
@@ -451,8 +469,8 @@ void piranha::Node::registerOutput(NodeOutput *node, const std::string &name) {
     node->setParentNode(this);
 }
 
-void piranha::Node::checkEnabled() {
-    if (m_checkedEnabled) return;
+bool piranha::Node::checkEnabled() {
+    if (m_checkedEnabled) return true;
     else m_checkedEnabled = true;
 
     m_enabled = true;
@@ -464,7 +482,8 @@ void piranha::Node::checkEnabled() {
         Node *dependency = m_inputs[i].dependency;
         bool isDependencyDisabled = false;
         if (dependency != nullptr) {
-            dependency->checkEnabled();
+            bool status = dependency->checkEnabled();
+            if (!status) return false;
             if (!dependency->isEnabled()) {
                 isDependencyDisabled = true;
                 m_enabled = false;
@@ -474,7 +493,8 @@ void piranha::Node::checkEnabled() {
         if (!isDependencyDisabled) {
             pNodeInput *node = m_inputs[i].input;
             if (node != nullptr && *node != nullptr) {
-                (*node)->checkEnabled();
+                bool status = (*node)->checkEnabled();
+                if (!status) return false;
                 if (!(*node)->isEnabled()) m_enabled = false;
             }
         }
@@ -484,7 +504,8 @@ void piranha::Node::checkEnabled() {
     if (m_enableInput != nullptr) {
         bool isDependencyDisabled = false;
         if (m_enableInputDependency != nullptr) {
-            m_enableInputDependency->checkEnabled();
+            bool status = m_enableInputDependency->checkEnabled();
+            if (!status) return false;
             if (!m_enableInputDependency->isEnabled()) {
                 m_enabled = false;
                 isDependencyDisabled = true;
@@ -495,7 +516,8 @@ void piranha::Node::checkEnabled() {
             pNodeInput node = *m_enableInput;
 
             native_bool enable;
-            node->evaluate();
+            bool result = node->evaluate();
+            if (!result) return false;
             node->fullCompute((void *)&enable);
 
             if (!enable) m_enabled = false;
@@ -504,9 +526,12 @@ void piranha::Node::checkEnabled() {
 
     // Check parent
     if (m_container != nullptr) {
-        m_container->checkEnabled();
+        bool status = m_container->checkEnabled();
+        if (!status) return false;
         if (!m_container->isEnabled()) m_enabled = false;
     }
+
+    return true;
 }
 
 void piranha::Node::registerOutputReference(NodeOutput *const *output, const std::string &name, Node *node) {
