@@ -234,9 +234,6 @@
     <ClInclude Include="..\..\include\ir_compilation_unit.h">
       <Filter>Header Files\syntax\unit</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\conf.h">
-      <Filter>Header Files\configuration</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\ir_context_tree.h">
       <Filter>Header Files\syntax\parser</Filter>
     </ClInclude>
@@ -347,6 +344,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\throw_runtime_error_node.h">
       <Filter>Header Files\nodes\probes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\version.h">
+      <Filter>Header Files\configuration</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
