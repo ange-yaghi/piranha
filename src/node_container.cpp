@@ -104,7 +104,8 @@ void piranha::NodeContainer::_evaluate() {
     }
 
     for (int i = 0; i < nodeCount; i++) {
-        m_nodes[i]->evaluate();
+        bool result = m_nodes[i]->evaluate();
+        if (!result) return;
     }
 }
 
