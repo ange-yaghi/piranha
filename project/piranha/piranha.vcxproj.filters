@@ -151,6 +151,9 @@
     <Filter Include="Source Files\assembly">
       <UniqueIdentifier>{96f997b4-3714-49eb-acaf-18fc8da5d689}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\probes">
+      <UniqueIdentifier>{244744d6-baf2-4f5f-b8c6-625fdbca9e5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\node_output.h">
@@ -341,6 +344,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\channel_node.h">
       <Filter>Header Files\nodes\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\throw_runtime_error_node.h">
+      <Filter>Header Files\nodes\probes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
