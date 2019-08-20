@@ -213,7 +213,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\ir_node.h" />
     <ClInclude Include="..\..\include\ir_node_definition.h" />
     <ClInclude Include="..\..\include\ir_parser_structure.h" />
-    <ClInclude Include="..\..\include\conf.h" />
+    <ClInclude Include="..\..\include\version.h" />
     <ClInclude Include="..\..\include\scanner.h" />
     <ClInclude Include="..\..\include\ir_structure_list.h" />
     <ClInclude Include="..\..\include\ir_token_info.h" />
