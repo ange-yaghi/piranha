@@ -221,6 +221,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\standard_allocator.h" />
     <ClInclude Include="..\..\include\string_conversions.h" />
     <ClInclude Include="..\..\include\subtract_operation_output.h" />
+    <ClInclude Include="..\..\include\throw_runtime_error_node.h" />
     <ClInclude Include="..\..\include\vector_constructor.h" />
     <ClInclude Include="..\..\include\vector_output.h" />
     <ClInclude Include="..\..\include\vector_split.h" />

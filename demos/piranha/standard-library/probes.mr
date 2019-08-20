@@ -1,0 +1,6 @@
+private import "literals.mr"
+private import "conversions.mr"
+
+public node throw_runtime_error => __piranha__throw_runtime_error {
+    input throw [bool]: false;
+}
