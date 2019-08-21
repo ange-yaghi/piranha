@@ -24,6 +24,7 @@ piranha::IrCompilationUnit::~IrCompilationUnit() {
 void piranha::IrCompilationUnit::build(NodeProgram *program) {
     IrContextTree *context = new IrContextTree(nullptr);
 
+    program->setRootUnit(this);
     program->addContainer(context, program->getTopLevelContainer());
 
     int nodeCount = getNodeCount();
@@ -335,7 +336,7 @@ void piranha::IrCompilationUnit::addImportStatement(IrImportStatement *statement
     }
 }
 
-piranha::IrImportStatement * piranha::IrCompilationUnit::getImportStatement(int index) const {
+piranha::IrImportStatement *piranha::IrCompilationUnit::getImportStatement(int index) const {
     return m_importStatements[index];
 }
 
