@@ -5,7 +5,7 @@
 
 Piranha is currently used as an SDL (scene description language) for the [MantaRay](https://github.com/ange-yaghi/manta-ray) ray-tracer.
 
-To get syntax highlighting in Visual Studio Code, checkout this project: [Piranha VS Code Extension](https://github.com/ange-yaghi/piranha-vscode-extension)
+For syntax highlighting in Visual Studio Code check out the [Piranha Visual Studio Code Extension](https://github.com/ange-yaghi/piranha-vscode-extension).
 
 To get started, check out the introductory handbook: [Piranha Handbook](docs/handbook/handbook.md)
 
