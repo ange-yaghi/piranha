@@ -51,6 +51,8 @@ Piranha is a configurable programming language that allows for easy object-orien
 
 Most examples given in this manual use a completely hypothetical Piranha language and thus cannot be run. Running examples are given in the [Hello World Compiler Tutorial](#3.2).
 
+For syntax highlighting, check out this project: [Piranha Visual Studio Code Extension](https://github.com/ange-yaghi/piranha-vscode-extension)
+
 # <a name="2"></a>2 Syntax Overview
 
 ## <a name="2.1"></a>2.1 Literals
