@@ -154,6 +154,12 @@
     <Filter Include="Header Files\nodes\probes">
       <UniqueIdentifier>{244744d6-baf2-4f5f-b8c6-625fdbca9e5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\optimization">
+      <UniqueIdentifier>{6e3d9789-b98e-46a4-9c2a-284f6094f5ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\optimization">
+      <UniqueIdentifier>{3813da9e-a5ca-404c-9c78-ea3d44b60f5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\node_output.h">
@@ -348,6 +354,9 @@
     <ClInclude Include="..\..\include\version.h">
       <Filter>Header Files\configuration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\node_graph.h">
+      <Filter>Header Files\optimization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
@@ -451,6 +460,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\channel_node.cpp">
       <Filter>Source Files\nodes\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\node_graph.cpp">
+      <Filter>Source Files\optimization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

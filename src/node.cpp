@@ -32,6 +32,11 @@ piranha::Node::Node() {
     m_isVirtual = false;
 
     m_runtimeError = false;
+
+    m_optimizedNode = nullptr;
+    m_unoptimizedNode = nullptr;
+
+    m_dead = false;
 }
 
 piranha::Node::~Node() {
@@ -384,6 +389,95 @@ bool piranha::Node::getOutputPortInfo(const std::string &name, PortInfo *info) c
     return found;
 }
 
+std::string piranha::Node::getOutputName(NodeOutput *output) const {
+    int outputCount = getOutputCount();
+    for (int i = 0; i < outputCount; i++) {
+        if (m_outputs[i].output == output) {
+            return m_outputs[i].name;
+        }
+    }
+
+    int outputReferenceCount = getOutputReferenceCount();
+    for (int i = 0; i < outputReferenceCount; i++) {
+        if (*m_outputReferences[i].output == output) {
+            return m_outputReferences[i].name;
+        }
+    }
+
+    int inputCount = getInputCount();
+    for (int i = 0; i < inputCount; i++) {
+        if (*m_inputs[i].input == output) {
+            return m_inputs[i].name;
+        }
+    }
+
+    return nullptr;
+}
+
+void piranha::Node::mapOptimizedPort(
+    Node *optimizedNode, const std::string &localName, const std::string &mappedName) const 
+{
+    std::string originalPortName = getMappedPort(mappedName);
+    optimizedNode->addPortMapping(localName, originalPortName);
+}
+
+void piranha::Node::addPortMapping(const std::string &localName, const std::string &mappedName) {
+    PortMapping newMapping = { localName, mappedName };
+    m_portMapping.push_back(newMapping);
+}
+
+std::string piranha::Node::getLocalPort(const std::string &mappedName) const {
+    int portMappingCount = getPortMappingCount();
+    for (int i = 0; i < portMappingCount; i++) {
+        if (m_portMapping[i].originalPort == mappedName) {
+            return m_portMapping[i].localPort;
+        }
+    }
+
+    return mappedName;
+}
+
+std::string piranha::Node::getMappedPort(const std::string &localName) const {
+    int portMappingCount = getPortMappingCount();
+    for (int i = 0; i < portMappingCount; i++) {
+        if (m_portMapping[i].localPort == localName) {
+            return m_portMapping[i].localPort;
+        }
+    }
+
+    return localName;
+}
+
+void piranha::Node::addFlag(const std::string &name, int data) {
+    m_flags.push_back({ name, data });
+}
+
+bool piranha::Node::hasFlag(const std::string &name) const {
+    int flagCount = getFlagCount();
+    for (int i = 0; i < flagCount; i++) {
+        if (m_flags[i].name == name) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool piranha::Node::getFlag(const std::string &name, int *dataTarget) const {
+    int flagCount = getFlagCount();
+    for (int i = 0; i < flagCount; i++) {
+        if (m_flags[i].name == name) {
+            if (dataTarget != nullptr) {
+                *dataTarget = m_flags[i].data;
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 piranha::NodeOutput *piranha::Node::getInterfaceInput() const {
     if (m_interfaceInput == nullptr) return nullptr;
     else return *m_interfaceInput;
@@ -435,6 +529,41 @@ void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly, int in
         }
         file << "}\n";
     }
+}
+
+piranha::Node *piranha::Node::optimize() {
+    if (isOptimized()) return m_optimizedNode;
+
+    int inputCount = getInputCount();
+    for (int i = 0; i < inputCount; i++) {
+        piranha::Node *node = (*m_inputs[i].input)->getParentNode();
+        piranha::Node *optimizedNode = node->optimize();
+
+        if (optimizedNode == nullptr) return nullptr; // There was an error
+        else if (optimizedNode == node) continue; // No optimizations found
+
+        std::string name = node->getOutputName(*m_inputs[i].input);
+        *m_inputs[i].input = optimizedNode->getOutput(optimizedNode->getLocalPort(name));
+
+        if (*m_inputs[i].input == nullptr) {
+            int a = 0;
+        }
+    }
+
+    Node *optimizedNode = _optimize();
+    if (optimizedNode == nullptr) return nullptr;
+    else if (optimizedNode != this) {
+        // Recursively optimize
+        optimizedNode->initialize();
+
+        optimizedNode = optimizedNode->optimize();
+        if (optimizedNode == nullptr) return nullptr;
+    }
+
+    m_optimizedNode = optimizedNode;
+    optimizedNode->m_unoptimizedNode = this;
+
+    return optimizedNode;
 }
 
 void piranha::Node::_initialize() {
@@ -547,6 +676,10 @@ piranha::Node::PortSkeleton *piranha::Node::getSkeleton(const std::string &name)
     }
 
     return nullptr;
+}
+
+piranha::Node *piranha::Node::_optimize() {
+    return this;
 }
 
 void piranha::Node::setPrimaryOutput(const std::string &name) {

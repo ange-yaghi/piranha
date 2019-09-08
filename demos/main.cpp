@@ -33,6 +33,8 @@ int main() {
             std::cout << "--- Running --------------" << std::endl;
             auto endCompile = std::chrono::high_resolution_clock::now();
 
+            nodeProgram.initialize();
+            nodeProgram.optimize();
             nodeProgram.execute();
 
             auto endExecute = std::chrono::high_resolution_clock::now();

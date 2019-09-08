@@ -5,7 +5,7 @@
 #include "../include/assembly.h"
 
 piranha::NodeContainer::NodeContainer() {
-    /* void */
+    m_container = nullptr;
 }
 
 piranha::NodeContainer::~NodeContainer() {
@@ -93,16 +93,37 @@ void piranha::NodeContainer::
     file << prefixIndent << "}" << std::endl;
 }
 
-void piranha::NodeContainer::_initialize() {
-    /* void */
+void piranha::NodeContainer::prune() {
+    int nodeCount = getNodeCount();
+    int newNodeCount = 0;
+    for (int i = 0; i < nodeCount; i++) {
+        bool optimizedOut = m_nodes[i]->isOptimizedOut() || m_nodes[i]->isDead();
+
+        if (optimizedOut) {
+            /* void */
+        }
+        else {
+            m_nodes[newNodeCount++] = m_nodes[i];
+        }
+    }
+
+    m_nodes.resize(newNodeCount);
+
+    int childCount = getChildCount();
+    for (int i = 0; i < childCount; i++) {
+        m_children[i]->prune();
+    }
 }
 
-void piranha::NodeContainer::_evaluate() {
+void piranha::NodeContainer::_initialize() {
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
         m_nodes[i]->initialize();
     }
+}
 
+void piranha::NodeContainer::_evaluate() {
+    int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
         bool result = m_nodes[i]->evaluate();
         if (!result) return;
@@ -111,4 +132,13 @@ void piranha::NodeContainer::_evaluate() {
 
 void piranha::NodeContainer::_destroy() {
     /* void */
+}
+
+piranha::Node *piranha::NodeContainer::_optimize() {
+    int nodeCount = getNodeCount();
+    for (int i = 0; i < nodeCount; i++) {
+        m_nodes[i] = m_nodes[i]->optimize();
+    }
+
+    return this;
 }

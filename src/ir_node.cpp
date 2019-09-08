@@ -410,20 +410,21 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     const IrAttributeList *specifiedAttributes = getAttributes();
 
     NodeContainer *newContainer = parentContainer;
+    NodeContainer *generatedContainer = nullptr;
     Node *newNode = nullptr;
     if (!m_definition->isBuiltin()) {
-        newContainer = new NodeContainer;
-        newContainer->setName(getName());
-        newContainer->initialize();
-        newContainer->setIrStructure(this);
-        newContainer->setIrContext(parentContext);
-        newContainer->setContainer(parentContainer);
+        generatedContainer = new NodeContainer;
+        generatedContainer->setName(getName());
+        generatedContainer->initialize();
+        generatedContainer->setIrStructure(this);
+        generatedContainer->setIrContext(parentContext);
+        generatedContainer->setContainer(parentContainer);
 
-        newNode = newContainer;
+        newNode = generatedContainer;
 
         if (!m_definition->isInline()) {
-            parentContainer->addChild(newContainer);
-            program->addContainer(newContext, newContainer);
+            parentContainer->addChild(generatedContainer);
+            program->addContainer(newContext, generatedContainer);
         }
         else {
             newNode->setVirtual(true);
@@ -471,7 +472,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             skeleton.output = nullptr;
 
             if (attributeDefinition->isInput()) {
-                newContainer->addContainerInput(attributeDefinition->getName(),
+                generatedContainer->addContainerInput(attributeDefinition->getName(),
                     attributeDefinition->getDirection() == IrAttributeDefinition::MODIFY,
                     attributeDefinition->getDirection() == IrAttributeDefinition::TOGGLE);
             }
@@ -549,7 +550,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
                     if (node != nullptr) node->addDependency(newNode);
                 }
 
-                newContainer->addContainerOutput(
+                generatedContainer->addContainerOutput(
                     output,
                     node,
                     attributeDefinition->getName(),

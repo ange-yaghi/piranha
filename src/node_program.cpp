@@ -6,6 +6,7 @@
 #include "../include/ir_node.h"
 #include "../include/ir_node_definition.h"
 #include "../include/assembly.h"
+#include "../include/node_graph.h"
 
 #include <fstream>
 
@@ -15,6 +16,8 @@ piranha::NodeProgram::NodeProgram() {
     m_errorMessage = "";
     m_errorNode = nullptr;
     m_runtimeError = false;
+
+    m_initialized = false;
 }
 
 piranha::NodeProgram::~NodeProgram() {
@@ -65,7 +68,9 @@ piranha::Node *piranha::NodeProgram::getCachedInstance(IrParserStructure *ir, Ir
     return nullptr;
 }
 
-bool piranha::NodeProgram::execute() {
+void piranha::NodeProgram::initialize() {
+    if (m_initialized) return;
+
     int nodeCount = m_topLevelContainer.getNodeCount();
 
     // Initialize all nodes
@@ -74,6 +79,26 @@ bool piranha::NodeProgram::execute() {
         node->initialize();
     }
 
+    m_initialized = true;
+}
+
+void piranha::NodeProgram::optimize() {
+    m_topLevelContainer.optimize();
+
+    NodeGraph graph;
+    graph.generateNodeGraph(this);
+    graph.markDeadNodes();
+
+    m_topLevelContainer.prune();
+}
+
+bool piranha::NodeProgram::execute() {
+    int nodeCount = m_topLevelContainer.getNodeCount();
+
+    // For backward compatibility
+    initialize();
+    
+    // Execute all nodes
     for (int i = 0; i < nodeCount; i++) {
         Node *node = m_topLevelContainer.getNode(i);
         bool result = node->evaluate();
