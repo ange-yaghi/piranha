@@ -26,6 +26,9 @@
     <ClCompile Include="..\..\test\runtime_tests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\optimization_tests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\utilities.h">

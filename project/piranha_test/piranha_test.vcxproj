@@ -65,6 +65,7 @@
     <ClCompile Include="..\..\test\compilation_tests.cpp" />
     <ClCompile Include="..\..\test\general_tests.cpp" />
     <ClCompile Include="..\..\test\operator_tests.cpp" />
+    <ClCompile Include="..\..\test\optimization_tests.cpp" />
     <ClCompile Include="..\..\test\runtime_tests.cpp" />
     <ClCompile Include="..\..\test\sdl_stress_tests.cpp" />
     <ClCompile Include="..\..\test\sdl_tests.cpp" />

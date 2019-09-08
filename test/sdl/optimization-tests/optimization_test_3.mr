@@ -1,0 +1,7 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+inline node test {
+    input s;
+}
+
+test(5)
