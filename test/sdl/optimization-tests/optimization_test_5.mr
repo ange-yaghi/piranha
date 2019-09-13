@@ -1,0 +1,14 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node container {
+    input s;
+    output out: s.d;
+}
+
+node calculation {
+    output d: int_add(5 + 8, 4 + 4 / 2);
+}
+
+container(
+    calculation()
+)

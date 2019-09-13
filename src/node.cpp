@@ -173,6 +173,7 @@ void piranha::Node::connectInput(pNodeInput input, const std::string &name, Node
 void piranha::Node::connectInput(pNodeInput input, int index, Node *dependency, Node *nodeInput) {
     *m_inputs[index].input = input;
     m_inputs[index].dependency = dependency;
+    m_inputs[index].nodeInput = nodeInput;
 
     // If this port can modify the input value, the channel
     // being connected has to be notified
@@ -536,17 +537,33 @@ piranha::Node *piranha::Node::optimize() {
 
     int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
-        piranha::Node *node = (*m_inputs[i].input)->getParentNode();
-        piranha::Node *optimizedNode = node->optimize();
+        pNodeInput input = *m_inputs[i].input;
+        Node *nodeInput = m_inputs[i].nodeInput;
 
-        if (optimizedNode == nullptr) return nullptr; // There was an error
-        else if (optimizedNode == node) continue; // No optimizations found
+        if (input != nullptr) {
+            Node *node = (*m_inputs[i].input)->getParentNode();
+            Node *optimizedNode = node->optimize();
 
-        std::string name = node->getOutputName(*m_inputs[i].input);
-        *m_inputs[i].input = optimizedNode->getOutput(optimizedNode->getLocalPort(name));
+            if (optimizedNode == nullptr) return nullptr; // There was an error
+            else if (optimizedNode == node) { /* No optimizations found */ }
+            else {
+                std::string name = node->getOutputName(*m_inputs[i].input);
+                *m_inputs[i].input = optimizedNode->getOutput(optimizedNode->getLocalPort(name));
 
-        if (*m_inputs[i].input == nullptr) {
-            int a = 0;
+                if (*m_inputs[i].input == nullptr) {
+                    int a = 0;
+                }
+            }
+        }
+
+        if (nodeInput != nullptr) {
+            Node *optimizedNode = nodeInput->optimize();
+
+            if (optimizedNode == nullptr) return nullptr;
+            else if (optimizedNode == nodeInput) { /* No optimizations found */ } 
+            else {
+                m_inputs[i].nodeInput = optimizedNode;
+            }
         }
     }
 
