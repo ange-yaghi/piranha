@@ -9,6 +9,6 @@ namespace piranha_demo {
     void printError(const piranha::CompilationError *err);
     void printErrorTrace(const piranha::ErrorList *errList);
 
-}
+} /* namespace piranha_demo */
 
 #endif /* PIRANHA_REFERENCE_COMPILER_UTILITIES_H */
