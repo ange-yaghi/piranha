@@ -103,3 +103,18 @@ TEST(OptimizationTests, OptimizationTest4) {
 
     program.execute();
 }
+
+TEST(OptimizationTests, OptimizationTest5) {
+    const ErrorList *errList;
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_5.mr", &errList);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.initialize();
+    program.optimize();
+
+    program.execute();
+}

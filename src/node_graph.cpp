@@ -2,6 +2,7 @@
 
 #include "../include/node_program.h"
 #include "../include/standard_allocator.h"
+#include "../include/exceptions.h"
 
 piranha::NodeGraph::NodeGraph() {
     /* void */
@@ -92,9 +93,20 @@ void piranha::NodeGraph::generateConnections() {
         int inputCount = node->getInputCount();
         for (int j = 0; j < inputCount; j++) {
             pNodeInput input = *node->getInput(j)->input;
-            Node *parentNode = input->getParentNode();
+            Node *nodeInput = node->getInput(j)->nodeInput;
+
+            Node *node;
+            if (input != nullptr) {
+                node = input->getParentNode();
+            }
+            else if (nodeInput != nullptr) {
+                node = nodeInput;
+            }
+            else {
+                throw EmptyPort();
+            }
             
-            GraphNode *endpoint = findNode(parentNode);
+            GraphNode *endpoint = findNode(node);
 
             if (!graphNode->hasInConnection(endpoint)) {
                 graphNode->inConnections.push_back(endpoint);

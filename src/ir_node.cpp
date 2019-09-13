@@ -507,7 +507,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             }
 
             if (newNode != nullptr) {
-                newNode->connectInput(output, attributeDefinition->getName(), node);
+                newNode->connectInput(output, attributeDefinition->getName(), node, node);
             }
         }
     }
