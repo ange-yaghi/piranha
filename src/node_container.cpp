@@ -126,7 +126,10 @@ void piranha::NodeContainer::_evaluate() {
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
         bool result = m_nodes[i]->evaluate();
-        if (!result) return;
+        if (!result) {
+            m_runtimeError = true;
+            return;
+        }
     }
 }
 
