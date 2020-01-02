@@ -231,6 +231,7 @@ Nodes can be instantiated inside of other nodes. This can be thought of as aggre
  <b>input</b> b;
  <b>input</b> c;
  <b>output</b> out: a * b + c;
+}
 
 <b>node</b> calculate {
   <b>input</b> a;
@@ -293,7 +294,7 @@ It is often convenient to not have to explicitly specify an output by name, espe
 )
 </pre>
 
-In the example above, the calculate nodes aliases the output called `c`. Nodes with an alias output must have only one output.
+In the example above, the calculate node aliases the output called `c`. Nodes with an alias output must have only one output.
 
 ### <a name="2.2.9"></a>2.2.9 Input Type Enforcement
 
