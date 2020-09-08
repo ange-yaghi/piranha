@@ -11,6 +11,8 @@
 #include "../include/compilation_error.h"
 #include "../include/node_output.h"
 #include "../include/language_rules.h"
+#include "../include/standard_allocator.h"
+#include "../include/memory_tracker.h"
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(
     const IrTokenInfo_string &directionToken, const IrTokenInfo_string &name, DIRECTION dir) 
@@ -140,7 +142,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
     if (m_typeDefinition == nullptr) return;
 
     if (m_direction == OUTPUT && m_defaultValue == nullptr) {
-        IrNode *expansion = new IrNode();
+        IrNode *expansion = TRACK(new IrNode);
         expansion->setLogicalParent(this);
         expansion->setScopeParent(this);
         expansion->setInterface(true);
@@ -160,7 +162,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 
         if (immediateInfo.failed) return;
         else if (immediateInfo.reachedDeadEnd) {
-            IrNode *expansion = new IrNode();
+            IrNode *expansion = TRACK(new IrNode);
             expansion->setLogicalParent(this);
             expansion->setScopeParent(this);
             expansion->setInterface(true);
@@ -231,15 +233,15 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
 
         // Create expanion structure
         IrInternalReference *internalReference = 
-            new IrInternalReference(reference, referenceInfo.newContext);
+            TRACK(new IrInternalReference(reference, referenceInfo.newContext));
 
-        IrAttribute *input = new IrAttribute();
+        IrAttribute *input = TRACK(new IrAttribute);
         input->setValue(internalReference);
 
-        IrAttributeList *attributeList = new IrAttributeList();
+        IrAttributeList *attributeList = TRACK(new IrAttributeList);
         attributeList->addAttribute(input);
 
-        IrNode *expansion = new IrNode();
+        IrNode *expansion = TRACK(new IrNode);
         expansion->setAttributes(attributeList);
         expansion->setLogicalParent(this);
         expansion->setScopeParent(this);
@@ -299,12 +301,12 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 
         // Errors for inputs/outputs differ only in code but are fundamentally the same
         if (m_direction == INPUT || m_direction == MODIFY || m_direction == TOGGLE) {
-            unit->addCompilationError(new CompilationError(*m_defaultValue->getSummaryToken(),
-                ErrorCode::IncompatibleDefaultType, context));
+            unit->addCompilationError(TRACK(new CompilationError(*m_defaultValue->getSummaryToken(),
+                ErrorCode::IncompatibleDefaultType, context)));
         }
         else if (m_direction == OUTPUT) {
-            unit->addCompilationError(new CompilationError(*m_defaultValue->getSummaryToken(),
-                ErrorCode::IncompatibleOutputDefinitionType, context));
+            unit->addCompilationError(TRACK(new CompilationError(*m_defaultValue->getSummaryToken(),
+                ErrorCode::IncompatibleOutputDefinitionType, context)));
         }
     }
 }
@@ -344,8 +346,8 @@ void piranha::IrAttributeDefinition::_resolveDefinitions() {
     }
 
     if (definition == nullptr) {
-        unit->addCompilationError(new CompilationError(typeToken,
-            ErrorCode::UndefinedNodeType));
+        unit->addCompilationError(TRACK(new CompilationError(typeToken,
+            ErrorCode::UndefinedNodeType)));
         m_typeDefinition = nullptr;
     }
 

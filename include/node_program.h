@@ -22,6 +22,7 @@ namespace piranha {
         void initialize();
         void optimize();
         bool execute();
+        void free();
 
         void writeAssembly(const std::string &fname) const;
 

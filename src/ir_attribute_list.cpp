@@ -1,6 +1,7 @@
 #include "../include/ir_attribute_list.h"
 
 #include "../include/ir_attribute.h"
+#include "../include/memory_tracker.h"
 
 piranha::IrAttributeList::IrAttributeList() {
     /* void */
@@ -33,4 +34,8 @@ piranha::IrAttribute *piranha::IrAttributeList::
     }
 
     return nullptr;
+}
+
+void piranha::IrAttributeList::free() {
+    IrParserStructure::free();
 }

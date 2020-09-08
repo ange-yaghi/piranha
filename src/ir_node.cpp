@@ -15,6 +15,7 @@
 #include "../include/exceptions.h"
 #include "../include/node_container.h"
 #include "../include/node_program.h"
+#include "../include/memory_tracker.h"
 
 piranha::IrNode::IrNode() {
     m_attributes = nullptr;
@@ -177,12 +178,12 @@ void piranha::IrNode::_validate() {
 
             if (positional) {
                 // Log a more specific message for clarify if the attribute is positional
-                unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(),
-                    ErrorCode::InputSpecifiedMultipleTimesPositional));
+                unit->addCompilationError(TRACK(new CompilationError(*attribute->getSummaryToken(),
+                    ErrorCode::InputSpecifiedMultipleTimesPositional)));
             }
             else {
-                unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(),
-                    ErrorCode::InputSpecifiedMultipleTimes));
+                unit->addCompilationError(TRACK(new CompilationError(*attribute->getSummaryToken(),
+                    ErrorCode::InputSpecifiedMultipleTimes)));
             }
         }
     }
@@ -201,8 +202,8 @@ void piranha::IrNode::_validate() {
 
                 if (attribute == nullptr && input->getDefaultValue() == nullptr) {
                     // This input port is not conencted and has no default value
-                    unit->addCompilationError(new CompilationError(*getSummaryToken(),
-                        ErrorCode::InputNotConnected));
+                    unit->addCompilationError(TRACK(new CompilationError(*getSummaryToken(),
+                        ErrorCode::InputNotConnected)));
                 }
             }
         }
@@ -212,21 +213,25 @@ void piranha::IrNode::_validate() {
 void piranha::IrNode::_checkInstantiation() {
     // Check all references relating to the connection of inputs from this
     // node to the actual definition.
-    IrContextTree *parentContext = new IrContextTree(nullptr);
+    IrContextTree *parentContext = TRACK(new IrContextTree(nullptr));
     IrContextTree *mainContext = parentContext->newChild(this, true);
 
     if (m_definition != nullptr) {
         m_definition->checkReferences(mainContext);
     }
+
+    addTree(parentContext);
 }
 
 void piranha::IrNode::_expand() {
-    // Expand with this node as the focus                      ____
-    IrContextTree *parentContext = new IrContextTree(nullptr); ////
+    // Expand with this node as the focus
+    IrContextTree *parentContext = TRACK(new IrContextTree(nullptr));
     IrContextTree *mainContext = parentContext->newChild(this, true);
     if (m_definition != nullptr) {
         m_definition->expand(mainContext);
     }
+
+    addTree(parentContext);
 }
 
 void piranha::IrNode::_expand(IrContextTree *context) {
@@ -243,13 +248,15 @@ void piranha::IrNode::_expand(IrContextTree *context) {
 }
 
 void piranha::IrNode::_checkTypes() {
-    // Check types with this node as the focus                 ____
-    IrContextTree *parentContext = new IrContextTree(nullptr); ////
+    // Check types with this node as the focus
+    IrContextTree *parentContext = TRACK(new IrContextTree(nullptr));
     IrContextTree *mainContext = parentContext->newChild(this, true);
 
     if (m_definition != nullptr) {
         m_definition->checkTypes(mainContext);
     }
+
+    addTree(parentContext);
 }
 
 void piranha::IrNode::_checkTypes(IrContextTree *context) {
@@ -267,7 +274,8 @@ void piranha::IrNode::_checkTypes(IrContextTree *context) {
 void piranha::IrNode::_checkCircularDefinitions(IrContextTree *context, IrNodeDefinition *root) {
     if (m_definition == root) {
         getParentUnit()->addCompilationError(
-            new CompilationError(*getSummaryToken(), ErrorCode::CircularDefinition, context)
+            TRACK(
+                new CompilationError(*getSummaryToken(), ErrorCode::CircularDefinition, context))
         );
         return;
     }
@@ -308,8 +316,8 @@ void piranha::IrNode::resolveNodeDefinition() {
     }
 
     if (definition == nullptr) {
-        unit->addCompilationError(new CompilationError(getTypeToken(), 
-            ErrorCode::UndefinedNodeType));
+        unit->addCompilationError(TRACK(new CompilationError(getTypeToken(), 
+            ErrorCode::UndefinedNodeType)));
     }
     else setDefinition(definition);
 }
@@ -339,8 +347,8 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 
             // Check position is not out of bounds
             if (position >= list->getInputCount()) {
-                unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(), 
-                    ErrorCode::ArgumentPositionOutOfBounds));
+                unit->addCompilationError(TRACK(new CompilationError(*attribute->getSummaryToken(), 
+                    ErrorCode::ArgumentPositionOutOfBounds)));
                 attribute->setAttributeDefinition(nullptr);
                 return;
             }
@@ -354,14 +362,14 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 
         if (definition == nullptr) {
             // Port not found
-            unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(), 
-                ErrorCode::PortNotFound));
+            unit->addCompilationError(TRACK(new CompilationError(*attribute->getSummaryToken(), 
+                ErrorCode::PortNotFound)));
             attribute->setAttributeDefinition(nullptr);
         }
         else if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
             // Can't assign an output port
-            unit->addCompilationError(new CompilationError(*attribute->getSummaryToken(), 
-                ErrorCode::UsingOutputPortAsInput));
+            unit->addCompilationError(TRACK(new CompilationError(*attribute->getSummaryToken(), 
+                ErrorCode::UsingOutputPortAsInput)));
             attribute->setAttributeDefinition(nullptr);
         }
         else {
@@ -413,7 +421,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     NodeContainer *generatedContainer = nullptr;
     Node *newNode = nullptr;
     if (!m_definition->isBuiltin()) {
-        generatedContainer = new NodeContainer;
+        generatedContainer = TRACK(new NodeContainer);
         generatedContainer->setName(getName());
         generatedContainer->initialize();
         generatedContainer->setIrStructure(this);
@@ -605,7 +613,7 @@ piranha::IrParserStructure *piranha::IrNode::getDefaultPort(bool *failed) {
 }
 
 void piranha::IrNode::writeTraceToFile(std::ofstream &file) {
-    IrContextTree *parentContext = new IrContextTree(nullptr);
+    IrContextTree *parentContext = TRACK(new IrContextTree(nullptr));
     IrContextTree *thisContext = parentContext->newChild(this);
 
     int attributeDefinitions = m_definition->getAttributeDefinitionList()->getDefinitionCount();
@@ -654,4 +662,8 @@ void piranha::IrNode::checkReferences(IrContextTree *inputContext) {
     if (m_definition != nullptr) {
         m_definition->checkReferences(thisContext);
     }
+}
+
+void piranha::IrNode::free() {
+    IrParserStructure::free();
 }

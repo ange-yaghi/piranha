@@ -7,6 +7,7 @@
 #include "../include/error_list.h"
 #include "../include/node_program.h"
 #include "../include/language_rules.h"
+#include "../include/memory_tracker.h"
 
 #include <cctype>
 #include <fstream>
@@ -14,15 +15,11 @@
 #include <sstream>
 
 piranha::IrCompilationUnit::~IrCompilationUnit() {
-    delete m_scanner;
-    m_scanner = nullptr;
-
-    delete m_parser;
-    m_parser = nullptr;
+    /* void */
 }
 
 void piranha::IrCompilationUnit::build(NodeProgram *program) {
-    IrContextTree *context = new IrContextTree(nullptr);
+    IrContextTree *context = TRACK(new IrContextTree(nullptr));
 
     program->setRootUnit(this);
     program->addContainer(context, program->getTopLevelContainer());
@@ -31,6 +28,8 @@ void piranha::IrCompilationUnit::build(NodeProgram *program) {
     for (int i = 0; i < nodeCount; i++) {
         Node *newNode = m_nodes[i]->generateNode(context, program, program->getTopLevelContainer());
     }
+
+    
 }
 
 piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parseFile(
@@ -64,21 +63,25 @@ piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parse(
 }
 
 void piranha::IrCompilationUnit::_checkInstantiation() {
-    IrContextTree *mainContext = new IrContextTree(nullptr, true);
+    IrContextTree *mainContext = TRACK(new IrContextTree(nullptr, true));
 
     int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->checkReferences(mainContext);
     }
+
+    addTree(mainContext);
 }
 
 void piranha::IrCompilationUnit::_checkTypes() {
-    IrContextTree *mainContext = new IrContextTree(nullptr, true);
+    IrContextTree *mainContext = TRACK(new IrContextTree(nullptr, true));
 
     int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->checkTypes(mainContext);
     }
+
+    addTree(mainContext);
 }
 
 void piranha::IrCompilationUnit::resolveAll() {
@@ -115,37 +118,48 @@ void piranha::IrCompilationUnit::validateAll() {
     validate();
 }
 
+void piranha::IrCompilationUnit::registerStructure(IrParserStructure *structure) {
+    m_allStructures.push_back(structure);
+}
+
+void piranha::IrCompilationUnit::free() {
+    IrParserStructure::free();
+
+    delete FTRACK(m_parser);
+    delete FTRACK(m_scanner);
+}
+
 void piranha::IrCompilationUnit::_expand() {
-    IrContextTree *mainContext = new IrContextTree(nullptr, true);
+    IrContextTree *mainContext = TRACK(new IrContextTree(nullptr, true));
 
     int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->expand(mainContext);
     }
+
+    addTree(mainContext);
 }
 
 piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parseHelper(
     std::istream &stream, IrCompilationUnit *topLevel) 
 {
-    delete m_scanner;
+    if (m_scanner != nullptr) delete FTRACK(m_scanner);
     try {
-        m_scanner = new piranha::Scanner(&stream);
+        m_scanner = TRACK(new piranha::Scanner(&stream));
     }
     catch (std::bad_alloc) {
         return FAIL;
     }
 
-    delete m_parser;
+    if (m_parser != nullptr) delete FTRACK(m_parser);
     try {
-        m_parser = new piranha::Parser(*m_scanner, *this);
+        m_parser = TRACK(new piranha::Parser(*m_scanner, *this));
     }
     catch (std::bad_alloc) {
         return FAIL;
     }
 
-    const int success = 0;
-    if (m_parser->parse() != success) {
-        std::cerr << "Parse failed!!" << std::endl;
+    if (m_parser->parse() != 0) {
         return FAIL;
     }
     else return SUCCESS;
@@ -292,8 +306,8 @@ void piranha::IrCompilationUnit::_validate() {
         int count = countSymbolIncidence(node->getName());
 
         if (count > 1) {
-            this->addCompilationError(new CompilationError(node->getNameToken(),
-                ErrorCode::SymbolUsedMultipleTimes));
+            this->addCompilationError(TRACK(new CompilationError(node->getNameToken(),
+                ErrorCode::SymbolUsedMultipleTimes)));
         }
     }
 
@@ -304,8 +318,8 @@ void piranha::IrCompilationUnit::_validate() {
         resolveLocalNodeDefinition(def->getName(), &count);
 
         if (count > 1) {
-            this->addCompilationError(new CompilationError(*def->getNameToken(),
-                ErrorCode::DuplicateNodeDefinition));
+            this->addCompilationError(TRACK(new CompilationError(*def->getNameToken(),
+                ErrorCode::DuplicateNodeDefinition)));
         }
     }
 }
@@ -394,7 +408,7 @@ void piranha::IrCompilationUnit::addCompilationError(CompilationError *err) {
         err->setCompilationUnit(this);
         m_errorList->addCompilationError(err);
     }
-    else delete err;
+    else delete FTRACK(err);
 }
 
 std::ostream& piranha::IrCompilationUnit::print(std::ostream &stream) {

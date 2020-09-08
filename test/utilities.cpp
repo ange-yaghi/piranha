@@ -27,7 +27,7 @@ bool findError(const ErrorList *errorList, const ErrorCode_struct &errorCode, in
     return false;
 }
 
-IrCompilationUnit *compileFile(const std::string &filename, const ErrorList **errList) {
+IrCompilationUnit *compileFile(const std::string &filename, const ErrorList **errList, Compiler **_compiler) {
     TestRules *rules = new TestRules();
     rules->initialize();
 
@@ -37,14 +37,20 @@ IrCompilationUnit *compileFile(const std::string &filename, const ErrorList **er
 
     if (errList != nullptr) *errList = compiler->getErrorList();
 
+    if (_compiler != nullptr) *_compiler = compiler;
+
     return unit;
 }
 
-IrCompilationUnit *compileToUnit(const std::string &filename, const ErrorList **errList, LanguageRules **outputRules) {
+IrCompilationUnit *compileToUnit(
+    const std::string &filename, const ErrorList **errList, 
+    LanguageRules **outputRules, Compiler **_compiler) 
+{
     TestRules *rules = new TestRules();
     rules->initialize();
 
     Compiler *compiler = new Compiler(rules);
+    if (_compiler != nullptr) *_compiler = compiler;
 
     IrCompilationUnit *unit = compiler->compile(IR_TEST_FILES + filename);
     EXPECT_NE(unit, nullptr);

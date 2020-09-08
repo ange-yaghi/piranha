@@ -107,3 +107,7 @@ bool piranha::NodeProgram::execute() {
 
     return true;
 }
+
+void piranha::NodeProgram::free() {
+
+}

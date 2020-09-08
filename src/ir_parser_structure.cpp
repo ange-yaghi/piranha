@@ -1,11 +1,13 @@
 #include "../include/ir_parser_structure.h"
 
+#include "../include/ir_node.h"
 #include "../include/ir_compilation_unit.h"
 #include "../include/ir_context_tree.h"
 #include "../include/node_program.h"
 #include "../include/node.h"
 #include "../include/language_rules.h"
 #include "../include/compilation_error.h"
+#include "../include/memory_tracker.h"
 
 piranha::IrParserStructure::IrReferenceInfo::IrReferenceInfo() {
     newContext = nullptr;
@@ -146,9 +148,9 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
         const IrReferenceChain::Link &link = chain.list[info.infiniteLoop];
 
         if (!link.structure->isInfiniteLoop(link.context)) {
-            if (output->touchedMainContext || IR_EMPTY_CONTEXT()) {
-                IR_ERR_OUT(new CompilationError(*link.structure->getSummaryToken(),
-                    ErrorCode::CircularReference, link.context));
+            if (output != nullptr && output->touchedMainContext || IR_EMPTY_CONTEXT()) {
+                IR_ERR_OUT(TRACK(new CompilationError(*link.structure->getSummaryToken(),
+                    ErrorCode::CircularReference, link.context)));
             }
         }
 
@@ -503,6 +505,37 @@ void piranha::IrParserStructure::setInfiniteLoop(IrContextTree *context) {
     if (isInfiniteLoop(context)) return;
 
     m_infiniteLoops.push_back(context);
+}
+
+void piranha::IrParserStructure::free() {
+    for (IrParserStructure *component : m_components) {
+        MemoryTracker::Allocation allocation;
+        if (MemoryTracker::Get()->Find(component, &allocation) && allocation.Freed) {
+            int a = 0;
+        }
+
+        component->free();
+
+        delete FTRACK(component);
+    }
+
+    for (IrContextTree *tree : m_trees) {
+        tree->free();
+
+        delete FTRACK(tree);
+    }
+    
+    int expansionCount = m_expansions.getEntryCount();
+    for (int i = 0; i < expansionCount; ++i) {
+        IrNode *expansion = *m_expansions.get(i);
+
+        if (expansion != nullptr) {
+            expansion->free();
+            delete FTRACK(expansion);
+        }
+    }
+
+    m_expansions.destroy();
 }
 
 piranha::NodeOutput *piranha::IrParserStructure::generateNodeOutput(

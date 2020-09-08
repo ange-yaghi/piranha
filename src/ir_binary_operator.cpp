@@ -6,6 +6,7 @@
 #include "../include/ir_value_constant.h"
 #include "../include/ir_attribute_definition_list.h"
 #include "../include/node.h"
+#include "../include/memory_tracker.h"
 
 piranha::IrBinaryOperator::IrBinaryOperator(
     OPERATOR op, IrValue *left, IrValue *right) 
@@ -90,13 +91,11 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
         if (publicAttribute == nullptr) {
             IR_FAIL();
 
-            //bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
-            //    (basicInfo.isStaticType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
             bool isValidError = (touchedMainContext && !basicInfo.isStaticType()) || IR_EMPTY_CONTEXT();
             if (query.recordErrors && isValidError) {
                 // Left hand does not have this member
-                IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),
-                    ErrorCode::UndefinedMember, query.inputContext));
+                IR_ERR_OUT(TRACK(new CompilationError(*m_rightOperand->getSummaryToken(),
+                    ErrorCode::UndefinedMember, query.inputContext)));
             }
 
             return nullptr;
@@ -109,8 +108,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
             bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
                 (basicInfo.isFixedType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
             if (query.recordErrors && isValidError) {
-                IR_ERR_OUT(new CompilationError(*m_rightOperand->getSummaryToken(),
-                    ErrorCode::AccessingInternalMember, query.inputContext));
+                IR_ERR_OUT(TRACK(new CompilationError(*m_rightOperand->getSummaryToken(),
+                    ErrorCode::AccessingInternalMember, query.inputContext)));
             }
 
             return nullptr;
@@ -194,7 +193,7 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 
             if (touchedMainContext || emptyContext) {
                 getParentUnit()->addCompilationError(
-                    new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context)
+                    TRACK(new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context))
                 );
             }
             return;
@@ -205,17 +204,17 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
         IrNodeDefinition *nodeDefinition = parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
 
         // Generate the expansion
-        IrAttribute *leftAttribute = new IrAttribute();
-        leftAttribute->setValue(m_leftOperand);
+        IrAttribute *leftAttribute = TRACK(new IrAttribute());
+        leftAttribute->setValue(TRACK(new IrInternalReference(m_leftOperand, context)));
 
-        IrAttribute *rightAttribute = new IrAttribute();
-        rightAttribute->setValue(m_rightOperand);
+        IrAttribute *rightAttribute = TRACK(new IrAttribute());
+        rightAttribute->setValue(TRACK(new IrInternalReference(m_rightOperand, context)));
 
-        IrAttributeList *attributeList = new IrAttributeList();
+        IrAttributeList *attributeList = TRACK(new IrAttributeList());
         attributeList->addAttribute(leftAttribute);
         attributeList->addAttribute(rightAttribute);
 
-        IrNode *expansion = new IrNode();
+        IrNode *expansion = TRACK(new IrNode());
         expansion->setAttributes(attributeList);
         expansion->setLogicalParent(this);
         expansion->setScopeParent(this);

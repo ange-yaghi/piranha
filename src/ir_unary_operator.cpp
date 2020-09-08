@@ -9,6 +9,7 @@
 #include "../include/ir_compilation_unit.h"
 #include "../include/ir_attribute.h"
 #include "../include/ir_attribute_list.h"
+#include "../include/memory_tracker.h"
 
 piranha::IrUnaryOperator::IrUnaryOperator(OPERATOR op, IrValue *operand) : IrValue(IrValue::UNARY_OPERATION) {
     m_operand = operand;
@@ -67,7 +68,7 @@ void piranha::IrUnaryOperator::_expand(IrContextTree *context) {
 
         if (touchedMainContext || emptyContext) {
             getParentUnit()->addCompilationError(
-                new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context)
+                TRACK(new CompilationError(m_summaryToken, ErrorCode::InvalidOperandTypes, context))
             );
         }
         return;
@@ -78,13 +79,13 @@ void piranha::IrUnaryOperator::_expand(IrContextTree *context) {
     IrNodeDefinition *nodeDefinition = parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
 
     // Generate the expansion
-    IrAttribute *attribute = new IrAttribute();
+    IrAttribute *attribute = TRACK(new IrAttribute());
     attribute->setValue(m_operand);
 
-    IrAttributeList *attributeList = new IrAttributeList();
+    IrAttributeList *attributeList = TRACK(new IrAttributeList());
     attributeList->addAttribute(attribute);
 
-    IrNode *expansion = new IrNode();
+    IrNode *expansion = TRACK(new IrNode());
     expansion->setAttributes(attributeList);
     expansion->setLogicalParent(this);
     expansion->setScopeParent(this);

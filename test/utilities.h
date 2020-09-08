@@ -5,6 +5,7 @@
 
 #include "../include/error_list.h"
 #include "../include/compilation_error.h"
+#include "../include/compiler.h"
 
 #include <string>
 
@@ -33,7 +34,10 @@ using namespace piranha;
 bool findError(const ErrorList *errorList, const ErrorCode_struct &errorCode,
     int line = -1, const IrCompilationUnit *unit = nullptr, bool instantiationError = false);
 
-IrCompilationUnit *compileFile(const std::string &filename, const ErrorList **errList = nullptr);
-IrCompilationUnit *compileToUnit(const std::string &filename, const ErrorList **errList = nullptr, LanguageRules **outputRules = nullptr);
+IrCompilationUnit *compileFile(
+    const std::string &filename, const ErrorList **errList = nullptr, Compiler **compiler = nullptr);
+IrCompilationUnit *compileToUnit(
+    const std::string &filename, const ErrorList **errList = nullptr, 
+    LanguageRules **outputRules = nullptr, Compiler **compiler = nullptr);
 
 #endif /* TEST_UTILITIES_H */

@@ -3,6 +3,7 @@
 #include "../include/ir_context_tree.h"
 #include "../include/key_value_lookup.h"
 #include "../include/assembly.h"
+#include "../include/memory_tracker.h"
 
 piranha::NodeContainer::NodeContainer() {
     m_container = nullptr;
@@ -54,14 +55,14 @@ piranha::NodeContainer *piranha::NodeContainer::getTopLevel() {
 }
 
 void piranha::NodeContainer::addContainerInput(const std::string &name, bool modifiesInput, bool enableInput) {
-    pNodeInput *connectionPoint = new pNodeInput;
+    pNodeInput *connectionPoint = TRACK(new pNodeInput);
     m_connections.push_back(connectionPoint);
 
     registerInput(connectionPoint, name, modifiesInput, enableInput);
 }
 
 void piranha::NodeContainer::addContainerOutput(pNodeInput output, Node *node, const std::string &name, bool primary) {
-    pNodeInput *connectionPoint = new pNodeInput;
+    pNodeInput *connectionPoint = TRACK(new pNodeInput);
     m_connections.push_back(connectionPoint);
 
     *connectionPoint = output;

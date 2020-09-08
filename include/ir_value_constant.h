@@ -15,6 +15,7 @@
 #include "node.h"
 #include "literal_node.h"
 #include "fundamental_types.h"
+#include "memory_tracker.h"
 
 namespace piranha {
 
@@ -110,9 +111,9 @@ namespace piranha {
             }
 
             // Generate the expansion
-            IrAttributeList *attributeList = new IrAttributeList();
+            IrAttributeList *attributeList = TRACK(new IrAttributeList());
 
-            IrLiteralNode<T> *expansion = new IrLiteralNode<T>();
+            IrLiteralNode<T> *expansion = TRACK(new IrLiteralNode<T>());
             expansion->setName("\"" + Base::valueToString() + "\"");
             expansion->setLiteralData(Base::template validateData<T>(Base::m_value));
             expansion->setAttributes(attributeList);
@@ -177,8 +178,8 @@ namespace piranha {
                 IR_FAIL();
 
                 if (query.recordErrors && IR_EMPTY_CONTEXT()) {
-                    IR_ERR_OUT(new CompilationError(m_summaryToken,
-                        ErrorCode::UnresolvedReference, query.inputContext));
+                    IR_ERR_OUT(TRACK(TRACK(new CompilationError(m_summaryToken,
+                        ErrorCode::UnresolvedReference, query.inputContext))));
                 }
 
                 return nullptr;

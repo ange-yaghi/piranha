@@ -60,6 +60,8 @@ namespace piranha {
         void setBuild(bool enableBuild) { m_build = enableBuild; }
         bool isBuildEnabled() const { return m_build; }
 
+        virtual void free();
+
     protected:
         IrTokenInfo_string m_type;
         IrTokenInfo_string m_name;

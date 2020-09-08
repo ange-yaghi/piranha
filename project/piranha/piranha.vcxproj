@@ -22,32 +22,32 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{3D4E1702-A9C0-4441-88AA-FC978C86B4D1}</ProjectGuid>
     <RootNamespace>piranha</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -177,8 +177,10 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\include\exceptions.h" />
     <ClInclude Include="..\..\include\int_conversions.h" />
     <ClInclude Include="..\..\include\ir_literal_node.h" />
+    <ClInclude Include="..\..\include\ir_reference.h" />
     <ClInclude Include="..\..\include\key_value_lookup.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
+    <ClInclude Include="..\..\include\memory_tracker.h" />
     <ClInclude Include="..\..\include\multiply_operation_output.h" />
     <ClInclude Include="..\..\include\node_container.h" />
     <ClInclude Include="..\..\include\node_graph.h" />
@@ -237,6 +239,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClCompile Include="..\..\autogen\scanner.auto.cpp" />
     <ClCompile Include="..\..\src\assembly.cpp" />
     <ClCompile Include="..\..\src\channel_node.cpp" />
+    <ClCompile Include="..\..\src\memory_tracker.cpp" />
     <ClCompile Include="..\..\src\node_graph.cpp" />
     <ClCompile Include="..\..\src\no_op_node.cpp" />
     <ClCompile Include="..\..\src\float_conversions.cpp" />

@@ -9,6 +9,7 @@
 #include "../include/ir_context_tree.h"
 #include "../include/language_rules.h"
 #include "../include/node.h"
+#include "../include/memory_tracker.h"
 
 piranha::IrNodeDefinition::IrNodeDefinition(const IrTokenInfo_string &name) {
     m_name = name;
@@ -98,10 +99,16 @@ piranha::IrNodeDefinition *piranha::IrNodeDefinition::getAliasType() {
     return typeDefinition->getAliasType();
 }
 
+void piranha::IrNodeDefinition::free() {
+    IrParserStructure::free();
+}
+
 void piranha::IrNodeDefinition::checkCircularDefinitions() {
-    IrContextTree *newContext = new IrContextTree(nullptr);
+    IrContextTree *newContext = TRACK(new IrContextTree(nullptr));
 
     IrParserStructure::checkCircularDefinitions(newContext, this);
+
+    addTree(newContext);
 }
 
 int piranha::IrNodeDefinition::countSymbolIncidence(const std::string &name) const {
@@ -166,8 +173,8 @@ void piranha::IrNodeDefinition::_validate() {
             IrAttributeDefinition *definition = m_attributes->getDefinition(i);
             int incidence = countSymbolIncidence(definition->getName());
             if (incidence > 1) {
-                unit->addCompilationError(new CompilationError(*definition->getNameToken(),
-                    ErrorCode::SymbolUsedMultipleTimes));
+                unit->addCompilationError(TRACK(new CompilationError(*definition->getNameToken(),
+                    ErrorCode::SymbolUsedMultipleTimes)));
             }
         }
     }
@@ -178,8 +185,8 @@ void piranha::IrNodeDefinition::_validate() {
             IrNode *node = m_body->getItem(i);
             int incidence = countSymbolIncidence(node->getName());
             if (incidence > 1) {
-                unit->addCompilationError(new CompilationError(node->getNameToken(),
-                    ErrorCode::SymbolUsedMultipleTimes));
+                unit->addCompilationError(TRACK(new CompilationError(node->getNameToken(),
+                    ErrorCode::SymbolUsedMultipleTimes)));
             }
         }
     }
@@ -193,14 +200,14 @@ void piranha::IrNodeDefinition::_validate() {
                 IrValue *value = definition->getDefaultValue();
                 if (value != nullptr) {
                     if (isBuiltin()) {
-                        unit->addCompilationError(new CompilationError(*definition->getNameToken(),
-                            ErrorCode::BuiltinOutputWithDefinition));
+                        unit->addCompilationError(TRACK(new CompilationError(*definition->getNameToken(),
+                            ErrorCode::BuiltinOutputWithDefinition)));
                     }
                 }
                 else {
                     if (!isBuiltin()) {
-                        unit->addCompilationError(new CompilationError(*definition->getNameToken(),
-                            ErrorCode::OutputWithNoDefinition));
+                        unit->addCompilationError(TRACK(new CompilationError(*definition->getNameToken(),
+                            ErrorCode::OutputWithNoDefinition)));
                     }
                 }
             }
@@ -220,8 +227,8 @@ void piranha::IrNodeDefinition::validateBuiltinMappings() {
     std::string builtinName = getBuiltinName();
 
     if (!m_rules->checkBuiltinType(builtinName)) {
-        unit->addCompilationError(new CompilationError(*getBuiltinNameToken(),
-            ErrorCode::UndefinedBuiltinType));
+        unit->addCompilationError(TRACK(new CompilationError(*getBuiltinNameToken(),
+            ErrorCode::UndefinedBuiltinType)));
         return;
     }
 
@@ -237,12 +244,12 @@ void piranha::IrNodeDefinition::validateBuiltinMappings() {
         if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
             bool found = reference->getOutputPortInfo(definition->getName(), &info);
             if (!found) {
-                unit->addCompilationError(new CompilationError(*definition->getNameToken(),
-                    ErrorCode::UndefinedBuiltinOutput));
+                unit->addCompilationError(TRACK(new CompilationError(*definition->getNameToken(),
+                    ErrorCode::UndefinedBuiltinOutput)));
             }
             else if (info.isAlias != definition->isAlias()) {
-                unit->addCompilationError(new CompilationError(*definition->getNameToken(),
-                    ErrorCode::AliasAttributeMismatch));
+                unit->addCompilationError(TRACK(new CompilationError(*definition->getNameToken(),
+                    ErrorCode::AliasAttributeMismatch)));
             }
         }
         else if (
@@ -253,17 +260,17 @@ void piranha::IrNodeDefinition::validateBuiltinMappings() {
             bool found = reference->getInputPortInfo(definition->getName(), &info);
             if (found) {
                 if (info.modifiesInput != (definition->getDirection() == IrAttributeDefinition::MODIFY)) {
-                    unit->addCompilationError(new CompilationError(*definition->getDirectionToken(),
-                        ErrorCode::ModifyAttributeMismatch));
+                    unit->addCompilationError(TRACK(new CompilationError(*definition->getDirectionToken(),
+                        ErrorCode::ModifyAttributeMismatch)));
                 }
                 if (info.isToggle != (definition->getDirection() == IrAttributeDefinition::TOGGLE)) {
-                    unit->addCompilationError(new CompilationError(*definition->getDirectionToken(),
-                        ErrorCode::ToggleAttributeMismatch));
+                    unit->addCompilationError(TRACK(new CompilationError(*definition->getDirectionToken(),
+                        ErrorCode::ToggleAttributeMismatch)));
                 }
             }
             else {
-                unit->addCompilationError(new CompilationError(*definition->getNameToken(),
-                    ErrorCode::UndefinedBuiltinInput));
+                unit->addCompilationError(TRACK(new CompilationError(*definition->getNameToken(),
+                    ErrorCode::UndefinedBuiltinInput)));
             }
         }
     }

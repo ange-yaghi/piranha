@@ -8,9 +8,12 @@
 #include "../include/compilation_error.h"
 #include "../include/ir_compilation_unit.h"
 #include "../include/ir_context_tree.h"
+#include "../include/memory_tracker.h"
 
 piranha::IrAttribute::IrAttribute() {
-    /* void */
+    m_value = nullptr;
+    m_definition = nullptr;
+    m_position = -1;
 }
 
 piranha::IrAttribute::IrAttribute(const IrTokenInfo_string &name, IrValue *value) {
@@ -29,6 +32,8 @@ piranha::IrAttribute::IrAttribute(IrValue *value) {
     m_position = -1;
 
     registerComponent(value);
+
+    m_definition = nullptr;
 }
 
 piranha::IrAttribute::~IrAttribute() {
@@ -38,6 +43,10 @@ piranha::IrAttribute::~IrAttribute() {
 void piranha::IrAttribute::setValue(IrValue *value) {
     m_value = value;
     registerComponent(value);
+}
+
+void piranha::IrAttribute::free() {
+    IrParserStructure::free();
 }
 
 piranha::IrParserStructure *piranha::IrAttribute::getImmediateReference(

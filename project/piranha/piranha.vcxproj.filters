@@ -160,6 +160,9 @@
     <Filter Include="Source Files\optimization">
       <UniqueIdentifier>{3813da9e-a5ca-404c-9c78-ea3d44b60f5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\syntax\reference">
+      <UniqueIdentifier>{6e8d407c-e612-4d90-b24c-623aea7016ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\node_output.h">
@@ -357,6 +360,12 @@
     <ClInclude Include="..\..\include\node_graph.h">
       <Filter>Header Files\optimization</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\memory_tracker.h">
+      <Filter>Header Files\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ir_reference.h">
+      <Filter>Header Files\syntax\reference</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
@@ -463,6 +472,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\node_graph.cpp">
       <Filter>Source Files\optimization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\memory_tracker.cpp">
+      <Filter>Source Files\memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

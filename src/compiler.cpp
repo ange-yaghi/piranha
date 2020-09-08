@@ -4,6 +4,7 @@
 #include "../include/ir_import_statement.h"
 #include "../include/compilation_error.h"
 #include "../include/language_rules.h"
+#include "../include/memory_tracker.h"
 
 piranha::Compiler::Compiler(const LanguageRules *rules) {
     m_rules = rules;
@@ -20,12 +21,12 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
     scriptPath.getParentPath(&rootDir);
 
     if (newUnit == nullptr) {
-        newUnit = new IrCompilationUnit();
+        newUnit = TRACK(new IrCompilationUnit());
         newUnit->setErrorList(&m_errorList);
         IrCompilationUnit::ParseResult parseResult = newUnit->parseFile(scriptPath);
 
         if (parseResult == IrCompilationUnit::IO_ERROR) {
-            delete newUnit;
+            delete TRACK(newUnit);
             return nullptr;
         }
 
@@ -51,8 +52,8 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
                 bool fileFound = resolvePath(importPath, &resolvedPath);
 
                 if (!fileFound) {
-                    newUnit->addCompilationError(new CompilationError(*s->getSummaryToken(),
-                        ErrorCode::FileOpenFailed));
+                    newUnit->addCompilationError(TRACK(new CompilationError(*s->getSummaryToken(),
+                        ErrorCode::FileOpenFailed)));
                     continue;
                 }
                 else fullImportPath = resolvedPath;
@@ -62,8 +63,8 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
             IrCompilationUnit *importUnit = analyze(fullImportPath);
             s->setUnit(importUnit);
             if (importUnit == nullptr) {
-                newUnit->addCompilationError(new CompilationError(*s->getSummaryToken(),
-                    ErrorCode::FileOpenFailed));
+                newUnit->addCompilationError(TRACK(new CompilationError(*s->getSummaryToken(),
+                    ErrorCode::FileOpenFailed)));
             }
             else newUnit->addDependency(importUnit);
         }
@@ -82,6 +83,18 @@ piranha::IrCompilationUnit *piranha::Compiler::compile(const IrPath &scriptPath)
     validate();
 
     return topLevel;
+}
+
+void piranha::Compiler::free() {
+    for (IrCompilationUnit *unit : m_units) {
+        unit->free();
+
+        delete FTRACK(unit);
+    }
+
+    m_units.clear();
+
+    m_errorList.free();
 }
 
 piranha::IrCompilationUnit *piranha::Compiler::getUnit(const IrPath &scriptPath) const {

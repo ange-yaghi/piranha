@@ -4,15 +4,18 @@
 #include "../include/ir_attribute_definition.h"
 #include "../include/ir_attribute_list.h"
 #include "../include/ir_attribute.h"
+#include "../include/memory_tracker.h"
 
 piranha::IrContextTree::IrContextTree() {
     m_context = nullptr;
     m_parent = nullptr;
+    m_mainContext = false;
 }
 
 piranha::IrContextTree::IrContextTree(IrNode *context, bool mainContext) {
     m_context = context;
     m_mainContext = mainContext;
+    m_parent = nullptr;
 }
 
 piranha::IrContextTree::~IrContextTree() {
@@ -26,6 +29,14 @@ piranha::IrContextTree *piranha::IrContextTree::getRoot() {
 
 piranha::IrContextTree *piranha::IrContextTree::getMain() {
     return getRoot()->_getMain();
+}
+
+void piranha::IrContextTree::free() {
+    for (IrContextTree *tree : m_children) {
+        tree->free();
+
+        delete FTRACK(tree);
+    }
 }
 
 piranha::IrContextTree *piranha::IrContextTree::_getMain() {

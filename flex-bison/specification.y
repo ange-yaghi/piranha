@@ -27,6 +27,7 @@
     #include "../include/ir_structure_list.h"
     #include "../include/ir_visibility.h"
     #include "../include/ir_unary_operator.h"
+    #include "../include/memory_tracker.h"
 
     #include <string>
 
@@ -189,9 +190,9 @@ statement_list
   ;
 
 import_statement
-  : IMPORT string                       { $$ = new IrImportStatement($2); }
+  : IMPORT string                       { $$ = TRACK(new IrImportStatement($2)); }
   | IMPORT LABEL                        { 
-                                            $$ = new IrImportStatement($2); 
+                                            $$ = TRACK(new IrImportStatement($2));
 
                                             /* The name is a valid label so it can be used as a short name */
                                             $$->setShortName($2); 
@@ -240,19 +241,19 @@ type_name_namespace
   ;
 
 node
-  : type_name_namespace LABEL connection_block          { $$ = new IrNode($1.data[1], $2, $3, $1.data[0]); }
+  : type_name_namespace LABEL connection_block          { $$ = TRACK(new IrNode($1.data[1], $2, $3, $1.data[0])); }
   | type_name_namespace connection_block                {
                                                             IrTokenInfo_string name;
                                                             name.specified = false;
                                                             name.data = "";
 
-                                                            $$ = new IrNode($1.data[1], name, $2, $1.data[0]);
+                                                            $$ = TRACK(new IrNode($1.data[1], name, $2, $1.data[0]));
                                                         }
   ;
 
 node_list
   : node                                                {
-                                                            $$ = new IrNodeList();
+                                                            $$ = TRACK(new IrNodeList());
                                                             $$->add($1);
                                                         }
   | node_list node                                      { 
@@ -270,12 +271,12 @@ standard_operator
   ;
 
 node_name
-  : NODE LABEL                                          { $$ = new IrNodeDefinition($2); }
+  : NODE LABEL                                          { $$ = TRACK(new IrNodeDefinition($2)); }
   | NODE OPERATOR standard_operator                     {
                                                             IrTokenInfo_string info = $2;
                                                             info.combine(&$3);
                                                             info.data = std::string("operator") + $3.data;
-                                                            $$ = new IrNodeDefinition(info);
+                                                            $$ = TRACK(new IrNodeDefinition(info));
                                                         }
   ;
 
@@ -322,7 +323,7 @@ immediate_node_definition
   : AUTO specific_node_definition                       {   
                                                             $$ = $2;
                                                             if ($$ != nullptr) {
-                                                                IrNode *newNode = new IrNode(*($2->getNameToken()), $2, new IrAttributeList());
+                                                                IrNode *newNode = TRACK(new IrNode(*($2->getNameToken()), $2, TRACK(new IrAttributeList())));
                                                                 driver.addNode(newNode);
                                                             }
                                                         }
@@ -336,7 +337,7 @@ node_decorator
 
 port_definitions
   : '{'                                                 { 
-                                                            $$ = new IrAttributeDefinitionList(); 
+                                                            $$ = TRACK(new IrAttributeDefinitionList()); 
                                                         }
   | port_definitions documented_port_definition ';'     { $$ = $1; $$->addDefinition($2); }
   | port_definitions documented_port_definition error   { $$ = $1; $$->addDefinition($2); }
@@ -344,10 +345,10 @@ port_definitions
   ;
 
 port_declaration
-  : INPUT LABEL                                         { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::INPUT); }
-  | OUTPUT LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::OUTPUT); }
-  | MODIFY LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::MODIFY); }
-  | TOGGLE LABEL                                        { $$ = new IrAttributeDefinition($1, $2, IrAttributeDefinition::TOGGLE); }  
+  : INPUT LABEL                                         { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::INPUT)); }
+  | OUTPUT LABEL                                        { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::OUTPUT)); }
+  | MODIFY LABEL                                        { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::MODIFY)); }
+  | TOGGLE LABEL                                        { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::TOGGLE)); }  
   ;
 
 port_status
@@ -371,26 +372,26 @@ documented_port_definition
   ;
 
 inline_node
-  : type_name_namespace connection_block    { $$ = new IrNode($1.data[1], $2, $1.data[0]); }
+  : type_name_namespace connection_block    { $$ = TRACK(new IrNode($1.data[1], $2, $1.data[0])); }
   ;
 
-connection_block 
-  : '(' ')'                             { 
-                                            $$ = new IrAttributeList(); 
-                                            $$->registerToken(&$1); 
-                                            $$->registerToken(&$2); 
+connection_block
+  : '(' ')'                             {
+                                            $$ = TRACK(new IrAttributeList());
+                                            $$->registerToken(&$1);
+                                            $$->registerToken(&$2);
                                         }
-  | '(' attribute_list ')'              { 
-                                            $$ = $2; 
-                                            $$->registerToken(&$1); 
-                                            $$->registerToken(&$3); 
+  | '(' attribute_list ')'              {
+                                            $$ = $2;
+                                            $$->registerToken(&$1);
+                                            $$->registerToken(&$3);
                                         }
   | '(' error ')'                       { yyerrok; }
   ;
 
 attribute_list
   : attribute                           { 
-                                            $$ = new IrAttributeList();
+                                            $$ = TRACK(new IrAttributeList());
                                             $$->addAttribute($1); 
                                         }
   | attribute_list ',' attribute        {
@@ -398,18 +399,18 @@ attribute_list
                                             $$ = $1; 
                                         }
   | error ',' attribute                 {
-                                            $$ = new IrAttributeList();
+                                            $$ = TRACK(new IrAttributeList());
                                             $$->addAttribute($3);
                                         }
   ;
 
 attribute
-  : LABEL ':' value                     { $$ = new IrAttribute($1, $3); }
-  | value                               { $$ = new IrAttribute($1); }
+  : LABEL ':' value                     { $$ = TRACK(new IrAttribute($1, $3)); }
+  | value                               { $$ = TRACK(new IrAttribute($1)); }
   ;
 
 label_value
-  : LABEL                               { $$ = static_cast<IrValue *>(new IrValueLabel($1)); }
+  : LABEL                               { $$ = static_cast<IrValue *>(TRACK(new IrValueLabel($1))); }
   ;
 
 value
@@ -427,15 +428,15 @@ string
   ;
 
 constant
-  : INT                                 { $$ = static_cast<IrValue *>(new IrValueInt($1)); @$ = $1; }
-  | string                              { $$ = static_cast<IrValue *>(new IrValueString($1)); }
-  | FLOAT                               { $$ = static_cast<IrValue *>(new IrValueFloat($1)); @$ = $1; }
-  | BOOL                                { $$ = static_cast<IrValue *>(new IrValueBool($1)); @$ = $1; }
+  : INT                                 { $$ = static_cast<IrValue *>(TRACK(new IrValueInt($1))); @$ = $1; }
+  | string                              { $$ = static_cast<IrValue *>(TRACK(new IrValueString($1))); }
+  | FLOAT                               { $$ = static_cast<IrValue *>(TRACK(new IrValueFloat($1))); @$ = $1; }
+  | BOOL                                { $$ = static_cast<IrValue *>(TRACK(new IrValueBool($1))); @$ = $1; }
   ;
 
 atomic_value
   : label_value                         { $$ = $1; }
-  | inline_node                         { $$ = static_cast<IrValue *>(new IrValueNodeRef($1)); }
+  | inline_node                         { $$ = static_cast<IrValue *>(TRACK(new IrValueNodeRef($1))); }
   | constant                            { $$ = $1; }
   ;
 
@@ -449,7 +450,7 @@ data_access
   : primary_exp                         { $$ = $1; }
   | data_access '.' label_value         { 
                                             $$ = static_cast<IrValue *>(
-                                                new IrBinaryOperator(IrBinaryOperator::DOT, $1, $3));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::DOT, $1, $3)));
                                         }
   ;
 
@@ -457,15 +458,15 @@ unary_exp
   : data_access                         { $$ = $1; }
   | '-' data_access                     {
                                             $$ = static_cast<IrValue *>(
-                                                new IrUnaryOperator(IrUnaryOperator::NUM_NEGATE, $2));
+                                                TRACK(new IrUnaryOperator(IrUnaryOperator::NUM_NEGATE, $2)));
                                         }
   | '+' data_access                     {
                                             $$ = static_cast<IrValue *>(
-                                                new IrUnaryOperator(IrUnaryOperator::POSITIVE, $2));
+                                                TRACK(new IrUnaryOperator(IrUnaryOperator::POSITIVE, $2)));
                                         }
   | '!' data_access                     {
                                             $$ = static_cast<IrValue *>(
-                                                new IrUnaryOperator(IrUnaryOperator::BOOL_NEGATE, $2));
+                                                TRACK(new IrUnaryOperator(IrUnaryOperator::BOOL_NEGATE, $2)));
                                         }
   ;
 
@@ -473,11 +474,11 @@ mul_exp
   : unary_exp                           { $$ = $1; }
   | mul_exp '*' unary_exp               {
                                             $$ = static_cast<IrValue *>(
-                                                new IrBinaryOperator(IrBinaryOperator::MUL, $1, $3));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::MUL, $1, $3)));
                                         }
   | mul_exp '/' unary_exp               {
                                             $$ = static_cast<IrValue *>(
-                                                new IrBinaryOperator(IrBinaryOperator::DIV, $1, $3));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::DIV, $1, $3)));
                                         }
   ;
 
@@ -485,11 +486,11 @@ add_exp
   : mul_exp                             { $$ = $1; }
   | add_exp '+' mul_exp                 {
                                             $$ = static_cast<IrValue *>(
-                                                new IrBinaryOperator(IrBinaryOperator::ADD, $1, $3));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::ADD, $1, $3)));
                                         }
   | add_exp '-' mul_exp                 {
                                             $$ = static_cast<IrValue *>(
-                                                new IrBinaryOperator(IrBinaryOperator::SUB, $1, $3));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::SUB, $1, $3)));
                                         }
   ;
 %%
@@ -498,10 +499,10 @@ void piranha::Parser::error(const IrTokenInfo &l, const std::string &err_message
     CompilationError *err;
     
     if (l.valid) {
-        err = new CompilationError(l, ErrorCode::UnexpectedToken);
+        err = TRACK(new CompilationError(l, ErrorCode::UnexpectedToken));
     }
     else {
-        err = new CompilationError(l, ErrorCode::UnidentifiedToken);
+        err = TRACK(new CompilationError(l, ErrorCode::UnidentifiedToken));
     }
 
     driver.addCompilationError(err);

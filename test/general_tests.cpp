@@ -24,41 +24,55 @@ using namespace piranha;
 
 TEST(GeneralTests, GeneralSyntaxTest_01) {
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("general-tests/general_syntax_test_1.mr", &errList);
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileFile("general-tests/general_syntax_test_1.mr", &errList, &compiler);
 
     EXPECT_TRUE(findError(errList, ErrorCode::UnresolvedReference, 18));
-
     EXPECT_EQ(errList->getErrorCount(), 1);
+    
+    compiler->free();
+
+    EXPECT_EQ(MemoryTracker::Get()->CountLeaks(), 0);
 }
 
 TEST(GeneralTests, GeneralSyntaxTest_02) {
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_2.mr", &errList);
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_2.mr", &errList, nullptr, &compiler);
 
     EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 26));
-
     EXPECT_EQ(errList->getErrorCount(), 1);
+
+    compiler->free();
+
+    EXPECT_EQ(MemoryTracker::Get()->CountLeaks(), 0);
 }
 
 TEST(GeneralTests, GeneralSyntaxTest_03) {
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_3.mr", &errList);
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_3.mr", &errList, nullptr, &compiler);
 
     EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 24));
     EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 26));
 
     EXPECT_EQ(errList->getErrorCount(), 2);
+
+    compiler->free();
 }
 
 TEST(GeneralTests, GeneralSyntaxTest_04) {
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_4.mr", &errList);
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_4.mr", &errList, nullptr, &compiler);
 
     EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 16));
     EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 18));
     EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 19));
 
     EXPECT_EQ(errList->getErrorCount(), 4);
+
+    compiler->free();
 }
 
 TEST(GeneralTests, GeneralSyntaxTest_05_retired) {
@@ -68,12 +82,18 @@ TEST(GeneralTests, GeneralSyntaxTest_05_retired) {
 TEST(GeneralTests, GeneralSyntaxTest_06) {
     const ErrorList *errList;
     LanguageRules *rules;
-    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_6.mr", &errList, &rules);
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_6.mr", &errList, &rules, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
     NodeProgram program;
     unit->build(&program);
+
+    
+    compiler->free();
+
+    EXPECT_EQ(MemoryTracker::Get()->CountLeaks(), 0);
 }
 
 TEST(GeneralTests, GeneralSyntaxTest_07) {
@@ -90,7 +110,8 @@ TEST(GeneralTests, GeneralSyntaxTest_07) {
 TEST(GeneralTests, GeneralSyntaxTest_08) {
     const ErrorList *errList;
     LanguageRules *rules;
-    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_8.mr", &errList, &rules);
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_8.mr", &errList, &rules, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 

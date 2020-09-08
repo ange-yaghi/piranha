@@ -1,5 +1,7 @@
 #include "../include/path.h"
 
+#include "../include/memory_tracker.h"
+
 #include <boost/filesystem.hpp>
 
 piranha::Path::Path(const std::string &path) {
@@ -13,7 +15,7 @@ piranha::Path::Path(const char *path) {
 }
 
 piranha::Path::Path(const Path &path) {
-    m_path = new boost::filesystem::path;
+    m_path = TRACK(new boost::filesystem::path);
     *m_path = path.getBoostPath();
 }
 
@@ -22,12 +24,12 @@ piranha::Path::Path() {
 }
 
 piranha::Path::Path(const boost::filesystem::path &path) {
-    m_path = new boost::filesystem::path;
+    m_path = TRACK(new boost::filesystem::path);
     *m_path = path;
 }
 
 piranha::Path::~Path() {
-    delete m_path;
+    if (m_path != nullptr) delete FTRACK(m_path);
 }
 
 std::string piranha::Path::toString() const {
@@ -35,9 +37,9 @@ std::string piranha::Path::toString() const {
 }
 
 void piranha::Path::setPath(const std::string &path) {
-    if (m_path != nullptr) delete m_path;
+    if (m_path != nullptr) delete FTRACK(m_path);
 
-    m_path = new boost::filesystem::path(path);
+    m_path = TRACK(new boost::filesystem::path(path));
 }
 
 bool piranha::Path::operator==(const Path &path) const {
@@ -49,14 +51,14 @@ piranha::Path piranha::Path::append(const Path &path) const {
 }
 
 void piranha::Path::getParentPath(Path *path) const {
-    path->m_path = new boost::filesystem::path;
+    path->m_path = TRACK(new boost::filesystem::path);
     *path->m_path = m_path->parent_path();
 }
 
 const piranha::Path &piranha::Path::operator=(const Path &b) {
-    if (m_path != nullptr) delete m_path;
+    if (m_path != nullptr) delete FTRACK(m_path);
 
-    m_path = new boost::filesystem::path;
+    m_path = TRACK(new boost::filesystem::path);
     *m_path = b.getBoostPath();
 
     return *this;
