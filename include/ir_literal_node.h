@@ -26,10 +26,6 @@ namespace piranha {
     public:
         virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
             Node *newNode = IrNode::_generateNode(context, program, container);
-
-            if (newNode == nullptr) {
-                int a = 0;
-            }
             
             if (!newNode->isLiteral()) {
                 throw InvalidLiteralType();

@@ -21,8 +21,11 @@
 using namespace piranha;
 
 TEST(IrSyntaxStressTests, IrSyntaxStressTest1) {
+    MemoryTracker::get()->reset();
+
     const ErrorList *errors;
-    compileFile("stress-testing/stress_test_1.mr", &errors);
+    Compiler *compiler;
+    compileFile("stress-testing/stress_test_1.mr", &errors, &compiler);
 
     EXPECT_EQ(errors->getErrorCount(), 10);
 
@@ -40,32 +43,57 @@ TEST(IrSyntaxStressTests, IrSyntaxStressTest1) {
 
     EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 62));
     EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 67));
+
+    compiler->free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
 
 TEST(IrSyntaxStressTests, IrSyntaxNodeArgumentStressTest1) {
+    MemoryTracker::get()->reset();
+    
     const ErrorList *errors;
-    compileFile("stress-testing/node_argument_stress_test_1.mr", &errors);
+    Compiler *compiler;
+    compileFile("stress-testing/node_argument_stress_test_1.mr", &errors, &compiler);
 
     EXPECT_EQ(errors->getErrorCount(), 5);
 
     EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 22, nullptr, true));
     EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 23, nullptr));
+
+    compiler->free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
 
 TEST(IrSyntaxStressTests, IrSyntaxDeepErrorIsolated) {
+    MemoryTracker::get()->reset();
+
     const ErrorList *errors;
-    compileFile("stress-testing/deep_error_isolated.mr", &errors);
+    Compiler *compiler;
+    compileFile("stress-testing/deep_error_isolated.mr", &errors, &compiler);
 
     EXPECT_EQ(errors->getErrorCount(), 1);
 
     EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 3, nullptr, true));
+
+    compiler->free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
 
 TEST(IrSyntaxStressTests, IrSyntaxDeepError) {
+    MemoryTracker::get()->reset();
+
     const ErrorList *errors;
-    compileFile("stress-testing/deep_error.mr", &errors);
+    Compiler *compiler;
+    compileFile("stress-testing/deep_error.mr", &errors, &compiler);
 
     EXPECT_EQ(errors->getErrorCount(), 3);
 
     EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 27, nullptr, true));
+
+    compiler->free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }

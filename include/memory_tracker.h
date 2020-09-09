@@ -9,12 +9,12 @@ namespace piranha {
     class MemoryTracker {
     public:
         struct Allocation {
-            std::string Filename;
-            int Line;
-            int Index;
-            void *Address;
+            std::string filename;
+            int line;
+            int index;
+            void *address;
 
-            bool Freed;
+            bool freed;
         };
 
     protected:
@@ -24,36 +24,37 @@ namespace piranha {
         MemoryTracker();
         ~MemoryTracker();
 
-        static MemoryTracker *Get();
+        static MemoryTracker *get();
+        void reset();
 
-        bool Find(void *address, Allocation *allocation);
+        bool find(void *address, Allocation *allocation);
 
-        void RecordAllocation(void *address, const std::string &filename, int line);
-        void RecordFree(void *address);
+        void recordAllocation(void *address, const std::string &filename, int line);
+        void recordFree(void *address);
 
-        int CountLeaks() const;
+        int countLeaks() const;
 
     private:
         std::vector<Allocation> m_allocations;
     };
 
 #define TRACK(address) \
-    (TrackedAllocation(address, __FILE__, __LINE__))
+    (trackedAllocation(address, __FILE__, __LINE__))
 
 #define FTRACK(address) \
-    (TrackedFree(address))
+    (trackedFree(address))
 
     template <typename T>
-    T *TrackedAllocation(T *address, const char *_filename, int line) {
+    T *trackedAllocation(T *address, const char *_filename, int line) {
         const std::string filename = _filename;
-        MemoryTracker::Get()->RecordAllocation(address, filename, line);
+        MemoryTracker::get()->recordAllocation(address, filename, line);
 
         return address;
     }
 
     template <typename T>
-    T *TrackedFree(T *address) {
-        MemoryTracker::Get()->RecordFree(address);
+    T *trackedFree(T *address) {
+        MemoryTracker::get()->recordFree(address);
 
         return address;
     }

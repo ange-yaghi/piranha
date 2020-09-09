@@ -390,6 +390,9 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         c = c->getParent();
     }
 
+    Node *cachedInstance = program->getCachedInstance(this, context);
+    if (cachedInstance != nullptr) return cachedInstance;
+
     if (isInterface()) {
         Node *node = getScopeParent()->_generateNode(context, program, _container);
 
@@ -405,9 +408,6 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         }
         else return nullptr;
     }
-
-    Node *cachedInstance = program->getCachedInstance(this, context);
-    if (cachedInstance != nullptr) return cachedInstance;
 
     IrContextTree *newContext;
     IrContextTree *parentContext = context;

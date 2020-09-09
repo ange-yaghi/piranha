@@ -29,7 +29,7 @@ void piranha::IrCompilationUnit::build(NodeProgram *program) {
         Node *newNode = m_nodes[i]->generateNode(context, program, program->getTopLevelContainer());
     }
 
-    
+    program->setRootContext(context);
 }
 
 piranha::IrCompilationUnit::ParseResult piranha::IrCompilationUnit::parseFile(

@@ -16,6 +16,9 @@ namespace piranha {
 
     class NodeProgram {
     public:
+        static const bool CheckDuplicates = true;
+
+    public:
         NodeProgram();
         ~NodeProgram();
 
@@ -42,9 +45,13 @@ namespace piranha {
         void setRootUnit(IrCompilationUnit *unit) { m_rootUnit = unit; }
         IrCompilationUnit *getRootUnit() const { return m_rootUnit; }
 
+        void setRootContext(IrContextTree *context) { m_rootContext = context; }
+        IrContextTree *getRootContext() const { return m_rootContext; }
+
     protected:
         bool m_initialized;
 
+        IrContextTree *m_rootContext;
         IrCompilationUnit *m_rootUnit;
 
         NodeContainer m_topLevelContainer;

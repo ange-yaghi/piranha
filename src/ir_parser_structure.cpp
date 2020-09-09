@@ -509,11 +509,6 @@ void piranha::IrParserStructure::setInfiniteLoop(IrContextTree *context) {
 
 void piranha::IrParserStructure::free() {
     for (IrParserStructure *component : m_components) {
-        MemoryTracker::Allocation allocation;
-        if (MemoryTracker::Get()->Find(component, &allocation) && allocation.Freed) {
-            int a = 0;
-        }
-
         component->free();
 
         delete FTRACK(component);

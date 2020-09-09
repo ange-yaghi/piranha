@@ -9,6 +9,7 @@
 #include "../include/node_graph.h"
 
 #include <fstream>
+#include <assert.h>
 
 piranha::NodeProgram::NodeProgram() {
     m_topLevelContainer.setName("root");
@@ -18,6 +19,8 @@ piranha::NodeProgram::NodeProgram() {
     m_runtimeError = false;
 
     m_initialized = false;
+
+    m_rootContext = nullptr;
 }
 
 piranha::NodeProgram::~NodeProgram() {
@@ -34,6 +37,14 @@ void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
 }
 
 void piranha::NodeProgram::addNode(Node *node) {
+    if (CheckDuplicates) {
+        for (Node *n : m_nodeCache) {
+            if (n == node) {
+                int breakHere = 0;
+            }
+        }
+    }
+
     m_nodeCache.push_back(node);
 
     node->setProgram(this);
@@ -109,5 +120,12 @@ bool piranha::NodeProgram::execute() {
 }
 
 void piranha::NodeProgram::free() {
+    m_containers.destroy();
 
+    for (Node *node : m_nodeCache) {
+        node->destroy();
+        delete FTRACK(node);
+    }
+
+    delete FTRACK(m_rootContext);
 }

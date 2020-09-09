@@ -23,8 +23,11 @@
 using namespace piranha;
 
 TEST(IrConstructionTests, IrConstructionSanityCheck) {
+    MemoryTracker::get()->reset();
+
     const ErrorList *list;
-    IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr", &list);
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr", &list, &compiler);
 
     EXPECT_EQ(list->getErrorCount(), 0);
 
@@ -51,10 +54,18 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
 
     program.getTopLevelContainer()->getNode(9)->getPrimaryOutput()->fullCompute((void *)&stringValue);
     EXPECT_EQ(stringValue, "123");
+
+    compiler->free();
+    program.free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
 
 TEST(IrConstructionTests, IrConstructionNestedTest) {
-    IrCompilationUnit *unit = compileFile("construction-tests/nested_conversions.mr");
+    MemoryTracker::get()->reset();
+
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileFile("construction-tests/nested_conversions.mr", nullptr, &compiler);
 
     TestRules generator;
     generator.initialize();
@@ -69,4 +80,9 @@ TEST(IrConstructionTests, IrConstructionNestedTest) {
     double value;
     topLevel->getPrimaryOutput()->fullCompute((void *)&value);
     EXPECT_EQ(value, 10.5);
+
+    program.free();
+    compiler->free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }

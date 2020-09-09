@@ -135,7 +135,11 @@ void piranha::NodeContainer::_evaluate() {
 }
 
 void piranha::NodeContainer::_destroy() {
-    /* void */
+    Node::_destroy();
+
+    for (pNodeInput *p : m_connections) {
+        delete FTRACK(p);
+    }
 }
 
 piranha::Node *piranha::NodeContainer::_optimize() {

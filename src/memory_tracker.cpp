@@ -10,14 +10,18 @@ piranha::MemoryTracker::~MemoryTracker() {
     /* void */
 }
 
-piranha::MemoryTracker *piranha::MemoryTracker::Get() {
+piranha::MemoryTracker *piranha::MemoryTracker::get() {
     if (s_instance == nullptr) s_instance = new MemoryTracker;
     return s_instance;
 }
 
-bool piranha::MemoryTracker::Find(void *address, Allocation *target) {
+void piranha::MemoryTracker::reset() {
+    m_allocations.clear();
+}
+
+bool piranha::MemoryTracker::find(void *address, Allocation *target) {
     for (Allocation &allocation : m_allocations) {
-        if (allocation.Address == address) {
+        if (allocation.address == address) {
             *target = allocation;
             return true;
         }
@@ -26,46 +30,42 @@ bool piranha::MemoryTracker::Find(void *address, Allocation *target) {
     return false;
 }
 
-void piranha::MemoryTracker::RecordAllocation(
+void piranha::MemoryTracker::recordAllocation(
     void *address, const std::string &filename, int line) 
 {
     for (Allocation &allocation : m_allocations) {
-        if (allocation.Address == address) {
-            allocation.Freed = false;
-            allocation.Line = line;
-            allocation.Filename = filename;
+        if (allocation.address == address) {
+            allocation.freed = false;
+            allocation.line = line;
+            allocation.filename = filename;
             return;
         }
     }
 
     Allocation allocation;
-    allocation.Address = address;
-    allocation.Filename = filename;
-    allocation.Freed = false;
-    allocation.Line = line;
-    allocation.Index = (int)m_allocations.size();
-
-    if (allocation.Index == 0) {
-        int breakHere = 0;
-    }
+    allocation.address = address;
+    allocation.filename = filename;
+    allocation.freed = false;
+    allocation.line = line;
+    allocation.index = (int)m_allocations.size();
 
     m_allocations.push_back(allocation);
 }
 
-void piranha::MemoryTracker::RecordFree(void *address) {
+void piranha::MemoryTracker::recordFree(void *address) {
     for (Allocation &allocation : m_allocations) {
-        if (allocation.Address == address) {
-            allocation.Freed = true;
+        if (allocation.address == address) {
+            allocation.freed = true;
         }
     }
 }
 
-int piranha::MemoryTracker::CountLeaks() const {
+int piranha::MemoryTracker::countLeaks() const {
     std::vector<Allocation> unfreed;
 
     int count = 0;
     for (const Allocation &allocation : m_allocations) {
-        if (!allocation.Freed) {
+        if (!allocation.freed) {
             ++count;
 
             unfreed.push_back(allocation);
