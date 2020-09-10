@@ -23,8 +23,11 @@
 using namespace piranha;
 
 TEST(OptimizationTests, OptimizationSanityCheck) {
+    MemoryTracker::get()->reset();
+
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_1.mr", &errList);
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_1.mr", &errList, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -46,11 +49,19 @@ TEST(OptimizationTests, OptimizationSanityCheck) {
     optimizedForm->getPrimaryOutput()->fullCompute((void *)&v_opt);
     firstNode->getPrimaryOutput()->fullCompute((void *)&v_ref);
     EXPECT_EQ(v_opt, v_ref);
+
+    compiler->free();
+    program.free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
 
 TEST(OptimizationTests, OptimizationTest2) {
+    MemoryTracker::get()->reset();
+
+    Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_2.mr", &errList);
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_2.mr", &errList, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -72,11 +83,19 @@ TEST(OptimizationTests, OptimizationTest2) {
     optimizedForm->getPrimaryOutput()->fullCompute((void *)&v_opt);
     firstNode->getPrimaryOutput()->fullCompute((void *)&v_ref);
     EXPECT_EQ(v_opt, v_ref);
+
+    compiler->free();
+    program.free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
 
 TEST(OptimizationTests, OptimizationTest3) {
+    MemoryTracker::get()->reset();
+
+    Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_3.mr", &errList);
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_3.mr", &errList, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -87,11 +106,19 @@ TEST(OptimizationTests, OptimizationTest3) {
     program.optimize();
 
     program.execute();
+
+    compiler->free();
+    program.free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
 
 TEST(OptimizationTests, OptimizationTest4) {
+    MemoryTracker::get()->reset();
+
+    Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_4.mr", &errList);
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_4.mr", &errList, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -102,11 +129,19 @@ TEST(OptimizationTests, OptimizationTest4) {
     program.optimize();
 
     program.execute();
+
+    compiler->free();
+    program.free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
 
 TEST(OptimizationTests, OptimizationTest5) {
+    MemoryTracker::get()->reset();
+
+    Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_5.mr", &errList);
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_5.mr", &errList, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -117,4 +152,9 @@ TEST(OptimizationTests, OptimizationTest5) {
     program.optimize();
 
     program.execute();
+
+    compiler->free();
+    program.free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }

@@ -23,8 +23,11 @@
 using namespace piranha;
 
 TEST(RuntimeTests, RuntimeErrorTest) {
+    MemoryTracker::get()->reset();
+
+    Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("runtime-tests/runtime_error_test.mr", &errList);
+    IrCompilationUnit *unit = compileFile("runtime-tests/runtime_error_test.mr", &errList, &compiler);
 
     NodeProgram program;
     unit->build(&program);
@@ -33,4 +36,9 @@ TEST(RuntimeTests, RuntimeErrorTest) {
     EXPECT_FALSE(result);
 
     EXPECT_EQ(program.getRuntimeError(), "Planned error");
+
+    compiler->free();
+    program.free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
