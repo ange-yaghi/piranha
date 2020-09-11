@@ -170,6 +170,7 @@ py $(ProjectDir)\..\..\scripts\package_piranha.py  $(PlatformTarget) $(Configura
     <ClInclude Include="..\..\autogen\stack.hh" />
     <ClInclude Include="..\..\include\assembly.h" />
     <ClInclude Include="..\..\include\bool_negate_operation.h" />
+    <ClInclude Include="..\..\include\build_settings.h" />
     <ClInclude Include="..\..\include\channel_node.h" />
     <ClInclude Include="..\..\include\console_input_node.h" />
     <ClInclude Include="..\..\include\console_output_node.h" />

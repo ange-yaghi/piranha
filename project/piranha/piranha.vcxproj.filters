@@ -366,6 +366,9 @@
     <ClInclude Include="..\..\include\ir_reference.h">
       <Filter>Header Files\syntax\reference</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\build_settings.h">
+      <Filter>Header Files\configuration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">

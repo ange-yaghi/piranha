@@ -24,7 +24,7 @@ piranha::IrAttributeDefinition::IrAttributeDefinition(
     registerToken(&m_directionToken);
 
     m_direction = dir;
-    setVisibility(IrVisibility::PUBLIC);
+    setVisibility(IrVisibility::Public);
 }
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &name) {
@@ -32,7 +32,7 @@ piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &
     registerToken(&m_name);
 
     m_direction = OUTPUT;
-    setVisibility(IrVisibility::PUBLIC);
+    setVisibility(IrVisibility::Public);
 }
 
 piranha::IrAttributeDefinition::~IrAttributeDefinition() {

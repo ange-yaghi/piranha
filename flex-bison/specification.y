@@ -200,9 +200,9 @@ import_statement
   ;
 
 import_statement_visibility
-  : PUBLIC import_statement             { $$ = $2; $$->setVisibility(IrVisibility::PUBLIC); }
-  | PRIVATE import_statement            { $$ = $2; $$->setVisibility(IrVisibility::PRIVATE); }
-  | import_statement                    { $$ = $1; $$->setVisibility(IrVisibility::DEFAULT); }
+  : PUBLIC import_statement             { $$ = $2; $$->setVisibility(IrVisibility::Public); }
+  | PRIVATE import_statement            { $$ = $2; $$->setVisibility(IrVisibility::Private); }
+  | import_statement                    { $$ = $1; $$->setVisibility(IrVisibility::Default); }
   ;
 
 import_statement_short_name
@@ -304,7 +304,7 @@ specific_node_definition
   | PRIVATE node_definition                             { 
                                                             if ($2 != nullptr) {
                                                                 $$ = $2; 
-                                                                $$->setVisibility(IrVisibility::PRIVATE); 
+                                                                $$->setVisibility(IrVisibility::Private); 
                                                                 $$->setScopeToken($1);
                                                             }
                                                             else $$ = nullptr;
@@ -312,7 +312,7 @@ specific_node_definition
   | PUBLIC node_definition                              { 
                                                             if ($2 != nullptr) {
                                                                 $$ = $2;
-                                                                $$->setVisibility(IrVisibility::PUBLIC);
+                                                                $$->setVisibility(IrVisibility::Public);
                                                                 $$->setScopeToken($1);
                                                             }
                                                             else $$ = nullptr;
@@ -450,7 +450,7 @@ data_access
   : primary_exp                         { $$ = $1; }
   | data_access '.' label_value         { 
                                             $$ = static_cast<IrValue *>(
-                                                TRACK(new IrBinaryOperator(IrBinaryOperator::DOT, $1, $3)));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::Operator::Dot, $1, $3)));
                                         }
   ;
 
@@ -458,15 +458,15 @@ unary_exp
   : data_access                         { $$ = $1; }
   | '-' data_access                     {
                                             $$ = static_cast<IrValue *>(
-                                                TRACK(new IrUnaryOperator(IrUnaryOperator::NUM_NEGATE, $2)));
+                                                TRACK(new IrUnaryOperator(IrUnaryOperator::Operator::NumericNegate, $2)));
                                         }
   | '+' data_access                     {
                                             $$ = static_cast<IrValue *>(
-                                                TRACK(new IrUnaryOperator(IrUnaryOperator::POSITIVE, $2)));
+                                                TRACK(new IrUnaryOperator(IrUnaryOperator::Operator::Positive, $2)));
                                         }
   | '!' data_access                     {
                                             $$ = static_cast<IrValue *>(
-                                                TRACK(new IrUnaryOperator(IrUnaryOperator::BOOL_NEGATE, $2)));
+                                                TRACK(new IrUnaryOperator(IrUnaryOperator::Operator::BoolNegate, $2)));
                                         }
   ;
 
@@ -474,11 +474,11 @@ mul_exp
   : unary_exp                           { $$ = $1; }
   | mul_exp '*' unary_exp               {
                                             $$ = static_cast<IrValue *>(
-                                                TRACK(new IrBinaryOperator(IrBinaryOperator::MUL, $1, $3)));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::Operator::Mul, $1, $3)));
                                         }
   | mul_exp '/' unary_exp               {
                                             $$ = static_cast<IrValue *>(
-                                                TRACK(new IrBinaryOperator(IrBinaryOperator::DIV, $1, $3)));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::Operator::Div, $1, $3)));
                                         }
   ;
 
@@ -486,11 +486,11 @@ add_exp
   : mul_exp                             { $$ = $1; }
   | add_exp '+' mul_exp                 {
                                             $$ = static_cast<IrValue *>(
-                                                TRACK(new IrBinaryOperator(IrBinaryOperator::ADD, $1, $3)));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::Operator::Add, $1, $3)));
                                         }
   | add_exp '-' mul_exp                 {
                                             $$ = static_cast<IrValue *>(
-                                                TRACK(new IrBinaryOperator(IrBinaryOperator::SUB, $1, $3)));
+                                                TRACK(new IrBinaryOperator(IrBinaryOperator::Operator::Sub, $1, $3)));
                                         }
   ;
 %%

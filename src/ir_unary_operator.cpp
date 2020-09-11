@@ -11,7 +11,7 @@
 #include "../include/ir_attribute_list.h"
 #include "../include/memory_tracker.h"
 
-piranha::IrUnaryOperator::IrUnaryOperator(OPERATOR op, IrValue *operand) : IrValue(IrValue::UNARY_OPERATION) {
+piranha::IrUnaryOperator::IrUnaryOperator(Operator op, IrValue *operand) : IrValue(IrValue::UNARY_OPERATION) {
     m_operand = operand;
     m_operator = op;
 

@@ -304,7 +304,7 @@ TEST(IrTests, IrNodeDefinitionTest) {
         IrNodeDefinition *nodeDef = parser.getNodeDefinition(0);
         EXPECT_EQ(nodeDef->getName(), "NewNode");
         EXPECT_EQ(nodeDef->isBuiltin(), false);
-        EXPECT_EQ(nodeDef->getVisibility(), IrVisibility::PUBLIC);
+        EXPECT_EQ(nodeDef->getVisibility(), IrVisibility::Public);
 
         const IrAttributeDefinitionList *definitions =
             nodeDef->getAttributeDefinitionList();
@@ -329,7 +329,7 @@ TEST(IrTests, IrNodeBuiltinTest) {
         EXPECT_EQ(nodeDef->getBuiltinName(), "BuiltinNode");
         EXPECT_EQ(nodeDef->getName(), "NewNode");
         EXPECT_EQ(nodeDef->isBuiltin(), true);
-        EXPECT_EQ(nodeDef->getVisibility(), IrVisibility::PUBLIC);
+        EXPECT_EQ(nodeDef->getVisibility(), IrVisibility::Public);
 
         const IrAttributeDefinitionList *definitions =
             nodeDef->getAttributeDefinitionList();

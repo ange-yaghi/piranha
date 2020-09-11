@@ -16,7 +16,7 @@ piranha::IrNodeDefinition::IrNodeDefinition(const IrTokenInfo_string &name) {
     registerToken(&name);
 
     // Node definitions are public by default
-    setDefaultVisibility(IrVisibility::PUBLIC);
+    setDefaultVisibility(IrVisibility::Public);
 }
 
 piranha::IrNodeDefinition::~IrNodeDefinition() {

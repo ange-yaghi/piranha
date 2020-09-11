@@ -128,77 +128,77 @@ void TestRules::registerBuiltinNodeTypes() {
 
     // ADD
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Add, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
         "__piranha__int_add"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Add, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
         "__piranha__float_add"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
+        { piranha::IrBinaryOperator::Operator::Add, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
         "__piranha__float_add"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
+        { piranha::IrBinaryOperator::Operator::Add, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
         "__piranha__string_add"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
+        { piranha::IrBinaryOperator::Operator::Add, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
         "__piranha__vector_add"
     );
 
     // SUBTRACT
     registerOperator(
-        { piranha::IrBinaryOperator::SUB, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Sub, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
         "__piranha__int_subtract"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::SUB, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Sub, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
         "__piranha__float_subtract"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::SUB, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
+        { piranha::IrBinaryOperator::Operator::Sub, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
         "__piranha__float_subtract"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::SUB, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
+        { piranha::IrBinaryOperator::Operator::Sub, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
         "__piranha__vector_subtract"
     );
 
     // MULTIPLY
     registerOperator(
-        { piranha::IrBinaryOperator::MUL, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Mul, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
         "__piranha__int_multiply"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::MUL, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Mul, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
         "__piranha__float_multiply"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::MUL, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
+        { piranha::IrBinaryOperator::Operator::Mul, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
         "__piranha__float_multiply"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::MUL, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
+        { piranha::IrBinaryOperator::Operator::Mul, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
         "__piranha__vector_multiply"
     );
 
     // DIVIDE
     registerOperator(
-        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Div, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
         "__piranha__int_divide"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Div, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
         "__piranha__float_divide"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
+        { piranha::IrBinaryOperator::Operator::Div, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
         "__piranha__float_divide"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
+        { piranha::IrBinaryOperator::Operator::Div, &piranha::FundamentalType::VectorType, &piranha::FundamentalType::VectorType },
         "__piranha__vector_divide"
     );
 
@@ -206,35 +206,35 @@ void TestRules::registerBuiltinNodeTypes() {
 
     // POSITIVE
     registerUnaryOperator(
-        { piranha::IrUnaryOperator::POSITIVE, &piranha::FundamentalType::IntType },
+        { piranha::IrUnaryOperator::Operator::Positive, &piranha::FundamentalType::IntType },
         "__piranha__int_positive"
     );
     registerUnaryOperator(
-        { piranha::IrUnaryOperator::POSITIVE, &piranha::FundamentalType::FloatType },
+        { piranha::IrUnaryOperator::Operator::Positive, &piranha::FundamentalType::FloatType },
         "__piranha__float_positive"
     );
     registerUnaryOperator(
-        { piranha::IrUnaryOperator::POSITIVE, &piranha::FundamentalType::VectorType },
+        { piranha::IrUnaryOperator::Operator::Positive, &piranha::FundamentalType::VectorType },
         "__piranha__vector_positive"
     );
 
     // NEGATIVE
     registerUnaryOperator(
-        { piranha::IrUnaryOperator::NUM_NEGATE, &piranha::FundamentalType::IntType },
+        { piranha::IrUnaryOperator::Operator::NumericNegate, &piranha::FundamentalType::IntType },
         "__piranha__int_negative"
     );
     registerUnaryOperator(
-        { piranha::IrUnaryOperator::NUM_NEGATE, &piranha::FundamentalType::FloatType },
+        { piranha::IrUnaryOperator::Operator::NumericNegate, &piranha::FundamentalType::FloatType },
         "__piranha__float_negative"
     );
     registerUnaryOperator(
-        { piranha::IrUnaryOperator::NUM_NEGATE, &piranha::FundamentalType::VectorType },
+        { piranha::IrUnaryOperator::Operator::NumericNegate, &piranha::FundamentalType::VectorType },
         "__piranha__vector_negative"
     );
 
     // INVERT
     registerUnaryOperator(
-        { piranha::IrUnaryOperator::BOOL_NEGATE, &piranha::FundamentalType::BoolType },
+        { piranha::IrUnaryOperator::Operator::BoolNegate, &piranha::FundamentalType::BoolType },
         "__piranha__bool_negate"
     );
 }

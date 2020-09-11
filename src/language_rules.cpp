@@ -27,7 +27,7 @@ piranha::Node *piranha::LanguageRules::generateNode(const std::string &builtinNa
 }
 
 std::string piranha::LanguageRules::resolveOperatorBuiltinType(
-    IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const
+    IrBinaryOperator::Operator op, const ChannelType *left, const ChannelType *right) const
 {
     if (left == nullptr) return "";
     if (right == nullptr) return "";
@@ -39,7 +39,7 @@ std::string piranha::LanguageRules::resolveOperatorBuiltinType(
 }
 
 std::string piranha::LanguageRules::resolveUnaryOperatorBuiltinType(
-    IrUnaryOperator::OPERATOR op, const ChannelType *type) const
+    IrUnaryOperator::Operator op, const ChannelType *type) const
 {
     if (type == nullptr) return "";
 
@@ -59,7 +59,7 @@ const piranha::ChannelType *piranha::LanguageRules::resolveChannelType(
 }
 
 piranha::Node *piranha::LanguageRules::generateOperator(
-    IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) 
+    IrBinaryOperator::Operator op, const ChannelType *left, const ChannelType *right) 
 {
     if (left == nullptr) return nullptr;
     if (right == nullptr) return nullptr;
@@ -74,7 +74,7 @@ piranha::Node *piranha::LanguageRules::generateOperator(
 }
 
 piranha::Node *piranha::LanguageRules::generateUnaryOperator(
-    IrUnaryOperator::OPERATOR op, const ChannelType *type)
+    IrUnaryOperator::Operator op, const ChannelType *type)
 {
     if (type == nullptr) return nullptr;
 

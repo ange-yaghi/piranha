@@ -1,6 +1,8 @@
 #ifndef PIRANHA_MEMORY_TRACKER_H
 #define PIRANHA_MEMORY_TRACKER_H
 
+#include "build_settings.h"
+
 #include <string>
 #include <vector>
 
@@ -38,11 +40,20 @@ namespace piranha {
         std::vector<Allocation> m_allocations;
     };
 
+#if ENABLE_MEMORY_TRACKER
+
 #define TRACK(address) \
     (trackedAllocation(address, __FILE__, __LINE__))
 
 #define FTRACK(address) \
     (trackedFree(address))
+
+#else
+
+#define TRACK(address) (address)
+#define FTRACK(address) (address)
+
+#endif /* ENABLE_MEMORY_TRACKER */
 
     template <typename T>
     T *trackedAllocation(T *address, const char *_filename, int line) {

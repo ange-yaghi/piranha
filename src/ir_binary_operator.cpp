@@ -9,7 +9,7 @@
 #include "../include/memory_tracker.h"
 
 piranha::IrBinaryOperator::IrBinaryOperator(
-    OPERATOR op, IrValue *left, IrValue *right) 
+    Operator op, IrValue *left, IrValue *right) 
     : IrValue(IrValue::BINARY_OPERATION) 
 {
     m_operator = op;
@@ -22,7 +22,7 @@ piranha::IrBinaryOperator::IrBinaryOperator(
     // The data access operators are special in the sense that the right-hand operand
     // will *always* be a standard label that doesn't reference anything itself.
     // Therefore it wouldn't be wise to resolve the reference of that label
-    if (op == DOT) {
+    if (op == Operator::Dot) {
         if (m_rightOperand != nullptr) {
             m_rightOperand->setCheckReferences(false);
         }
@@ -51,7 +51,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
     }
 
     // The dot is the reference operator
-    if (m_operator == DOT) {
+    if (m_operator == Operator::Dot) {
         IrReferenceQuery basicQuery;
         basicQuery.inputContext = query.inputContext;
         basicQuery.recordErrors = false;
@@ -139,7 +139,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
 void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
     if (m_leftOperand == nullptr || m_rightOperand == nullptr) return;
 
-    if (m_operator == DOT) {
+    if (m_operator == Operator::Dot) {
         m_leftOperand->expandChain(context);
     }
     else {
@@ -234,7 +234,7 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
 piranha::Node *piranha::IrBinaryOperator::
     _generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
-    if (m_operator == DOT) {
+    if (m_operator == Operator::Dot) {
         IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
         Node *node = m_leftOperand->generateNode(context, program, container);
         
@@ -249,7 +249,7 @@ piranha::Node *piranha::IrBinaryOperator::
 piranha::NodeOutput *piranha::IrBinaryOperator::
     _generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
-    if (m_operator == DOT) {
+    if (m_operator == Operator::Dot) {
         IrValueLabel *labelConstant = static_cast<IrValueLabel *>(m_rightOperand);
         Node *node = m_leftOperand->generateNode(context, program, container);
 

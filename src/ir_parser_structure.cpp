@@ -82,8 +82,8 @@ piranha::IrParserStructure::IrParserStructure() {
     m_typesChecked = false;
     m_instantiationChecked = false;
 
-    m_visibility = IrVisibility::DEFAULT;
-    m_defaultVisibility = IrVisibility::PRIVATE;
+    m_visibility = IrVisibility::Default;
+    m_defaultVisibility = IrVisibility::Private;
 
     m_rules = nullptr;
 }
@@ -478,11 +478,11 @@ piranha::IrParserStructure *piranha::IrParserStructure::resolveLocalName(
 }
 
 bool piranha::IrParserStructure::allowsExternalAccess() const {
-    IrVisibility visibility = (m_visibility == IrVisibility::DEFAULT) 
+    IrVisibility visibility = (m_visibility == IrVisibility::Default) 
         ? m_defaultVisibility 
         : m_visibility;
 
-    return visibility == IrVisibility::PUBLIC;
+    return visibility == IrVisibility::Public;
 }
 
 piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {

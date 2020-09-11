@@ -45,7 +45,7 @@ namespace piranha {
     };
 
     struct OperatorMapping {
-        IrBinaryOperator::OPERATOR op;
+        IrBinaryOperator::Operator op;
         const ChannelType *leftType;
         const ChannelType *rightType;
         bool reversible = true;
@@ -75,7 +75,7 @@ namespace piranha {
     };
 
     struct UnaryOperatorMapping {
-        IrUnaryOperator::OPERATOR op;
+        IrUnaryOperator::Operator op;
         const ChannelType *type;
         bool isBase = true;
 
@@ -119,9 +119,9 @@ namespace piranha {
 
         Node *generateNode(const std::string &builtinName) const;
         std::string resolveOperatorBuiltinType(
-            IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const;
+            IrBinaryOperator::Operator op, const ChannelType *left, const ChannelType *right) const;
         std::string resolveUnaryOperatorBuiltinType(
-            IrUnaryOperator::OPERATOR op, const ChannelType *type) const;
+            IrUnaryOperator::Operator op, const ChannelType *type) const;
         const ChannelType *resolveChannelType(const std::string &builtinName) const;
 
         template <typename NativeType>
@@ -142,8 +142,8 @@ namespace piranha {
     protected:
         virtual void registerBuiltinNodeTypes() = 0;
 
-        Node *generateOperator(IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right);
-        Node *generateUnaryOperator(IrUnaryOperator::OPERATOR op, const ChannelType *type);
+        Node *generateOperator(IrBinaryOperator::Operator op, const ChannelType *left, const ChannelType *right);
+        Node *generateUnaryOperator(IrUnaryOperator::Operator op, const ChannelType *type);
 
     protected:
         Node *generateBuiltinType(const std::string &typeName) const;
