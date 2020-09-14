@@ -280,6 +280,8 @@ TEST(IrOperatorTests, IrOperatorTest6) {
 }
 
 TEST(IrOperatorTests, IrOperatorTest7) {
+    MemoryTracker::get()->reset();
+
     const ErrorList *errList;
     Compiler *compiler;
     IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_7.mr", &errList, nullptr, &compiler);
@@ -295,6 +297,8 @@ TEST(IrOperatorTests, IrOperatorTest7) {
 }
 
 TEST(IrOperatorTests, IrOperatorTest8) {
+    MemoryTracker::get()->reset();
+
     const ErrorList *errList;
     LanguageRules *rules;
     Compiler *compiler;
@@ -316,6 +320,24 @@ TEST(IrOperatorTests, IrOperatorTest8) {
 
     compiler->free();
     program.free();
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
+}
+
+TEST(IrOperatorTests, IrOperatorTest9) {
+    MemoryTracker::get()->reset();
+
+    const ErrorList *errList;
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_9.mr", &errList, nullptr, &compiler);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.free();
+    compiler->free();
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }

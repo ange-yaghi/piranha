@@ -218,18 +218,18 @@ void TestRules::registerBuiltinNodeTypes() {
         "__piranha__vector_positive"
     );
 
-    // NEGATIVE
+    // NEGATE
     registerUnaryOperator(
         { piranha::IrUnaryOperator::Operator::NumericNegate, &piranha::FundamentalType::IntType },
-        "__piranha__int_negative"
+        "__piranha__int_negate"
     );
     registerUnaryOperator(
         { piranha::IrUnaryOperator::Operator::NumericNegate, &piranha::FundamentalType::FloatType },
-        "__piranha__float_negative"
+        "__piranha__float_negate"
     );
     registerUnaryOperator(
         { piranha::IrUnaryOperator::Operator::NumericNegate, &piranha::FundamentalType::VectorType },
-        "__piranha__vector_negative"
+        "__piranha__vector_negate"
     );
 
     // INVERT

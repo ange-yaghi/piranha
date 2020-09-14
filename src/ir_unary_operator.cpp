@@ -9,6 +9,7 @@
 #include "../include/ir_compilation_unit.h"
 #include "../include/ir_attribute.h"
 #include "../include/ir_attribute_list.h"
+#include "../include/ir_value_constant.h"
 #include "../include/memory_tracker.h"
 
 piranha::IrUnaryOperator::IrUnaryOperator(Operator op, IrValue *operand) : IrValue(IrValue::UNARY_OPERATION) {
@@ -80,7 +81,7 @@ void piranha::IrUnaryOperator::_expand(IrContextTree *context) {
 
     // Generate the expansion
     IrAttribute *attribute = TRACK(new IrAttribute());
-    attribute->setValue(m_operand);
+    attribute->setValue(TRACK(new IrInternalReference(m_operand, context)));
 
     IrAttributeList *attributeList = TRACK(new IrAttributeList());
     attributeList->addAttribute(attribute);

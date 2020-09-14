@@ -1,0 +1,8 @@
+private import "operators.mr" as operators
+
+node test {
+    input __in;
+    output __out: -__in; // InvalidOperandTypes
+}
+
+test test1(0.5)
