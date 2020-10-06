@@ -858,7 +858,7 @@ We need to add some additional code to `main.cpp` in order to construct and run 
   }
 ```
 
-We must also tell the compiler which set of language rules to use. This is achieved by changing the compiler instantiating to the following code:
+We must also tell the compiler which set of language rules to use. This is achieved by changing the compiler instantiation to the following code:
 
 ```C++
   LanguageRules rules;
@@ -1106,7 +1106,7 @@ The `LanguageRules` object provides a function called `registerConversion(...)` 
 
 ```
 
-This will instruct the compiler to automatically instantiate `piranha::StringToIntConversion` whenever a string must converted to an integer. As with before, we must have the same structures reflected in `compiler_lib.mr`:
+This will instruct the compiler to automatically instantiate `piranha::StringToIntConversion` whenever a string must be converted to an integer. As before, we must have the same structures reflected in `compiler_lib.mr`:
 
 `compiler_lib.mr`:
 <pre>
