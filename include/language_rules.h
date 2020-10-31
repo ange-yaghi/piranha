@@ -171,8 +171,6 @@ namespace piranha {
         KeyValueLookup<OperatorMapping, std::string> m_operatorRules;
         KeyValueLookup<UnaryOperatorMapping, std::string> m_unaryOperatorRules;
         KeyValueLookup<LiteralType, std::string> m_literalRules;
-
-        NodeProgram *m_nodeProgram;
     };
 
 } /* namespace piranha */

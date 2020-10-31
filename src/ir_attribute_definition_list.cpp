@@ -20,7 +20,7 @@ void piranha::IrAttributeDefinitionList::addDefinition(IrAttributeDefinition *de
 piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
     getDefinition(int index, bool isInput) const 
 {
-    int totalCount = getDefinitionCount();
+    const int totalCount = getDefinitionCount();
     int inputIndex = 0;
     for (int i = 0; i < totalCount; i++) {
         IrAttributeDefinition *definition = m_definitions[i];
@@ -43,9 +43,9 @@ piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
 }
 
 int piranha::IrAttributeDefinitionList::getCount(
-    IrAttributeDefinition::DIRECTION direction) const 
+    IrAttributeDefinition::Direction direction) const 
 {
-    int totalCount = getDefinitionCount();
+    const int totalCount = getDefinitionCount();
     int inputs = 0;
     for (int i = 0; i < totalCount; i++) {
         IrAttributeDefinition *definition = m_definitions[i];
@@ -59,29 +59,28 @@ int piranha::IrAttributeDefinitionList::getCount(
 
 int piranha::IrAttributeDefinitionList::getInputCount() const {
     return 
-        getCount(IrAttributeDefinition::INPUT) + 
-        getCount(IrAttributeDefinition::MODIFY) +
-        getCount(IrAttributeDefinition::TOGGLE);
+        getCount(IrAttributeDefinition::Direction::Input) + 
+        getCount(IrAttributeDefinition::Direction::Modify) +
+        getCount(IrAttributeDefinition::Direction::Toggle);
 }
 
 int piranha::IrAttributeDefinitionList::getOutputCount() const {
-    return getCount(IrAttributeDefinition::OUTPUT);
+    return getCount(IrAttributeDefinition::Direction::Output);
 }
 
 piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
     getOutputDefinition(int index) const 
 {
-    return getDefinition(index, IrAttributeDefinition::OUTPUT);
+    return getDefinition(index, false);
 }
 
 piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
     getOutputDefinition(const std::string &name) const 
 {
-    int totalCount = getDefinitionCount();
-    int inputs = 0;
+    const int totalCount = getDefinitionCount();
     for (int i = 0; i < totalCount; i++) {
         IrAttributeDefinition *definition = m_definitions[i];
-        if (definition->getDirection() != IrAttributeDefinition::OUTPUT) continue;
+        if (definition->getDirection() != IrAttributeDefinition::Direction::Output) continue;
 
         if (name == definition->getName()) return definition;
     }
@@ -90,11 +89,10 @@ piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::
 }
 
 piranha::IrAttributeDefinition *piranha::IrAttributeDefinitionList::getAliasOutput() const {
-    int totalCount = getDefinitionCount();
-    int inputs = 0;
+    const int totalCount = getDefinitionCount();
     for (int i = 0; i < totalCount; i++) {
         IrAttributeDefinition *definition = m_definitions[i];
-        if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
+        if (definition->getDirection() == IrAttributeDefinition::Direction::Output) {
             if (definition->isAlias()) return definition;
         }
     }

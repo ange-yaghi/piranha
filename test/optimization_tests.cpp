@@ -27,7 +27,8 @@ TEST(OptimizationTests, OptimizationSanityCheck) {
 
     const ErrorList *errList;
     Compiler *compiler;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_1.mr", &errList, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_1.mr", &errList, &rules, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -35,23 +36,29 @@ TEST(OptimizationTests, OptimizationSanityCheck) {
     unit->build(&program);
 
     program.initialize();
+
+    piranha::native_int v_ref;
+    Node *firstNode = program.getTopLevelContainer()->getNode(2);
+    firstNode->evaluate();
+    firstNode->getPrimaryOutput()->fullCompute((void *)&v_ref);
+
     program.optimize();
 
     Node *optimizedForm = program.getTopLevelContainer()->getNode(0);
-    Node *firstNode = program.getTopLevelContainer()->getNode(0)->getUnoptimizedForm();
 
     optimizedForm->evaluate();
 
     EXPECT_NE(firstNode, optimizedForm);
     EXPECT_TRUE(optimizedForm->hasFlag(Node::META_CONSTANT));
     
-    piranha::native_int v_opt, v_ref;
+    piranha::native_int v_opt;
     optimizedForm->getPrimaryOutput()->fullCompute((void *)&v_opt);
-    firstNode->getPrimaryOutput()->fullCompute((void *)&v_ref);
+    
     EXPECT_EQ(v_opt, v_ref);
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -61,7 +68,8 @@ TEST(OptimizationTests, OptimizationTest2) {
 
     Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_2.mr", &errList, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_2.mr", &errList, &rules, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -69,23 +77,27 @@ TEST(OptimizationTests, OptimizationTest2) {
     unit->build(&program);
 
     program.initialize();
+
+    piranha::native_int v_opt, v_ref;
+    Node *firstNode = program.getTopLevelContainer()->getNode(8);
+    firstNode->evaluate();
+    firstNode->getPrimaryOutput()->fullCompute((void *)&v_ref);
+
     program.optimize();
 
     Node *optimizedForm = program.getTopLevelContainer()->getNode(0);
-    Node *firstNode = program.getTopLevelContainer()->getNode(0)->getUnoptimizedForm();
 
     optimizedForm->evaluate();
 
     EXPECT_NE(firstNode, optimizedForm);
     EXPECT_TRUE(optimizedForm->hasFlag(Node::META_CONSTANT));
-
-    piranha::native_int v_opt, v_ref;
+    
     optimizedForm->getPrimaryOutput()->fullCompute((void *)&v_opt);
-    firstNode->getPrimaryOutput()->fullCompute((void *)&v_ref);
     EXPECT_EQ(v_opt, v_ref);
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -95,7 +107,8 @@ TEST(OptimizationTests, OptimizationTest3) {
 
     Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_3.mr", &errList, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_3.mr", &errList, &rules, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -109,6 +122,7 @@ TEST(OptimizationTests, OptimizationTest3) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -118,7 +132,8 @@ TEST(OptimizationTests, OptimizationTest4) {
 
     Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_4.mr", &errList, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_4.mr", &errList, &rules, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -132,6 +147,7 @@ TEST(OptimizationTests, OptimizationTest4) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -141,7 +157,8 @@ TEST(OptimizationTests, OptimizationTest5) {
 
     Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_5.mr", &errList, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_5.mr", &errList, &rules, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -155,6 +172,7 @@ TEST(OptimizationTests, OptimizationTest5) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }

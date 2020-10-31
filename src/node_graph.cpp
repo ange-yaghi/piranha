@@ -9,7 +9,9 @@ piranha::NodeGraph::NodeGraph() {
 }
 
 piranha::NodeGraph::~NodeGraph() {
-    /* void */
+    for (GraphNode *graphNode : m_nodes) {
+        StandardAllocator::Global()->free(graphNode);
+    }
 }
 
 void piranha::NodeGraph::generateNodeGraph(NodeProgram *program) {

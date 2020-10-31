@@ -1,6 +1,8 @@
 #ifndef PIRANHA_RULE_H
 #define PIRANHA_RULE_H
 
+#include "memory_tracker.h"
+
 #include <string>
 
 namespace piranha {
@@ -20,7 +22,7 @@ namespace piranha {
         }
 
         virtual ~Rule() {
-            /* void */
+            delete FTRACK(m_reference);
         }
 
         virtual NodeBase *buildNode() const = 0;
@@ -45,14 +47,14 @@ namespace piranha {
     class SpecializedRule : public Rule<ValueType, NodeBase> {
     public:
         SpecializedRule(const ValueType &value) : Rule<ValueType, NodeBase>(value) {
-            NodeType *reference = new NodeType();
+            NodeType *reference = TRACK(new NodeType());
             reference->initialize();
 
-            setReference(reference);
+            Rule<ValueType, NodeBase>::setReference(reference);
         }
 
         SpecializedRule() : Rule<ValueType, NodeBase>() {
-            NodeType *reference = new NodeType();
+            NodeType *reference = TRACK(new NodeType());
             reference->initialize();
 
             Rule<ValueType, NodeBase>::setReference(reference);
@@ -63,7 +65,7 @@ namespace piranha {
         }
 
         virtual NodeBase *buildNode() const {
-            return new NodeType();
+            return TRACK(new NodeType());
         }
     };
 

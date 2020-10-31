@@ -196,7 +196,7 @@ void piranha::IrNodeDefinition::_validate() {
         int attributeCount = m_attributes->getDefinitionCount();
         for (int i = 0; i < attributeCount; i++) {
             IrAttributeDefinition *definition = m_attributes->getDefinition(i);
-            if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
+            if (definition->getDirection() == IrAttributeDefinition::Direction::Output) {
                 IrValue *value = definition->getDefaultValue();
                 if (value != nullptr) {
                     if (isBuiltin()) {
@@ -241,7 +241,7 @@ void piranha::IrNodeDefinition::validateBuiltinMappings() {
     for (int i = 0; i < attributeCount; i++) {
         IrAttributeDefinition *definition = m_attributes->getDefinition(i);
         Node::PortInfo info;
-        if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
+        if (definition->getDirection() == IrAttributeDefinition::Direction::Output) {
             bool found = reference->getOutputPortInfo(definition->getName(), &info);
             if (!found) {
                 unit->addCompilationError(TRACK(new CompilationError(*definition->getNameToken(),
@@ -253,17 +253,17 @@ void piranha::IrNodeDefinition::validateBuiltinMappings() {
             }
         }
         else if (
-            definition->getDirection() == IrAttributeDefinition::INPUT ||
-            definition->getDirection() == IrAttributeDefinition::MODIFY ||
-            definition->getDirection() == IrAttributeDefinition::TOGGLE)
+            definition->getDirection() == IrAttributeDefinition::Direction::Input ||
+            definition->getDirection() == IrAttributeDefinition::Direction::Modify ||
+            definition->getDirection() == IrAttributeDefinition::Direction::Toggle)
         {
             bool found = reference->getInputPortInfo(definition->getName(), &info);
             if (found) {
-                if (info.modifiesInput != (definition->getDirection() == IrAttributeDefinition::MODIFY)) {
+                if (info.modifiesInput != (definition->getDirection() == IrAttributeDefinition::Direction::Modify)) {
                     unit->addCompilationError(TRACK(new CompilationError(*definition->getDirectionToken(),
                         ErrorCode::ModifyAttributeMismatch)));
                 }
-                if (info.isToggle != (definition->getDirection() == IrAttributeDefinition::TOGGLE)) {
+                if (info.isToggle != (definition->getDirection() == IrAttributeDefinition::Direction::Toggle)) {
                     unit->addCompilationError(TRACK(new CompilationError(*definition->getDirectionToken(),
                         ErrorCode::ToggleAttributeMismatch)));
                 }

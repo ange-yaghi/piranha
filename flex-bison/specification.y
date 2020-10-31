@@ -123,6 +123,7 @@
 %type <piranha::IrTokenInfo_string> type_name;
 %type <piranha::IrTokenInfoSet<std::string, 2>> type_name_namespace;
 %type <piranha::IrNode *> node;
+%type <piranha::IrNode *> node_member;
 %type <piranha::IrNodeList *> node_list;
 %type <piranha::IrAttributeList *> attribute_list;
 %type <piranha::IrAttributeList *> connection_block;
@@ -131,6 +132,7 @@
 %type <piranha::IrValue *> atomic_value;
 %type <piranha::IrValue *> label_value;
 %type <piranha::IrNode *> inline_node;
+%type <piranha::IrNode *> inline_node_member;
 %type <piranha::IrValue *> constant;
 %type <piranha::IrValue *> data_access;
 %type <piranha::IrValue *> mul_exp;
@@ -168,25 +170,25 @@ sdl
   ;
 
 decorator
-  : DECORATOR LABEL ':' string      {}
+  : DECORATOR LABEL ':' string          { /* void */ }
   ;
 
 decorator_list
-  : decorator                       {}
-  | decorator_list decorator        {}
+  : decorator                           { /* void */ }
+  | decorator_list decorator            { /* void */ }
   ;
 
 statement
-  : node                                { driver.addNode($1); }
+  : node_member                         { driver.addNode($1); }
   | import_statement_short_name         { driver.addImportStatement($1); }
   | node_decorator                      { driver.addNodeDefinition($1); }
-  | MODULE '{' decorator_list '}'       { }
+  | MODULE '{' decorator_list '}'       { /* void */ }
   ;
 
 statement_list 
-  : statement                           { }
-  | statement_list statement            { }
-  | statement_list error                { }
+  : statement                           { /* void */ }
+  | statement_list statement            { /* void */ }
+  | statement_list error                { /* void */ }
   ;
 
 import_statement
@@ -251,12 +253,20 @@ node
                                                         }
   ;
 
+node_member
+  : node                                                { $$ = $1; }
+  | data_access '.' node                                {
+                                                            $$ = $3;
+                                                            $$->setThis($1);
+                                                        }
+  ;
+
 node_list
-  : node                                                {
+  : node_member                                         {
                                                             $$ = TRACK(new IrNodeList());
                                                             $$->add($1);
                                                         }
-  | node_list node                                      { 
+  | node_list node_member                               { 
                                                             $$ = $1;
                                                             $1->add($2);  
                                                         }
@@ -336,19 +346,17 @@ node_decorator
   ;
 
 port_definitions
-  : '{'                                                 { 
-                                                            $$ = TRACK(new IrAttributeDefinitionList()); 
-                                                        }
+  : '{'                                                 { $$ = TRACK(new IrAttributeDefinitionList()); }
   | port_definitions documented_port_definition ';'     { $$ = $1; $$->addDefinition($2); }
   | port_definitions documented_port_definition error   { $$ = $1; $$->addDefinition($2); }
   | port_definitions error ';'                          { $$ = $1; }
   ;
 
 port_declaration
-  : INPUT LABEL                                         { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::INPUT)); }
-  | OUTPUT LABEL                                        { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::OUTPUT)); }
-  | MODIFY LABEL                                        { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::MODIFY)); }
-  | TOGGLE LABEL                                        { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::TOGGLE)); }  
+  : INPUT LABEL                                         { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::Direction::Input)); }
+  | OUTPUT LABEL                                        { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::Direction::Output)); }
+  | MODIFY LABEL                                        { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::Direction::Modify)); }
+  | TOGGLE LABEL                                        { $$ = TRACK(new IrAttributeDefinition($1, $2, IrAttributeDefinition::Direction::Toggle)); }  
   ;
 
 port_status
@@ -369,6 +377,14 @@ port_connection
 documented_port_definition
   : decorator_list port_connection          { $$ = $2; }
   | port_connection                         { $$ = $1; }
+  ;
+
+inline_node_member
+  : inline_node                             { $$ = $1; }
+  | data_access '.' inline_node             {
+                                                $$ = $3;
+                                                $$->setThis($1);
+                                            }
   ;
 
 inline_node
@@ -436,7 +452,7 @@ constant
 
 atomic_value
   : label_value                         { $$ = $1; }
-  | inline_node                         { $$ = static_cast<IrValue *>(TRACK(new IrValueNodeRef($1))); }
+  | inline_node_member                  { $$ = static_cast<IrValue *>(TRACK(new IrValueNodeRef($1))); }
   | constant                            { $$ = $1; }
   ;
 

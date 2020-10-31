@@ -26,7 +26,7 @@ piranha::IrNode::IrNode() {
 
 piranha::IrNode::IrNode(
     const IrTokenInfo_string &type, const IrTokenInfo_string &name, 
-    IrAttributeList *attributes, const IrTokenInfo_string &library) 
+    IrAttributeList *attributes, const IrTokenInfo_string &library)
 {
     m_type = type;
     m_name = name;
@@ -45,7 +45,7 @@ piranha::IrNode::IrNode(
 
 piranha::IrNode::IrNode(
     const IrTokenInfo_string &type, IrAttributeList *attributes, 
-    const IrTokenInfo_string &library) 
+    const IrTokenInfo_string &library)
 {
     m_type = type;
     m_name = IrTokenInfo_string("");
@@ -61,7 +61,10 @@ piranha::IrNode::IrNode(
     m_build = true;
 }
 
-piranha::IrNode::IrNode(const IrTokenInfo_string &name, IrNodeDefinition *nodeDefinition, IrAttributeList *attributes) {
+piranha::IrNode::IrNode(
+    const IrTokenInfo_string &name, IrNodeDefinition *nodeDefinition, 
+    IrAttributeList *attributes) 
+{
     m_name = name;
     m_attributes = attributes;
 
@@ -94,10 +97,10 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(const std::string &name, int
     if (count != nullptr) *count = 0;
 
     IrAttribute *firstResult = nullptr;
-    int attributeCount = m_attributes->getAttributeCount();
+    const int attributeCount = m_attributes->getAttributeCount();
     for (int i = 0; i < attributeCount; i++) {
         IrAttribute *attribute = m_attributes->getAttribute(i);
-        bool definitionMatches = attribute->getAttributeDefinition() != nullptr
+        const bool definitionMatches = attribute->getAttributeDefinition() != nullptr
             ? attribute->getAttributeDefinition()->getName() == name
             : false;
         if (definitionMatches || attribute->getName() == name) {
@@ -123,12 +126,12 @@ piranha::IrAttribute *piranha::IrNode::getAttribute(
     if (count != nullptr) *count = 0;
 
     IrAttribute *firstResult = nullptr;
-    int attributeCount = m_attributes->getAttributeCount();
+    const int attributeCount = m_attributes->getAttributeCount();
     for (int i = 0; i < attributeCount; i++) {
         IrAttribute *attribute = m_attributes->getAttribute(i);
         if (attribute->getAttributeDefinition() == definition) {
             if (firstResult == nullptr) firstResult = attribute;
-            if (count != nullptr) (*count)++;
+            if (count != nullptr) ++(*count);
         }
     }
 
@@ -335,7 +338,7 @@ void piranha::IrNode::resolveAttributeDefinitions() {
 
     IrCompilationUnit *unit = getParentUnit();
 
-    int attributeCount = m_attributes->getAttributeCount();
+    const int attributeCount = m_attributes->getAttributeCount();
     for (int i = 0; i < attributeCount; i++) {
         IrAttribute *attribute = m_attributes->getAttribute(i);
 
@@ -343,7 +346,7 @@ void piranha::IrNode::resolveAttributeDefinitions() {
         
         if (attribute->isPositional()) {
             const IrAttributeDefinitionList *list = m_definition->getAttributeDefinitionList();
-            int position = attribute->getPosition();
+            const int position = attribute->getPosition();
 
             // Check position is not out of bounds
             if (position >= list->getInputCount()) {
@@ -366,7 +369,7 @@ void piranha::IrNode::resolveAttributeDefinitions() {
                 ErrorCode::PortNotFound)));
             attribute->setAttributeDefinition(nullptr);
         }
-        else if (definition->getDirection() == IrAttributeDefinition::OUTPUT) {
+        else if (definition->getDirection() == IrAttributeDefinition::Direction::Output) {
             // Can't assign an output port
             unit->addCompilationError(TRACK(new CompilationError(*attribute->getSummaryToken(), 
                 ErrorCode::UsingOutputPortAsInput)));
@@ -401,7 +404,6 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
             node->setIrStructure(this);
             node->setIrContext(context);
 
-            program->addNode(node);
             parentContainer->addNode(node);
 
             return node;
@@ -458,7 +460,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     }
 
     // Generate attribute skeletons
-    int attributeCount = allAttributes->getDefinitionCount();
+    const int attributeCount = allAttributes->getDefinitionCount();
     for (int i = 0; i < attributeCount; i++) {
         IrAttributeDefinition *attributeDefinition = allAttributes->getDefinition(i);
 
@@ -470,19 +472,15 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 
         if (m_definition->isBuiltin()) {
             NodeOutput *output = newNode->getOutput(skeleton.name);
-            skeleton.nodeOutput = (output != nullptr)
-                ? output->getInterface()
-                : nullptr;
             skeleton.output = output;
         }
         else {
-            skeleton.nodeOutput = nullptr;
             skeleton.output = nullptr;
 
             if (attributeDefinition->isInput()) {
                 generatedContainer->addContainerInput(attributeDefinition->getName(),
-                    attributeDefinition->getDirection() == IrAttributeDefinition::MODIFY,
-                    attributeDefinition->getDirection() == IrAttributeDefinition::TOGGLE);
+                    attributeDefinition->getDirection() == IrAttributeDefinition::Direction::Modify,
+                    attributeDefinition->getDirection() == IrAttributeDefinition::Direction::Toggle);
             }
             else {
                 if (attributeDefinition->isAlias()) {
@@ -588,7 +586,7 @@ piranha::NodeOutput *piranha::IrNode::_generateNodeOutput(
 {
     if (isInterface()) {
         if (!isBuildEnabled()) return nullptr;
-        return getScopeParent()->generateNodeOutput(context, program, container);
+        else return getScopeParent()->generateNodeOutput(context, program, container);
     }
     else {
         return IrParserStructure::_generateNodeOutput(context, program, container);
@@ -662,6 +660,11 @@ void piranha::IrNode::checkReferences(IrContextTree *inputContext) {
     if (m_definition != nullptr) {
         m_definition->checkReferences(thisContext);
     }
+}
+
+void piranha::IrNode::setThis(IrValue *memberThis) {
+    m_attributes->addAttribute(
+        TRACK(new IrAttribute(IrTokenInfo_string("this"), memberThis)));
 }
 
 void piranha::IrNode::free() {

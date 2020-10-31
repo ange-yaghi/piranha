@@ -15,7 +15,7 @@
 #include "../include/memory_tracker.h"
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(
-    const IrTokenInfo_string &directionToken, const IrTokenInfo_string &name, DIRECTION dir) 
+    const IrTokenInfo_string &directionToken, const IrTokenInfo_string &name, Direction dir) 
 {
     m_name = name;
     registerToken(&m_name);
@@ -31,7 +31,7 @@ piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &
     m_name = name;
     registerToken(&m_name);
 
-    m_direction = OUTPUT;
+    m_direction = Direction::Output;
     setVisibility(IrVisibility::Public);
 }
 
@@ -98,7 +98,7 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
             return nullptr;
         }
     }
-    else if (m_defaultValue == nullptr && m_direction == OUTPUT) {
+    else if (m_defaultValue == nullptr && m_direction == Direction::Output) {
         if (m_typeDefinition == nullptr) {
             IR_FAIL();
             return nullptr;
@@ -141,7 +141,7 @@ const piranha::ChannelType *piranha::IrAttributeDefinition::getImmediateChannelT
 void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
     if (m_typeDefinition == nullptr) return;
 
-    if (m_direction == OUTPUT && m_defaultValue == nullptr) {
+    if (m_direction == Direction::Output && m_defaultValue == nullptr) {
         IrNode *expansion = TRACK(new IrNode);
         expansion->setLogicalParent(this);
         expansion->setScopeParent(this);
@@ -300,11 +300,14 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
         IrCompilationUnit *unit = getParentUnit();
 
         // Errors for inputs/outputs differ only in code but are fundamentally the same
-        if (m_direction == INPUT || m_direction == MODIFY || m_direction == TOGGLE) {
+        if (m_direction == Direction::Input || 
+            m_direction == Direction::Modify || 
+            m_direction == Direction::Output)
+        {
             unit->addCompilationError(TRACK(new CompilationError(*m_defaultValue->getSummaryToken(),
                 ErrorCode::IncompatibleDefaultType, context)));
         }
-        else if (m_direction == OUTPUT) {
+        else if (m_direction == Direction::Output) {
             unit->addCompilationError(TRACK(new CompilationError(*m_defaultValue->getSummaryToken(),
                 ErrorCode::IncompatibleOutputDefinitionType, context)));
         }
@@ -312,7 +315,14 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 }
 
 bool piranha::IrAttributeDefinition::isInput() const {
-    return m_direction == INPUT || m_direction == MODIFY || m_direction == TOGGLE;
+    return 
+        m_direction == Direction::Input || 
+        m_direction == Direction::Modify || 
+        m_direction == Direction::Toggle;
+}
+
+bool piranha::IrAttributeDefinition::isThis() const {
+    return getName() == "this";
 }
 
 void piranha::IrAttributeDefinition::_resolveDefinitions() {
@@ -357,7 +367,11 @@ void piranha::IrAttributeDefinition::_resolveDefinitions() {
 piranha::Node *piranha::IrAttributeDefinition::_generateNode(
     IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
-    if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
+    if (
+        m_typeDefinition != nullptr && 
+        m_direction == Direction::Output && 
+        m_defaultValue == nullptr) 
+    {
         // This must be an interface
         return context
             ->getContext()
@@ -372,7 +386,11 @@ piranha::Node *piranha::IrAttributeDefinition::_generateNode(
 piranha::NodeOutput *piranha::IrAttributeDefinition::_generateNodeOutput(
     IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
-    if (m_typeDefinition != nullptr && m_direction == OUTPUT && m_defaultValue == nullptr) {
+    if (
+        m_typeDefinition != nullptr && 
+        m_direction == Direction::Output && 
+        m_defaultValue == nullptr)
+    {
         // This must be an interface
         return context
             ->getContext()

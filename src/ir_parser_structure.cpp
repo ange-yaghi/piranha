@@ -557,6 +557,9 @@ piranha::Node *piranha::IrParserStructure::generateNode(
                     program->addNode(node);
                 }
             }
+            else if (program->getCachedInstance(node) == nullptr) {
+                program->addNode(node);
+            }
 
             return node->generateAliasNode();
         }

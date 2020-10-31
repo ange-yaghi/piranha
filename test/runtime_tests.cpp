@@ -27,18 +27,20 @@ TEST(RuntimeTests, RuntimeErrorTest) {
 
     Compiler *compiler;
     const ErrorList *errList;
-    IrCompilationUnit *unit = compileFile("runtime-tests/runtime_error_test.mr", &errList, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("runtime-tests/runtime_error_test.mr", &errList, &rules, &compiler);
 
     NodeProgram program;
     unit->build(&program);
 
-    bool result = program.execute();
+    const bool result = program.execute();
     EXPECT_FALSE(result);
 
     EXPECT_EQ(program.getRuntimeError(), "Planned error");
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }

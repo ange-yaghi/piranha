@@ -34,7 +34,6 @@ piranha::Node::Node() {
     m_runtimeError = false;
 
     m_optimizedNode = nullptr;
-    m_unoptimizedNode = nullptr;
 
     m_dead = false;
 }
@@ -213,7 +212,10 @@ piranha::Node *piranha::Node::generateNodeOutput(const std::string &name) {
         return getNodeOutput(name);
     }
 
-    if (skeleton->nodeOutput != nullptr) return skeleton->nodeOutput;
+    Node *nodeOutput = (skeleton->output != nullptr)
+        ? skeleton->output->getInterface()
+        : nullptr;
+    if (nodeOutput != nullptr) return nodeOutput;
 
     NodeContainer *container = skeleton->container;
 
@@ -227,8 +229,6 @@ piranha::Node *piranha::Node::generateNodeOutput(const std::string &name) {
             container->addNode(newNode);
         }
     }
-
-    skeleton->nodeOutput = newNode;
 
     return newNode;
 }
@@ -308,21 +308,21 @@ piranha::Node *piranha::Node::getPrimaryNode() const {
 }
 
 piranha::NodeOutput *piranha::Node::getOutput(const std::string &name) const {
-    int outputCount = getOutputCount();
+    const int outputCount = getOutputCount();
     for (int i = 0; i < outputCount; i++) {
         if (name == m_outputs[i].name) {
             return m_outputs[i].output;
         }
     }
 
-    int outputReferenceCount = getOutputReferenceCount();
+    const int outputReferenceCount = getOutputReferenceCount();
     for (int i = 0; i < outputReferenceCount; i++) {
         if (name == m_outputReferences[i].name) {
             return *m_outputReferences[i].output;
         }
     }
 
-    int inputCount = getInputCount();
+    const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
         if (name == m_inputs[i].name) {
             return *m_inputs[i].input;
@@ -333,7 +333,7 @@ piranha::NodeOutput *piranha::Node::getOutput(const std::string &name) const {
 }
 
 piranha::Node *piranha::Node::getNodeOutput(const std::string &name) const {
-    int outputReferenceCount = getOutputReferenceCount();
+    const int outputReferenceCount = getOutputReferenceCount();
     for (int i = 0; i < outputReferenceCount; i++) {
         if (name == m_outputReferences[i].name) {
             if (m_outputReferences[i].nodeOutput == nullptr) {
@@ -343,14 +343,14 @@ piranha::Node *piranha::Node::getNodeOutput(const std::string &name) const {
         }
     }
 
-    int outputCount = getOutputCount();
+    const int outputCount = getOutputCount();
     for (int i = 0; i < outputCount; i++) {
         if (name == m_outputs[i].name) {
             return m_outputs[i].output->getInterface();
         }
     }
 
-    int inputCount = getInputCount();
+    const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
         if (name == m_inputs[i].name) {
             if (m_inputs[i].nodeInput == nullptr) {
@@ -373,14 +373,14 @@ bool piranha::Node::getOutputPortInfo(const std::string &name, PortInfo *info) c
     }
 
     bool found = false;
-    int referenceOutputCount = getOutputReferenceCount();
+    const int referenceOutputCount = getOutputReferenceCount();
     for (int i = 0; i < referenceOutputCount; i++) {
         if (name == m_outputReferences[i].name) {
             found = true;
         }
     }
 
-    int outputCount = getOutputCount();
+    const int outputCount = getOutputCount();
     for (int i = 0; i < outputCount; i++) {
         if (name == m_outputs[i].name) {
             found = true;
@@ -391,21 +391,21 @@ bool piranha::Node::getOutputPortInfo(const std::string &name, PortInfo *info) c
 }
 
 std::string piranha::Node::getOutputName(NodeOutput *output) const {
-    int outputCount = getOutputCount();
+    const int outputCount = getOutputCount();
     for (int i = 0; i < outputCount; i++) {
         if (m_outputs[i].output == output) {
             return m_outputs[i].name;
         }
     }
 
-    int outputReferenceCount = getOutputReferenceCount();
+    const int outputReferenceCount = getOutputReferenceCount();
     for (int i = 0; i < outputReferenceCount; i++) {
         if (*m_outputReferences[i].output == output) {
             return m_outputReferences[i].name;
         }
     }
 
-    int inputCount = getInputCount();
+    const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
         if (*m_inputs[i].input == output) {
             return m_inputs[i].name;
@@ -428,7 +428,7 @@ void piranha::Node::addPortMapping(const std::string &localName, const std::stri
 }
 
 std::string piranha::Node::getLocalPort(const std::string &mappedName) const {
-    int portMappingCount = getPortMappingCount();
+    const int portMappingCount = getPortMappingCount();
     for (int i = 0; i < portMappingCount; i++) {
         if (m_portMapping[i].originalPort == mappedName) {
             return m_portMapping[i].localPort;
@@ -439,7 +439,7 @@ std::string piranha::Node::getLocalPort(const std::string &mappedName) const {
 }
 
 std::string piranha::Node::getMappedPort(const std::string &localName) const {
-    int portMappingCount = getPortMappingCount();
+    const int portMappingCount = getPortMappingCount();
     for (int i = 0; i < portMappingCount; i++) {
         if (m_portMapping[i].localPort == localName) {
             return m_portMapping[i].localPort;
@@ -454,7 +454,7 @@ void piranha::Node::addFlag(const std::string &name, int data) {
 }
 
 bool piranha::Node::hasFlag(const std::string &name) const {
-    int flagCount = getFlagCount();
+    const int flagCount = getFlagCount();
     for (int i = 0; i < flagCount; i++) {
         if (m_flags[i].name == name) {
             return true;
@@ -465,7 +465,7 @@ bool piranha::Node::hasFlag(const std::string &name) const {
 }
 
 bool piranha::Node::getFlag(const std::string &name, int *dataTarget) const {
-    int flagCount = getFlagCount();
+    const int flagCount = getFlagCount();
     for (int i = 0; i < flagCount; i++) {
         if (m_flags[i].name == name) {
             if (dataTarget != nullptr) {
@@ -488,8 +488,8 @@ void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly, int in
     std::string prefixIndent = "";
     for (int i = 0; i < indent; i++) prefixIndent += "  ";
 
-    std::string builtinName = getBuiltinName();
-    std::string name = getName();
+    const std::string builtinName = getBuiltinName();
+    const std::string name = getName();
     
     if (name.empty()) {
         file << prefixIndent + builtinName << "\n";
@@ -498,33 +498,33 @@ void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly, int in
         file << prefixIndent + builtinName << ": " << name << "\n";
     }
 
-    int nodeInputs = getInputCount();
+    const int nodeInputs = getInputCount();
     if (nodeInputs > 0) {
         file << prefixIndent + "  in  { ";
         for (int i = 0; i < nodeInputs; i++) {
             const Node::NodeInputPort *port = getInput(i);
-            int index = assembly->getOutputLabel(*port->input);
+            const int index = assembly->getOutputLabel(*port->input);
 
             file << port->name << ": &" << index << "; ";
         }
         file << "}\n";
     }
 
-    int nodeOutputs = getOutputCount();
-    int nodeOutputReferences = getOutputReferenceCount();
+    const int nodeOutputs = getOutputCount();
+    const int nodeOutputReferences = getOutputReferenceCount();
 
     if (nodeOutputReferences > 0 || nodeOutputs > 0) {
         file << prefixIndent + "  out { ";
         for (int i = 0; i < nodeOutputs; i++) {
             const Node::NodeOutputPort *port = getOutput(i);
-            int index = assembly->getOutputLabel(port->output);
+            const int index = assembly->getOutputLabel(port->output);
 
             file << port->name << ": @" << index << "; ";
         }
 
         for (int i = 0; i < nodeOutputReferences; i++) {
             const Node::NodeOutputPortReference *port = getOutputReference(i);
-            int index = assembly->getOutputLabel(*port->output);
+            const int index = assembly->getOutputLabel(*port->output);
 
             file << port->name << ": &" << index << "; ";
         }
@@ -535,7 +535,11 @@ void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly, int in
 piranha::Node *piranha::Node::optimize() {
     if (isOptimized()) return m_optimizedNode;
 
-    int inputCount = getInputCount();
+    // This should never really do anything but if the user tries something strange
+    // like evaluating the node before optimizing, the optimization step wouldn't break
+    m_evaluated = false;
+
+    const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
         pNodeInput input = *m_inputs[i].input;
         Node *nodeInput = m_inputs[i].nodeInput;
@@ -549,10 +553,6 @@ piranha::Node *piranha::Node::optimize() {
             else {
                 std::string name = node->getOutputName(*m_inputs[i].input);
                 *m_inputs[i].input = optimizedNode->getOutput(optimizedNode->getLocalPort(name));
-
-                if (*m_inputs[i].input == nullptr) {
-                    int a = 0;
-                }
             }
         }
 
@@ -578,7 +578,6 @@ piranha::Node *piranha::Node::optimize() {
     }
 
     m_optimizedNode = optimizedNode;
-    optimizedNode->m_unoptimizedNode = this;
 
     return optimizedNode;
 }
@@ -622,7 +621,7 @@ bool piranha::Node::checkEnabled() {
     m_enabled = true;
 
     // Check all dependencies
-    int inputCount = getInputCount();
+    const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
         // Check the dependency node first
         Node *dependency = m_inputs[i].dependency;
@@ -685,7 +684,7 @@ void piranha::Node::registerOutputReference(NodeOutput *const *output, const std
 }
 
 piranha::Node::PortSkeleton *piranha::Node::getSkeleton(const std::string &name) {
-    int count = (int)m_portSkeletons.size();
+    const int count = (int)m_portSkeletons.size();
     for (int i = 0; i < count; i++) {
         if (m_portSkeletons[i].name == name) {
             return &m_portSkeletons[i];

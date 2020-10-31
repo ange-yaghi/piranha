@@ -37,6 +37,8 @@ void piranha::IrContextTree::free() {
 
         delete FTRACK(tree);
     }
+
+    m_children.clear();
 }
 
 piranha::IrContextTree *piranha::IrContextTree::_getMain() {
@@ -54,7 +56,7 @@ piranha::IrContextTree *piranha::IrContextTree::_getMain() {
 }
 
 piranha::IrContextTree *piranha::IrContextTree::newChild(IrNode *context, bool mainContext) {
-    IrContextTree *newChild = new IrContextTree(context, mainContext);
+    IrContextTree *newChild = TRACK(new IrContextTree(context, mainContext));
     newChild->setParent(this);
 
     m_children.push_back(newChild);

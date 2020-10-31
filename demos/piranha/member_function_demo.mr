@@ -1,0 +1,12 @@
+private import "standard-library/standard_library.mr" as std
+
+node some_class {
+    output out: "Hello world!";
+}
+
+node some_member {
+    input this [some_class];
+    output out: this.out;
+}
+
+std::console_out(some_class().some_member().out)

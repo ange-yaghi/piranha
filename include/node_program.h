@@ -35,6 +35,7 @@ namespace piranha {
 
         void addNode(Node *node);
         Node *getCachedInstance(IrParserStructure *ir, IrContextTree *context);
+        Node *getCachedInstance(Node *node);
 
         void addContainer(IrContextTree *context, NodeContainer *container);
         NodeContainer *getContainer(IrContextTree *context);

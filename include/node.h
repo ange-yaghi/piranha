@@ -42,7 +42,6 @@ namespace piranha {
 
         struct PortSkeleton {
             NodeOutput *output;
-            Node *nodeOutput;
             std::string name;
 
             IrAttributeDefinition *definition;
@@ -152,9 +151,8 @@ namespace piranha {
         virtual bool isLiteral() const { return false; }
 
         Node *optimize();
-        Node *getUnoptimizedForm() const { return m_unoptimizedNode; }
         bool isOptimized() const { return m_optimizedNode != nullptr; }
-        bool isOptimizedOut() const { return m_optimizedNode != this; }
+        bool isOptimizedOut() const { return isOptimized() && m_optimizedNode != this; }
 
         bool isDead() const { return m_dead; }
         void markDead() { m_dead = true; }
@@ -235,7 +233,6 @@ namespace piranha {
         virtual Node *_optimize();
 
         Node *m_optimizedNode;
-        Node *m_unoptimizedNode;
 
         bool m_dead;
 

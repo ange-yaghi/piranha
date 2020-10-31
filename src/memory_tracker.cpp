@@ -16,7 +16,7 @@ piranha::MemoryTracker *piranha::MemoryTracker::get() {
 }
 
 void piranha::MemoryTracker::reset() {
-    m_allocations.clear();
+    m_allocations = std::vector<Allocation>();
 }
 
 bool piranha::MemoryTracker::find(void *address, Allocation *target) {
@@ -48,6 +48,10 @@ void piranha::MemoryTracker::recordAllocation(
     allocation.freed = false;
     allocation.line = line;
     allocation.index = (int)m_allocations.size();
+
+    if (allocation.index == 1547) {
+        int a = 0;
+    }
 
     m_allocations.push_back(allocation);
 }

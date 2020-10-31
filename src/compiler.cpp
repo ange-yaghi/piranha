@@ -33,7 +33,7 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
         newUnit->setRules(m_rules);
         m_units.push_back(newUnit);
 
-        int importCount = newUnit->getImportStatementCount();
+        const int importCount = newUnit->getImportStatementCount();
         for (int i = 0; i < importCount; i++) {
             IrImportStatement *s = newUnit->getImportStatement(i);
             std::string libName = s->getLibName();

@@ -13,6 +13,7 @@
 
 piranha::NodeProgram::NodeProgram() {
     m_topLevelContainer.setName("root");
+    m_topLevelContainer.setProgram(this);
 
     m_errorMessage = "";
     m_errorNode = nullptr;
@@ -67,7 +68,7 @@ void piranha::NodeProgram::throwRuntimeError(const std::string &msg, Node *node)
 }
 
 piranha::Node *piranha::NodeProgram::getCachedInstance(IrParserStructure *ir, IrContextTree *context) {
-    int nodeCount = getNodeCount();
+    const int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
         if (m_nodeCache[i]->getIrStructure() == ir) {
             if (m_nodeCache[i]->getContext()->isEqual(context)) {
@@ -79,10 +80,21 @@ piranha::Node *piranha::NodeProgram::getCachedInstance(IrParserStructure *ir, Ir
     return nullptr;
 }
 
+piranha::Node *piranha::NodeProgram::getCachedInstance(Node *node) {
+    const int nodeCount = getNodeCount();
+    for (int i = 0; i < nodeCount; i++) {
+        if (m_nodeCache[i] == node) {
+            return m_nodeCache[i];
+        }
+    }
+
+    return nullptr;
+}
+
 void piranha::NodeProgram::initialize() {
     if (m_initialized) return;
 
-    int nodeCount = m_topLevelContainer.getNodeCount();
+    const int nodeCount = m_topLevelContainer.getNodeCount();
 
     // Initialize all nodes
     for (int i = 0; i < nodeCount; i++) {
@@ -100,11 +112,20 @@ void piranha::NodeProgram::optimize() {
     graph.generateNodeGraph(this);
     graph.markDeadNodes();
 
+    int nodeCount = getNodeCount();
+    for (int i = 0; i < nodeCount; ++i) {
+        if (m_nodeCache[i]->isOptimizedOut() || m_nodeCache[i]->isDead()) {
+            m_nodeCache.erase(m_nodeCache.begin() + i);
+            --nodeCount;
+            --i;
+        }
+    }
+
     m_topLevelContainer.prune();
 }
 
 bool piranha::NodeProgram::execute() {
-    int nodeCount = m_topLevelContainer.getNodeCount();
+    const int nodeCount = m_topLevelContainer.getNodeCount();
 
     // For backward compatibility
     initialize();
@@ -112,7 +133,7 @@ bool piranha::NodeProgram::execute() {
     // Execute all nodes
     for (int i = 0; i < nodeCount; i++) {
         Node *node = m_topLevelContainer.getNode(i);
-        bool result = node->evaluate();
+        const bool result = node->evaluate();
         if (!result) return false;
     }
 
@@ -127,5 +148,6 @@ void piranha::NodeProgram::free() {
         delete FTRACK(node);
     }
 
+    m_rootContext->free();
     delete FTRACK(m_rootContext);
 }

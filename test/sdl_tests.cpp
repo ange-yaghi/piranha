@@ -338,23 +338,23 @@ TEST(IrTests, IrNodeBuiltinTest) {
 
         EXPECT_EQ(definitions->getDefinition(0)->isAlias(), true);
         EXPECT_EQ(definitions->getDefinition(0)->getDirection(),
-            IrAttributeDefinition::INPUT);
+            IrAttributeDefinition::Direction::Input);
         EXPECT_EQ(definitions->getDefinition(0)->getName(), "A");
         CHECK_IR_POS(definitions->getDefinition(0), 5, 18, 19, 19);
 
         EXPECT_EQ(definitions->getDefinition(1)->isAlias(), false);
         EXPECT_EQ(definitions->getDefinition(1)->getDirection(),
-            IrAttributeDefinition::INPUT);
+            IrAttributeDefinition::Direction::Input);
         EXPECT_EQ(definitions->getDefinition(1)->getName(), "B");
 
         EXPECT_EQ(definitions->getDefinition(2)->isAlias(), true);
         EXPECT_EQ(definitions->getDefinition(2)->getDirection(),
-            IrAttributeDefinition::OUTPUT);
+            IrAttributeDefinition::Direction::Output);
         EXPECT_EQ(definitions->getDefinition(2)->getName(), "A_out");
 
         EXPECT_EQ(definitions->getDefinition(3)->isAlias(), false);
         EXPECT_EQ(definitions->getDefinition(3)->getDirection(),
-            IrAttributeDefinition::OUTPUT);
+            IrAttributeDefinition::Direction::Output);
         EXPECT_EQ(definitions->getDefinition(3)->getName(), "B_out");
 
         parser.free();
@@ -637,7 +637,7 @@ TEST(IrTests, IrReferenceResolutionTest) {
     IrCompilationUnit *unit = compiler.compile(IR_TEST_FILES "reference_resolution.mr");
 
     const ErrorList *errors = compiler.getErrorList();
-    int errorCount = errors->getErrorCount();
+    const int errorCount = errors->getErrorCount();
 
     // Expect no errors
     EXPECT_EQ(errorCount, 0);
@@ -657,6 +657,8 @@ TEST(IrTests, IrReferenceResolutionTest) {
     IrNode *childNode = (IrNode *)node->resolveLocalName("C")->getReference(query);
     EXPECT_EQ(childNode->getType(), "ChildNode");
     EXPECT_EQ(childNode->getName(), "childNode");
+
+    query.inputContext->free();
 
     compiler.free();
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);

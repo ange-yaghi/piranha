@@ -27,12 +27,11 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
 
     const ErrorList *list;
     Compiler *compiler;
-    IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr", &list, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("construction-tests/simple_float.mr", &list, &rules, &compiler);
 
     EXPECT_EQ(list->getErrorCount(), 0);
 
-    TestRules generator;
-    generator.initialize();
     NodeProgram program;
     unit->build(&program);
 
@@ -57,6 +56,7 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -65,10 +65,9 @@ TEST(IrConstructionTests, IrConstructionNestedTest) {
     MemoryTracker::get()->reset();
 
     Compiler *compiler;
-    IrCompilationUnit *unit = compileFile("construction-tests/nested_conversions.mr", nullptr, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("construction-tests/nested_conversions.mr", nullptr, &rules, &compiler);
 
-    TestRules generator;
-    generator.initialize();
     NodeProgram program;
     unit->build(&program);
 
@@ -83,6 +82,8 @@ TEST(IrConstructionTests, IrConstructionNestedTest) {
 
     program.free();
     compiler->free();
+
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }

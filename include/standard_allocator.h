@@ -1,6 +1,8 @@
 #ifndef PIRANHA_STANDARD_ALLOCATOR_H
 #define PIRANHA_STANDARD_ALLOCATOR_H
 
+#include "memory_tracker.h"
+
 #include <assert.h>
 #include <new>
 
@@ -30,21 +32,21 @@ namespace piranha {
 
             if (alignment == 1) {
                 if (n == 1) {
-                    newObject = new t_alloc;
+                    newObject = TRACK(new t_alloc);
                 }
                 else {
-                    newObject = new t_alloc[n];
+                    newObject = TRACK(new t_alloc[n]);
                 }
             }
             else {
                 void *buffer = _aligned_malloc(sizeof(t_alloc) * n, alignment);
                 if (n == 1) {
-                    newObject = new (buffer) t_alloc;
+                    newObject = TRACK(new (buffer) t_alloc);
                 }
                 else {
                     newObject = (t_alloc *)buffer;
                     for (unsigned int i = 0; i < n; i++) {
-                        new ((t_alloc *)buffer + i) t_alloc;
+                        TRACK(new ((t_alloc *)buffer + i) t_alloc);
                     }
                 }
             }
@@ -65,10 +67,10 @@ namespace piranha {
             m_currentUsage -= sizeof(t_alloc) * n;
 
             if (n == 1) {
-                delete memory;
+                delete FTRACK(memory);
             }
             else {
-                delete[] memory;
+                delete[] FTRACK(memory);
             }
         }
 
@@ -88,7 +90,7 @@ namespace piranha {
                 memory[i].~t_alloc();
             }
 
-            _aligned_free((void *)memory);
+            _aligned_free(FTRACK((void *)memory));
         }
 
         unsigned int getMaxUsage() const { return m_maxUsage; }

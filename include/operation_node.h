@@ -64,21 +64,21 @@ namespace piranha {
         virtual Node *_optimize() {
             addFlag(Node::META_ACTIONLESS);
 
-            bool leftConstant = (*m_output.getLeftConnection())
+            const bool leftConstant = (*m_output.getLeftConnection())
                 ->getParentNode()
                 ->hasFlag(Node::META_CONSTANT);
-            bool rightConstant = (*m_output.getRightConnection())
+            const bool rightConstant = (*m_output.getRightConnection())
                 ->getParentNode()
                 ->hasFlag(Node::META_CONSTANT);
 
             if (leftConstant && rightConstant) {
                 addFlag(Node::META_CONSTANT);
 
-                bool result = evaluate();
+                const bool result = evaluate();
                 if (!result) return nullptr;
 
                 DefaultLiteralNode<FundamentalType> *newLiteral = 
-                    new DefaultLiteralNode<FundamentalType>();
+                    TRACK(new DefaultLiteralNode<FundamentalType>());
 
                 FundamentalType computedValue;
                 m_output.fullCompute((void *)&computedValue);

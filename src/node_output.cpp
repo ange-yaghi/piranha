@@ -1,12 +1,14 @@
 #include "../include/node_output.h"
 
 #include "../include/node.h"
+#include "../include/memory_tracker.h"
 
 piranha::NodeOutput::NodeOutput(const ChannelType *singleType) {
     m_singleType = singleType; 
     m_evaluated = false;
     m_checkedEnabled = false;
     m_interface = nullptr;
+    m_parentNode = nullptr;
 
     m_enabled = true;
 }
@@ -29,28 +31,26 @@ piranha::Node *piranha::NodeOutput::getModifyConnection(int index) const {
 
 void piranha::NodeOutput::initialize() {
     registerInputs();
-
-    m_interface = generateInterface();
 }
 
 bool piranha::NodeOutput::evaluate() {
     if (m_evaluated) return true;
     else m_evaluated = true;
 
-    int inputCount = getInputCount();
+    const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
         bool result = (*m_inputs[i])->evaluate();
         if (!result) return false;
     }
 
-    int modifyCount = getModifyConnectionCount();
+    const int modifyCount = getModifyConnectionCount();
     for (int i = 0; i < modifyCount; i++) {
-        bool result = m_modifyConnections[i]->evaluate();
+        const bool result = m_modifyConnections[i]->evaluate();
         if (!result) return false;
     }
 
     if (m_parentNode != nullptr) {
-        bool result = m_parentNode->evaluate();
+        const bool result = m_parentNode->evaluate();
         if (!result) return false;
     }
 
@@ -64,27 +64,35 @@ bool piranha::NodeOutput::checkEnabled() {
 
     m_enabled = true;
 
-    int inputCount = getInputCount();
+    const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
-        bool status = (*m_inputs[i])->checkEnabled();
+        const bool status = (*m_inputs[i])->checkEnabled();
         if (!status) return false;
         if (!(*m_inputs[i])->isEnabled()) m_enabled = false;
     }
 
-    int modifyCount = getModifyConnectionCount();
+    const int modifyCount = getModifyConnectionCount();
     for (int i = 0; i < modifyCount; i++) {
-        bool status = m_modifyConnections[i]->checkEnabled();
+        const bool status = m_modifyConnections[i]->checkEnabled();
         if (!status) return false;
         if (!m_modifyConnections[i]->isEnabled()) m_enabled = false;
     }
 
     if (m_parentNode != nullptr) {
-        bool status = m_parentNode->checkEnabled();
+        const bool status = m_parentNode->checkEnabled();
         if (!status) return false;
         if (!m_parentNode->isEnabled()) m_enabled = false;
     }
 
     return true;
+}
+
+piranha::Node *piranha::NodeOutput::getInterface() {
+    if (m_interface == nullptr) {
+        m_interface = generateInterface();
+    }
+
+    return m_interface;
 }
 
 void piranha::NodeOutput::_evaluate() {

@@ -4,6 +4,7 @@
 #include "../include/key_value_lookup.h"
 #include "../include/assembly.h"
 #include "../include/memory_tracker.h"
+#include "../include/node_program.h"
 
 piranha::NodeContainer::NodeContainer() {
     m_container = nullptr;
@@ -95,13 +96,13 @@ void piranha::NodeContainer::
 }
 
 void piranha::NodeContainer::prune() {
-    int nodeCount = getNodeCount();
+    const int nodeCount = getNodeCount();
     int newNodeCount = 0;
     for (int i = 0; i < nodeCount; i++) {
-        bool optimizedOut = m_nodes[i]->isOptimizedOut() || m_nodes[i]->isDead();
+        const bool optimizedOut = m_nodes[i]->isOptimizedOut() || m_nodes[i]->isDead();
 
         if (optimizedOut) {
-            /* void */
+            delete FTRACK(m_nodes[i]);
         }
         else {
             m_nodes[newNodeCount++] = m_nodes[i];
@@ -110,7 +111,7 @@ void piranha::NodeContainer::prune() {
 
     m_nodes.resize(newNodeCount);
 
-    int childCount = getChildCount();
+    const int childCount = getChildCount();
     for (int i = 0; i < childCount; i++) {
         m_children[i]->prune();
     }
@@ -145,7 +146,14 @@ void piranha::NodeContainer::_destroy() {
 piranha::Node *piranha::NodeContainer::_optimize() {
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
-        m_nodes[i] = m_nodes[i]->optimize();
+        Node *optimizedNode = m_nodes[i]->optimize();
+        if (optimizedNode != m_nodes[i] && optimizedNode != nullptr) {
+            m_program->addNode(optimizedNode);
+            m_nodes.insert(m_nodes.begin() + i, optimizedNode);
+
+            ++nodeCount;
+            ++i;
+        }
     }
 
     return this;

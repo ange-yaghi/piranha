@@ -26,7 +26,8 @@ TEST(IrOperatorTests, IrOperatorSanityCheck) {
     MemoryTracker::get()->reset();
 
     Compiler *compiler;
-    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_sanity_check.mr", nullptr, nullptr, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_sanity_check.mr", nullptr, &rules, &compiler);
     IrNode *node = unit->getNode(0);
 
     IrParserStructure::IrReferenceQuery query;
@@ -38,10 +39,12 @@ TEST(IrOperatorTests, IrOperatorSanityCheck) {
         ->getAliasOutput()
         ->getReference(query)
         ->getImmediateChannelType();
+    query.inputContext->free();
 
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -50,7 +53,8 @@ TEST(IrOperatorTests, IrOperatorTest1) {
     MemoryTracker::get()->reset();
 
     Compiler *compiler;
-    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_1.mr", nullptr, nullptr, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_1.mr", nullptr, &rules, &compiler);
     IrNode *node = unit->getNode(0);
 
     IrParserStructure::IrReferenceQuery query;
@@ -62,10 +66,12 @@ TEST(IrOperatorTests, IrOperatorTest1) {
         ->getAliasOutput()
         ->getReference(query)
         ->getImmediateChannelType();
+    query.inputContext->free();
 
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -74,57 +80,71 @@ TEST(IrOperatorTests, IrOperatorTest2) {
     MemoryTracker::get()->reset();
 
     Compiler *compiler;
-    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_2.mr", nullptr, nullptr, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_2.mr", nullptr, &rules, &compiler);
     IrNode *node = unit->getNode(0);
 
     const IrAttributeDefinitionList *list = node
         ->getDefinition()
         ->getAttributeDefinitionList();
 
+    IrContextTree *parentContext = new IrContextTree(nullptr);;
+
     const piranha::ChannelType *channelType;
     IrParserStructure::IrReferenceQuery query;
-    query.inputContext = new IrContextTree(nullptr);
+    query.inputContext = parentContext;
     query.recordErrors = false;
     channelType = list
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+    parentContext->free();
+
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     channelType = list
         ->getOutputDefinition("test2")
         ->getReference(query)
         ->getImmediateChannelType();
+    parentContext->free();
+
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     channelType = list
         ->getOutputDefinition("test3")
         ->getReference(query)
         ->getImmediateChannelType();
+    parentContext->free();
+
     EXPECT_EQ(channelType, &FundamentalType::FloatType);    
 
     // Test with the alternate context
-    query.inputContext = query.inputContext->newChild(node);
+    query.inputContext = parentContext->newChild(node);
     query.recordErrors = false;
     channelType = list
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     channelType = list
         ->getOutputDefinition("test2")
         ->getReference(query)
         ->getImmediateChannelType();
+
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     channelType = list
         ->getOutputDefinition("test3")
         ->getReference(query)
         ->getImmediateChannelType();
+    parentContext->free();
+
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -133,7 +153,8 @@ TEST(IrOperatorTests, IrOperatorTest3) {
     MemoryTracker::get()->reset();
 
     Compiler *compiler;
-    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_3.mr", nullptr, nullptr, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_3.mr", nullptr, &rules, &compiler);
     IrNode *node1 = unit->getNode(0);
     IrNode *node2 = unit->getNode(1);
     IrNode *node3 = unit->getNode(2);
@@ -154,6 +175,7 @@ TEST(IrOperatorTests, IrOperatorTest3) {
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+    parent->free();
     EXPECT_EQ(channelType, &FundamentalType::IntType);
 
     query.inputContext = parent->newChild(node1);
@@ -162,6 +184,7 @@ TEST(IrOperatorTests, IrOperatorTest3) {
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+    parent->free();
     EXPECT_EQ(channelType, &FundamentalType::IntType);
 
     query.inputContext = parent->newChild(node2);
@@ -170,6 +193,7 @@ TEST(IrOperatorTests, IrOperatorTest3) {
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+    parent->free();
     EXPECT_EQ(channelType, &FundamentalType::IntType);
 
     query.inputContext = parent->newChild(node3);
@@ -178,9 +202,11 @@ TEST(IrOperatorTests, IrOperatorTest3) {
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+    parent->free();
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -189,7 +215,8 @@ TEST(IrOperatorTests, IrOperatorTest4) {
     MemoryTracker::get()->reset();
 
     Compiler *compiler;
-    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_4.mr", nullptr, nullptr, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_4.mr", nullptr, &rules, &compiler);
     IrNode *node1 = unit->getNode(0);
     IrNode *node2 = unit->getNode(1);
     IrNode *node3 = unit->getNode(2);
@@ -209,6 +236,7 @@ TEST(IrOperatorTests, IrOperatorTest4) {
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+    parent->free();
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     query.inputContext = parent->newChild(node2);
@@ -217,6 +245,7 @@ TEST(IrOperatorTests, IrOperatorTest4) {
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+    parent->free();
     EXPECT_EQ(channelType, &FundamentalType::IntType);
 
     query.inputContext = parent->newChild(node3);
@@ -225,9 +254,11 @@ TEST(IrOperatorTests, IrOperatorTest4) {
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+    parent->free();
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -236,7 +267,8 @@ TEST(IrOperatorTests, IrOperatorTest5) {
     MemoryTracker::get()->reset();
 
     Compiler *compiler;
-    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_5.mr", nullptr, nullptr, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_5.mr", nullptr, &rules, &compiler);
     IrNode *node1 = unit->getNode(0);
     IrNode *node2 = unit->getNode(1);
 
@@ -255,9 +287,12 @@ TEST(IrOperatorTests, IrOperatorTest5) {
         ->getOutputDefinition("test1")
         ->getReference(query)
         ->getImmediateChannelType();
+    parent->free();
     EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     compiler->free();
+
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -320,6 +355,7 @@ TEST(IrOperatorTests, IrOperatorTest8) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -329,7 +365,8 @@ TEST(IrOperatorTests, IrOperatorTest9) {
 
     const ErrorList *errList;
     Compiler *compiler;
-    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_9.mr", &errList, nullptr, &compiler);
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileToUnit("operator-tests/operator_test_9.mr", &errList, &rules, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 
@@ -338,6 +375,7 @@ TEST(IrOperatorTests, IrOperatorTest9) {
 
     program.free();
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }

@@ -41,7 +41,7 @@ namespace piranha {
         void setParentNode(Node *parentNode) { m_parentNode = parentNode; }
         Node *getParentNode() const { return m_parentNode; }
 
-        Node *getInterface() const { return m_interface; }
+        Node *getInterface();
 
         void overrideType(const ChannelType *type) { m_singleType = type; }
 

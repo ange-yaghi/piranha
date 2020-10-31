@@ -25,7 +25,7 @@ TEST(IrSyntaxStressTests, IrSyntaxStressTest1) {
 
     const ErrorList *errors;
     Compiler *compiler;
-    compileFile("stress-testing/stress_test_1.mr", &errors, &compiler);
+    compileFile("stress-testing/stress_test_1.mr", &errors, nullptr, &compiler);
 
     EXPECT_EQ(errors->getErrorCount(), 10);
 
@@ -54,7 +54,7 @@ TEST(IrSyntaxStressTests, IrSyntaxNodeArgumentStressTest1) {
     
     const ErrorList *errors;
     Compiler *compiler;
-    compileFile("stress-testing/node_argument_stress_test_1.mr", &errors, &compiler);
+    compileFile("stress-testing/node_argument_stress_test_1.mr", &errors, nullptr, &compiler);
 
     EXPECT_EQ(errors->getErrorCount(), 5);
 
@@ -71,7 +71,7 @@ TEST(IrSyntaxStressTests, IrSyntaxDeepErrorIsolated) {
 
     const ErrorList *errors;
     Compiler *compiler;
-    compileFile("stress-testing/deep_error_isolated.mr", &errors, &compiler);
+    compileFile("stress-testing/deep_error_isolated.mr", &errors, nullptr, &compiler);
 
     EXPECT_EQ(errors->getErrorCount(), 1);
 
@@ -87,7 +87,7 @@ TEST(IrSyntaxStressTests, IrSyntaxDeepError) {
 
     const ErrorList *errors;
     Compiler *compiler;
-    compileFile("stress-testing/deep_error.mr", &errors, &compiler);
+    compileFile("stress-testing/deep_error.mr", &errors, nullptr, &compiler);
 
     EXPECT_EQ(errors->getErrorCount(), 3);
 

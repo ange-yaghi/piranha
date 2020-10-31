@@ -102,7 +102,7 @@ void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
 
         if (type == expectedType && expectedType != nullptr) return; // No conversion necessary
 
-        bool validConversion = m_rules->checkConversion(type, expectedType);
+        const bool validConversion = m_rules->checkConversion(type, expectedType);
         if (validConversion) return;
 
         IrCompilationUnit *unit = getParentUnit();

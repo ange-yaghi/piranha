@@ -1,0 +1,12 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node sub {
+    output c: 5;
+}
+
+node test {
+    input this;
+    output out: this.c;
+}
+
+sub().test(this: sub())

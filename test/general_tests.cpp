@@ -27,7 +27,7 @@ TEST(GeneralTests, GeneralSyntaxTest_01) {
 
     const ErrorList *errList;
     Compiler *compiler;
-    IrCompilationUnit *unit = compileFile("general-tests/general_syntax_test_1.mr", &errList, &compiler);
+    IrCompilationUnit *unit = compileFile("general-tests/general_syntax_test_1.mr", &errList, nullptr, &compiler);
 
     EXPECT_TRUE(findError(errList, ErrorCode::UnresolvedReference, 18));
     EXPECT_EQ(errList->getErrorCount(), 1);
@@ -102,6 +102,7 @@ TEST(GeneralTests, GeneralSyntaxTest_06) {
 
     program.free();
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -121,6 +122,7 @@ TEST(GeneralTests, GeneralSyntaxTest_07) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -164,6 +166,7 @@ TEST(GeneralTests, GeneralSyntaxTest_09) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -180,6 +183,7 @@ TEST(GeneralTests, GeneralSyntaxTest_10) {
     EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 5, nullptr, true));
 
     compiler->free();
+    delete rules;
     
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -199,6 +203,7 @@ TEST(GeneralTests, GeneralSyntaxTest_11) {
     EXPECT_EQ(errList->getErrorCount(), 3);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -218,6 +223,7 @@ TEST(GeneralTests, GeneralSyntaxTest_12) {
     EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleDefaultType, 7, nullptr, false));
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -234,6 +240,7 @@ TEST(GeneralTests, GeneralSyntaxTest_13) {
     EXPECT_TRUE(findError(errList, ErrorCode::UnexpectedToken, 8, nullptr, false));
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -250,6 +257,7 @@ TEST(GeneralTests, GeneralSyntaxTest_14) {
     EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 6, nullptr, false));
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -266,6 +274,7 @@ TEST(GeneralTests, GeneralSyntaxTest_15) {
     EXPECT_TRUE(findError(errList, ErrorCode::UndefinedMember, 10, nullptr, false));
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -282,6 +291,7 @@ TEST(GeneralTests, GeneralSyntaxTest_16) {
     EXPECT_TRUE(findError(errList, ErrorCode::InvalidOperandTypes, 13, nullptr, false));
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -303,6 +313,7 @@ TEST(GeneralTests, GeneralSyntaxTest_17) {
 
     program.free();
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -319,6 +330,7 @@ TEST(GeneralTests, GeneralSyntaxTest_18) {
     EXPECT_TRUE(findError(errList, ErrorCode::UndefinedBuiltinType, 1, nullptr, false));
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -338,6 +350,7 @@ TEST(GeneralTests, GeneralSyntaxTest_19) {
     EXPECT_TRUE(findError(errList, ErrorCode::IncompatibleType, 27, nullptr, false));
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -358,6 +371,7 @@ TEST(GeneralTests, GeneralSyntaxTest_20) {
     EXPECT_EQ(errList->getErrorCount(), 4);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -381,6 +395,7 @@ TEST(GeneralTests, GeneralSyntaxTest_21) {
     EXPECT_EQ(errList->getErrorCount(), 8);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -397,6 +412,7 @@ TEST(GeneralTests, GeneralSyntaxTest_21a) {
     EXPECT_EQ(errList->getErrorCount(), 2);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -416,6 +432,7 @@ TEST(GeneralTests, GeneralSyntaxTest_21b) {
     EXPECT_EQ(errList->getErrorCount(), 3);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -437,6 +454,7 @@ TEST(GeneralTests, GeneralSyntaxTest_22) {
     EXPECT_EQ(errList->getErrorCount(), 5);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -455,6 +473,7 @@ TEST(GeneralTests, GeneralSyntaxTest_23) {
     EXPECT_EQ(errList->getErrorCount(), 5);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -470,6 +489,7 @@ TEST(GeneralTests, GeneralSyntaxTest_24) {
     EXPECT_EQ(errList->getErrorCount(), 0);
 
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -496,6 +516,7 @@ TEST(GeneralTests, GeneralSyntaxTest_25) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -521,6 +542,7 @@ TEST(GeneralTests, GeneralSyntaxTest_26) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -546,6 +568,7 @@ TEST(GeneralTests, GeneralSyntaxTest_27) {
 
     program.free();
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -571,6 +594,7 @@ TEST(GeneralTests, GeneralSyntaxTest_28) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -592,6 +616,7 @@ TEST(GeneralTests, GeneralSyntaxTest_29) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -616,6 +641,7 @@ TEST(GeneralTests, GeneralSyntaxTest_30) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -637,6 +663,7 @@ TEST(GeneralTests, GeneralSyntaxTest_31) {
 
     program.free();
     compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -658,6 +685,7 @@ TEST(GeneralTests, GeneralSyntaxTest_32) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -679,6 +707,7 @@ TEST(GeneralTests, GeneralSyntaxTest_33) {
 
     compiler->free();
     program.free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
@@ -700,6 +729,46 @@ TEST(GeneralTests, GeneralSyntaxTest_34) {
 
     compiler->free();
     program.free();
+    delete rules;
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_35) {
+    MemoryTracker::get()->reset();
+
+    const ErrorList *errList;
+    LanguageRules *rules;
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_35.mr", &errList, &rules, &compiler);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+
+    compiler->free();
+    program.free();
+    delete rules;
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
+}
+
+TEST(GeneralTests, GeneralSyntaxTest_36) {
+    MemoryTracker::get()->reset();
+
+    const ErrorList *errList;
+    LanguageRules *rules;
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_36.mr", &errList, &rules, &compiler);
+
+    EXPECT_TRUE(findError(errList, ErrorCode::InputSpecifiedMultipleTimes, 12));
+    EXPECT_EQ(errList->getErrorCount(), 2);
+
+    compiler->free();
+    delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }

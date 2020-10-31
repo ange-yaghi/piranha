@@ -60,6 +60,8 @@ namespace piranha {
         void setBuild(bool enableBuild) { m_build = enableBuild; }
         bool isBuildEnabled() const { return m_build; }
 
+        void setThis(IrValue *memberThis);
+
         virtual void free();
 
     protected:
