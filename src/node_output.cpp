@@ -33,12 +33,6 @@ void piranha::NodeOutput::initialize() {
     registerInputs();
 }
 
-void piranha::NodeOutput::free() {
-    if (m_interface != nullptr) {
-        freeInterface(m_interface);
-    }
-}
-
 bool piranha::NodeOutput::evaluate() {
     if (m_evaluated) return true;
     else m_evaluated = true;
@@ -93,16 +87,17 @@ bool piranha::NodeOutput::checkEnabled() {
     return true;
 }
 
-piranha::Node *piranha::NodeOutput::getInterface() {
-    if (m_interface == nullptr) {
-        m_interface = generateInterface();
+piranha::Node *piranha::NodeOutput::generateInterface(NodeAllocator *nodeAllocator) {
+    m_interface = newInterface(nodeAllocator);
+    if (m_interface != nullptr) {
+        m_interface->setMemorySpace(Node::MemorySpace::ClientExternal);
     }
 
     return m_interface;
 }
 
-void piranha::NodeOutput::freeInterface(Node *interfaceNode) {
-    delete FTRACK(interfaceNode);
+piranha::Node *piranha::NodeOutput::getInterface() const {
+    return m_interface;
 }
 
 void piranha::NodeOutput::_evaluate() {

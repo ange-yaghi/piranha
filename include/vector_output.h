@@ -15,8 +15,8 @@ namespace piranha {
         ~FundamentalOutput() { /* void */ }
 
     protected:
-        virtual Node *generateInterface() {
-            VectorSplitNode *vectorInterface = TRACK(new VectorSplitNode());
+        virtual Node *newInterface(NodeAllocator *nodeAllocator) {
+            VectorSplitNode *vectorInterface = nodeAllocator->allocate<VectorSplitNode>();
             vectorInterface->initialize();
             vectorInterface->connectInput(this, "__in", nullptr);
 

@@ -144,10 +144,6 @@ void piranha::Node::destroy() {
     m_initialized = false;
     m_evaluated = false;
 
-    for (Node::NodeOutputPort port : m_outputs) {
-        port.output->free();
-    }
-
     _destroy();
 }
 

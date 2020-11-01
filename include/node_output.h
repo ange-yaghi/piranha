@@ -10,6 +10,7 @@ namespace piranha {
 
     struct IntersectionPoint;
     class Node;
+    class NodeAllocator;
 
     class NodeOutput {
     public:
@@ -30,7 +31,6 @@ namespace piranha {
         const ChannelType *getType() const { return m_singleType; }
 
         void initialize();
-        void free();
         bool evaluate();
         bool checkEnabled();
 
@@ -42,15 +42,15 @@ namespace piranha {
         void setParentNode(Node *parentNode) { m_parentNode = parentNode; }
         Node *getParentNode() const { return m_parentNode; }
 
-        Node *getInterface();
+        Node *generateInterface(NodeAllocator *nodeAllocator);
+        Node *getInterface() const;
 
         void overrideType(const ChannelType *type) { m_singleType = type; }
 
         void addDependency(Node *node) { m_dependencyChain.push_back(node); }
 
     protected:
-        virtual Node *generateInterface() { return nullptr; }
-        virtual void freeInterface(Node *interfaceNode);
+        virtual Node *newInterface(NodeAllocator *nodeAllocator) { return nullptr; }
 
     private:
         const ChannelType *m_singleType;

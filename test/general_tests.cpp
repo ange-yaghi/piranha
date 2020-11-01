@@ -120,8 +120,8 @@ TEST(GeneralTests, GeneralSyntaxTest_07) {
     NodeProgram program;
     unit->build(&program);
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -164,8 +164,8 @@ TEST(GeneralTests, GeneralSyntaxTest_09) {
     EXPECT_EQ(v.z, 0.0);
     EXPECT_EQ(v.w, 10.0);
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -639,8 +639,8 @@ TEST(GeneralTests, GeneralSyntaxTest_30) {
     EXPECT_TRUE(program.getTopLevelContainer()->getNode(7)->isEnabled());
     EXPECT_FALSE(program.getTopLevelContainer()->getNode(9)->isEnabled());
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);

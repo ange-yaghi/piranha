@@ -23,7 +23,7 @@ void piranha::NodeGraph::generateNodeGraph(NodeProgram *program) {
 void piranha::NodeGraph::markDeadTree(GraphNode *node) {
     node->node->markDead();
     
-    int inputCount = (int)node->inConnections.size();
+    const int inputCount = (int)node->inConnections.size();
     for (int i = 0; i < inputCount; i++) {
         GraphNode *input = node->inConnections[i];
         input->liveOutputConnections--;
@@ -37,14 +37,14 @@ void piranha::NodeGraph::markDeadTree(GraphNode *node) {
 }
 
 void piranha::NodeGraph::markDeadNodes() {
-    int nodeCount = getNodeCount();
+    const int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
-        int outConnectionCount = (int)m_nodes[i]->outConnections.size();
+        const int outConnectionCount = (int)m_nodes[i]->outConnections.size();
         m_nodes[i]->liveOutputConnections = outConnectionCount;
     }
 
     for (int i = 0; i < nodeCount; i++) {
-        int outConnectionCount = (int)m_nodes[i]->outConnections.size();
+        const int outConnectionCount = (int)m_nodes[i]->outConnections.size();
         if (outConnectionCount == 0 && m_nodes[i]->node->hasFlag(piranha::Node::META_ACTIONLESS)) {
             markDeadTree(m_nodes[i]);
         }
@@ -52,7 +52,7 @@ void piranha::NodeGraph::markDeadNodes() {
 }
 
 piranha::NodeGraph::GraphNode *piranha::NodeGraph::findNode(Node *node) {
-    int nodeCount = getNodeCount();
+    const int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
         if (m_nodes[i]->node == node) return m_nodes[i];
     }
@@ -73,7 +73,7 @@ void piranha::NodeGraph::createNode(Node *node) {
 void piranha::NodeGraph::generateNodes(NodeContainer *container) {
     createNode(container);
 
-    int childCount = container->getChildCount();
+    const int childCount = container->getChildCount();
     for (int i = 0; i < childCount; i++) {
         generateNodes(container->getChild(i));
     }
@@ -86,13 +86,13 @@ void piranha::NodeGraph::generateNodes(NodeContainer *container) {
 }
 
 void piranha::NodeGraph::generateConnections() {
-    int nodeCount = getNodeCount();
+    const int nodeCount = getNodeCount();
 
     for (int i = 0; i < nodeCount; i++) {
         GraphNode *graphNode = m_nodes[i];
         Node *node = graphNode->node;
 
-        int inputCount = node->getInputCount();
+        const int inputCount = node->getInputCount();
         for (int j = 0; j < inputCount; j++) {
             pNodeInput input = *node->getInput(j)->input;
             Node *nodeInput = node->getInput(j)->nodeInput;
@@ -122,7 +122,7 @@ void piranha::NodeGraph::generateConnections() {
 }
 
 bool piranha::NodeGraph::GraphNode::hasOutConnection(GraphNode *node) {
-    int outConCount = (int)outConnections.size();
+    const int outConCount = (int)outConnections.size();
     for (int i = 0; i < outConCount; i++) {
         if (outConnections[i] == node) return true;
     }
@@ -131,7 +131,7 @@ bool piranha::NodeGraph::GraphNode::hasOutConnection(GraphNode *node) {
 }
 
 bool piranha::NodeGraph::GraphNode::hasInConnection(GraphNode *node) {
-    int inConCount = (int)inConnections.size();
+    const int inConCount = (int)inConnections.size();
     for (int i = 0; i < inConCount; i++) {
         if (inConnections[i] == node) return true;
     }

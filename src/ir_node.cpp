@@ -397,7 +397,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     if (cachedInstance != nullptr) return cachedInstance;
 
     if (isInterface()) {
-        Node *node = getScopeParent()->_generateNode(context, program, _container);
+        Node *node = getScopeParent()->generateNode(context, program, _container);
 
         if (node != nullptr) {
             node->setBuiltinName(m_definition->getBuiltinName());
@@ -568,7 +568,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
                     newContainer->addNode(node);
                 }
             }
-
+            
             if (output != nullptr) {
                 Node *nodeInterface = output->getInterface();
                 if (nodeInterface != nullptr) {

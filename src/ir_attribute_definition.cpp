@@ -373,11 +373,17 @@ piranha::Node *piranha::IrAttributeDefinition::_generateNode(
         m_defaultValue == nullptr) 
     {
         // This must be an interface
-        return context
+        Node *interfaceNode = context
             ->getContext()
             ->_generateNode(context->getParent(), program, container)
             ->getOutput(getName())
-            ->getInterface();
+            ->generateInterface(program->getNodeAllocator());
+        
+        if (interfaceNode != nullptr) {
+            program->addNode(interfaceNode);
+        }
+
+        return interfaceNode;
     }
 
     return IrParserStructure::_generateNode(context, program, container);
