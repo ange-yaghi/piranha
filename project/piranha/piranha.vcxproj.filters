@@ -369,6 +369,9 @@
     <ClInclude Include="..\..\include\build_settings.h">
       <Filter>Header Files\configuration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\node_allocator.h">
+      <Filter>Header Files\memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">
@@ -477,6 +480,9 @@
       <Filter>Source Files\optimization</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\memory_tracker.cpp">
+      <Filter>Source Files\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\node_allocator.cpp">
       <Filter>Source Files\memory</Filter>
     </ClCompile>
   </ItemGroup>

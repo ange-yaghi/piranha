@@ -56,8 +56,8 @@ TEST(OptimizationTests, OptimizationSanityCheck) {
     
     EXPECT_EQ(v_opt, v_ref);
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -95,8 +95,8 @@ TEST(OptimizationTests, OptimizationTest2) {
     optimizedForm->getPrimaryOutput()->fullCompute((void *)&v_opt);
     EXPECT_EQ(v_opt, v_ref);
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -120,8 +120,8 @@ TEST(OptimizationTests, OptimizationTest3) {
 
     program.execute();
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -145,8 +145,8 @@ TEST(OptimizationTests, OptimizationTest4) {
 
     program.execute();
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -170,8 +170,33 @@ TEST(OptimizationTests, OptimizationTest5) {
 
     program.execute();
 
-    compiler->free();
     program.free();
+    compiler->free();
+    delete rules;
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
+}
+
+TEST(OptimizationTests, OptimizationTest6) {
+    MemoryTracker::get()->reset();
+
+    Compiler *compiler;
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_6.mr", &errList, &rules, &compiler);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.initialize();
+    program.optimize();
+
+    program.execute();
+
+    program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);

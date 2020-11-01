@@ -11,11 +11,14 @@
 #include <assert.h>
 
 piranha::LanguageRules::LanguageRules() {
-    /* void */
+    m_nodeAllocator = &m_defaultNodeAllocator;
 }
 
 piranha::LanguageRules::~LanguageRules() {
-    /* void */
+    const int ruleCount = m_builtinRules.getEntryCount();
+    for (int i = 0; i < ruleCount; ++i) {
+        m_builtinRules.get(i)->destroy(m_nodeAllocator);
+    }
 }
 
 void piranha::LanguageRules::initialize() {
@@ -93,7 +96,7 @@ piranha::Node *piranha::LanguageRules::
     BuiltinRule *rule = m_builtinRules.lookup(typeName);
     if (rule == nullptr) return nullptr;
 
-    Node *newNode = rule->buildNode();
+    Node *newNode = rule->buildNode(getNodeAllocator());
     newNode->setBuiltinName(typeName);
 
     return newNode;

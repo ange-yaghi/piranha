@@ -49,16 +49,17 @@ void piranha::MemoryTracker::recordAllocation(
     allocation.line = line;
     allocation.index = (int)m_allocations.size();
 
-    if (allocation.index == 1547) {
-        int a = 0;
-    }
-
     m_allocations.push_back(allocation);
 }
 
 void piranha::MemoryTracker::recordFree(void *address) {
     for (Allocation &allocation : m_allocations) {
         if (allocation.address == address) {
+            if (allocation.freed) {
+                // Double freed
+                int breakHere = 0;
+            }
+
             allocation.freed = true;
         }
     }

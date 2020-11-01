@@ -4,13 +4,14 @@
 #include "node_container.h"
 #include "pkey_value_lookup.h"
 #include "ir_compilation_unit.h"
+#include "language_rules.h"
 
 #include <vector>
 
 namespace piranha {
 
     class Node;
-    class LanguageRules;
+    class NodeAllocator;
     class IrParserStructure;
     class IrContextTree;
 
@@ -48,6 +49,8 @@ namespace piranha {
 
         void setRootContext(IrContextTree *context) { m_rootContext = context; }
         IrContextTree *getRootContext() const { return m_rootContext; }
+
+        NodeAllocator *getNodeAllocator() { return m_rootUnit->getRules()->getNodeAllocator(); }
 
     protected:
         bool m_initialized;

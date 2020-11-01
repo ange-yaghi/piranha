@@ -139,6 +139,8 @@ namespace piranha {
 
         const Node *getReferenceNode(const std::string &builtinType) const;
 
+        NodeAllocator *getNodeAllocator() const { return m_nodeAllocator; }
+
     protected:
         virtual void registerBuiltinNodeTypes() = 0;
 
@@ -153,6 +155,7 @@ namespace piranha {
             BuiltinRule *newRule =
                 m_builtinRules.newValue<SpecializedRule<BuiltinTypeInfo, NodeType, Node>>(builtinName);
             newRule->setValue({ nodeType });
+            newRule->generateReference(getNodeAllocator());
         }
 
         void registerLiteralType(LiteralType literalType, const std::string &builtinType);
@@ -160,6 +163,8 @@ namespace piranha {
         void registerConversion(const NodeTypeConversion &conversion, const std::string &builtinType);
         void registerOperator(const OperatorMapping &op, const std::string &builtinType);
         void registerUnaryOperator(const UnaryOperatorMapping &op, const std::string &builtinType);
+
+        void setNodeAllocator(NodeAllocator *nodeAllocator) { m_nodeAllocator = nodeAllocator; }
 
     public:
         template <typename BaseType>
@@ -171,6 +176,9 @@ namespace piranha {
         KeyValueLookup<OperatorMapping, std::string> m_operatorRules;
         KeyValueLookup<UnaryOperatorMapping, std::string> m_unaryOperatorRules;
         KeyValueLookup<LiteralType, std::string> m_literalRules;
+
+        NodeAllocator m_defaultNodeAllocator;
+        NodeAllocator *m_nodeAllocator;
     };
 
 } /* namespace piranha */

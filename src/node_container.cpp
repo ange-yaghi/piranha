@@ -98,11 +98,20 @@ void piranha::NodeContainer::
 void piranha::NodeContainer::prune() {
     const int nodeCount = getNodeCount();
     int newNodeCount = 0;
-    for (int i = 0; i < nodeCount; i++) {
+    for (int i = 0; i < nodeCount; ++i) {
         const bool optimizedOut = m_nodes[i]->isOptimizedOut() || m_nodes[i]->isDead();
 
         if (optimizedOut) {
-            delete FTRACK(m_nodes[i]);
+            m_nodes[i]->destroy();
+
+            if (m_nodes[i]->getMemorySpace() == Node::MemorySpace::PiranhaInternal) {
+                if (m_nodes[i]->getIrStructure() != nullptr) {
+                    delete FTRACK(m_nodes[i]);
+                }
+            }
+            else if (m_nodes[i]->getMemorySpace() == Node::MemorySpace::ClientExternal) {
+                m_program->getNodeAllocator()->free(m_nodes[i]);
+            }
         }
         else {
             m_nodes[newNodeCount++] = m_nodes[i];
@@ -118,16 +127,16 @@ void piranha::NodeContainer::prune() {
 }
 
 void piranha::NodeContainer::_initialize() {
-    int nodeCount = getNodeCount();
+    const int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
         m_nodes[i]->initialize();
     }
 }
 
 void piranha::NodeContainer::_evaluate() {
-    int nodeCount = getNodeCount();
+    const int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
-        bool result = m_nodes[i]->evaluate();
+        const bool result = m_nodes[i]->evaluate();
         if (!result) {
             m_runtimeError = true;
             return;
@@ -143,13 +152,13 @@ void piranha::NodeContainer::_destroy() {
     }
 }
 
-piranha::Node *piranha::NodeContainer::_optimize() {
+piranha::Node *piranha::NodeContainer::_optimize(NodeAllocator *nodeAllocator) {
     int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
-        Node *optimizedNode = m_nodes[i]->optimize();
+        Node *optimizedNode = m_nodes[i]->optimize(nodeAllocator);
         if (optimizedNode != m_nodes[i] && optimizedNode != nullptr) {
-            m_program->addNode(optimizedNode);
             m_nodes.insert(m_nodes.begin() + i, optimizedNode);
+            m_program->addNode(optimizedNode);
 
             ++nodeCount;
             ++i;

@@ -17,7 +17,7 @@ namespace piranha {
         virtual ~NodeOutput();
 
         virtual void fullCompute(void *target) const { /* void */ }
-        virtual void registerInputs() {}
+        virtual void registerInputs() { /* void */ }
 
         int getInputCount() const { return (int)m_inputs.size(); }
         NodeOutput **getInputConnection(int index) { return m_inputs[index]; }
@@ -30,6 +30,7 @@ namespace piranha {
         const ChannelType *getType() const { return m_singleType; }
 
         void initialize();
+        void free();
         bool evaluate();
         bool checkEnabled();
 
@@ -49,6 +50,7 @@ namespace piranha {
 
     protected:
         virtual Node *generateInterface() { return nullptr; }
+        virtual void freeInterface(Node *interfaceNode);
 
     private:
         const ChannelType *m_singleType;

@@ -49,11 +49,11 @@ namespace piranha {
             return m_lookupTable[index].value;
         }
 
-        template <typename T>
+        template <typename T_Value>
         ValueType *newValue(const KeyType &key) {
             KeyValuePair kvp;
             kvp.key = key;
-            kvp.value = TRACK(new T());
+            kvp.value = TRACK(new T_Value());
 
             m_lookupTable.push_back(kvp);
 

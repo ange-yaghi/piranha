@@ -60,7 +60,7 @@ void piranha::IrParserStructure::IrReferenceChain::
 int piranha::IrParserStructure::IrReferenceChain::
     searchLink(IrParserStructure *structure, IrContextTree *context) 
 {
-    int links = (int)list.size();
+    const int links = (int)list.size();
     for (int i = 0; i < links; i++) {
         const Link &link = list[i];
         if (link.structure == structure && link.context->isEqual(context)) {
@@ -75,6 +75,7 @@ piranha::IrParserStructure::IrParserStructure() {
     m_scopeParent = nullptr;
     m_logicalParent = nullptr;
     m_checkReferences = true;
+    m_parentUnit = nullptr;
 
     m_definitionsResolved = false;
     m_expanded = false;
@@ -94,7 +95,7 @@ piranha::IrParserStructure::~IrParserStructure() {
 
 void piranha::IrParserStructure::setRules(const LanguageRules *rules) {
     // Set component rules
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->setRules(rules);
     }
@@ -189,7 +190,7 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
 
     if (immediateReference != nullptr) {
         // Check for an infinite loop
-        int infiniteLoop = chain->searchLink(immediateReference, immediateInfo.newContext);
+        const int infiniteLoop = chain->searchLink(immediateReference, immediateInfo.newContext);
         if (infiniteLoop >= 0) {
             IR_FAIL();
             IR_INFO_OUT(infiniteLoop, infiniteLoop);
@@ -255,7 +256,7 @@ void piranha::IrParserStructure::resolveDefinitions() {
     else m_definitionsResolved = true;
 
     // Resolve components
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->resolveDefinitions();
     }
@@ -269,7 +270,7 @@ void piranha::IrParserStructure::checkCircularDefinitions() {
 
 void piranha::IrParserStructure::checkCircularDefinitions(IrContextTree *context, IrNodeDefinition *root) {
     // Check components
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         if (m_components[i]->getCheckReferences()) {
             m_components[i]->checkCircularDefinitions(context, root);
@@ -284,7 +285,7 @@ void piranha::IrParserStructure::expand() {
     else m_expanded = true;
 
     // Check components
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->expand();
     }
@@ -297,7 +298,7 @@ void piranha::IrParserStructure::expand(IrContextTree *context) {
     else *m_expansions.newValue(context) = nullptr;
 
     // Expand components
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         if (m_components[i]->getCheckReferences()) {
             m_components[i]->expand(context);
@@ -333,7 +334,7 @@ void piranha::IrParserStructure::expandChain(IrContextTree *context, IrReference
 
 void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {
     // Check components
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->checkReferences(inputContext);
     }
@@ -353,7 +354,7 @@ void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {
 }
 
 void piranha::IrParserStructure::checkTypes(IrContextTree *inputContext) {
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->checkTypes(inputContext);
     }
@@ -366,7 +367,7 @@ void piranha::IrParserStructure::checkInstantiation() {
     m_instantiationChecked = true;
 
     // Check components
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->checkInstantiation();
     }
@@ -379,7 +380,7 @@ void piranha::IrParserStructure::checkTypes() {
     m_typesChecked = true;
 
     // Check components
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->checkTypes();
     }
@@ -392,7 +393,7 @@ void piranha::IrParserStructure::validate() {
     m_validated = true;
 
     // Validate components
-    int componentCount = getComponentCount();
+    const int componentCount = getComponentCount();
     for (int i = 0; i < componentCount; i++) {
         m_components[i]->validate();
     }
@@ -491,7 +492,7 @@ piranha::IrCompilationUnit *piranha::IrParserStructure::getParentUnit() const {
 }
 
 bool piranha::IrParserStructure::isInfiniteLoop(IrContextTree *context) {
-    int infiniteLoops = (int)m_infiniteLoops.size();
+    const int infiniteLoops = (int)m_infiniteLoops.size();
     for (int i = 0; i < infiniteLoops; i++) {
         if (m_infiniteLoops[i]->isEqual(context)) {
             return true;
@@ -520,7 +521,7 @@ void piranha::IrParserStructure::free() {
         delete FTRACK(tree);
     }
     
-    int expansionCount = m_expansions.getEntryCount();
+    const int expansionCount = m_expansions.getEntryCount();
     for (int i = 0; i < expansionCount; ++i) {
         IrNode *expansion = *m_expansions.get(i);
 
@@ -552,15 +553,6 @@ piranha::Node *piranha::IrParserStructure::generateNode(
     else {
         node = _generateNode(context, program, container);
         if (node != nullptr) {
-            if (node->getIrStructure() != nullptr) {
-                if (program->getCachedInstance(node->getIrStructure(), node->getContext()) == nullptr) {
-                    program->addNode(node);
-                }
-            }
-            else if (program->getCachedInstance(node) == nullptr) {
-                program->addNode(node);
-            }
-
             return node->generateAliasNode();
         }
         else return nullptr;

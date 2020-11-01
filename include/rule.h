@@ -22,10 +22,11 @@ namespace piranha {
         }
 
         virtual ~Rule() {
-            delete FTRACK(m_reference);
+            /* void */
         }
 
-        virtual NodeBase *buildNode() const = 0;
+        virtual NodeBase *buildNode(NodeAllocator *nodeAllocator) const = 0;
+        void destroy(NodeAllocator *nodeAllocator) { nodeAllocator->free(m_reference); }
 
         void setValue(const ValueType &value) { m_value = value; }
         const ValueType &getValue() const { return m_value; }
@@ -38,6 +39,13 @@ namespace piranha {
             return m_reference;
         }
 
+        void generateReference(NodeAllocator *nodeAllocator) {
+            NodeBase *reference = buildNode(nodeAllocator);
+            reference->initialize();
+
+            Rule<ValueType, NodeBase>::setReference(reference);
+        }
+
     protected:
         ValueType m_value;
         NodeBase *m_reference;
@@ -47,25 +55,19 @@ namespace piranha {
     class SpecializedRule : public Rule<ValueType, NodeBase> {
     public:
         SpecializedRule(const ValueType &value) : Rule<ValueType, NodeBase>(value) {
-            NodeType *reference = TRACK(new NodeType());
-            reference->initialize();
-
-            Rule<ValueType, NodeBase>::setReference(reference);
+            /* void */
         }
 
         SpecializedRule() : Rule<ValueType, NodeBase>() {
-            NodeType *reference = TRACK(new NodeType());
-            reference->initialize();
-
-            Rule<ValueType, NodeBase>::setReference(reference);
+            /* void */
         }
 
         virtual ~SpecializedRule() {
             /* void */
         }
 
-        virtual NodeBase *buildNode() const {
-            return TRACK(new NodeType());
+        virtual NodeBase *buildNode(NodeAllocator *nodeAllocator) const {
+            return nodeAllocator->allocate<NodeType>();
         }
     };
 

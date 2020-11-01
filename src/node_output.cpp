@@ -33,6 +33,12 @@ void piranha::NodeOutput::initialize() {
     registerInputs();
 }
 
+void piranha::NodeOutput::free() {
+    if (m_interface != nullptr) {
+        freeInterface(m_interface);
+    }
+}
+
 bool piranha::NodeOutput::evaluate() {
     if (m_evaluated) return true;
     else m_evaluated = true;
@@ -93,6 +99,10 @@ piranha::Node *piranha::NodeOutput::getInterface() {
     }
 
     return m_interface;
+}
+
+void piranha::NodeOutput::freeInterface(Node *interfaceNode) {
+    delete FTRACK(interfaceNode);
 }
 
 void piranha::NodeOutput::_evaluate() {

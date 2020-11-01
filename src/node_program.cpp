@@ -106,7 +106,7 @@ void piranha::NodeProgram::initialize() {
 }
 
 void piranha::NodeProgram::optimize() {
-    m_topLevelContainer.optimize();
+    m_topLevelContainer.optimize(getNodeAllocator());
 
     NodeGraph graph;
     graph.generateNodeGraph(this);
@@ -145,7 +145,13 @@ void piranha::NodeProgram::free() {
 
     for (Node *node : m_nodeCache) {
         node->destroy();
-        delete FTRACK(node);
+
+        if (node->getMemorySpace() == Node::MemorySpace::PiranhaInternal) {
+            delete FTRACK(node);
+        }
+        else if (node->getMemorySpace() == Node::MemorySpace::ClientExternal) {
+            getNodeAllocator()->free(node);
+        }
     }
 
     m_rootContext->free();

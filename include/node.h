@@ -3,6 +3,7 @@
 
 #include "channel_type.h"
 #include "node_output.h"
+#include "node_allocator.h"
 
 #include <string>
 #include <vector>
@@ -63,6 +64,12 @@ namespace piranha {
         struct MetaFlag {
             std::string name;
             int data;
+        };
+
+        enum class MemorySpace {
+            Unknown,
+            PiranhaInternal,
+            ClientExternal
         };
 
     public:
@@ -150,12 +157,16 @@ namespace piranha {
 
         virtual bool isLiteral() const { return false; }
 
-        Node *optimize();
+        Node *optimize(NodeAllocator *allocator);
+
         bool isOptimized() const { return m_optimizedNode != nullptr; }
-        bool isOptimizedOut() const { return isOptimized() && m_optimizedNode != this; }
+        bool isOptimizedOut() const;
 
         bool isDead() const { return m_dead; }
         void markDead() { m_dead = true; }
+
+        MemorySpace getMemorySpace() const { return m_memorySpace; }
+        void setMemorySpace(MemorySpace space) { m_memorySpace = space; }
 
         void mapOptimizedPort(Node *optimizedNode, const std::string &localName, const std::string &mappedName) const;
         void addPortMapping(const std::string &localName, const std::string &mappedName);
@@ -230,13 +241,15 @@ namespace piranha {
 
     protected:
         // Automatic optimization
-        virtual Node *_optimize();
+        virtual Node *_optimize(NodeAllocator *allocator);
 
         Node *m_optimizedNode;
 
         bool m_dead;
 
         std::vector<PortMapping> m_portMapping;
+
+        MemorySpace m_memorySpace;
 
     protected:
         // Metadata flags

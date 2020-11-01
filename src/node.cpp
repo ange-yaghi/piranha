@@ -36,6 +36,7 @@ piranha::Node::Node() {
     m_optimizedNode = nullptr;
 
     m_dead = false;
+    m_memorySpace = MemorySpace::PiranhaInternal;
 }
 
 piranha::Node::~Node() {
@@ -94,7 +95,7 @@ void piranha::Node::initialize() {
 bool piranha::Node::evaluate() {
     if (isEvaluated()) return true;
 
-    bool status = checkEnabled();
+    const bool status = checkEnabled();
     if (!status) return false;
     if (!isEnabled()) return true;
 
@@ -102,17 +103,17 @@ bool piranha::Node::evaluate() {
     m_evaluated = true;
 
     // First evaluate all dependencies
-    int inputCount = getInputCount();
+    const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
         pNodeInput *node = m_inputs[i].input;
         if (node != nullptr && *node != nullptr) {
             // Evaluate the dependency first if it exists
             if (m_inputs[i].dependency != nullptr) {
-                bool result = m_inputs[i].dependency->evaluate();
+                const bool result = m_inputs[i].dependency->evaluate();
                 if (!result) return false;
             }
 
-            bool result = (*node)->evaluate();
+            const bool result = (*node)->evaluate();
             if (!result) return false;
         }
     }
@@ -121,17 +122,17 @@ bool piranha::Node::evaluate() {
     _evaluate();
     if (m_runtimeError) return false;
 
-    int outputReferenceCount = getOutputReferenceCount();
+    const int outputReferenceCount = getOutputReferenceCount();
     for (int i = 0; i < outputReferenceCount; i++) {
         NodeOutput *output = *m_outputReferences[i].output;
         if (output != nullptr) {
-            bool result = output->evaluate();
+            const bool result = output->evaluate();
             if (!result) return false;
         }
 
         Node *nodeOutput = m_outputReferences[i].nodeOutput;
         if (nodeOutput != nullptr) {
-            bool result = nodeOutput->evaluate();
+            const bool result = nodeOutput->evaluate();
             if (!result) return false;
         }
     }
@@ -142,6 +143,10 @@ bool piranha::Node::evaluate() {
 void piranha::Node::destroy() {
     m_initialized = false;
     m_evaluated = false;
+
+    for (Node::NodeOutputPort port : m_outputs) {
+        port.output->free();
+    }
 
     _destroy();
 }
@@ -412,7 +417,7 @@ std::string piranha::Node::getOutputName(NodeOutput *output) const {
         }
     }
 
-    return nullptr;
+    return "";
 }
 
 void piranha::Node::mapOptimizedPort(
@@ -532,7 +537,7 @@ void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly, int in
     }
 }
 
-piranha::Node *piranha::Node::optimize() {
+piranha::Node *piranha::Node::optimize(NodeAllocator *allocator) {
     if (isOptimized()) return m_optimizedNode;
 
     // This should never really do anything but if the user tries something strange
@@ -546,7 +551,7 @@ piranha::Node *piranha::Node::optimize() {
 
         if (input != nullptr) {
             Node *node = (*m_inputs[i].input)->getParentNode();
-            Node *optimizedNode = node->optimize();
+            Node *optimizedNode = node->optimize(allocator);
 
             if (optimizedNode == nullptr) return nullptr; // There was an error
             else if (optimizedNode == node) { /* No optimizations found */ }
@@ -557,7 +562,7 @@ piranha::Node *piranha::Node::optimize() {
         }
 
         if (nodeInput != nullptr) {
-            Node *optimizedNode = nodeInput->optimize();
+            Node *optimizedNode = nodeInput->optimize(allocator);
 
             if (optimizedNode == nullptr) return nullptr;
             else if (optimizedNode == nodeInput) { /* No optimizations found */ } 
@@ -567,19 +572,27 @@ piranha::Node *piranha::Node::optimize() {
         }
     }
 
-    Node *optimizedNode = _optimize();
+    Node *optimizedNode = _optimize(allocator);
     if (optimizedNode == nullptr) return nullptr;
     else if (optimizedNode != this) {
+        optimizedNode->setMemorySpace(MemorySpace::ClientExternal);
+
         // Recursively optimize
         optimizedNode->initialize();
 
-        optimizedNode = optimizedNode->optimize();
+        optimizedNode = optimizedNode->optimize(allocator);
         if (optimizedNode == nullptr) return nullptr;
     }
 
     m_optimizedNode = optimizedNode;
 
     return optimizedNode;
+}
+
+bool piranha::Node::isOptimizedOut() const {
+    if (!isOptimized()) return false;
+    else if (m_optimizedNode == this) return false;
+    else return true;
 }
 
 void piranha::Node::_initialize() {
@@ -627,7 +640,7 @@ bool piranha::Node::checkEnabled() {
         Node *dependency = m_inputs[i].dependency;
         bool isDependencyDisabled = false;
         if (dependency != nullptr) {
-            bool status = dependency->checkEnabled();
+            const bool status = dependency->checkEnabled();
             if (!status) return false;
             if (!dependency->isEnabled()) {
                 isDependencyDisabled = true;
@@ -638,7 +651,7 @@ bool piranha::Node::checkEnabled() {
         if (!isDependencyDisabled) {
             pNodeInput *node = m_inputs[i].input;
             if (node != nullptr && *node != nullptr) {
-                bool status = (*node)->checkEnabled();
+                const bool status = (*node)->checkEnabled();
                 if (!status) return false;
                 if (!(*node)->isEnabled()) m_enabled = false;
             }
@@ -649,7 +662,7 @@ bool piranha::Node::checkEnabled() {
     if (m_enableInput != nullptr) {
         bool isDependencyDisabled = false;
         if (m_enableInputDependency != nullptr) {
-            bool status = m_enableInputDependency->checkEnabled();
+            const bool status = m_enableInputDependency->checkEnabled();
             if (!status) return false;
             if (!m_enableInputDependency->isEnabled()) {
                 m_enabled = false;
@@ -661,7 +674,7 @@ bool piranha::Node::checkEnabled() {
             pNodeInput node = *m_enableInput;
 
             native_bool enable;
-            bool result = node->evaluate();
+            const bool result = node->evaluate();
             if (!result) return false;
             node->fullCompute((void *)&enable);
 
@@ -671,7 +684,7 @@ bool piranha::Node::checkEnabled() {
 
     // Check parent
     if (m_container != nullptr) {
-        bool status = m_container->checkEnabled();
+        const bool status = m_container->checkEnabled();
         if (!status) return false;
         if (!m_container->isEnabled()) m_enabled = false;
     }
@@ -694,7 +707,7 @@ piranha::Node::PortSkeleton *piranha::Node::getSkeleton(const std::string &name)
     return nullptr;
 }
 
-piranha::Node *piranha::Node::_optimize() {
+piranha::Node *piranha::Node::_optimize(NodeAllocator *allocator) {
     return this;
 }
 

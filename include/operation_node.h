@@ -61,7 +61,7 @@ namespace piranha {
         OperationNodeType<FundamentalType> m_output;
 
     protected:
-        virtual Node *_optimize() {
+        virtual Node *_optimize(NodeAllocator *nodeAllocator) {
             addFlag(Node::META_ACTIONLESS);
 
             const bool leftConstant = (*m_output.getLeftConnection())
@@ -77,8 +77,8 @@ namespace piranha {
                 const bool result = evaluate();
                 if (!result) return nullptr;
 
-                DefaultLiteralNode<FundamentalType> *newLiteral = 
-                    TRACK(new DefaultLiteralNode<FundamentalType>());
+                DefaultLiteralNode<FundamentalType> *newLiteral =
+                    nodeAllocator->allocate<DefaultLiteralNode<FundamentalType>>();
 
                 FundamentalType computedValue;
                 m_output.fullCompute((void *)&computedValue);

@@ -1,0 +1,14 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node container {
+    input s;
+    output out: s.d;
+}
+
+node calculation {
+    output d: vector_add(vector(1, 2, 3, 4), vector(5, 6, 7, 8));
+}
+
+container(
+    calculation()
+)
