@@ -14,9 +14,9 @@ namespace piranha {
             std::string filename;
             int line;
             int index;
-            void *address;
 
-            bool freed;
+            void *address = nullptr;
+            bool freed = false;
         };
 
     protected:

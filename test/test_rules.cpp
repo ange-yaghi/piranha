@@ -105,10 +105,10 @@ void TestRules::registerBuiltinNodeTypes() {
     registerBuiltinType<piranha::ConsoleInputNode>("__piranha__console_in");
 
     // Literals
-    registerLiteralType(piranha::LITERAL_STRING, "__piranha__literal_string");
-    registerLiteralType(piranha::LITERAL_INT, "__piranha__literal_int");
-    registerLiteralType(piranha::LITERAL_FLOAT, "__piranha__literal_float");
-    registerLiteralType(piranha::LITERAL_BOOL, "__piranha__literal_bool");
+    registerLiteralType(piranha::LiteralType::String, "__piranha__literal_string");
+    registerLiteralType(piranha::LiteralType::Integer, "__piranha__literal_int");
+    registerLiteralType(piranha::LiteralType::Float, "__piranha__literal_float");
+    registerLiteralType(piranha::LiteralType::Boolean, "__piranha__literal_bool");
 
     // Conversions
     registerConversion(

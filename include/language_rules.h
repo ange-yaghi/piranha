@@ -126,10 +126,10 @@ namespace piranha {
 
         template <typename NativeType>
         std::string getLiteralBuiltinName() const { return ""; }
-        template<> std::string getLiteralBuiltinName<piranha::native_bool>() const { return *m_literalRules.lookup(LITERAL_BOOL); }
-        template<> std::string getLiteralBuiltinName<piranha::native_string>() const  { return *m_literalRules.lookup(LITERAL_STRING); }
-        template<> std::string getLiteralBuiltinName<piranha::native_int>() const  { return *m_literalRules.lookup(LITERAL_INT); }
-        template<> std::string getLiteralBuiltinName<piranha::native_float>() const { return *m_literalRules.lookup(LITERAL_FLOAT); }
+        template<> std::string getLiteralBuiltinName<piranha::native_bool>() const { return *m_literalRules.lookup(LiteralType::Boolean); }
+        template<> std::string getLiteralBuiltinName<piranha::native_string>() const  { return *m_literalRules.lookup(LiteralType::String); }
+        template<> std::string getLiteralBuiltinName<piranha::native_int>() const  { return *m_literalRules.lookup(LiteralType::Integer); }
+        template<> std::string getLiteralBuiltinName<piranha::native_float>() const { return *m_literalRules.lookup(LiteralType::Float); }
 
         bool checkConversion(const ChannelType *input, const ChannelType *output) const;
         Node *generateConversion(const ChannelType *input, const ChannelType *output);

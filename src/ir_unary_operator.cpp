@@ -12,7 +12,7 @@
 #include "../include/ir_value_constant.h"
 #include "../include/memory_tracker.h"
 
-piranha::IrUnaryOperator::IrUnaryOperator(Operator op, IrValue *operand) : IrValue(IrValue::UNARY_OPERATION) {
+piranha::IrUnaryOperator::IrUnaryOperator(Operator op, IrValue *operand) : IrValue(IrValue::ValueType::UnaryOperation) {
     m_operand = operand;
     m_operator = op;
 
@@ -61,11 +61,11 @@ void piranha::IrUnaryOperator::_expand(IrContextTree *context) {
         ? reference->getImmediateChannelType()
         : info.fixedType->getChannelType();
 
-    std::string builtinType =
+    const std::string builtinType =
         m_rules->resolveUnaryOperatorBuiltinType(m_operator, type);
 
     if (builtinType.empty()) {
-        bool touchedMainContext = (info.touchedMainContext && !info.isFixedType());
+        const bool touchedMainContext = (info.touchedMainContext && !info.isFixedType());
 
         if (touchedMainContext || emptyContext) {
             getParentUnit()->addCompilationError(

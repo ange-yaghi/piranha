@@ -160,9 +160,6 @@
     <Filter Include="Source Files\optimization">
       <UniqueIdentifier>{3813da9e-a5ca-404c-9c78-ea3d44b60f5e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\syntax\reference">
-      <UniqueIdentifier>{6e8d407c-e612-4d90-b24c-623aea7016ce}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\node_output.h">
@@ -362,9 +359,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\memory_tracker.h">
       <Filter>Header Files\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\ir_reference.h">
-      <Filter>Header Files\syntax\reference</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\build_settings.h">
       <Filter>Header Files\configuration</Filter>

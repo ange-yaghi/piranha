@@ -44,7 +44,7 @@ void piranha::IrContextTree::free() {
 piranha::IrContextTree *piranha::IrContextTree::_getMain() {
     if (isMainContext()) return this;
 
-    int childCount = getChildCount();
+    const int childCount = getChildCount();
     for (int i = 0; i < childCount; i++) {
         IrContextTree *mainRoot;
         mainRoot = m_children[i]->_getMain();

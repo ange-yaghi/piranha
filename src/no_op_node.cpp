@@ -1,7 +1,7 @@
 #include "../include/no_op_node.h"
 
 piranha::NoOpNode::NoOpNode() {
-    /* void */
+    m_input = nullptr;
 }
 
 piranha::NoOpNode::~NoOpNode() {

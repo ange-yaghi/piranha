@@ -16,7 +16,7 @@ void piranha::ErrorList::addCompilationError(CompilationError *err) {
 }
 
 void piranha::ErrorList::free() {
-    int errorCount = getErrorCount();
+    const int errorCount = getErrorCount();
 
     for (int i = 0; i < errorCount; i++) {
         delete FTRACK(m_compilationErrors[i]);

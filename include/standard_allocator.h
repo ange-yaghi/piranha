@@ -2,13 +2,12 @@
 #define PIRANHA_STANDARD_ALLOCATOR_H
 
 #include "memory_tracker.h"
+#include "build_settings.h"
 
 #include <assert.h>
 #include <new>
 
 #include <iostream>
-
-#define STD_ALLOC_ENABLE_LEDGER (true)
 
 namespace piranha {
 
@@ -21,7 +20,7 @@ namespace piranha {
 
         template <typename t_alloc>
         t_alloc *allocate(unsigned int n = 1, unsigned int alignment = 1) {
-#ifdef STD_ALLOC_ENABLE_LEDGER
+#if STD_ALLOC_ENABLE_LEDGER
             m_allocationLedger++;
 #endif /* STD_ALLOC_ENABLE_LEDGER */
 
@@ -58,7 +57,7 @@ namespace piranha {
         void free(t_alloc *memory, int n = 1) {
             if (memory == nullptr) return;
 
-#ifdef STD_ALLOC_ENABLE_LEDGER
+#if STD_ALLOC_ENABLE_LEDGER
             m_allocationLedger--;
             assert(m_allocationLedger >= 0);
 #endif /* STD_ALLOC_ENABLE_LEDGER */
@@ -78,7 +77,7 @@ namespace piranha {
         void aligned_free(t_alloc *memory, int n = 1) {
             if (memory == nullptr) return;
 
-#ifdef STD_ALLOC_ENABLE_LEDGER
+#if STD_ALLOC_ENABLE_LEDGER
             m_allocationLedger--;
             assert(m_allocationLedger >= 0);
 #endif /* STD_ALLOC_ENABLE_LEDGER */

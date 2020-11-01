@@ -4,7 +4,8 @@
 #include "../include/ir_parser_structure.h"
 
 piranha::CompilationError::CompilationError(const IrTokenInfo &location, 
-            const ErrorCode_struct &code, IrContextTree *instantiation) {
+            const ErrorCode_struct &code, IrContextTree *instantiation) 
+{
     m_errorLocation = location;
     m_code = code;
     m_instantiation = instantiation;

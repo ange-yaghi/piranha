@@ -56,7 +56,7 @@ TEST(IrTests, IrSingleAttribute) {
         EXPECT_EQ(node->getType(), "FileImage");
 
         EXPECT_EQ(attribute->getName(), "test");
-        EXPECT_EQ(attribute->getValue()->getType(), IrValue::CONSTANT_LABEL);
+        EXPECT_EQ(attribute->getValue()->getType(), IrValue::ValueType::ConstantLabel);
         EXPECT_EQ(((IrValueLabel *)attribute->getValue())->getValue(), "test");
         EXPECT_EQ(attributes->getAttributeCount(), 1);
 
@@ -83,11 +83,11 @@ TEST(IrTests, IrTwoAttributes) {
         EXPECT_EQ(node->getType(), "FileImage");
 
         EXPECT_EQ(attribute0->getName(), "test1");
-        EXPECT_EQ(attribute0->getValue()->getType(), IrValue::CONSTANT_LABEL);
+        EXPECT_EQ(attribute0->getValue()->getType(), IrValue::ValueType::ConstantLabel);
         EXPECT_EQ(((IrValueLabel *)attribute0->getValue())->getValue(), "test");
 
         EXPECT_EQ(attribute1->getName(), "test2");
-        EXPECT_EQ(attribute1->getValue()->getType(), IrValue::CONSTANT_LABEL);
+        EXPECT_EQ(attribute1->getValue()->getType(), IrValue::ValueType::ConstantLabel);
         EXPECT_EQ(((IrValueLabel *)attribute1->getValue())->getValue(), "test");
 
         EXPECT_EQ(attributes->getAttributeCount(), 2);
@@ -143,11 +143,11 @@ TEST(IrTests, IrInlineNode) {
         EXPECT_EQ(node->getType(), "FileImage");
 
         EXPECT_EQ(attribute0->getName(), "test1");
-        EXPECT_EQ(attribute0->getValue()->getType(), IrValue::CONSTANT_LABEL);
+        EXPECT_EQ(attribute0->getValue()->getType(), IrValue::ValueType::ConstantLabel);
         EXPECT_EQ(((IrValueLabel *)attribute0->getValue())->getValue(), "test");
 
         EXPECT_EQ(attribute1->getName(), "test2");
-        EXPECT_EQ(attribute1->getValue()->getType(), IrValue::NODE_REF);
+        EXPECT_EQ(attribute1->getValue()->getType(), IrValue::ValueType::NodeReference);
 
         IrNode *inlineNode = ((IrValueNodeRef *)attribute1->getValue())->getValue();
         EXPECT_EQ(inlineNode->getType(), "InlineNode");
@@ -184,11 +184,11 @@ TEST(IrTests, IrSimpleIntTest) {
         EXPECT_EQ(node->getType(), "FileImage");
 
         EXPECT_EQ(attribute0->getName(), "test_dec");
-        EXPECT_EQ(attribute0->getValue()->getType(), IrValue::CONSTANT_INT);
+        EXPECT_EQ(attribute0->getValue()->getType(), IrValue::ValueType::ConstantInt);
         EXPECT_EQ(((IrValueInt *)attribute0->getValue())->getValue(), 10);
 
         EXPECT_EQ(attribute1->getName(), "test_hex_1");
-        EXPECT_EQ(attribute1->getValue()->getType(), IrValue::CONSTANT_INT);
+        EXPECT_EQ(attribute1->getValue()->getType(), IrValue::ValueType::ConstantInt);
         EXPECT_EQ(((IrValueInt *)attribute1->getValue())->getValue(), 16);
 
         EXPECT_EQ(attributes->getAttributeCount(), 2);
@@ -215,7 +215,7 @@ TEST(IrTests, IrStringSanityCheck) {
         EXPECT_EQ(node->getType(), "FileImage");
 
         EXPECT_EQ(attribute->getName(), "test");
-        EXPECT_EQ(attribute->getValue()->getType(), IrValue::CONSTANT_STRING);
+        EXPECT_EQ(attribute->getValue()->getType(), IrValue::ValueType::ConstantString);
         EXPECT_EQ(((IrValueString *)attribute->getValue())->getValue(), "test");
         EXPECT_EQ(attributes->getAttributeCount(), 1);
 
@@ -241,14 +241,14 @@ TEST(IrTests, IrSingleNodeDataAccess) {
         const IrValue *v0 = attribute0->getValue();
         const IrValue *v1 = attribute1->getValue();
 
-        EXPECT_EQ(v0->getType(), IrValue::BINARY_OPERATION);
-        EXPECT_EQ(v1->getType(), IrValue::BINARY_OPERATION);
+        EXPECT_EQ(v0->getType(), IrValue::ValueType::BinaryOperation);
+        EXPECT_EQ(v1->getType(), IrValue::ValueType::BinaryOperation);
 
-        EXPECT_EQ(((IrBinaryOperator *)v0)->getLeft()->getType(), IrValue::NODE_REF);
-        EXPECT_EQ(((IrBinaryOperator *)v0)->getRight()->getType(), IrValue::CONSTANT_LABEL);
+        EXPECT_EQ(((IrBinaryOperator *)v0)->getLeft()->getType(), IrValue::ValueType::NodeReference);
+        EXPECT_EQ(((IrBinaryOperator *)v0)->getRight()->getType(), IrValue::ValueType::ConstantLabel);
 
-        EXPECT_EQ(((IrBinaryOperator *)v1)->getLeft()->getType(), IrValue::BINARY_OPERATION);
-        EXPECT_EQ(((IrBinaryOperator *)v1)->getRight()->getType(), IrValue::CONSTANT_LABEL);
+        EXPECT_EQ(((IrBinaryOperator *)v1)->getLeft()->getType(), IrValue::ValueType::BinaryOperation);
+        EXPECT_EQ(((IrBinaryOperator *)v1)->getRight()->getType(), IrValue::ValueType::ConstantLabel);
 
         parser.free();
     }
@@ -375,14 +375,14 @@ TEST(IrTests, IrFloatTest) {
         EXPECT_EQ(testAttrib->getName(), "test_float");
 
         IrValue *value = testAttrib->getValue();
-        EXPECT_EQ(value->getType(), IrValue::NODE_REF);
+        EXPECT_EQ(value->getType(), IrValue::ValueType::NodeReference);
 
         IrValueNodeRef *nodeRef = static_cast<IrValueNodeRef *>(value);
         node = nodeRef->getValue();
         IrAttribute *attribute1 = node->getAttributes()->getAttribute(0);
         IrAttribute *attribute2 = node->getAttributes()->getAttribute(1);
-        EXPECT_EQ(attribute1->getValue()->getType(), IrValue::CONSTANT_FLOAT);
-        EXPECT_EQ(attribute2->getValue()->getType(), IrValue::CONSTANT_FLOAT);
+        EXPECT_EQ(attribute1->getValue()->getType(), IrValue::ValueType::ConstantFloat);
+        EXPECT_EQ(attribute2->getValue()->getType(), IrValue::ValueType::ConstantFloat);
 
         IrValueFloat *v1 = (IrValueFloat *)attribute1->getValue();
         IrValueFloat *v2 = (IrValueFloat *)attribute2->getValue();
@@ -415,8 +415,8 @@ TEST(IrTests, IrBoolTest) {
         IrValue *falseValue = falseAttrib->getValue();
         IrValue *trueValue = trueAttrib->getValue();
 
-        EXPECT_EQ(falseValue->getType(), IrValue::CONSTANT_BOOL);
-        EXPECT_EQ(trueValue->getType(), IrValue::CONSTANT_BOOL);
+        EXPECT_EQ(falseValue->getType(), IrValue::ValueType::ConstantBool);
+        EXPECT_EQ(trueValue->getType(), IrValue::ValueType::ConstantBool);
 
         IrValueBool *castFalse = (IrValueBool *)falseValue;
         IrValueBool *castTrue = (IrValueBool *)trueValue;

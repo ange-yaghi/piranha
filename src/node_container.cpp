@@ -23,13 +23,13 @@ void piranha::NodeContainer::addNode(Node *node) {
 }
 
 bool piranha::NodeContainer::findNode(Node *node) const {
-    int nodeCount = getNodeCount();
-    for (int i = 0; i < nodeCount; i++) {
+    const int nodeCount = getNodeCount();
+    for (int i = 0; i < nodeCount; ++i) {
         if (m_nodes[i] == node) return true;
     }
 
-    int childCount = getChildCount();
-    for (int i = 0; i < childCount; i++) {
+    const int childCount = getChildCount();
+    for (int i = 0; i < childCount; ++i) {
         if (m_children[i]->findNode(node)) return true;
     }
 
@@ -40,7 +40,7 @@ bool piranha::NodeContainer::findContainer(Node *node) const {
     if (node == this) return true;
     
     int childCount = getChildCount();
-    for (int i = 0; i < childCount; i++) {
+    for (int i = 0; i < childCount; ++i) {
         if (m_children[i]->findContainer(node)) return true;
     }
 
@@ -80,14 +80,14 @@ void piranha::NodeContainer::
     writeAssembly(std::fstream &file, Assembly *assembly, int indent) const 
 {
     std::string prefixIndent = "";
-    for (int i = 0; i < indent; i++) prefixIndent += "  ";
+    for (int i = 0; i < indent; ++i) prefixIndent += "  ";
 
-    std::string name = getName();
+    const std::string name = getName();
     file << prefixIndent;
     if (name.empty()) file << "{" << std::endl;
     else file << name << " {" << std::endl;
 
-    int nodeCount = getNodeCount();
+    const int nodeCount = getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
         Node *node = getNode(i);
         node->writeAssembly(file, assembly, indent + 1);
@@ -120,21 +120,21 @@ void piranha::NodeContainer::prune() {
     m_nodes.resize(newNodeCount);
 
     const int childCount = getChildCount();
-    for (int i = 0; i < childCount; i++) {
+    for (int i = 0; i < childCount; ++i) {
         m_children[i]->prune();
     }
 }
 
 void piranha::NodeContainer::_initialize() {
     const int nodeCount = getNodeCount();
-    for (int i = 0; i < nodeCount; i++) {
+    for (int i = 0; i < nodeCount; ++i) {
         m_nodes[i]->initialize();
     }
 }
 
 void piranha::NodeContainer::_evaluate() {
     const int nodeCount = getNodeCount();
-    for (int i = 0; i < nodeCount; i++) {
+    for (int i = 0; i < nodeCount; ++i) {
         const bool result = m_nodes[i]->evaluate();
         if (!result) {
             m_runtimeError = true;
@@ -153,7 +153,7 @@ void piranha::NodeContainer::_destroy() {
 
 piranha::Node *piranha::NodeContainer::_optimize(NodeAllocator *nodeAllocator) {
     int nodeCount = getNodeCount();
-    for (int i = 0; i < nodeCount; i++) {
+    for (int i = 0; i < nodeCount; ++i) {
         Node *optimizedNode = m_nodes[i]->optimize(nodeAllocator);
         if (optimizedNode != m_nodes[i] && optimizedNode != nullptr) {
             m_nodes.insert(m_nodes.begin() + i, optimizedNode);

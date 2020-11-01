@@ -1,5 +1,7 @@
 #include "../include/memory_tracker.h"
 
+#include <assert.h>
+
 piranha::MemoryTracker *piranha::MemoryTracker::s_instance = nullptr;
 
 piranha::MemoryTracker::MemoryTracker() {
@@ -55,10 +57,7 @@ void piranha::MemoryTracker::recordAllocation(
 void piranha::MemoryTracker::recordFree(void *address) {
     for (Allocation &allocation : m_allocations) {
         if (allocation.address == address) {
-            if (allocation.freed) {
-                // Double freed
-                int breakHere = 0;
-            }
+            assert(!allocation.freed);
 
             allocation.freed = true;
         }

@@ -127,7 +127,7 @@ int piranha::IrNodeDefinition::countSymbolIncidence(const std::string &name) con
     }
 
     if (m_body != nullptr) {
-        int nodeCount = m_body->getItemCount();
+        const int nodeCount = m_body->getItemCount();
         for (int i = 0; i < nodeCount; i++) {
             IrNode *node = m_body->getItem(i);
             if (node->getName() == name) {
@@ -143,7 +143,7 @@ piranha::IrParserStructure *piranha::IrNodeDefinition::resolveLocalName(
     const std::string &name) const 
 {
     if (m_attributes != nullptr) {
-        int attributeCount = m_attributes->getDefinitionCount();
+        const int attributeCount = m_attributes->getDefinitionCount();
         for (int i = 0; i < attributeCount; i++) {
             IrAttributeDefinition *definition = m_attributes->getDefinition(i);
             if (definition->getName() == name) return definition;
@@ -151,7 +151,7 @@ piranha::IrParserStructure *piranha::IrNodeDefinition::resolveLocalName(
     }
 
     if (m_body != nullptr) {
-        int nodeCount = m_body->getItemCount();
+        const int nodeCount = m_body->getItemCount();
         for (int i = 0; i < nodeCount; i++) {
             IrNode *node = m_body->getItem(i);
             if (node->getName() == name) {
@@ -168,10 +168,10 @@ void piranha::IrNodeDefinition::_validate() {
 
     // Check that no symbol is used more than once
     if (m_attributes != nullptr) {
-        int attributeCount = m_attributes->getDefinitionCount();
+        const int attributeCount = m_attributes->getDefinitionCount();
         for (int i = 0; i < attributeCount; i++) {
             IrAttributeDefinition *definition = m_attributes->getDefinition(i);
-            int incidence = countSymbolIncidence(definition->getName());
+            const int incidence = countSymbolIncidence(definition->getName());
             if (incidence > 1) {
                 unit->addCompilationError(TRACK(new CompilationError(*definition->getNameToken(),
                     ErrorCode::SymbolUsedMultipleTimes)));
@@ -180,10 +180,10 @@ void piranha::IrNodeDefinition::_validate() {
     }
 
     if (m_body != nullptr) {
-        int nodeCount = m_body->getItemCount();
+        const int nodeCount = m_body->getItemCount();
         for (int i = 0; i < nodeCount; i++) {
             IrNode *node = m_body->getItem(i);
-            int incidence = countSymbolIncidence(node->getName());
+            const int incidence = countSymbolIncidence(node->getName());
             if (incidence > 1) {
                 unit->addCompilationError(TRACK(new CompilationError(node->getNameToken(),
                     ErrorCode::SymbolUsedMultipleTimes)));
@@ -193,7 +193,7 @@ void piranha::IrNodeDefinition::_validate() {
 
     // Check that every output has a definition of the right type
     if (m_attributes != nullptr) {
-        int attributeCount = m_attributes->getDefinitionCount();
+        const int attributeCount = m_attributes->getDefinitionCount();
         for (int i = 0; i < attributeCount; i++) {
             IrAttributeDefinition *definition = m_attributes->getDefinition(i);
             if (definition->getDirection() == IrAttributeDefinition::Direction::Output) {
@@ -237,12 +237,12 @@ void piranha::IrNodeDefinition::validateBuiltinMappings() {
     // Check that the definition is compatible with the
     // builtin node
     const Node *reference = m_rules->getReferenceNode(builtinName);
-    int attributeCount = m_attributes->getDefinitionCount();
+    const int attributeCount = m_attributes->getDefinitionCount();
     for (int i = 0; i < attributeCount; i++) {
         IrAttributeDefinition *definition = m_attributes->getDefinition(i);
         Node::PortInfo info;
         if (definition->getDirection() == IrAttributeDefinition::Direction::Output) {
-            bool found = reference->getOutputPortInfo(definition->getName(), &info);
+            const bool found = reference->getOutputPortInfo(definition->getName(), &info);
             if (!found) {
                 unit->addCompilationError(TRACK(new CompilationError(*definition->getNameToken(),
                     ErrorCode::UndefinedBuiltinOutput)));
@@ -257,7 +257,7 @@ void piranha::IrNodeDefinition::validateBuiltinMappings() {
             definition->getDirection() == IrAttributeDefinition::Direction::Modify ||
             definition->getDirection() == IrAttributeDefinition::Direction::Toggle)
         {
-            bool found = reference->getInputPortInfo(definition->getName(), &info);
+            const bool found = reference->getInputPortInfo(definition->getName(), &info);
             if (found) {
                 if (info.modifiesInput != (definition->getDirection() == IrAttributeDefinition::Direction::Modify)) {
                     unit->addCompilationError(TRACK(new CompilationError(*definition->getDirectionToken(),

@@ -13,7 +13,7 @@ piranha::IrAttributeList::~IrAttributeList() {
 
 void piranha::IrAttributeList::addAttribute(IrAttribute *attribute) {
     if (attribute != nullptr) {
-        int index = getAttributeCount();
+        const int index = getAttributeCount();
 
         m_attributes.push_back(attribute);
         attribute->setPosition(index);
@@ -25,7 +25,7 @@ void piranha::IrAttributeList::addAttribute(IrAttribute *attribute) {
 piranha::IrAttribute *piranha::IrAttributeList::
     getAttribute(IrAttributeDefinition *definition) const 
 {
-    int attributeCount = getAttributeCount();
+    const int attributeCount = getAttributeCount();
     for (int i = 0; i < attributeCount; i++) {
         IrAttribute *attribute = getAttribute(i);
         if (attribute->getAttributeDefinition() == definition) {

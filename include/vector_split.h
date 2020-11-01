@@ -8,7 +8,7 @@ namespace piranha {
     template<int index>
     class VectorSplitOutput : public FloatValueOutput {
     public:
-        VectorSplitOutput() { /* void */ }
+        VectorSplitOutput() { m_input = nullptr; }
         ~VectorSplitOutput() { /* void */ }
 
         virtual void fullCompute(void *_target) const {

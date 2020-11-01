@@ -26,10 +26,10 @@ namespace piranha {
 
     class IrCompilationUnit : public IrParserStructure {
     public:
-        enum ParseResult {
-            IO_ERROR,
-            SUCCESS,
-            FAIL
+        enum class ParseResult {
+            IoError,
+            Success,
+            Fail
         };
 
     public:

@@ -25,7 +25,7 @@ piranha::IrCompilationUnit *piranha::Compiler::analyze(const IrPath &scriptPath)
         newUnit->setErrorList(&m_errorList);
         IrCompilationUnit::ParseResult parseResult = newUnit->parseFile(scriptPath);
 
-        if (parseResult == IrCompilationUnit::IO_ERROR) {
+        if (parseResult == IrCompilationUnit::ParseResult::IoError) {
             delete TRACK(newUnit);
             return nullptr;
         }

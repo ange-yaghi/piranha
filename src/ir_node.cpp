@@ -163,12 +163,12 @@ void piranha::IrNode::_validate() {
     }
 
     // Check for symbols used more than once
-    int attributeCount = attributes->getAttributeCount();
+    const int attributeCount = attributes->getAttributeCount();
     for (int i = 0; i < attributeCount; i++) {
         IrAttribute *attribute = attributes->getAttribute(i);
 
         int count;
-        bool positional = attribute->isPositional();
+        const bool positional = attribute->isPositional();
 
         IrAttributeDefinition *definition = attribute->getAttributeDefinition();
 
@@ -442,7 +442,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
         }
     }
     else {
-        std::string builtinType = m_definition->getBuiltinName();
+        const std::string builtinType = m_definition->getBuiltinName();
         if (builtinType.empty()) return nullptr;
 
         newNode = m_rules->generateNode(builtinType);
@@ -527,7 +527,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
     // Generate internal nodes
     IrNodeList *nestedNodeList = definition->getBody();
     if (nestedNodeList != nullptr) {
-        int nestedNodeCount = nestedNodeList->getItemCount();
+        const int nestedNodeCount = nestedNodeList->getItemCount();
         for (int i = 0; i < nestedNodeCount; i++) {
             IrNode *node = nestedNodeList->getItem(i);
             Node *nestedNode = node->generateNode(newContext, program, newContainer);
@@ -614,7 +614,7 @@ void piranha::IrNode::writeTraceToFile(std::ofstream &file) {
     IrContextTree *parentContext = TRACK(new IrContextTree(nullptr));
     IrContextTree *thisContext = parentContext->newChild(this);
 
-    int attributeDefinitions = m_definition->getAttributeDefinitionList()->getDefinitionCount();
+    const int attributeDefinitions = m_definition->getAttributeDefinitionList()->getDefinitionCount();
     for (int i = 0; i < attributeDefinitions; i++) {
         m_definition
             ->getAttributeDefinitionList()

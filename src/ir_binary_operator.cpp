@@ -10,7 +10,7 @@
 
 piranha::IrBinaryOperator::IrBinaryOperator(
     Operator op, IrValue *left, IrValue *right) 
-    : IrValue(IrValue::BINARY_OPERATION) 
+    : IrValue(IrValue::ValueType::BinaryOperation) 
 {
     m_operator = op;
     m_leftOperand = left;
@@ -91,7 +91,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
         if (publicAttribute == nullptr) {
             IR_FAIL();
 
-            bool isValidError = (touchedMainContext && !basicInfo.isStaticType()) || IR_EMPTY_CONTEXT();
+            const bool isValidError = (touchedMainContext && !basicInfo.isStaticType()) || IR_EMPTY_CONTEXT();
             if (query.recordErrors && isValidError) {
                 // Left hand does not have this member
                 IR_ERR_OUT(TRACK(new CompilationError(*m_rightOperand->getSummaryToken(),
@@ -105,7 +105,7 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
         if (!publicAttribute->allowsExternalAccess()) {
             IR_FAIL();
 
-            bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
+            const bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
                 (basicInfo.isFixedType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
             if (query.recordErrors && isValidError) {
                 IR_ERR_OUT(TRACK(new CompilationError(*m_rightOperand->getSummaryToken(),
@@ -144,7 +144,7 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
     }
     else {
         if (m_rules == nullptr) return;
-        bool emptyContext = context->isEmpty();
+        const bool emptyContext = context->isEmpty();
 
         IrReferenceInfo leftInfo;
         IrReferenceQuery leftQuery;
@@ -181,15 +181,15 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
             ? rightReference->getImmediateChannelType()
             : rightInfo.fixedType->getChannelType();
 
-        std::string builtinType = 
+        const std::string builtinType = 
             m_rules->resolveOperatorBuiltinType(m_operator, leftType, rightType);
 
         if (builtinType.empty()) {
-            bool touchedMainContext =
+            const bool touchedMainContext =
                 ((leftInfo.touchedMainContext && !leftInfo.isStaticType()) ||
                 (rightInfo.touchedMainContext && !rightInfo.isStaticType()));
 
-            bool isOutside = leftInfo.isFixedTypeOutside(context);
+            const bool isOutside = leftInfo.isFixedTypeOutside(context);
 
             if (touchedMainContext || emptyContext) {
                 getParentUnit()->addCompilationError(

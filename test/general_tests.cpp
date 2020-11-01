@@ -401,6 +401,8 @@ TEST(GeneralTests, GeneralSyntaxTest_21) {
 }
 
 TEST(GeneralTests, GeneralSyntaxTest_21a) {
+    MemoryTracker::get()->reset();
+
     const ErrorList *errList;
     LanguageRules *rules;
     Compiler *compiler;
