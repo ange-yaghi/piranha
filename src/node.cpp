@@ -124,7 +124,7 @@ bool piranha::Node::evaluate() {
 
     const int outputReferenceCount = getOutputReferenceCount();
     for (int i = 0; i < outputReferenceCount; i++) {
-        NodeOutput *output = *m_outputReferences[i].output;
+        NodeOutput *output = (*m_outputReferences[i].output);
         if (output != nullptr) {
             const bool result = output->evaluate();
             if (!result) return false;
@@ -158,7 +158,7 @@ void piranha::Node::connectEnableInput(pNodeInput input, Node *dependency) {
 }
 
 void piranha::Node::connectInput(pNodeInput input, const std::string &name, Node *dependency, Node *nodeInput) {
-    int inputCount = getInputCount();
+    const int inputCount = getInputCount();
 
     for (int i = 0; i < inputCount; i++) {
         if (name == m_inputs[i].name) {
@@ -554,6 +554,8 @@ piranha::Node *piranha::Node::optimize(NodeAllocator *allocator) {
             else {
                 std::string name = node->getOutputName(*m_inputs[i].input);
                 *m_inputs[i].input = optimizedNode->getOutput(optimizedNode->getLocalPort(name));
+                m_inputs[i].dependency = optimizedNode;
+                m_inputs[i].nodeInput = optimizedNode;
             }
         }
 
@@ -564,6 +566,36 @@ piranha::Node *piranha::Node::optimize(NodeAllocator *allocator) {
             else if (optimizedNode == nodeInput) { /* No optimizations found */ } 
             else {
                 m_inputs[i].nodeInput = optimizedNode;
+                m_inputs[i].dependency = optimizedNode;
+            }
+        }
+    }
+
+    const int outputCount = getOutputReferenceCount();
+    for (int i = 0; i < outputCount; i++) {
+        pNodeInput output = *m_outputReferences[i].output;
+        Node *nodeOutput = m_outputReferences[i].nodeOutput;
+
+        if (output != nullptr) {
+            Node *node = (*m_outputReferences[i].output)->getParentNode();
+            Node *optimizedNode = node->optimize(allocator);
+
+            if (optimizedNode == nullptr) return nullptr; // There was an error
+            else if (optimizedNode == node) { /* No optimizations found */ }
+            else {
+                std::string name = node->getOutputName(*m_outputReferences[i].output);
+                *m_outputReferences[i].output = optimizedNode->getOutput(optimizedNode->getLocalPort(name));
+                m_outputReferences[i].nodeOutput = optimizedNode;
+            }
+        }
+
+        if (nodeOutput != nullptr) {
+            Node *optimizedNode = nodeOutput->optimize(allocator);
+
+            if (optimizedNode == nullptr) return nullptr;
+            else if (optimizedNode == nodeOutput) { /* No optimizations found */ }
+            else {
+                m_outputReferences[i].nodeOutput = optimizedNode;
             }
         }
     }
@@ -688,7 +720,7 @@ bool piranha::Node::checkEnabled() {
     return true;
 }
 
-void piranha::Node::registerOutputReference(NodeOutput *const *output, const std::string &name, Node *node) {
+void piranha::Node::registerOutputReference(NodeOutput **output, const std::string &name, Node *node) {
     m_outputReferences.push_back({ output, node, name });
 }
 

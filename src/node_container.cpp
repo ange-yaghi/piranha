@@ -5,6 +5,7 @@
 #include "../include/assembly.h"
 #include "../include/memory_tracker.h"
 #include "../include/node_program.h"
+#include "../include/node_output.h"
 
 piranha::NodeContainer::NodeContainer() {
     m_container = nullptr;
@@ -105,9 +106,7 @@ void piranha::NodeContainer::prune() {
             m_nodes[i]->destroy();
 
             if (m_nodes[i]->getMemorySpace() == Node::MemorySpace::PiranhaInternal) {
-                if (m_nodes[i]->getIrStructure() != nullptr) {
-                    delete FTRACK(m_nodes[i]);
-                }
+                delete FTRACK(m_nodes[i]);
             }
             else if (m_nodes[i]->getMemorySpace() == Node::MemorySpace::ClientExternal) {
                 m_program->getNodeAllocator()->free(m_nodes[i]);

@@ -25,6 +25,8 @@ piranha::IrAttributeDefinition::IrAttributeDefinition(
 
     m_direction = dir;
     setVisibility(IrVisibility::Public);
+
+    m_typeDefinition = nullptr;
 }
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &name) {
@@ -33,6 +35,8 @@ piranha::IrAttributeDefinition::IrAttributeDefinition(const IrTokenInfo_string &
 
     m_direction = Direction::Output;
     setVisibility(IrVisibility::Public);
+
+    m_typeDefinition = nullptr;
 }
 
 piranha::IrAttributeDefinition::~IrAttributeDefinition() {
@@ -361,7 +365,10 @@ void piranha::IrAttributeDefinition::_resolveDefinitions() {
         m_typeDefinition = nullptr;
     }
 
-    else m_typeDefinition = definition;
+    else {
+        assert(definition != (void *)0xCDCDCDCDCDCDCDCD);
+        m_typeDefinition = definition;
+    }
 }
 
 piranha::Node *piranha::IrAttributeDefinition::_generateNode(

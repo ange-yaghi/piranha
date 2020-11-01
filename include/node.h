@@ -36,7 +36,7 @@ namespace piranha {
         };
 
         struct NodeOutputPortReference {
-            NodeOutput *const *output;
+            NodeOutput **output;
             Node *nodeOutput;
             std::string name;
         };
@@ -206,7 +206,7 @@ namespace piranha {
         void registerOutput(NodeOutput *node, const std::string &name);
 
         std::vector<NodeOutputPortReference> m_outputReferences;
-        void registerOutputReference(NodeOutput *const *output, const std::string &name, Node *node = nullptr);
+        void registerOutputReference(NodeOutput **output, const std::string &name, Node *node = nullptr);
 
         PortSkeleton *getSkeleton(const std::string &name);
         std::vector<PortSkeleton> m_portSkeletons;
