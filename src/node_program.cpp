@@ -127,12 +127,15 @@ bool piranha::NodeProgram::execute() {
 
     // For backward compatibility
     initialize();
+
+    if (isKilled()) return true;
     
     // Execute all nodes
     for (int i = 0; i < nodeCount; i++) {
         Node *node = m_topLevelContainer.getNode(i);
         const bool result = node->evaluate();
         if (!result) return false;
+        if (isKilled()) return true;
     }
 
     return true;
@@ -152,6 +155,8 @@ void piranha::NodeProgram::free() {
         }
     }
 
-    m_rootContext->free();
-    delete FTRACK(m_rootContext);
+    if (m_rootContext != nullptr) {
+        m_rootContext->free();
+        delete FTRACK(m_rootContext);
+    }
 }
