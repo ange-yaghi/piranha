@@ -78,7 +78,7 @@ void piranha::NodeGraph::generateNodes(NodeContainer *container) {
         generateNodes(container->getChild(i));
     }
 
-    int nodeCount = container->getNodeCount();
+    const int nodeCount = container->getNodeCount();
     for (int i = 0; i < nodeCount; i++) {
         Node *node = container->getNode(i);
         createNode(node);
@@ -96,26 +96,31 @@ void piranha::NodeGraph::generateConnections() {
         for (int j = 0; j < inputCount; j++) {
             pNodeInput input = *node->getInput(j)->input;
             Node *nodeInput = node->getInput(j)->nodeInput;
+            Node *dependency = node->getInput(j)->dependency;
 
-            Node *node;
-            if (input != nullptr) {
-                node = input->getParentNode();
-            }
-            else if (nodeInput != nullptr) {
-                node = nodeInput;
-            }
-            else {
+            std::vector<Node *> toCheck = {
+                (input == nullptr) ? nullptr : input->getParentNode(),
+                nodeInput,
+                dependency
+            };
+
+            if (input == nullptr && nodeInput == nullptr) {
                 throw EmptyPort();
             }
-            
-            GraphNode *endpoint = findNode(node);
 
-            if (!graphNode->hasInConnection(endpoint)) {
-                graphNode->inConnections.push_back(endpoint);
-            }
+            for (Node *node : toCheck) {
+                if (node != nullptr) {
+                    GraphNode *endpoint = findNode(node);
+                    if (endpoint == nullptr) continue;
 
-            if (!endpoint->hasOutConnection(graphNode)) {
-                endpoint->outConnections.push_back(graphNode);
+                    if (!graphNode->hasInConnection(endpoint)) {
+                        graphNode->inConnections.push_back(endpoint);
+                    }
+
+                    if (!endpoint->hasOutConnection(graphNode)) {
+                        endpoint->outConnections.push_back(graphNode);
+                    }
+                }
             }
         }
     }
