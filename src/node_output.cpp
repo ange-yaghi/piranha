@@ -6,6 +6,7 @@
 piranha::NodeOutput::NodeOutput(const ChannelType *singleType) {
     m_singleType = singleType; 
     m_evaluated = false;
+    m_evaluating = false;
     m_checkedEnabled = false;
     m_interface = nullptr;
     m_parentNode = nullptr;
@@ -34,8 +35,8 @@ void piranha::NodeOutput::initialize() {
 }
 
 bool piranha::NodeOutput::evaluate() {
-    if (m_evaluated) return true;
-    else m_evaluated = true;
+    if (m_evaluated || m_evaluating) return true;
+    else m_evaluating = true;
 
     const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
@@ -55,6 +56,8 @@ bool piranha::NodeOutput::evaluate() {
     }
 
     _evaluate();
+
+    m_evaluated = true;
     return true;
 }
 

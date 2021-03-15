@@ -15,6 +15,7 @@ piranha::Node::Node() {
 
     m_initialized = false;
     m_evaluated = false;
+    m_evaluating = false;
     m_primaryOutput = "";
 
     m_enableInput = nullptr;
@@ -93,15 +94,13 @@ void piranha::Node::initialize() {
 }
 
 bool piranha::Node::evaluate() {
-    if (isEvaluated()) return true;
+    if (isEvaluated() || m_evaluating) return true;
+    else m_evaluating = true;
 
     const bool status = checkEnabled();
     if (!status) return false;
     if (!isEnabled()) return true;
-
-    // Set evaluated flag
-    m_evaluated = true;
-
+    
     // First evaluate all dependencies
     const int inputCount = getInputCount();
     for (int i = 0; i < inputCount; i++) {
@@ -136,6 +135,8 @@ bool piranha::Node::evaluate() {
             if (!result) return false;
         }
     }
+
+    m_evaluated = true;
 
     return true;
 }
