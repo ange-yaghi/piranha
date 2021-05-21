@@ -86,7 +86,6 @@ TEST(OptimizationTests, OptimizationTest2) {
     program.optimize();
 
     Node *optimizedForm = program.getTopLevelContainer()->getNode(0);
-
     optimizedForm->evaluate();
 
     EXPECT_NE(firstNode, optimizedForm);
@@ -184,6 +183,31 @@ TEST(OptimizationTests, OptimizationTest6) {
     const ErrorList *errList;
     LanguageRules *rules;
     IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_6.mr", &errList, &rules, &compiler);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    NodeProgram program;
+    unit->build(&program);
+
+    program.initialize();
+    program.optimize();
+
+    program.execute();
+
+    program.free();
+    compiler->free();
+    delete rules;
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
+}
+
+TEST(OptimizationTests, OptimizationTest7) {
+    MemoryTracker::get()->reset();
+
+    Compiler *compiler;
+    const ErrorList *errList;
+    LanguageRules *rules;
+    IrCompilationUnit *unit = compileFile("optimization-tests/optimization_test_7.mr", &errList, &rules, &compiler);
 
     EXPECT_EQ(errList->getErrorCount(), 0);
 

@@ -101,7 +101,6 @@ void piranha::NodeContainer::prune() {
     int newNodeCount = 0;
     for (int i = 0; i < nodeCount; ++i) {
         const bool optimizedOut = m_nodes[i]->isOptimizedOut() || m_nodes[i]->isDead();
-
         if (optimizedOut) {
             m_nodes[i]->destroy();
 
@@ -162,6 +161,21 @@ piranha::Node *piranha::NodeContainer::_optimize(NodeAllocator *nodeAllocator) {
             ++nodeCount;
             ++i;
         }
+    }
+
+    bool isActionless = true;
+    for (int i = 0; i < nodeCount; ++i) {
+        const bool optimizedOut = m_nodes[i]->isOptimizedOut() || m_nodes[i]->isDead();
+        if (!optimizedOut) {
+            if (!m_nodes[i]->hasFlag(Node::META_ACTIONLESS)) {
+                isActionless = false;
+                break;
+            }
+        }
+    }
+
+    if (isActionless) {
+        addFlag(Node::META_ACTIONLESS);
     }
 
     return this;

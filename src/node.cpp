@@ -137,6 +137,7 @@ bool piranha::Node::evaluate() {
     }
 
     m_evaluated = true;
+    m_evaluating = false;
 
     return true;
 }
@@ -188,7 +189,7 @@ bool piranha::Node::getInputPortInfo(const std::string &name, PortInfo *info) co
     info->isToggle = false;
     info->isAlias = false;
 
-    int inputCount = getInputCount();
+    const int inputCount = getInputCount();
     bool found = false;
     for (int i = 0; i < inputCount; i++) {
         if (name == m_inputs[i].name) {

@@ -110,14 +110,15 @@ void piranha::NodeProgram::optimize() {
     graph.generateNodeGraph(this);
     graph.markDeadNodes();
 
-    int nodeCount = getNodeCount();
+    const int nodeCount = getNodeCount();
+    int newNodeCount = 0;
     for (int i = 0; i < nodeCount; ++i) {
-        if (m_nodeCache[i]->isOptimizedOut() || m_nodeCache[i]->isDead()) {
-            m_nodeCache.erase(m_nodeCache.begin() + i);
-            --nodeCount;
-            --i;
+        if (!m_nodeCache[i]->isOptimizedOut() && !m_nodeCache[i]->isDead()) {
+            m_nodeCache[newNodeCount++] = m_nodeCache[i];
         }
     }
+
+    m_nodeCache.resize(newNodeCount);
 
     m_topLevelContainer.prune();
 }

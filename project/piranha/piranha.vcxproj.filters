@@ -366,6 +366,9 @@
     <ClInclude Include="..\..\include\node_allocator.h">
       <Filter>Header Files\memory</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\int_probe.h">
+      <Filter>Header Files\nodes\probes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\node_output.cpp">

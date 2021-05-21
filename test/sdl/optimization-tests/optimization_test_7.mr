@@ -1,9 +1,6 @@
 private import "../../../demos/piranha/standard-library/standard_library.mr" as std
 
-inline node test {
-    input s;
-
-    int_probe probe(s)
+auto node test {
+    output constant: 1;
+    output d: constant + 2;
 }
-
-test(5)

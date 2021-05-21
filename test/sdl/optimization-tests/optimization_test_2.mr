@@ -2,6 +2,8 @@ private import "../../../demos/piranha/standard-library/standard_library.mr" as 
 
 node container {
     input s;
+
+    int_probe probe(s)
 }
 
 container(
