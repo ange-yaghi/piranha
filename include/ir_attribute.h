@@ -55,4 +55,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* PIRANHA_ATTRIBUTE_H */
+#endif /* PIRANHA_IR_ATTRIBUTE_H */
