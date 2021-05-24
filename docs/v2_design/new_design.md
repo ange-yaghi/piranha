@@ -1,4 +1,6 @@
-### Piranha V2 Design
+# Piranha V2 Design
+
+## Types
 
 Name | WireDefinition
 ---- | --------------
@@ -48,3 +50,12 @@ Name | Node
 ---- | ------------
 Context | Context
 NodeDefinition | NodeDefinition
+
+## Stages
+
+1. Parsing
+2. Name Resolution
+3. Operator Expansion
+4. Access Resolution
+5. Type Resolution
+6. Optimization
