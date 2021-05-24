@@ -7,17 +7,17 @@ AdaptorDefinition | NodeDefinition \| NULL
 
 ---
 
-Name | WireInstance
+Name | Wire
 ---- | ------------
 Definition | WireDefinition
-Adaptor | NodeInstance \| NULL
+Adaptor | Node \| NULL
 
 ---
 
 Name | Conduit
 ---- | -------
-NodeInstance | NodeInstance \| NULL
-WireInstance | WireInstance \| NULL
+Node | Node \| NULL
+Wire | Wire \| NULL
 
 ---
 
@@ -40,12 +40,11 @@ Nodes | NodeInstance[]
 Name | Context
 ---- | -------
 ConnectionMap | Port -> (Conduit \| NULL \| UNKNOWN)
-NodeInstance | NodeInstance | NULL
+Node | Node | NULL
 
 ---
 
-Name | NodeInstance
+Name | Node
 ---- | ------------
 Context | Context
 NodeDefinition | NodeDefinition
-```
