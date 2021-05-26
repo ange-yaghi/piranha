@@ -248,7 +248,6 @@ piranha::NodeOutput *piranha::Node::generateOutput(const std::string &name) {
     if (skeleton->output != nullptr) return skeleton->output;
 
     NodeContainer *container = skeleton->container;
-
     NodeOutput *newOutput = skeleton->definition->generateNodeOutput(
         skeleton->context,
         m_program,
@@ -538,7 +537,7 @@ void piranha::Node::writeAssembly(std::fstream &file, Assembly *assembly, int in
 piranha::Node *piranha::Node::optimize(NodeAllocator *allocator) {
     if (isOptimized()) return m_optimizedNode;
 
-    // This should never really do anything but if the user tries something strange
+    // This should never do anything but if the user tries something strange
     // like evaluating the node before optimizing, the optimization step wouldn't break
     m_evaluated = false;
 
@@ -548,13 +547,13 @@ piranha::Node *piranha::Node::optimize(NodeAllocator *allocator) {
         Node *nodeInput = m_inputs[i].nodeInput;
 
         if (input != nullptr) {
-            Node *node = (*m_inputs[i].input)->getParentNode();
+            Node *node = input->getParentNode();
             Node *optimizedNode = node->optimize(allocator);
 
             if (optimizedNode == nullptr) return nullptr; // There was an error
             else if (optimizedNode == node) { /* No optimizations found */ }
             else {
-                std::string name = node->getOutputName(*m_inputs[i].input);
+                std::string name = node->getOutputName(input);
                 *m_inputs[i].input = optimizedNode->getOutput(optimizedNode->getLocalPort(name));
                 m_inputs[i].dependency = optimizedNode;
                 m_inputs[i].nodeInput = optimizedNode;
