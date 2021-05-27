@@ -553,7 +553,7 @@ piranha::Node *piranha::Node::optimize(NodeAllocator *allocator) {
             if (optimizedNode == nullptr) return nullptr; // There was an error
             else if (optimizedNode == node) { /* No optimizations found */ }
             else {
-                std::string name = node->getOutputName(input);
+                const std::string name = node->getOutputName(input);
                 *m_inputs[i].input = optimizedNode->getOutput(optimizedNode->getLocalPort(name));
                 m_inputs[i].dependency = optimizedNode;
                 m_inputs[i].nodeInput = optimizedNode;
@@ -562,7 +562,6 @@ piranha::Node *piranha::Node::optimize(NodeAllocator *allocator) {
 
         if (nodeInput != nullptr) {
             Node *optimizedNode = nodeInput->optimize(allocator);
-
             if (optimizedNode == nullptr) return nullptr;
             else if (optimizedNode == nodeInput) { /* No optimizations found */ } 
             else {
@@ -580,7 +579,6 @@ piranha::Node *piranha::Node::optimize(NodeAllocator *allocator) {
         if (output != nullptr) {
             Node *node = (*m_outputReferences[i].output)->getParentNode();
             Node *optimizedNode = node->optimize(allocator);
-
             if (optimizedNode == nullptr) return nullptr; // There was an error
             else if (optimizedNode == node) { /* No optimizations found */ }
             else {
@@ -592,7 +590,6 @@ piranha::Node *piranha::Node::optimize(NodeAllocator *allocator) {
 
         if (nodeOutput != nullptr) {
             Node *optimizedNode = nodeOutput->optimize(allocator);
-
             if (optimizedNode == nullptr) return nullptr;
             else if (optimizedNode == nodeOutput) { /* No optimizations found */ }
             else {
