@@ -231,7 +231,9 @@ piranha::IrNodeDefinition *piranha::IrCompilationUnit::resolveLocalBuiltinNodeDe
 
         if (definition->getBuiltinName() == typeName) {
             (*count)++;
-            if (firstDefinition == nullptr) firstDefinition = definition;
+            if (firstDefinition == nullptr) {
+                firstDefinition = definition;
+            }
         }
     }
 
@@ -396,7 +398,7 @@ int piranha::IrCompilationUnit::countSymbolIncidence(const std::string &name) co
     for (int i = 0; i < nodeCount; i++) {
         IrNode *node = m_nodes[i];
         if (!name.empty() && node->getName() == name) {
-            count++;
+            ++count;
         }
     }
 
