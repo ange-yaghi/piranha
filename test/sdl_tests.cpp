@@ -18,7 +18,6 @@
 
 using namespace piranha;
 
-
 TEST(IrTests, IrSanityCheck) {
     MemoryTracker::get()->reset();
     {
