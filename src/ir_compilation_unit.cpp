@@ -208,7 +208,9 @@ piranha::IrNodeDefinition *piranha::IrCompilationUnit::resolveNodeDefinition(
 
                 // Make sure to not overwrite the result definition
                 // The first definition to be found must be returned
-                if (firstDefinition == nullptr) firstDefinition = definition;
+                if (firstDefinition == nullptr) {
+                    firstDefinition = definition;
+                }
             }
         }
     }
@@ -257,7 +259,6 @@ piranha::IrNodeDefinition *piranha::IrCompilationUnit::resolveBuiltinNodeDefinit
     // Search dependencies
     const int dependencyCount = getImportStatementCount();
     for (int i = 0; i < dependencyCount; i++) {
-        int secondaryCount = 0;
         IrImportStatement *importStatement = getImportStatement(i);
 
         // Skip the import statement if it already failed
@@ -266,13 +267,17 @@ piranha::IrNodeDefinition *piranha::IrCompilationUnit::resolveBuiltinNodeDefinit
         // Skip if the import statement cannot be accessed
         if (external && !importStatement->allowsExternalAccess()) continue;
 
+        int secondaryCount = 0;
+
         // The external access flag must be set to true since the libraries are being accessed
         // externally                                                                           ----
         IrNodeDefinition *definition =                                                          ////
             importStatement->getUnit()->resolveBuiltinNodeDefinition(typeName, &secondaryCount, true);
         if (definition != nullptr) {
             (*count) += secondaryCount;
-            if (firstDefinition == nullptr) firstDefinition = definition;
+            if (firstDefinition == nullptr) {
+                firstDefinition = definition;
+            }
         }
     }
 
@@ -293,8 +298,10 @@ piranha::IrNodeDefinition *piranha::IrCompilationUnit::resolveLocalNodeDefinitio
 
         const std::string defName = m_nodeDefinitions[i]->getName();
         if (defName == typeName) {
-            (*count)++;
-            if (definition == nullptr) definition = m_nodeDefinitions[i];
+            ++(*count);
+            if (definition == nullptr) {
+                definition = m_nodeDefinitions[i];
+            }
         }
     }
 
@@ -308,7 +315,8 @@ void piranha::IrCompilationUnit::_validate() {
         const int count = countSymbolIncidence(node->getName());
 
         if (count > 1) {
-            this->addCompilationError(TRACK(new CompilationError(node->getNameToken(),
+            this->addCompilationError(
+                TRACK(new CompilationError(node->getNameToken(),
                 ErrorCode::SymbolUsedMultipleTimes)));
         }
     }
@@ -320,7 +328,8 @@ void piranha::IrCompilationUnit::_validate() {
         resolveLocalNodeDefinition(def->getName(), &count);
 
         if (count > 1) {
-            this->addCompilationError(TRACK(new CompilationError(*def->getNameToken(),
+            this->addCompilationError(
+                TRACK(new CompilationError(*def->getNameToken(),
                 ErrorCode::DuplicateNodeDefinition)));
         }
     }
