@@ -44,13 +44,17 @@ I have tried to rely on as few dependencies as possible and at some point may el
 ### Build with CMake
 After cloning the Piranha repository, `cd` into the repository and run the following commands:
 
-`mkdir build`
-`cd build`
-`cmake ..`
-`cmake --build .`
+```
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
 
 If using MSVC, to set whether it is a Release or Debug build, run the last step like this:
-`cmake --build . --config Release`
+```
+cmake --build . --config Release
+```
 
 If using MSVC, CMake will output a Visual Studio solution which you can use for development and debugging. You can also try running the reference compiler directly `piranha_reference_compiler`.
 
