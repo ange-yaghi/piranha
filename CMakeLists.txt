@@ -28,26 +28,23 @@ set_property(TARGET gtest_main PROPERTY FOLDER "gtest")
 # =========================================================
 # FLEX BISON
 
-find_package(FLEX)
-find_package(BISON) 
+find_package(FLEX REQUIRED)
+find_package(BISON REQUIRED) 
 
-IF(FLEX_FOUND AND BISON_FOUND)
-    flex_target(
-        lexer
-        flex-bison/scanner.l
-        ../autogen/scanner.auto.cpp
-        DEFINES_FILE ../autogen/scanner.auto.h)
+flex_target(
+    lexer
+    flex-bison/scanner.l
+    ${CMAKE_CURRENT_BINARY_DIR}/scanner.auto.cpp
+    DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/scanner.auto.h)
 
-    bison_target(
-        parser
-        flex-bison/specification.y
-        ../autogen/parser.auto.cpp
-        DEFINES_FILE ../autogen/parser.auto.h)
-    add_flex_bison_dependency(lexer parser)
-ELSE()
-    message("Flex or Bison not found, scanner and parser changes will not be built")
-ENDIF()
+bison_target(
+    parser
+    flex-bison/specification.y
+    ${CMAKE_CURRENT_BINARY_DIR}/parser.auto.cpp
+    DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.auto.h)
+add_flex_bison_dependency(lexer parser)
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(dependencies/libraries/flex/include)
 include_directories(include)
 
@@ -165,8 +162,8 @@ add_library(piranha STATIC
     include/version.h
 
     # Autogen
-    autogen/parser.auto.cpp
-    autogen/scanner.auto.cpp
+    ${BISON_parser_OUTPUTS}
+    ${FLEX_lexer_OUTPUTS}
 )
 
 target_link_libraries(piranha Boost::filesystem)
