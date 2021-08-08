@@ -8,11 +8,13 @@
 #include "../include/memory_tracker.h"
 
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <chrono>
 
 int main() {
     std::string filename;
+    std::cout << "Enter .mr file: ";
     std::cin >> filename;
 
     while (true) {
@@ -29,10 +31,13 @@ int main() {
 
             piranha_demo::printErrorTrace(compiler.getErrorList());
 
-            if (compiler.getErrorList()->getErrorCount() == 0) {
+            if (unit == nullptr) {
+                std::cout << "Could not find file: " << filename << std::endl;
+            }
+            else if (compiler.getErrorList()->getErrorCount() == 0) {
                 unit->build(&nodeProgram);
 
-                std::cout << "--- Running --------------" << std::endl;
+                std::cout << "--- Running ----------------" << std::endl;
                 auto endCompile = std::chrono::high_resolution_clock::now();
 
                 nodeProgram.initialize();
@@ -41,10 +46,10 @@ int main() {
 
                 auto endExecute = std::chrono::high_resolution_clock::now();
 
-                nodeProgram.writeAssembly("../../workspace/asm/" + unit->getPath().getStem() + ".pasm");
+                nodeProgram.writeAssembly("../workspace/asm/" + unit->getPath().getStem() + ".pasm");
 
                 std::cout << std::endl;
-                std::cout << "-----------------------" << std::endl;
+                std::cout << "----------------------------" << std::endl;
                 std::cout << " Compile time:   " <<
                     (endCompile - startCompile).count() * 1.0e-6 << " ms" << std::endl;
                 std::cout << " Execution time: " <<
@@ -59,8 +64,15 @@ int main() {
         std::cout << "Memory leaks: " << piranha::MemoryTracker::get()->countLeaks() << std::endl;
         piranha::MemoryTracker::get()->reset();
 
-        std::cout << std::endl << std::endl;
-        std::cin.get();
+        std::cout << std::endl;
+        std::cout << "Run again (y/n)? ";
+
+        char cmd;
+        std::cin >> cmd;
+
+        if (cmd != 'y') break;
+
+        std::cout << std::endl;
     }
 
     return 0;

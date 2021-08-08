@@ -9,7 +9,7 @@
 #endif /* PIRANHA_DIST */
 #endif
 
-#include "../autogen/parser.auto.h"
+#include <parser.auto.h>
 #include "ir_token_info.h"
 #include "ir_token_info.h"
 #include "memory_tracker.h"
