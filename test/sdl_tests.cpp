@@ -1,4 +1,4 @@
-#include <pch.h>
+#include <gtest/gtest.h>
 
 #include "../include/ir_compilation_unit.h"
 #include "../include/ir_node.h"
