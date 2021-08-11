@@ -60,7 +60,6 @@
 #include "pipe_node.h"
 #include "pkey_value_lookup.h"
 #include "rule.h"
-#include "scanner.h"
 #include "standard_allocator.h"
 #include "string_conversions.h"
 #include "subtract_operation_output.h"
