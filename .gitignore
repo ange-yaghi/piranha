@@ -358,3 +358,6 @@ autogen/
 
 # Ignore temp files added by flex
 project/mantaray/~flex*
+
+# Ignore compile commands used for code completion in vim
+compile_commands.json

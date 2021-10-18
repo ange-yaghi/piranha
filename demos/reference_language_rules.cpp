@@ -19,6 +19,7 @@
 #include "../include/bool_negate_operation.h"
 #include "../include/no_op_node.h"
 #include "../include/throw_runtime_error_node.h"
+#include "../include/int_probe.h"
 
 piranha_demo::ReferenceLanguageRules::ReferenceLanguageRules() {
     /* void */
@@ -45,6 +46,8 @@ void piranha_demo::ReferenceLanguageRules::registerBuiltinNodeTypes() {
 
     registerBuiltinType<piranha::ThrowRuntimeErrorNode>(
         "__piranha__throw_runtime_error");
+    registerBuiltinType<piranha::IntProbeNode>(
+        "__piranha__int_probe");
 
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_int, piranha::AddOperationNodeOutput>>("__piranha__int_add");
