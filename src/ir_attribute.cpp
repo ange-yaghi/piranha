@@ -14,6 +14,7 @@ piranha::IrAttribute::IrAttribute() {
     m_value = nullptr;
     m_definition = nullptr;
     m_position = -1;
+    setVisibility(IrVisibility::Public);
 }
 
 piranha::IrAttribute::IrAttribute(const IrTokenInfo_string &name, IrValue *value) {
@@ -23,6 +24,7 @@ piranha::IrAttribute::IrAttribute(const IrTokenInfo_string &name, IrValue *value
 
     registerToken(&name);
     registerComponent(value);
+    setVisibility(IrVisibility::Public);
 
     m_definition = nullptr;
 }
@@ -32,6 +34,7 @@ piranha::IrAttribute::IrAttribute(IrValue *value) {
     m_position = -1;
 
     registerComponent(value);
+    setVisibility(IrVisibility::Public);
 
     m_definition = nullptr;
 }
@@ -95,8 +98,8 @@ void piranha::IrAttribute::_checkTypes(IrContextTree *context) {
 
         if (m_rules == nullptr) return;
 
-        const ChannelType *type = info.isFixedType() 
-            ? info.fixedType->getChannelType() 
+        const ChannelType *type = info.isFixedType()
+            ? info.fixedType->getChannelType()
             : finalReference->getImmediateChannelType();
         const ChannelType *expectedType = typeDefinition->getChannelType();
 

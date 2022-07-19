@@ -93,7 +93,7 @@ piranha::IrNodeDefinition *piranha::IrNodeDefinition::getAliasType() {
     IrAttributeDefinition *alias = m_attributes->getAliasOutput();
     if (alias == nullptr) return this;
 
-     IrNodeDefinition *typeDefinition = alias->getTypeDefinition();
+    IrNodeDefinition *typeDefinition = alias->getTypeDefinition();
     if (typeDefinition == nullptr) return this;
 
     return typeDefinition->getAliasType();
