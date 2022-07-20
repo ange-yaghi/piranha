@@ -663,8 +663,11 @@ void piranha::IrNode::checkReferences(IrContextTree *inputContext) {
 }
 
 void piranha::IrNode::setThis(IrValue *memberThis) {
-    m_attributes->addAttribute(
-        TRACK(new IrAttribute(IrTokenInfo_string("this"), memberThis)));
+    IrAttributeList *attributes = getAttributes();
+    if (attributes != nullptr) {
+        m_attributes->addAttribute(
+            TRACK(new IrAttribute(IrTokenInfo_string("this"), memberThis)));
+    }
 }
 
 void piranha::IrNode::free() {
