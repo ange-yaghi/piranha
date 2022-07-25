@@ -20,7 +20,7 @@ private node NewNode {
     // Accessing internal members in this manner should fail
     output should_fail: myNode.childNode;   // AccessingInternalMember
     output should_also_fail: nonsense;      // UnresolvedReference
-    output cant_access_that: myNode.A;      // AccessingInternalMember
+    output accessing_input: myNode.A;       // This is okay
     output doesnt_exit: myNode.nonsense;    // UndefinedMember
 
     TestNode myNode(

@@ -164,7 +164,7 @@ void piranha::IrNode::_validate() {
 
     // Check for symbols used more than once
     const int attributeCount = attributes->getAttributeCount();
-    for (int i = 0; i < attributeCount; i++) {
+    for (int i = 0; i < attributeCount; ++i) {
         IrAttribute *attribute = attributes->getAttribute(i);
 
         int count;
@@ -199,7 +199,7 @@ void piranha::IrNode::_validate() {
         if (attributeList != nullptr) {
             int inputCount = attributeList->getInputCount();
 
-            for (int i = 0; i < inputCount; i++) {
+            for (int i = 0; i < inputCount; ++i) {
                 IrAttributeDefinition *input = attributeList->getInputDefinition(i);
                 IrParserStructure *attribute = getAttribute(input);
 
@@ -227,7 +227,7 @@ void piranha::IrNode::_checkInstantiation() {
 }
 
 void piranha::IrNode::_expand() {
-    // Expand with this node as the focus
+    // Expand with this node as the focus.
     IrContextTree *parentContext = TRACK(new IrContextTree(nullptr));
     IrContextTree *mainContext = parentContext->newChild(this, true);
     if (m_definition != nullptr) {

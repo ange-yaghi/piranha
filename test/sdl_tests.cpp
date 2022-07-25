@@ -674,13 +674,12 @@ TEST(IrTests, IrReferenceResolutionError1Test) {
 
     EXPECT_TRUE(findError(errors, ErrorCode::AccessingInternalMember, 21));
     EXPECT_TRUE(findError(errors, ErrorCode::UnresolvedReference, 22));
-    EXPECT_TRUE(findError(errors, ErrorCode::AccessingInternalMember, 23));
     EXPECT_TRUE(findError(errors, ErrorCode::UndefinedMember, 24));
 
     EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimes, 32));
     EXPECT_TRUE(findError(errors, ErrorCode::InputSpecifiedMultipleTimes, 33));
 
-    EXPECT_EQ(errors->getErrorCount(), 6);
+    EXPECT_EQ(errors->getErrorCount(), 5);
 
     compiler.free();
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);

@@ -774,3 +774,19 @@ TEST(GeneralTests, GeneralSyntaxTest_36) {
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
+
+TEST(GeneralTests, GeneralSyntaxTest_37) {
+    MemoryTracker::get()->reset();
+
+    const ErrorList *errList;
+    LanguageRules *rules;
+    Compiler *compiler;
+    IrCompilationUnit *unit = compileToUnit("general-tests/general_syntax_test_37.mr", &errList, &rules, &compiler);
+
+    EXPECT_EQ(errList->getErrorCount(), 0);
+
+    compiler->free();
+    delete rules;
+
+    EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
+}

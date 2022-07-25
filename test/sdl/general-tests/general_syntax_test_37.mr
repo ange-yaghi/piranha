@@ -1,0 +1,19 @@
+private import "../../../demos/piranha/standard-library/standard_library.mr" as std
+
+node parameter_pattern {
+    input test: 0.0;
+}
+
+node parameterized {
+    input parameters: parameter_pattern();
+    input test: parameters.test;
+    output c: test;
+}
+
+parameter_pattern params(
+    test: float_add(1.0, 1.0)
+)
+
+parameterized(
+    params
+)
