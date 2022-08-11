@@ -15,7 +15,7 @@
 #include "../include/memory_tracker.h"
 
 piranha::IrAttributeDefinition::IrAttributeDefinition(
-    const IrTokenInfo_string &directionToken, const IrTokenInfo_string &name, Direction dir) 
+    const IrTokenInfo_string &directionToken, const IrTokenInfo_string &name, Direction dir)
 {
     m_name = name;
     registerToken(&m_name);
@@ -54,7 +54,7 @@ void piranha::IrAttributeDefinition::setAliasToken(const IrTokenInfo_string &ali
 }
 
 piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReference(
-    const IrReferenceQuery &query, IrReferenceInfo *output) 
+    const IrReferenceQuery &query, IrReferenceInfo *output)
 {
     IR_RESET(query);
 
@@ -109,6 +109,10 @@ piranha::IrParserStructure *piranha::IrAttributeDefinition::getImmediateReferenc
         }
         else {
             IrNode **node = m_expansions.lookup(query.inputContext);
+            if (node == nullptr) {
+                IR_FAIL();
+                return nullptr;
+            }
             return *node;
         }
     }
@@ -161,7 +165,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
         IrReferenceQuery immediateQuery;
         immediateQuery.inputContext = context;
         immediateQuery.recordErrors = false;
-        IrParserStructure *immediateReference = 
+        IrParserStructure *immediateReference =
             getImmediateReference(immediateQuery, &immediateInfo);
 
         if (immediateInfo.failed) return;
@@ -187,7 +191,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
         IrReferenceQuery referenceQuery;
         referenceQuery.inputContext = immediateInfo.newContext;
         referenceQuery.recordErrors = false;
-        IrParserStructure *reference = 
+        IrParserStructure *reference =
             immediateReference->getReference(referenceQuery, &referenceInfo);
 
         if (referenceInfo.failed) return;
@@ -200,7 +204,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
         IrNodeDefinition *fixedTypeDefinition = (referenceInfo.isFixedType())
             ? referenceInfo.fixedType
             : nullptr;
-        // IMPORTANT: fixed type information from the immediate reference cannot be 
+        // IMPORTANT: fixed type information from the immediate reference cannot be
         // used because it will always get forced to the type of this attribute definition
         // thereby preventing automatic conversion from taking place.
 
@@ -222,7 +226,7 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
         }
         else if (referenceType == expectedType) return; // No expansion/conversion needed
 
-        std::string builtinType = 
+        std::string builtinType =
             m_rules->resolveConversionBuiltinType(referenceType, expectedType);
 
         if (builtinType.empty()) return; // Incompatible types
@@ -232,11 +236,11 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
             : context->getContext()->getParentUnit();
 
         int count = 0;
-        IrNodeDefinition *nodeDefinition = 
+        IrNodeDefinition *nodeDefinition =
             parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
 
         // Create expanion structure
-        IrInternalReference *internalReference = 
+        IrInternalReference *internalReference =
             TRACK(new IrInternalReference(reference, referenceInfo.newContext));
 
         IrAttribute *input = TRACK(new IrAttribute);
@@ -292,8 +296,8 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
             if (definition == getTypeDefinition()) return; // Type is confirmed to be correct
         }
 
-        const ChannelType *type = info.isFixedType() 
-            ? info.fixedType->getChannelType() 
+        const ChannelType *type = info.isFixedType()
+            ? info.fixedType->getChannelType()
             : defaultReference->getImmediateChannelType();
         const ChannelType *expectedType = getTypeDefinition()->getChannelType();
 
@@ -304,8 +308,8 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
         IrCompilationUnit *unit = getParentUnit();
 
         // Errors for inputs/outputs differ only in code but are fundamentally the same
-        if (m_direction == Direction::Input || 
-            m_direction == Direction::Modify || 
+        if (m_direction == Direction::Input ||
+            m_direction == Direction::Modify ||
             m_direction == Direction::Output)
         {
             unit->addCompilationError(TRACK(new CompilationError(*m_defaultValue->getSummaryToken(),
@@ -319,9 +323,9 @@ void piranha::IrAttributeDefinition::_checkTypes(IrContextTree *context) {
 }
 
 bool piranha::IrAttributeDefinition::isInput() const {
-    return 
-        m_direction == Direction::Input || 
-        m_direction == Direction::Modify || 
+    return
+        m_direction == Direction::Input ||
+        m_direction == Direction::Modify ||
         m_direction == Direction::Toggle;
 }
 
@@ -375,9 +379,9 @@ piranha::Node *piranha::IrAttributeDefinition::_generateNode(
     IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
     if (
-        m_typeDefinition != nullptr && 
-        m_direction == Direction::Output && 
-        m_defaultValue == nullptr) 
+        m_typeDefinition != nullptr &&
+        m_direction == Direction::Output &&
+        m_defaultValue == nullptr)
     {
         // This must be an interface
         Node *interfaceNode = context
@@ -385,7 +389,7 @@ piranha::Node *piranha::IrAttributeDefinition::_generateNode(
             ->_generateNode(context->getParent(), program, container)
             ->getOutput(getName())
             ->generateInterface(program->getNodeAllocator());
-        
+
         if (interfaceNode != nullptr) {
             program->addNode(interfaceNode);
         }
@@ -400,8 +404,8 @@ piranha::NodeOutput *piranha::IrAttributeDefinition::_generateNodeOutput(
     IrContextTree *context, NodeProgram *program, NodeContainer *container)
 {
     if (
-        m_typeDefinition != nullptr && 
-        m_direction == Direction::Output && 
+        m_typeDefinition != nullptr &&
+        m_direction == Direction::Output &&
         m_defaultValue == nullptr)
     {
         // This must be an interface
