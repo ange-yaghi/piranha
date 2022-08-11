@@ -1,4 +1,4 @@
-#include "..\include\int_conversions.h"
+#include "int_conversions.h"
 
 // CONVERSION =============================================
 // string -> int
