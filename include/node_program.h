@@ -71,7 +71,7 @@ namespace piranha {
         std::string m_errorMessage;
         Node *m_errorNode;
 
-        std::atomic<bool> m_kill;
+        std::atomic<bool> m_kill = false;
     };
 
 } /* namespace piranha */
