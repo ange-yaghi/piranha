@@ -6,7 +6,7 @@ set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmake")
 
 project(piranha)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 # =========================================================
 # GTEST
@@ -29,7 +29,7 @@ set_property(TARGET gtest_main PROPERTY FOLDER "gtest")
 # FLEX BISON
 
 find_package(FLEX REQUIRED)
-find_package(BISON REQUIRED) 
+find_package(BISON REQUIRED)
 
 flex_target(
     lexer

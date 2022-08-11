@@ -3,6 +3,7 @@
 
 #include <ostream>
 #include <string>
+#include <climits>
 
 namespace piranha {
 
@@ -58,7 +59,7 @@ namespace piranha {
         }
 
         friend std::ostream& operator<<(std::ostream& os, const IrTokenInfo& dt) {
-            os << dt.colStart << " (L" << dt.lineStart << ")" 
+            os << dt.colStart << " (L" << dt.lineStart << ")"
                 << " - " << dt.colEnd << " (L" << dt.lineEnd << ")" << std::endl;
             return os;
         }

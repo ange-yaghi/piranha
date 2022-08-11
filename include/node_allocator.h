@@ -18,7 +18,7 @@ namespace piranha {
 
         template <typename T_NodeType>
         void free(T_NodeType *target) {
-            FTRACK(target);
+            target = FTRACK(target);
 
             target->~T_NodeType();
             free((void *)target);

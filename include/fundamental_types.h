@@ -57,8 +57,14 @@ namespace piranha {
         Undefined
     };
 
+    template <typename T>
+    bool dependantFalse() {
+        // This stops clang/gcc from seeing the static_assert is always false
+        return false;
+    }
+
     template <typename NativeType>
-    inline LiteralType LiteralTypeLookup() { static_assert(false, "Looking up a type that does not exist"); return LiteralType::Undefined; };
+    inline LiteralType LiteralTypeLookup() { static_assert(dependantFalse<NativeType>, "Looking up a type that does not exist"); return LiteralType::Undefined; };
 
     template <> inline LiteralType LiteralTypeLookup<native_float>() { return LiteralType::Float; }
     template <> inline LiteralType LiteralTypeLookup<native_bool>() { return LiteralType::Boolean; }
@@ -66,7 +72,7 @@ namespace piranha {
     template <> inline LiteralType LiteralTypeLookup<native_string>() { return LiteralType::String; }
 
     template <typename NativeType>
-    inline const ChannelType *NativeTypeLookup() { static_assert(false, "Looking up a type that does not exist"); return nullptr; }
+    inline const ChannelType *NativeTypeLookup() { static_assert(dependantFalse<NativeType>, "Looking up a type that does not exist"); return nullptr; }
 
     template <> inline const ChannelType *NativeTypeLookup<native_float>() { return &FundamentalType::FloatType; }
     template <> inline const ChannelType *NativeTypeLookup<native_bool>() { return &FundamentalType::BoolType; }

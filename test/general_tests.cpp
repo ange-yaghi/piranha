@@ -31,7 +31,7 @@ TEST(GeneralTests, GeneralSyntaxTest_01) {
 
     EXPECT_TRUE(findError(errList, ErrorCode::UnresolvedReference, 18));
     EXPECT_EQ(errList->getErrorCount(), 1);
-    
+
     compiler->free();
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -184,7 +184,7 @@ TEST(GeneralTests, GeneralSyntaxTest_10) {
 
     compiler->free();
     delete rules;
-    
+
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
 }
 
@@ -516,8 +516,8 @@ TEST(GeneralTests, GeneralSyntaxTest_25) {
 
     EXPECT_EQ(v, 15);
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -542,8 +542,8 @@ TEST(GeneralTests, GeneralSyntaxTest_26) {
     EXPECT_FALSE(program.getTopLevelContainer()->getNode(2)->isEnabled());
     EXPECT_TRUE(program.getTopLevelContainer()->getNode(4)->isEnabled());
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -594,8 +594,8 @@ TEST(GeneralTests, GeneralSyntaxTest_28) {
     EXPECT_FALSE(program.getTopLevelContainer()->getNode(2)->isEnabled());
     EXPECT_FALSE(program.getTopLevelContainer()->getNode(3)->isEnabled());
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -616,8 +616,8 @@ TEST(GeneralTests, GeneralSyntaxTest_29) {
 
     program.execute();
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -685,8 +685,8 @@ TEST(GeneralTests, GeneralSyntaxTest_32) {
 
     program.execute();
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -707,8 +707,8 @@ TEST(GeneralTests, GeneralSyntaxTest_33) {
 
     program.execute();
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -729,8 +729,8 @@ TEST(GeneralTests, GeneralSyntaxTest_34) {
 
     program.execute();
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
@@ -751,8 +751,8 @@ TEST(GeneralTests, GeneralSyntaxTest_35) {
 
     program.execute();
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);

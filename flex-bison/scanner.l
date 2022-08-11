@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 
-/* Implementation of yyFlexScanner */ 
+/* Implementation of yyFlexScanner */
 #include "../include/scanner.h"
 #undef  YY_DECL
 #define YY_DECL int piranha::Scanner::yylex( piranha::Parser::semantic_type *const lval, piranha::Parser::location_type *location)
@@ -97,12 +97,9 @@ H                   [a-fA-F0-9]
 \"(\\.|[^\\"\n])*\" {
                         // String literal
                         size_t length = strlen(yytext);
-                        char *str = new char[length];
-                        strcpy_s(str, length, yytext + 1);
-                        str[length - 2] = '\0';
+                        std::string str(yytext + 1, length - 2);
 
                         buildValue<std::string>(str, location);
-                        delete[] str;
 
                         return (token::STRING);
                     }

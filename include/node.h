@@ -5,6 +5,7 @@
 #include "node_output.h"
 #include "node_allocator.h"
 
+#include <atomic>
 #include <string>
 #include <vector>
 #include <mutex>

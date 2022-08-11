@@ -38,7 +38,7 @@ namespace piranha {
                 }
             }
             else {
-                void *buffer = _aligned_malloc(sizeof(t_alloc) * n, alignment);
+                void *buffer = aligned_alloc(sizeof(t_alloc) * n, alignment);
                 if (n == 1) {
                     newObject = TRACK(new (buffer) t_alloc);
                 }
@@ -89,7 +89,7 @@ namespace piranha {
                 memory[i].~t_alloc();
             }
 
-            _aligned_free(FTRACK((void *)memory));
+            free(FTRACK((void *)memory));
         }
 
         unsigned int getMaxUsage() const { return m_maxUsage; }
