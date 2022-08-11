@@ -7,6 +7,7 @@
 #include "language_rules.h"
 
 #include <vector>
+#include <atomic>
 
 namespace piranha {
 
