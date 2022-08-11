@@ -53,7 +53,7 @@ std::string piranha::LanguageRules::resolveUnaryOperatorBuiltinType(
 }
 
 const piranha::ChannelType *piranha::LanguageRules::resolveChannelType(
-    const std::string &builtinName) const 
+    const std::string &builtinName) const
 {
     BuiltinRule *rule = m_builtinRules.lookup(builtinName);
     return (rule == nullptr)
@@ -62,7 +62,7 @@ const piranha::ChannelType *piranha::LanguageRules::resolveChannelType(
 }
 
 piranha::Node *piranha::LanguageRules::generateOperator(
-    IrBinaryOperator::Operator op, const ChannelType *left, const ChannelType *right) 
+    IrBinaryOperator::Operator op, const ChannelType *left, const ChannelType *right)
 {
     if (left == nullptr) return nullptr;
     if (right == nullptr) return nullptr;
@@ -91,13 +91,14 @@ piranha::Node *piranha::LanguageRules::generateUnaryOperator(
 }
 
 piranha::Node *piranha::LanguageRules::
-    generateBuiltinType(const std::string &typeName) const 
+    generateBuiltinType(const std::string &typeName) const
 {
     BuiltinRule *rule = m_builtinRules.lookup(typeName);
     if (rule == nullptr) return nullptr;
 
     Node *newNode = rule->buildNode(getNodeAllocator());
     newNode->setBuiltinName(typeName);
+    newNode->setMemorySpace(Node::MemorySpace::ClientExternal);
 
     return newNode;
 }
@@ -138,25 +139,25 @@ const piranha::Node *piranha::LanguageRules::getReferenceNode(const std::string 
 }
 
 void piranha::LanguageRules::registerLiteralType(
-    LiteralType literalType, const std::string &builtinType) 
+    LiteralType literalType, const std::string &builtinType)
 {
     *m_literalRules.newValue<std::string>(literalType) = builtinType;
 }
 
 void piranha::LanguageRules::registerConversion(
-    const NodeTypeConversion &conversion, const std::string &builtinType) 
+    const NodeTypeConversion &conversion, const std::string &builtinType)
 {
     *m_conversionRules.newValue(conversion) = builtinType;
 }
 
 void piranha::LanguageRules::registerOperator(
-    const OperatorMapping &op, const std::string &builtinType) 
+    const OperatorMapping &op, const std::string &builtinType)
 {
     *m_operatorRules.newValue<std::string>(op) = builtinType;
 }
 
 void piranha::LanguageRules::registerUnaryOperator(
-    const UnaryOperatorMapping &op, const std::string &builtinType) 
+    const UnaryOperatorMapping &op, const std::string &builtinType)
 {
     *m_unaryOperatorRules.newValue<std::string>(op) = builtinType;
 }
