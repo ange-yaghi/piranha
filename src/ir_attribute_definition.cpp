@@ -226,6 +226,10 @@ void piranha::IrAttributeDefinition::_expand(IrContextTree *context) {
         }
         else if (referenceType == expectedType) return; // No expansion/conversion needed
 
+        // Stop if language rules are not specified
+        // NOTE - This should only really be used in unit testing
+        if (m_rules == nullptr) return;
+
         std::string builtinType =
             m_rules->resolveConversionBuiltinType(referenceType, expectedType);
 
