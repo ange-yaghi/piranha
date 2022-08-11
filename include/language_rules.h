@@ -39,7 +39,7 @@ namespace piranha {
                 cmp = this;
             }
 
-            return (cmp->startingType->isCompatibleWith(*base->startingType)) 
+            return (cmp->startingType->isCompatibleWith(*base->startingType))
                 && (cmp->targetType->isCompatibleWith(*base->targetType));
         }
     };
@@ -63,7 +63,7 @@ namespace piranha {
                 cmp = this;
             }
 
-            bool typesMatch = cmp->leftType->isCompatibleWith(*base->leftType) 
+            bool typesMatch = cmp->leftType->isCompatibleWith(*base->leftType)
                 && cmp->rightType->isCompatibleWith(*base->rightType);
             if (!typesMatch && base->reversible) {
                 typesMatch = cmp->leftType->isCompatibleWith(*base->rightType)
@@ -106,7 +106,7 @@ namespace piranha {
     class LanguageRules {
     public:
         LanguageRules();
-        ~LanguageRules();
+        virtual ~LanguageRules();
 
         void initialize();
 
