@@ -38,8 +38,8 @@ TEST(RuntimeTests, RuntimeErrorTest) {
 
     EXPECT_EQ(program.getRuntimeError(), "Planned error");
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);

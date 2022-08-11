@@ -116,7 +116,7 @@ TEST(IrOperatorTests, IrOperatorTest2) {
         ->getImmediateChannelType();
     parentContext->free();
 
-    EXPECT_EQ(channelType, &FundamentalType::FloatType);    
+    EXPECT_EQ(channelType, &FundamentalType::FloatType);
 
     // Test with the alternate context
     query.inputContext = parentContext->newChild(node);
@@ -353,8 +353,8 @@ TEST(IrOperatorTests, IrOperatorTest8) {
     program.getTopLevelContainer()->getNode(5)->getPrimaryOutput()->fullCompute((void *)&result);
     EXPECT_EQ(result, "Goodbye world!");
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);

@@ -36,7 +36,7 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
     unit->build(&program);
 
     program.execute();
-    
+
     double value;
     program.getTopLevelContainer()->getNode(1)->getPrimaryOutput()->fullCompute((void *)&value);
     EXPECT_EQ(value, 10.0);
@@ -54,8 +54,8 @@ TEST(IrConstructionTests, IrConstructionSanityCheck) {
     program.getTopLevelContainer()->getNode(9)->getPrimaryOutput()->fullCompute((void *)&stringValue);
     EXPECT_EQ(stringValue, "123");
 
-    compiler->free();
     program.free();
+    compiler->free();
     delete rules;
 
     EXPECT_EQ(MemoryTracker::get()->countLeaks(), 0);
