@@ -38,7 +38,7 @@ bool piranha::NodeContainer::findNode(Node *node) const {
 
 bool piranha::NodeContainer::findContainer(Node *node) const {
     if (node == this) return true;
-    
+
     int childCount = getChildCount();
     for (int i = 0; i < childCount; ++i) {
         if (m_children[i]->findContainer(node)) return true;
@@ -77,7 +77,7 @@ void piranha::NodeContainer::addContainerOutput(pNodeInput output, Node *node, c
 }
 
 void piranha::NodeContainer::
-    writeAssembly(std::fstream &file, Assembly *assembly, int indent) const 
+    writeAssembly(std::fstream &file, Assembly *assembly, int indent) const
 {
     std::string prefixIndent = "";
     for (int i = 0; i < indent; ++i) prefixIndent += "  ";
@@ -97,6 +97,11 @@ void piranha::NodeContainer::
 }
 
 void piranha::NodeContainer::prune() {
+    const int childCount = getChildCount();
+    for (int i = 0; i < childCount; ++i) {
+        m_children[i]->prune();
+    }
+
     const int nodeCount = getNodeCount();
     int newNodeCount = 0;
     for (int i = 0; i < nodeCount; ++i) {
@@ -117,11 +122,6 @@ void piranha::NodeContainer::prune() {
     }
 
     m_nodes.resize(newNodeCount);
-
-    const int childCount = getChildCount();
-    for (int i = 0; i < childCount; ++i) {
-        m_children[i]->prune();
-    }
 }
 
 void piranha::NodeContainer::_initialize() {
