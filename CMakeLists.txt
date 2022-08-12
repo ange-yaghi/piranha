@@ -48,10 +48,17 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(dependencies/libraries/flex/include)
 include_directories(include)
 
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.40 COMPONENTS filesystem REQUIRED)
+# Aim for C++17's filesystem first, fallback on boost
+include(CheckCXXSymbolExists)
+check_cxx_symbol_exists(std::filesystem::path::preferred_separator "filesystem" USE_CXX17_FILESYSTEM)
+add_compile_definitions(USE_CXX17_FILESYSTEM=${USE_CXX17_FILESYSTEM})
+
+if (NOT USE_CXX17_FILESYSTEM)
+    set(Boost_USE_STATIC_LIBS ON)
+    set(Boost_USE_MULTITHREADED ON)
+    set(Boost_USE_STATIC_RUNTIME OFF)
+    find_package(Boost 1.40 COMPONENTS filesystem REQUIRED)
+endif()
 
 add_library(piranha STATIC
     # Source files
@@ -166,7 +173,9 @@ add_library(piranha STATIC
     ${FLEX_lexer_OUTPUTS}
 )
 
-target_link_libraries(piranha Boost::filesystem)
+if (NOT USE_CXX17_FILESYSTEM)
+    target_link_libraries(piranha Boost::filesystem)
+endif()
 
 add_executable(piranha_reference_compiler
     # Source files
