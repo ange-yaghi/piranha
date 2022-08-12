@@ -8,6 +8,7 @@
 #include <new>
 
 #include <iostream>
+#include <cstdlib>
 
 namespace piranha {
 
@@ -38,7 +39,12 @@ namespace piranha {
                 }
             }
             else {
-                void *buffer = aligned_alloc(sizeof(t_alloc) * n, alignment);
+#ifdef _MSC_VER
+                void *buffer = _aligned_malloc(alignment, sizeof(t_alloc) * n);
+#else
+                void *buffer = std::aligned_alloc(alignment, sizeof(t_alloc) * n);
+#endif
+                
                 if (n == 1) {
                     newObject = TRACK(new (buffer) t_alloc);
                 }

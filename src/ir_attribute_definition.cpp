@@ -372,9 +372,7 @@ void piranha::IrAttributeDefinition::_resolveDefinitions() {
             ErrorCode::UndefinedNodeType)));
         m_typeDefinition = nullptr;
     }
-
     else {
-        assert(definition != (void *)0xCDCDCDCDCDCDCDCD);
         m_typeDefinition = definition;
     }
 }
