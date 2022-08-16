@@ -3,17 +3,27 @@
 
 #include <string>
 
+#if USE_CXX17_FILESYSTEM
+#include <filesystem>
+#else // USE_CXX17_FILESYSTEM
 // Forward Boost declaration
 namespace boost {
     namespace filesystem {
         class path;
     } /* namespace filesystem */
 } /* namespace boost */
+#endif // USE_CXX17_FILESYSTEM
 
 namespace piranha {
 
-    class Path {        
-    protected: Path(const boost::filesystem::path &path);
+#if USE_CXX17_FILESYSTEM
+    namespace filesystem = std::filesystem;
+#else // USE_CXX17_FILESYSTEM
+    namespace filesystem = boost::filesystem;
+#endif // USE_CXX17_FILESYSTEM
+
+    class Path {
+    protected: Path(const filesystem::path &path);
     public:
         Path(const std::string &path);
         Path(const char *path);
@@ -38,10 +48,10 @@ namespace piranha {
         bool exists() const;
 
     protected:
-        boost::filesystem::path *m_path;
+        filesystem::path *m_path;
 
     protected:
-        const boost::filesystem::path &getBoostPath() const { return *m_path; }
+        const filesystem::path &getBoostPath() const { return *m_path; }
     };
 
 } /* namespace piranha */
