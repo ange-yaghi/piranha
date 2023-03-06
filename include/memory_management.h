@@ -3,6 +3,10 @@
 
 #include <assert.h>
 
+#if __APPLE__
+#define __int64 long long
+#endif
+
 namespace piranha {
 
     typedef unsigned __int64 mem_size;

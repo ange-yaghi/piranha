@@ -125,7 +125,7 @@ H                   [a-fA-F0-9]
 "::"                { DEFAULT_BUILD(location); return (token::NAMESPACE_POINTER); }
 "="                 { DEFAULT_BUILD(location); return ('='); }
 
-[ \t\v\n\f]         { }
+[ \t\v\n\f\r]       { }
 "//"[^\n]*          { }
 "/*"                { comment(); }
 .                   { BUILD_INVALID(location); return (token::UNRECOGNIZED); }

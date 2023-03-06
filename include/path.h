@@ -2,18 +2,12 @@
 #define PIRANHA_PATH_H
 
 #include <string>
-
-// Forward Boost declaration
-namespace boost {
-    namespace filesystem {
-        class path;
-    } /* namespace filesystem */
-} /* namespace boost */
+#include <filesystem>
 
 namespace piranha {
 
     class Path {        
-    protected: Path(const boost::filesystem::path &path);
+    protected: Path(const std::filesystem::path &path);
     public:
         Path(const std::string &path);
         Path(const char *path);
@@ -38,10 +32,10 @@ namespace piranha {
         bool exists() const;
 
     protected:
-        boost::filesystem::path *m_path;
+        std::filesystem::path *m_path;
 
     protected:
-        const boost::filesystem::path &getBoostPath() const { return *m_path; }
+        const std::filesystem::path &getBoostPath() const { return *m_path; }
     };
 
 } /* namespace piranha */
