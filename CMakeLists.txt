@@ -198,3 +198,6 @@ target_link_libraries(piranha_test
 include(GoogleTest)
 gtest_discover_tests(piranha_test)
 
+set_property(TARGET piranha PROPERTY FOLDER "piranha")
+set_property(TARGET piranha_reference_compiler PROPERTY FOLDER "piranha")
+set_property(TARGET piranha_test PROPERTY FOLDER "piranha")
