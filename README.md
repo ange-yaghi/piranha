@@ -7,6 +7,8 @@ Piranha is currently used as an SDL (scene description language) for the [MantaR
 
 For syntax highlighting in Visual Studio Code check out the [Piranha Visual Studio Code Extension](https://github.com/ange-yaghi/piranha-vscode-extension).
 
+For syntax highlighting in Sublime Text check out the [Piranha Sublime Text Package](https://github.com/Kostasn2/piranha-syntax-highlighting-package).
+
 To get started, check out the introductory handbook: [Piranha Handbook](docs/handbook/handbook.md)
 
 Example Piranha compiler implementation: [Hello World Piranha Compiler](https://github.com/ange-yaghi/piranha-hello-world-compiler)
