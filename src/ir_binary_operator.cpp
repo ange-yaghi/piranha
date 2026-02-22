@@ -105,8 +105,8 @@ piranha::IrParserStructure *piranha::IrBinaryOperator::
         if (!publicAttribute->allowsExternalAccess()) {
             IR_FAIL();
 
-            const bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) && 
-                (basicInfo.isFixedType() && IR_EMPTY_CONTEXT() || !basicInfo.isFixedType());
+            const bool isValidError = (IR_EMPTY_CONTEXT() || touchedMainContext) &&
+                ((basicInfo.isFixedType() && IR_EMPTY_CONTEXT()) || !basicInfo.isFixedType());
             if (query.recordErrors && isValidError) {
                 IR_ERR_OUT(TRACK(new CompilationError(*m_rightOperand->getSummaryToken(),
                     ErrorCode::AccessingInternalMember, query.inputContext)));
@@ -189,7 +189,7 @@ void piranha::IrBinaryOperator::_expand(IrContextTree *context) {
                 ((leftInfo.touchedMainContext && !leftInfo.isStaticType()) ||
                 (rightInfo.touchedMainContext && !rightInfo.isStaticType()));
 
-            const bool isOutside = leftInfo.isFixedTypeOutside(context);
+            [[maybe_unused]] const bool isOutside = leftInfo.isFixedTypeOutside(context);
 
             if (touchedMainContext || emptyContext) {
                 getParentUnit()->addCompilationError(

@@ -39,7 +39,7 @@ void piranha::NodeProgram::writeAssembly(const std::string &fname) const {
 
 void piranha::NodeProgram::addNode(Node *node) {
     if (CheckDuplicates) {
-        for (Node *n : m_nodeCache) {
+        for ([[maybe_unused]] Node *n : m_nodeCache) {
             assert(n != node);
         }
     }

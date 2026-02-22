@@ -48,6 +48,13 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(dependencies/libraries/flex/include)
 include_directories(include)
 
+# Suppress warnings in Bison-generated code
+set_source_files_properties(
+    ${CMAKE_CURRENT_BINARY_DIR}/parser.auto.cpp
+    PROPERTIES
+    COMPILE_FLAGS "-Wno-unused-but-set-variable"
+)
+
 add_library(piranha STATIC
     # Source files
     src/assembly.cpp

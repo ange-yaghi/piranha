@@ -149,7 +149,7 @@ piranha::IrParserStructure *piranha::IrParserStructure::getReference(
         const IrReferenceChain::Link &link = chain.list[info.infiniteLoop];
 
         if (!link.structure->isInfiniteLoop(link.context)) {
-            if (output != nullptr && output->touchedMainContext || IR_EMPTY_CONTEXT()) {
+            if ((output != nullptr && output->touchedMainContext) || IR_EMPTY_CONTEXT()) {
                 IR_ERR_OUT(TRACK(new CompilationError(*link.structure->getSummaryToken(),
                     ErrorCode::CircularReference, link.context)));
             }
@@ -345,7 +345,7 @@ void piranha::IrParserStructure::checkReferences(IrContextTree *inputContext) {
         query.recordErrors = true;
         IrReferenceInfo info;
 
-        IrParserStructure *reference = getReference(query, &info);
+        [[maybe_unused]] IrParserStructure *reference = getReference(query, &info);
 
         if (info.err != nullptr) {
             getParentUnit()->addCompilationError(info.err);
@@ -438,7 +438,7 @@ void piranha::IrParserStructure::writeReferencesToFile(
     query.inputContext = context;
     query.recordErrors = false;
 
-    IrNode *asNode = getAsNode();
+    [[maybe_unused]] IrNode *asNode = getAsNode();
     IrParserStructure *immediateReference = getImmediateReference(query, &info);
 
     if (info.failed) {

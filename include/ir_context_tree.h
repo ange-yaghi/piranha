@@ -15,7 +15,7 @@ namespace piranha {
     public:
         IrContextTree();
         IrContextTree(IrNode *context, bool mainContext = false);
-        ~IrContextTree();
+        virtual ~IrContextTree();
 
         void setParent(IrContextTree *parent) { m_parent = parent; }
         IrContextTree *getParent() const { return m_parent; }

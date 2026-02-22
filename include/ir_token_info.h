@@ -76,7 +76,7 @@ namespace piranha {
         }
 
         T_IrTokenInfo(const T &data, int lineStart, int lineEnd, int colStart, int colEnd)
-            : data(data), IrTokenInfo(lineStart, lineEnd, colStart, colEnd) {
+            : IrTokenInfo(lineStart, lineEnd, colStart, colEnd), data(data) {
             /* void */
         }
 

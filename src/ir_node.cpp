@@ -417,7 +417,7 @@ piranha::Node *piranha::IrNode::_generateNode(IrContextTree *context, NodeProgra
 
     IrNodeDefinition *definition = getDefinition();
     const IrAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
-    const IrAttributeList *specifiedAttributes = getAttributes();
+    [[maybe_unused]] const IrAttributeList *specifiedAttributes = getAttributes();
 
     NodeContainer *newContainer = parentContainer;
     NodeContainer *generatedContainer = nullptr;
