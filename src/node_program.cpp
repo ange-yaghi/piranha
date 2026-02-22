@@ -130,10 +130,26 @@ bool piranha::NodeProgram::execute() {
     initialize();
 
     if (isKilled()) return true;
-    
-    // Execute all nodes
+
+    // First pass: evaluate all mutation nodes (nodes that modify other nodes)
+    // These must be evaluated before other nodes that depend on the modifications
     for (int i = 0; i < nodeCount; i++) {
         Node *node = m_topLevelContainer.getNode(i);
+
+        if (node->hasFlag(Node::META_MUTATION)) {
+            const bool result = node->evaluate();
+            if (!result) return false;
+            if (isKilled()) return true;
+        }
+    }
+
+    // Second pass: evaluate all remaining nodes (skip mutation nodes already evaluated)
+    for (int i = 0; i < nodeCount; i++) {
+        Node *node = m_topLevelContainer.getNode(i);
+
+        // Skip mutation nodes as they were already evaluated in the first pass
+        if (node->hasFlag(Node::META_MUTATION)) continue;
+
         const bool result = node->evaluate();
         if (!result) return false;
         if (isKilled()) return true;

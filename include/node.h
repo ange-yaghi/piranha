@@ -78,6 +78,7 @@ namespace piranha {
         // Standard metadata flags
         static constexpr const char *META_CONSTANT = "!!PIRANHA::CONSTANT";
         static constexpr const char *META_ACTIONLESS = "!!PIRANHA::ACTIONLESS";
+        static constexpr const char *META_MUTATION = "!!PIRANHA::MUTATION";
 
     public:
         Node();
