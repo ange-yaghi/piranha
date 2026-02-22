@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
+# Set CMake policies for compatibility
+if(POLICY CMP0167)
+    cmake_policy(SET CMP0167 NEW)
+endif()
+
 # Enable group projects in folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmake")
@@ -9,12 +14,142 @@ project(piranha)
 set(CMAKE_CXX_STANDARD 17)
 
 # =========================================================
+# Platform Detection and Cross-Platform Support
+# =========================================================
+
+# Platform detection
+if(WIN32)
+    set(PLATFORM_NAME "Windows")
+elseif(APPLE)
+    set(PLATFORM_NAME "macOS")
+    # Detect Apple Silicon
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64")
+        set(PLATFORM_APPLE_SILICON ON)
+        message(STATUS "Detected Apple Silicon (M1/M2/M3/M4)")
+    else()
+        set(PLATFORM_INTEL_MAC ON)
+        message(STATUS "Detected Intel Mac")
+    endif()
+elseif(UNIX)
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+        set(PLATFORM_NAME "Linux")
+    elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+        set(PLATFORM_NAME "FreeBSD")
+    elseif(CMAKE_SYSTEM_NAME MATCHES "OpenBSD")
+        set(PLATFORM_NAME "OpenBSD")
+    elseif(CMAKE_SYSTEM_NAME MATCHES "NetBSD")
+        set(PLATFORM_NAME "NetBSD")
+    else()
+        set(PLATFORM_NAME "Generic UNIX")
+    endif()
+endif()
+
+message(STATUS "Platform: ${PLATFORM_NAME}")
+
+# =========================================================
+# Find Bison 3.2+ (Critical Requirement)
+# =========================================================
+
+# Platform-specific Bison paths
+if(APPLE)
+    # Homebrew paths (both Intel and Apple Silicon)
+    find_program(BISON_EXECUTABLE bison
+        PATHS
+            /opt/homebrew/opt/bison/bin
+            /usr/local/opt/bison/bin
+            /opt/homebrew/bin
+            /usr/local/bin
+        NO_DEFAULT_PATH
+    )
+    if(NOT BISON_EXECUTABLE)
+        find_program(BISON_EXECUTABLE bison)
+    endif()
+elseif(UNIX)
+    find_program(BISON_EXECUTABLE bison)
+endif()
+
+# Verify Bison version
+if(BISON_EXECUTABLE)
+    execute_process(
+        COMMAND "${BISON_EXECUTABLE}" --version
+        OUTPUT_VARIABLE BISON_VERSION_OUTPUT
+        ERROR_VARIABLE BISON_VERSION_OUTPUT
+    )
+    if(BISON_VERSION_OUTPUT MATCHES "bison \\(GNU Bison\\) ([0-9]+)\\.([0-9]+)")
+        set(BISON_MAJOR ${CMAKE_MATCH_1})
+        set(BISON_MINOR ${CMAKE_MATCH_2})
+        set(BISON_VERSION "${BISON_MAJOR}.${BISON_MINOR}")
+
+        if(BISON_MAJOR LESS 3 OR (BISON_MAJOR EQUAL 3 AND BISON_MINOR LESS 2))
+            message(FATAL_ERROR
+                "Bison ${BISON_VERSION} is too old. Piranha requires 3.2+.\n"
+                "Install via:\n"
+                "  macOS: brew install bison\n"
+                "  Linux: sudo apt install bison (Ubuntu) or sudo dnf install bison (Fedora)\n"
+                "  BSD: sudo pkg install bison (FreeBSD) or pkg_add bison (OpenBSD)"
+            )
+        endif()
+        message(STATUS "Found Bison ${BISON_VERSION}")
+    endif()
+else()
+    message(FATAL_ERROR "Bison not found. Install Bison 3.2+")
+endif()
+
+# =========================================================
+# Find Flex
+# =========================================================
+
+find_program(FLEX_EXECUTABLE flex)
+if(FLEX_EXECUTABLE)
+    message(STATUS "Found Flex: ${FLEX_EXECUTABLE}")
+endif()
+
+# =========================================================
+# Platform-specific Boost configuration
+# =========================================================
+
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+
+if(APPLE)
+    # Homebrew Boost paths
+    if(EXISTS "/opt/homebrew")
+        list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew")
+    endif()
+    if(EXISTS "/usr/local")
+        list(APPEND CMAKE_PREFIX_PATH "/usr/local")
+    endif()
+elseif(UNIX)
+    # Linux/BSD - CMake finds Boost in standard locations
+endif()
+
+find_package(Boost 1.40 COMPONENTS filesystem REQUIRED)
+message(STATUS "Found Boost ${Boost_VERSION}")
+
+# =========================================================
+# Platform-specific compiler flags
+# =========================================================
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang|GNU")
+    add_compile_options(-Wall -Wextra)
+
+    if(APPLE)
+        # macOS-specific: avoid warnings
+        add_compile_options(-Wno-unused-command-line-argument)
+    endif()
+
+    # Flex compatibility with C++17
+    add_compile_options(-Wno-register)
+endif()
+
+# =========================================================
 # GTEST
 
 include(FetchContent)
 FetchContent_Declare(
     googletest
-    URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)

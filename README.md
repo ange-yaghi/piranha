@@ -36,28 +36,93 @@ Piranha was designed for the unique demands of a ray-tracer SDL (scene descripti
 Only a few steps are required to begin contributing to Piranha.
 
 ### Install Dependencies
-I have tried to rely on as few dependencies as possible and at some point may eliminate these dependencies as well, but for now you'll have to live with the pain. Install the following:
 
-1. CMake
-2. Boost (make sure to build the optional dependencies as well)
-3. Flex
-4. Bison
+Piranha requires the following dependencies:
+- **CMake** (3.10 or later)
+- **Boost** (1.40 or later) - with filesystem component
+- **Flex** (lexical analyzer generator)
+- **Bison** (3.2 or later) - parser generator
+
+#### Platform-Specific Installation
+
+**macOS (Intel & Apple Silicon M1/M2/M3/M4)**
+```bash
+# Install all dependencies via Homebrew
+brew install cmake boost bison flex
+
+# Ensure Bison 3.2+ is available in PATH
+# Homebrew installs to /opt/homebrew/opt/bison/bin (Apple Silicon)
+# or /usr/local/opt/bison/bin (Intel)
+```
+
+**Linux (Ubuntu/Debian)**
+```bash
+sudo apt update
+sudo apt install cmake libboost-all-dev bison flex
+```
+
+**Linux (Fedora/RHEL)**
+```bash
+sudo dnf install cmake boost-devel bison flex
+```
+
+**FreeBSD**
+```bash
+sudo pkg install cmake boost-libs bison flex
+```
+
+**OpenBSD**
+```bash
+pkg_add cmake bison flex
+# Boost may need to be installed from ports
+```
+
+**Windows (MSVC)**
+```bash
+# Use vcpkg for dependencies
+vcpkg install cmake boost-filesystem bison flex
+```
 
 ### Build with CMake
-After cloning the Piranha repository, `cd` into the repository and run the following commands:
 
-```
+After cloning the Piranha repository and installing dependencies:
+
+**macOS, Linux, BSD (Unix-like systems)**
+```bash
 mkdir build
 cd build
 cmake ..
-cmake --build .
+make -j$(sysctl -n hw.ncpu 2>/dev/null || nproc)
 ```
 
-If using MSVC, to set whether it is a Release or Debug build, run the last step like this:
-```
+**Windows (MSVC)**
+```bash
+mkdir build
+cd build
+cmake ..
 cmake --build . --config Release
 ```
 
-If using MSVC, CMake will output a Visual Studio solution which you can use for development and debugging. You can also try running the reference compiler directly `piranha_reference_compiler`.
+### Platform Detection
+
+The CMake build system automatically detects your platform:
+- **Windows**: MSVC compiler
+- **macOS**: AppleClang with Apple Silicon (M1/M2/M3/M4) or Intel Mac detection
+- **Linux**: GCC or Clang
+- **BSD**: Clang or GCC
+
+### Build Output
+
+Upon successful build, you'll find:
+- `libpiranha.a` - Static library
+- `piranha_reference_compiler` - Example compiler implementation
+- `piranha_test` - Test suite
+
+### Running Tests
+
+```bash
+cd build
+ctest --output-on-failure
+```
 
 **You are now ready to begin development!**
